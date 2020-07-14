@@ -16,6 +16,9 @@ import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
+
+import {globalInstancesFactory} from '@hermes/composition';
+globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/plugins');
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
