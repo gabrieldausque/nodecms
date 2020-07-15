@@ -1,4 +1,4 @@
-import AuthenticationPlugin from '../interfaces/AuthenticationPlugin';
+import AuthenticationPlugin from '../../interfaces/AuthenticationPlugin';
 
 export default class LocalAuthentication implements AuthenticationPlugin{
   public static metadata : any[] = [
