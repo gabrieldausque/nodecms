@@ -40,10 +40,41 @@ describe('\'Authentication\' service', () => {
     expect(service.authenticator).to.be.an.instanceof(LocalAuthentication);
   })
 
-  it('should throw error if document service is called without authentication', async () => {
+  it('should throw error if any service are called without authentication', async () => {
       const fn = async () => {
           const { data } = await axios.get(getUrl('document/0'));
       };
       await expect(fn()).to.be.rejectedWith('Request failed with status code 401');
   })
+
+  it('should throw error if authentication find, remove or patch method is called', async () => {
+    const find = async () => {
+      const { data } = await axios.request({
+        url: getUrl('authentication'),
+        method:"GET"
+      });
+    };
+
+    const remove = async () => {
+      const { data } = await axios.request({
+        url:getUrl('authentication/0'),
+        method:"DELETE"
+      });
+    };
+
+    const patch = async () => {
+      const { data } = await axios.request(
+        {
+          url: getUrl('authentication/0'),
+          method:"PATCH"
+        });
+    };
+
+    await expect(find()).to.be.rejectedWith('Request failed with status code 405').then(async () => {
+      await expect(remove()).to.be.rejectedWith('Request failed with status code 405');
+    }).then(async() => {
+      await expect(patch()).to.be.rejectedWith('Request failed with status code 405');
+    })
+  })
+
 });

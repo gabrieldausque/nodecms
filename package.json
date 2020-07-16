@@ -49,7 +49,8 @@
     "helmet": "^3.23.3",
     "serve-favicon": "^2.5.0",
     "winston": "^3.3.3",
-    "@hermes/composition": "^1.0.5"
+    "@hermes/composition": "^1.0.5",
+    "csv-load-sync": "^1.0.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",
