@@ -2,8 +2,12 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {globalInstancesFactory} from "@hermes/composition";
 import AuthenticationPlugin from "../../plugins/interfaces/AuthenticationPlugin";
+import {NotAcceptable} from "@feathersjs/errors";
 
-interface Data {}
+interface Data {
+  login?:string,
+  password?:string
+}
 
 interface ServiceOptions {
   contractName:string,
@@ -25,16 +29,35 @@ export class Authentication implements ServiceMethods<Data> {
     return [];
   }
 
-  async get (id: Id, params?: Params): Promise<Data> {
-    return this.authenticator.isAuthenticated();
+  async get (id: Id, params?: Params): Promise<any> {
+    // TODO : extract login, from header token
+    // TODO : extract date from header token
+    const login:string = '';
+    const date:Date = new Date();
+    return this.authenticator.isAuthenticated(login, date);
   }
 
-  async create (data: Data, params?: Params): Promise<Data> {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
+  async create (data: Data, params?: Params): Promise<any> {
+    // TODO : add a control for client
+    // TODO : add a control for last login tentative for user ...
+    let tokenEncrypted:string;
+    try {
+      const login = (data.login)?data.login:'anonymous';
+      const password = (data.password)?data.password:'nopass';
 
-    return data;
+      if(login === 'anonymous' || password === 'nopass') {
+        throw new NotAcceptable('Login or password wrong. Please retry')
+      // TODO : log client tentative for login in an unauthorize way for further counter measure
+      }
+      const tokenDecrypted = await this.authenticator.authenticate(login, password);
+      tokenEncrypted = await this.encryptor.encrypt(tokenDecrypted);
+    } catch(ex) {
+      // TODO : return the honey pot token, that give access to : you didn't say the magic word !!!!
+      tokenEncrypted = await this.encryptor.encrypt(this.honeyPot.token);
+      // TODO : Make a specific exception for wrong password and nologin authorized in the time
+    }
+    //TODO : set the header token
+    return 'Ok';
   }
 
   async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
