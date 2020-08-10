@@ -1,7 +1,8 @@
-import assert from 'assert';
+// @ts-ignore
 import chai from 'chai';
-chai.use(require('chai-as-promised'));
+// @ts-ignore
 import {expect} from 'chai';
+chai.use(require('chai-as-promised'));
 import {NodeCryptoPlugin} from "../../../src/plugins/Encryption/NodeCryptoPlugin";
 import {CustomAuthenticatedUserToken} from "../../../src/plugins/interfaces/AuthenticationPlugin";
 import * as os from "os";

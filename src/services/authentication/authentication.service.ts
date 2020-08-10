@@ -14,7 +14,16 @@ declare module '../../declarations' {
 export default function (app: Application) {
   const options = {
     paginate: app.get('paginate'),
-    contractName: app.get('authentication').contractName
+    authentication:
+      {
+        contractName: app.get('authentication').authentication.contractName,
+        configuration: app.get('authentication').authentication.configuration
+      },
+    encryption:
+      {
+        contractName: app.get('authentication').encryption.contractName,
+        configuration: app.get('authentication').encryption.configuration
+      }
   };
 
   // Initialize our service with any options it requires

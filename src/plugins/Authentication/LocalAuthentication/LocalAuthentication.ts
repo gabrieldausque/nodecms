@@ -35,7 +35,8 @@ export default class LocalAuthentication implements AuthenticationPlugin{
         this.authorityKey = os.hostname()
       }
     } else {
-      this.authorityKey = os.hostname()
+      this.authorityKey = os.hostname();
+      this.database = dataLoader('data/users.csv');
     }
   }
 
