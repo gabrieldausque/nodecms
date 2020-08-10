@@ -1,7 +1,10 @@
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from '../../interfaces/AuthenticationPlugin';
+import * as process from "process";
+import * as os from "os";
 const dataLoader = require('csv-load-sync');
 
 export interface LocalAuthenticationConfiguration {
+  authorityKey: string;
   userFile: string;
 }
 
@@ -15,12 +18,24 @@ export default class LocalAuthentication implements AuthenticationPlugin{
   ]
 
   public database: any;
+  private authorityKey: string;
 
   constructor(configuration?:LocalAuthenticationConfiguration) {
-    if(configuration && configuration.userFile){
-      this.database = dataLoader(configuration.userFile);
+    if(configuration) {
+      if (configuration.userFile) {
+        this.database = dataLoader(configuration.userFile);
+      } else {
+        this.database = dataLoader('data/users.csv');
+      }
+
+      if (configuration.authorityKey) {
+        this.authorityKey = configuration.authorityKey
+      } else {
+        console.warn(`Beware : no authority key provided, default will be used, and it is not secure` )
+        this.authorityKey = os.hostname()
+      }
     } else {
-      this.database = dataLoader('data/users.csv');
+      this.authorityKey = os.hostname()
     }
   }
 
@@ -29,7 +44,7 @@ export default class LocalAuthentication implements AuthenticationPlugin{
       if(allowedUsers.login === login && allowedUsers.password === password) {
         const token:CustomAuthenticatedUserToken = {
           authenticationDate: new Date(),
-          authorityKey: 'MyKey',
+          authorityKey: this.authorityKey,
           login: allowedUsers.login.toString()
         };
         return Promise.resolve(token);

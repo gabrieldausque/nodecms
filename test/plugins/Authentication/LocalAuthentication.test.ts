@@ -8,7 +8,7 @@ import {CustomAuthenticatedUserToken} from "../../../src/plugins/interfaces/Auth
 const factory = new InstancesFactory();
 factory.loadExportedClassesFromDirectory(__dirname + '/../../../src/plugins');
 
-describe('LocalAuthentication plugin tests', () => {
+describe('Authentication plugin tests', () => {
   it('Should authenticate user from local file loaded from configuration', async () => {
     const plugin = factory.getInstanceFromCatalogs('AuthenticationPlugin', 'Default');
     const token:CustomAuthenticatedUserToken = await plugin.authenticate('localtest','apassword');

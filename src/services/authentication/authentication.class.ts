@@ -1,8 +1,9 @@
-import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
-import { Application } from '../../declarations';
+import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/feathers';
+import {Application} from '../../declarations';
 import {globalInstancesFactory} from "@hermes/composition";
-import AuthenticationPlugin from "../../plugins/interfaces/AuthenticationPlugin";
+import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/interfaces/AuthenticationPlugin";
 import {NotAcceptable} from "@feathersjs/errors";
+import {EncryptionPlugin} from "../../plugins/interfaces/EncryptionPlugin";
 
 interface Data {
   login?:string,
@@ -10,19 +11,46 @@ interface Data {
 }
 
 interface ServiceOptions {
-  contractName:string,
-  configuration?:any
+  authentication: {
+    contractName:string
+    configuration?:any
+  },
+  encryption: {
+    contractName:string,
+    configuration?:any
+  }
+}
+
+interface HoneyPot {
+  token: CustomAuthenticatedUserToken;
 }
 
 export class Authentication implements ServiceMethods<Data> {
   app: Application;
   options: ServiceOptions;
   authenticator: AuthenticationPlugin
+  encryptor: EncryptionPlugin;
+  honeyPot: HoneyPot = {
+    token: {
+      authenticationDate: new Date(),
+      authorityKey: "honeyPot",
+      login: "winnie",
+    }
+  };
 
-  constructor (options: ServiceOptions = { contractName:'Default'}, app: Application) {
+  constructor (options: ServiceOptions = {
+    authentication: {contractName:'Default'},
+    encryption: {contractName:'Default'}
+    }, app: Application) {
     this.options = options;
     this.app = app;
-    this.authenticator = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationPlugin', options.contractName, options.configuration)
+    this.authenticator = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationPlugin',
+      options.authentication.contractName,
+      options.authentication.configuration)
+    this.encryptor = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin',
+      options.encryption.contractName,
+      options.encryption.configuration
+    )
   }
 
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
@@ -38,9 +66,9 @@ export class Authentication implements ServiceMethods<Data> {
   }
 
   async create (data: Data, params?: Params): Promise<any> {
-    // TODO : add a control for client
-    // TODO : add a control for last login tentative for user ...
+    // TODO : add a control for last login tentative for user and client ...
     let tokenEncrypted:string;
+
     try {
       const login = (data.login)?data.login:'anonymous';
       const password = (data.password)?data.password:'nopass';
@@ -57,6 +85,7 @@ export class Authentication implements ServiceMethods<Data> {
       // TODO : Make a specific exception for wrong password and nologin authorized in the time
     }
     //TODO : set the header token
+
     return 'Ok';
   }
 
@@ -68,7 +97,7 @@ export class Authentication implements ServiceMethods<Data> {
     return data;
   }
 
-  async remove (id: NullableId, params?: Params): Promise<Data> {
+  async remove (id: NullableId, params?: Params): Promise<any> {
     return { id };
   }
 }
