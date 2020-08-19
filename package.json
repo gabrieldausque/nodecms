@@ -44,12 +44,13 @@
     "@feathersjs/feathers": "^4.5.5",
     "@feathersjs/socketio": "^4.5.5",
     "@feathersjs/transport-commons": "^4.5.5",
+    "feathers-swagger": "^1.2.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "helmet": "^3.23.3",
     "serve-favicon": "^2.5.0",
     "winston": "^3.3.3",
-    "@hermes/composition": "^1.0.5",
+    "@hermes/composition": "^1.0.8",
     "csv-load-sync": "^1.0.0"
   },
   "devDependencies": {

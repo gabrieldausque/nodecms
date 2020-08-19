@@ -58,17 +58,15 @@ export class Authentication implements ServiceMethods<Data> {
   }
 
   async get (id: Id, params?: Params): Promise<any> {
-    // TODO : extract login, from header token
-    // TODO : extract date from header token
-    const login:string = '';
-    const date:Date = new Date();
-    return this.authenticator.isAuthenticated(login, date);
+    if(!params || !params.authenticationToken)
+      return false;
+    const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decrypt(params.authenticationToken);
+    return this.authenticator.isAuthenticated(decryptedToken);
   }
 
   async create (data: Data, params?: Params): Promise<any> {
     // TODO : add a control for last login tentative for user and client ...
     let tokenEncrypted:string;
-
     try {
       const login = (data.login)?data.login:'anonymous';
       const password = (data.password)?data.password:'nopass';
@@ -79,14 +77,13 @@ export class Authentication implements ServiceMethods<Data> {
       }
       const tokenDecrypted = await this.authenticator.authenticate(login, password);
       tokenEncrypted = await this.encryptor.encrypt(tokenDecrypted);
+
     } catch(ex) {
       // TODO : return the honey pot token, that give access to : you didn't say the magic word !!!!
       tokenEncrypted = await this.encryptor.encrypt(this.honeyPot.token);
       // TODO : Make a specific exception for wrong password and nologin authorized in the time
     }
-    //TODO : set the header token
-
-    return 'Ok';
+    return tokenEncrypted;
   }
 
   async update (id: NullableId, data: Data, params?: Params): Promise<Data> {

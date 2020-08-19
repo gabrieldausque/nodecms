@@ -1,5 +1,5 @@
 export default interface AuthenticationPlugin {
-  isAuthenticated(login:string,authenticationCreationDate:Date):boolean;
+  isAuthenticated(decryptedToken:CustomAuthenticatedUserToken):boolean;
   authenticate(login:string, password:string):Promise<CustomAuthenticatedUserToken>
 }
 

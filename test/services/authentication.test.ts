@@ -17,8 +17,9 @@ import url from "url";
 import {Server} from "http";
 import axios from "axios";
 import {NotAuthenticated} from "@feathersjs/errors";
+import {Authentication} from "../../src/services/authentication/authentication.class";
 
-describe('\'Authentication\' service', () => {
+describe('Authentication service', () => {
   let server: Server;
 
   before(function(done) {
@@ -75,6 +76,21 @@ describe('\'Authentication\' service', () => {
     }).then(async() => {
       await expect(patch()).to.be.rejectedWith('Request failed with status code 405');
     })
+  })
+
+  it('should create authentication token, set it in the response header, and be able to use it in further request', async() => {
+    const response = await axios.request({
+      url: getUrl('authentication'),
+      method: "POST",
+      data: {
+        login: "localtest",
+        password: "apassword",
+      }
+    })
+    expect(response.headers['authorization']).to.be.ok;
+    const service = app.service('authentication') as Authentication;
+    const customToken = await service.encryptor.decrypt(response.headers['authorization'].replace('Bearer ', ''));
+    expect(customToken.login).to.be.eq('localtest');
   })
 
 });

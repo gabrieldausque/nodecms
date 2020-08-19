@@ -1,4 +1,6 @@
+// @ts-ignore
 import assert from 'assert';
+// @ts-ignore
 import chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';

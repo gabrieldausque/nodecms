@@ -19,6 +19,14 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
   private salt: string;
   private iv: Buffer;
 
+  public static metadata : any[] = [
+    {
+      contractType:'EncryptionPlugin',
+      contractName:'Default',
+      isShared:true
+    }
+  ]
+
   constructor(configuration:NodeCryptoPluginConfiguration) {
     // TODO : check the configuration
     this.cipherAlgorithm = configuration.cipherAlgorithm;
@@ -50,7 +58,7 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     const encryptedAsArray = tokenEncrypted.split(':');
     let decrypted:string = '';
     if(encryptedAsArray.length > 1) {
-      (decipher as any).setAuthTag(new Buffer(encryptedAsArray[1], 'hex'))
+      (decipher as any).setAuthTag(Buffer.from(encryptedAsArray[1], 'hex'));
       decrypted = decipher.update(encryptedAsArray[0],'hex','utf8');
     } else {
       decrypted = decipher.update(tokenEncrypted,'hex','utf8');

@@ -1,5 +1,5 @@
 // Initializes the `Authentication` service on path `/authentication`
-import { ServiceAddons } from '@feathersjs/feathers';
+import {ServiceAddons, ServiceMethods} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { Authentication } from './authentication.class';
 import hooks from './authentication.hooks';
@@ -26,11 +26,44 @@ export default function (app: Application) {
       }
   };
 
+  const authenticationService = new Authentication(options, app);
+  configureSwagger(authenticationService);
   // Initialize our service with any options it requires
-  app.use('/authentication', new Authentication(options, app));
+  app.use('/authentication',(req,res,next) => {
+    if(req.feathers && req.headers && req.headers['authorization']) {
+      req.feathers.authenticationToken = req.headers['authorization'].replace('Bearer ', '');
+    }
+    next();
+  },
+    authenticationService, (req, res, next) => {
+    const encryptedToken = res.data;
+    res.setHeader('Authorization', `Bearer ${encryptedToken}`);
+    console.log(`after authentication`);
+    res.status(200).json('OK');
+  });
 
   // Get our initialized service so that we can register hooks
   const service = app.service('authentication');
 
   service.hooks(hooks);
+}
+
+function configureSwagger(service:ServiceMethods<{ [key:string] : any | any[] }>) {
+  service.docs = {
+    operations: {
+      patch:false,
+      remove:false,
+      find:false
+    },
+    definitions: {
+      authentication: {
+        type: 'object',
+        required: ['login', 'password'],
+        properties: {
+          login: { type: 'string', description:'The login'},
+          password: { type: 'string', description:'The password'}
+        }
+      }
+    }
+  }
 }

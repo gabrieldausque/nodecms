@@ -54,7 +54,7 @@ export default class LocalAuthentication implements AuthenticationPlugin{
     return Promise.reject(`User ${login} doesn't exist or wrong password`);
   }
 
-  isAuthenticated(login:string,authenticationCreationDate:Date): boolean {
+  isAuthenticated(decryptedToken:CustomAuthenticatedUserToken): boolean {
     return false;
   }
 
