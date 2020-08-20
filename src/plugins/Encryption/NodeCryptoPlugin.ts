@@ -63,7 +63,10 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     } else {
       decrypted = decipher.update(tokenEncrypted,'hex','utf8');
     }
-    return JSON.parse(`${decrypted}${decipher.final('utf8')}`);
+    const decryptedToken = JSON.parse(`${decrypted}${decipher.final('utf8')}`);
+
+    decryptedToken.authenticationDate = new Date(decryptedToken.authenticationDate);
+    return decryptedToken;
   }
 
 }

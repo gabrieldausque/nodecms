@@ -18,6 +18,7 @@ import {Server} from "http";
 import axios from "axios";
 import {NotAuthenticated} from "@feathersjs/errors";
 import {Authentication} from "../../src/services/authentication/authentication.class";
+import * as os from "os";
 
 describe('Authentication service', () => {
   let server: Server;
@@ -91,6 +92,70 @@ describe('Authentication service', () => {
     const service = app.service('authentication') as Authentication;
     const customToken = await service.encryptor.decrypt(response.headers['authorization'].replace('Bearer ', ''));
     expect(customToken.login).to.be.eq('localtest');
+  })
+
+  it('should invalidate a wrong login token', async () => {
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+      login: 'aWrongLogin',
+      authenticationDate: new Date(),
+      authorityKey: os.hostname()
+    })
+    const response = await axios.request({
+      url: getUrl('authentication/aWrongLogin'),
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${encryptedToken}`
+      }
+    })
+    expect(response.data).to.be.false;
+  })
+
+  it('should invalidate an expired token', async () => {
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+      login: 'localtest',
+      authenticationDate: new Date("2020-01-01"),
+      authorityKey: os.hostname()
+    })
+    const response = await axios.request({
+      url: getUrl('authentication/localtest'),
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${encryptedToken}`
+      }
+    })
+    expect(response.data).to.be.false;
+  })
+
+  it('should invalidate a wrong authority key token', async () => {
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+      login: 'localtest',
+      authenticationDate: new Date(),
+      authorityKey: "wrongAuthority"
+    })
+    const response = await axios.request({
+      url: getUrl('authentication/localtest'),
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${encryptedToken}`
+      }
+    })
+    expect(response.data).to.be.false;
+  })
+
+  it('should invalidate a good token used with another login', async () => {
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+      login: 'localtest',
+      authenticationDate: new Date(),
+      authorityKey: os.hostname()
+    })
+    const response = await axios.request({
+      url: getUrl('authentication/otheruser'),
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${encryptedToken}`
+      }
+    })
+    expect(response.data).to.be.false;
   })
 
 });

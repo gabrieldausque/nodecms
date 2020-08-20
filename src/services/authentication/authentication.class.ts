@@ -61,7 +61,7 @@ export class Authentication implements ServiceMethods<Data> {
     if(!params || !params.authenticationToken)
       return false;
     const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decrypt(params.authenticationToken);
-    return this.authenticator.isAuthenticated(decryptedToken);
+    return this.authenticator.isAuthenticated(id.toString(), decryptedToken);
   }
 
   async create (data: Data, params?: Params): Promise<any> {
@@ -71,10 +71,12 @@ export class Authentication implements ServiceMethods<Data> {
       const login = (data.login)?data.login:'anonymous';
       const password = (data.password)?data.password:'nopass';
 
+      // TODO : check the client : no repeat tentative, etc ...
       if(login === 'anonymous' || password === 'nopass') {
         throw new NotAcceptable('Login or password wrong. Please retry')
-      // TODO : log client tentative for login in an unauthorize way for further counter measure
+      // TODO : log client ip or identifier tentative for login in an unauthorize way for further counter measure
       }
+
       const tokenDecrypted = await this.authenticator.authenticate(login, password);
       tokenEncrypted = await this.encryptor.encrypt(tokenDecrypted);
 
@@ -83,6 +85,7 @@ export class Authentication implements ServiceMethods<Data> {
       tokenEncrypted = await this.encryptor.encrypt(this.honeyPot.token);
       // TODO : Make a specific exception for wrong password and nologin authorized in the time
     }
+
     return tokenEncrypted;
   }
 

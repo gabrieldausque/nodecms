@@ -1,6 +1,10 @@
 export default interface AuthenticationPlugin {
-  isAuthenticated(decryptedToken:CustomAuthenticatedUserToken):boolean;
-  authenticate(login:string, password:string):Promise<CustomAuthenticatedUserToken>
+  userExists(login:string) : boolean;
+  userIsActive(login:string) : boolean;
+  tokenNotExpired(decryptedToken:CustomAuthenticatedUserToken) : boolean;
+  validAuthorityKey(authorityKey: string) : boolean;
+  isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken) : boolean;
+  authenticate(login:string, password:string):Promise<CustomAuthenticatedUserToken>;
 }
 
 export interface CustomAuthenticatedUserToken {

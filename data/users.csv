@@ -1,3 +1,4 @@
-"login","password"
-"localtest","apassword"
-"otheruser","anotherpassword"
+"login","password","isActive"
+"localtest","apassword","true"
+"otheruser","anotherpassword","true"
+"inactiveuser","anything","false"

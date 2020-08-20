@@ -36,10 +36,16 @@ export default function (app: Application) {
     next();
   },
     authenticationService, (req, res, next) => {
-    const encryptedToken = res.data;
-    res.setHeader('Authorization', `Bearer ${encryptedToken}`);
-    console.log(`after authentication`);
-    res.status(200).json('OK');
+
+    if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
+      const encryptedToken = res.data;
+      res.setHeader('Authorization', `Bearer ${encryptedToken}`);
+      console.log(`after authentication`);
+      res.status(200).json('OK');
+    } else {
+      res.status(200).json(res.data);
+    }
+
   });
 
   // Get our initialized service so that we can register hooks
