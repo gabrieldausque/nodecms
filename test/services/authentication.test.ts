@@ -43,8 +43,15 @@ describe('Authentication service', () => {
   })
 
   it('should throw error if any service are called without authentication', async () => {
+      const service = app.service('authentication');
       const fn = async () => {
-          const { data } = await axios.get(getUrl('document/0'));
+          const { data } = await axios.request({
+              method:'get',
+              url: getUrl('document/0'),
+              headers: {
+                "ncms-uniqueid": service.encryptor.encryptUniqueId('toto')
+              }
+            });
       };
       await expect(fn()).to.be.rejectedWith('Request failed with status code 401');
   })
@@ -80,6 +87,7 @@ describe('Authentication service', () => {
   })
 
   it('should create authentication token, set it in the response header, and be able to use it in further request', async() => {
+
     const response = await axios.request({
       url: getUrl('authentication'),
       method: "POST",
@@ -90,12 +98,12 @@ describe('Authentication service', () => {
     })
     expect(response.headers['authorization']).to.be.ok;
     const service = app.service('authentication') as Authentication;
-    const customToken = await service.encryptor.decrypt(response.headers['authorization'].replace('Bearer ', ''));
+    const customToken = await service.encryptor.decryptCustomToken(response.headers['authorization'].replace('Bearer ', ''));
     expect(customToken.login).to.be.eq('localtest');
   })
 
   it('should invalidate a wrong login token', async () => {
-    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encryptCustomToken({
       login: 'aWrongLogin',
       authenticationDate: new Date(),
       authorityKey: os.hostname()
@@ -111,7 +119,7 @@ describe('Authentication service', () => {
   })
 
   it('should invalidate an expired token', async () => {
-    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encryptCustomToken({
       login: 'localtest',
       authenticationDate: new Date("2020-01-01"),
       authorityKey: os.hostname()
@@ -127,7 +135,7 @@ describe('Authentication service', () => {
   })
 
   it('should invalidate a wrong authority key token', async () => {
-    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encryptCustomToken({
       login: 'localtest',
       authenticationDate: new Date(),
       authorityKey: "wrongAuthority"
@@ -143,7 +151,7 @@ describe('Authentication service', () => {
   })
 
   it('should invalidate a good token used with another login', async () => {
-    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encrypt({
+    const encryptedToken = await (app.service('authentication') as Authentication).encryptor.encryptCustomToken({
       login: 'localtest',
       authenticationDate: new Date(),
       authorityKey: os.hostname()

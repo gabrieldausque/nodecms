@@ -17,7 +17,6 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
   private key: string;
   private keyLength: number;
   private salt: string;
-  private iv: Buffer;
 
   public static metadata : any[] = [
     {
@@ -35,15 +34,14 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     this.salt = configuration.salt;
     // @ts-ignore
     this.key = crypto.scryptSync(this.password, this.salt, this.keyLength);
-    this.iv = crypto.randomBytes(16);
   }
 
-  async encrypt(tokenDecrypted: CustomAuthenticatedUserToken): Promise<string> {
-    const cipher = crypto.createCipheriv(this.cipherAlgorithm, this.key, this.iv);
-    // TODO : check if cipher is an authenticated encryption and throw error if so
-    const part1 = cipher.update(JSON.stringify(tokenDecrypted), 'utf8','hex');
+  encryptUniqueId(login: string): string {
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(this.cipherAlgorithm, this.key, iv)
+    const part1 = cipher.update(`${login}`, 'utf8','hex');
     const part2 = cipher.final('hex');
-    let encrypted = `${part1}${part2}`
+    let encrypted = `${iv.toString('hex')}:${part1}${part2}`
     try {
       encrypted = `${encrypted}:${(cipher as any).getAuthTag().toString('hex')}`;
     }
@@ -53,18 +51,42 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     return encrypted;
   }
 
-  decrypt(tokenEncrypted: string): Promise<CustomAuthenticatedUserToken> {
-    const decipher = crypto.createDecipheriv(this.cipherAlgorithm, this.key, this.iv);
-    const encryptedAsArray = tokenEncrypted.split(':');
+  decryptUniqueId(encryptedUniqueId: string): string {
+    const encryptedAsArray = encryptedUniqueId.split(':');
+    const decipher = crypto.createDecipheriv(this.cipherAlgorithm, this.key, Buffer.from(encryptedAsArray[0], 'hex'));
     let decrypted:string = '';
-    if(encryptedAsArray.length > 1) {
-      (decipher as any).setAuthTag(Buffer.from(encryptedAsArray[1], 'hex'));
-      decrypted = decipher.update(encryptedAsArray[0],'hex','utf8');
-    } else {
-      decrypted = decipher.update(tokenEncrypted,'hex','utf8');
+    if(encryptedAsArray.length > 2) {
+      (decipher as any).setAuthTag(Buffer.from(encryptedAsArray[2], 'hex'));
     }
-    const decryptedToken = JSON.parse(`${decrypted}${decipher.final('utf8')}`);
+    decrypted = decipher.update(encryptedAsArray[1],'hex','utf8');
+    const decryptedUniqueId = `${decrypted}${decipher.final('utf8')}`;
+    return decryptedUniqueId;
+  }
 
+  async encryptCustomToken(tokenDecrypted: CustomAuthenticatedUserToken): Promise<string> {
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(this.cipherAlgorithm, this.key, iv);
+    const part1 = cipher.update(JSON.stringify(tokenDecrypted), 'utf8','hex');
+    const part2 = cipher.final('hex');
+    let encrypted = `${iv.toString('hex')}:${part1}${part2}`
+    try {
+      encrypted = `${encrypted}:${(cipher as any).getAuthTag().toString('hex')}`;
+    }
+    catch(ex) {
+      // Do nothing, is only to manage authenticated encryption algorithm
+    }
+    return encrypted;
+  }
+
+  decryptCustomToken(tokenEncrypted: string): Promise<CustomAuthenticatedUserToken> {
+    const encryptedAsArray = tokenEncrypted.split(':');
+    const decipher = crypto.createDecipheriv(this.cipherAlgorithm, this.key, Buffer.from(encryptedAsArray[0], 'hex'));
+    let decrypted:string = '';
+    if(encryptedAsArray.length > 2) {
+      (decipher as any).setAuthTag(Buffer.from(encryptedAsArray[2], 'hex'));
+    }
+    decrypted = decipher.update(encryptedAsArray[1],'hex','utf8');
+    const decryptedToken = JSON.parse(`${decrypted}${decipher.final('utf8')}`);
     decryptedToken.authenticationDate = new Date(decryptedToken.authenticationDate);
     return decryptedToken;
   }

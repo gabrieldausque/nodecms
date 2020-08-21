@@ -9,7 +9,7 @@ import * as os from "os";
 import crypto from 'crypto';
 
 describe('NodeCrypto plugin tests', () => {
-  it('should encrypt and decrypt a standard token', async () => {
+  it('should encryptCustomToken and decryptCustomToken a standard token', async () => {
 
     const encryptor = new NodeCryptoPlugin({
       password:"MySecret",
@@ -22,6 +22,6 @@ describe('NodeCrypto plugin tests', () => {
       login: "winnie",
       authorityKey: os.hostname()
     }
-    expect(JSON.stringify(encryptor.decrypt(await encryptor.encrypt(testToken)))).to.be.equal(JSON.stringify(testToken));
+    expect(JSON.stringify(encryptor.decryptCustomToken(await encryptor.encryptCustomToken(testToken)))).to.be.equal(JSON.stringify(testToken));
   })
 });

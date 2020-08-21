@@ -1,4 +1,4 @@
-import { NotAuthenticated } from "@feathersjs/errors";
+import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
 // Application hooks that run for every service
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -7,10 +7,12 @@ export default {
     all: [
       async (context:any) => {
         if(context.path !== 'authentication'){
+          if(!context.params.clientId){
+            throw new NotAcceptable('You are missing your unique clientId. Please correct and retry.');
+          }
           const authenticationService = context.app.service('authentication');
-          const authenticationResult = await authenticationService.get(0);
-          if(!authenticationResult) {
-            throw new NotAuthenticated('You are not authorized to access this content or method. Please authenticate before using this application');
+          if(!await authenticationService.get(authenticationService.encryptor.decryptUniqueId(context.params.clientId))) {
+            throw new NotAuthenticated('Please authenticate before using this application');
           }
         }
       }

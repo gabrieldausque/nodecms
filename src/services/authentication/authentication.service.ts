@@ -38,6 +38,10 @@ export default function (app: Application) {
     authenticationService, (req, res, next) => {
 
     if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
+      if(req.method.toLowerCase() === 'post') {
+        res.setHeader('ncms-uniqueId', `${authenticationService.encryptor.encryptUniqueId(req.params['login'])}`);
+      }
+      // TODO : regenerate the uniqueId on update
       const encryptedToken = res.data;
       res.setHeader('Authorization', `Bearer ${encryptedToken}`);
       console.log(`after authentication`);

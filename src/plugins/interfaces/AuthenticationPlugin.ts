@@ -5,6 +5,7 @@ export default interface AuthenticationPlugin {
   validAuthorityKey(authorityKey: string) : boolean;
   isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken) : boolean;
   authenticate(login:string, password:string):Promise<CustomAuthenticatedUserToken>;
+  canAuthenticate(login:string, context?:{clientUniqueId: string}):boolean;
 }
 
 export interface CustomAuthenticatedUserToken {

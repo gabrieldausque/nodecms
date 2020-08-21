@@ -9,7 +9,8 @@
   "authentication": {
     "authentication" : {
       "contractName": "Default",
-      "configuration": {}
+      "configuration": {
+      }
     },
     "encryption" : {
       "contractName": "Default",
