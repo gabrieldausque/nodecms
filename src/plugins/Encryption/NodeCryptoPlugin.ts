@@ -36,7 +36,7 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     this.key = crypto.scryptSync(this.password, this.salt, this.keyLength);
   }
 
-  encryptUniqueId(login: string): string {
+  encryptClientId(login: string): string {
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(this.cipherAlgorithm, this.key, iv)
     const part1 = cipher.update(`${login}`, 'utf8','hex');
@@ -46,12 +46,12 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
       encrypted = `${encrypted}:${(cipher as any).getAuthTag().toString('hex')}`;
     }
     catch(ex) {
-      // Do nothing, is only to manage authenticated encryption algorithm
+      // Do nothing, is only to manage authenticated encryption algorithm that used authTag
     }
     return encrypted;
   }
 
-  decryptUniqueId(encryptedUniqueId: string): string {
+  decryptClientId(encryptedUniqueId: string): string {
     const encryptedAsArray = encryptedUniqueId.split(':');
     const decipher = crypto.createDecipheriv(this.cipherAlgorithm, this.key, Buffer.from(encryptedAsArray[0], 'hex'));
     let decrypted:string = '';

@@ -4,6 +4,7 @@ import { Application } from '../../declarations';
 import { Authentication } from './authentication.class';
 import hooks from './authentication.hooks';
 
+
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
@@ -12,6 +13,17 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application) {
+
+  const authenticationConfiguration =  app.get('authentication');
+  if(!authenticationConfiguration.authentication ||
+    !authenticationConfiguration.authentication.contractName ||
+    !authenticationConfiguration.encryption ||
+    !authenticationConfiguration.encryption.contractName ||
+    !authenticationConfiguration.realm
+  ) {
+    throw new Error('Authentication configuration is incomplete, please correct');
+  }
+
   const options = {
     paginate: app.get('paginate'),
     authentication:
@@ -38,12 +50,11 @@ export default function (app: Application) {
     authenticationService, (req, res, next) => {
 
     if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
-      if(req.method.toLowerCase() === 'post') {
-        res.setHeader('ncms-uniqueId', `${authenticationService.encryptor.encryptUniqueId(req.params['login'])}`);
-      }
-      // TODO : regenerate the uniqueId on update
+      res.setHeader('ncms-uniqueId', `${authenticationService.encryptor.encryptClientId(req.params['login'])}`);
       const encryptedToken = res.data;
+      const realm = app.get('authentication').realm;
       res.setHeader('Authorization', `Bearer ${encryptedToken}`);
+      res.setHeader('www-authenticate', `Bearer realm=${realm}`)
       console.log(`after authentication`);
       res.status(200).json('OK');
     } else {

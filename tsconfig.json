@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
-    "test"
+    "test",
+    "frontend"
   ]
 }

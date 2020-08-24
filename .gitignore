@@ -110,3 +110,4 @@ $RECYCLE.BIN/
 # Others
 lib/
 /package-lock.json
+/src/frontend/package-lock.json

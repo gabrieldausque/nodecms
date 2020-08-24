@@ -20,6 +20,7 @@
         "keyLength":16,
         "salt":"MySalt"
       }
-    }
+    },
+    "realm": "localhost.local.domain"
   }
 }

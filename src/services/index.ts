@@ -8,7 +8,6 @@ export default function (app: Application) {
   configureSwagger(app);
   app.configure(authentication);
   app.configure(document);
-
 }
 
 function configureSwagger(app: Application): void {

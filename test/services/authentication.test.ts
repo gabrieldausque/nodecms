@@ -45,15 +45,32 @@ describe('Authentication service', () => {
   it('should throw error if any service are called without authentication', async () => {
       const service = app.service('authentication');
       const fn = async () => {
-          const { data } = await axios.request({
-              method:'get',
-              url: getUrl('document/0'),
-              headers: {
-                "ncms-uniqueid": service.encryptor.encryptUniqueId('toto')
-              }
-            });
+        const { data } = await axios.request({
+          method:'get',
+          url: getUrl('document/0'),
+          headers: {
+            "ncms-uniqueid": service.encryptor.encryptClientId('toto'),
+            "www-authenticate": 'Bearer realm=localhost.local.domain'
+          }
+        });
       };
       await expect(fn()).to.be.rejectedWith('Request failed with status code 401');
+  })
+
+  it('should throw error if any service are called with authentication from other realm', async () => {
+    const service = app.service('authentication');
+    const fn = async () => {
+      const { data } = await axios.request({
+        method:'get',
+        url: getUrl('document/0'),
+        headers: {
+          "authorization": `Bearer ${service.create({ login: 'localtest', password: 'apassword'})}`,
+          "www-authenticate": 'Bearer realm=otherdomain.com',
+          "ncms-uniqueid": service.encryptor.encryptClientId('localtes')
+        }
+      });
+    };
+    await expect(fn()).to.be.rejectedWith('Request failed with status code 501');
   })
 
   it('should throw error if authentication find, remove or patch method is called', async () => {
@@ -100,6 +117,21 @@ describe('Authentication service', () => {
     const service = app.service('authentication') as Authentication;
     const customToken = await service.encryptor.decryptCustomToken(response.headers['authorization'].replace('Bearer ', ''));
     expect(customToken.login).to.be.eq('localtest');
+  })
+
+  it('should have the right realm set on create authentication', async () => {
+    const response = await axios.request({
+      url: getUrl('authentication'),
+      method: "POST",
+      data: {
+        login: "localtest",
+        password: "apassword",
+      }
+    })
+    const regexp = /Bearer[ ]+realm=(?<realm>[^ ]+)/g
+    const authenticateHeader = response.headers['www-authenticate'];
+    const realm = regexp.exec(authenticateHeader)?.groups?.realm;
+    expect(realm).to.be.eql('localhost.local.domain');
   })
 
   it('should invalidate a wrong login token', async () => {
@@ -165,5 +197,7 @@ describe('Authentication service', () => {
     })
     expect(response.data).to.be.false;
   })
+
+
 
 });
