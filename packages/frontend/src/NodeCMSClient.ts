@@ -14,3 +14,27 @@ export class NodeCMSClient {
         return response.data.value
     }
 }
+
+const getClientConfig = async () => {
+    const xmlRequest = new XMLHttpRequest()
+    xmlRequest.open('GET', `${window.location.href}/clientConfiguration.json`);
+    return new Promise((resolve, reject) => {
+        xmlRequest.onreadystatechange = () => {
+            resolve(xmlRequest.responseText);
+        }
+        xmlRequest.send();
+    });
+}
+
+let backendClient = null;
+getClientConfig().then((configuration:any) => {
+    backendClient = new NodeCMSClient(configuration.backendHost)
+    backendClient.getMetadata('title').then((value) => {
+        document.querySelector('head title').innerHTML = value;
+    });
+    window.dispatchEvent(new Event('backend-ready'));
+})
+
+export const getBackendClient = () => {
+    return backendClient;
+};
