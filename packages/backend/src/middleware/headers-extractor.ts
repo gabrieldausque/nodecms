@@ -10,6 +10,13 @@ export default () => {
         if(request.feathers.headers['ncms-uniqueid'])
           request.feathers.clientId = request.feathers.headers['ncms-uniqueid']
 
+        if(request.feathers.headers['authorization']) {
+          const regexp = /Bearer[ ]+(?<token>[^ ]+)/g
+          const match = regexp.exec(request.feathers.headers['authorization']);
+          if(match && match.groups && match.groups.token)
+            request.feathers.authenticationToken = match.groups.token
+        }
+
         if(request.feathers.headers['www-authenticate']) {
           const regexp = /Bearer[ ]+realm=(?<realm>[^ ]+)/g
           const match = regexp.exec(request.feathers.headers['www-authenticate']);

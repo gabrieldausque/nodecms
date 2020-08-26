@@ -20,7 +20,14 @@ export class CSVMetadataStorage implements MetadataStorage {
     if(!filePath){
       filePath = 'data/metadata.csv';
     }
-    this.database = dataLoader(filePath);
+    const fromFile = dataLoader(filePath)
+    this.database = fromFile.map((m:any) => {
+      return {
+        key: m.key,
+        value: m.value,
+        isPublic: (m.isPublic.toLowerCase() === 'true')
+      }
+    });
   }
 
   get(key:string):Metadata|null {

@@ -1,4 +1,6 @@
+//@ts-ignore
 import assert from 'assert';
+//@ts-ignore
 import chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
@@ -14,5 +16,10 @@ describe('Metadata service', () => {
   it('should return the title when asking for it', async () => {
     const service = app.service('metadata');
     expect((await service.get('title') as any).value).to.eql('My Node CMS application');
+  })
+
+  it('should reject request when asking for a private metadata', async () => {
+    const service = app.service('metadata');
+    expect(service.get('private-metadata')).to.be.rejected
   })
 });

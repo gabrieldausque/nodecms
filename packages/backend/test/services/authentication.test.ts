@@ -1,4 +1,6 @@
+//@ts-ignore
 import assert from 'assert';
+//@ts-ignore
 import chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
@@ -15,6 +17,7 @@ const getUrl = (pathname?: string) => url.format({
 
 //@ts-ignore
 import LocalAuthentication from '../../src/plugins/Authentication/LocalAuthentication/LocalAuthentication';
+//@ts-ignore
 import url from "url";
 import {Server} from "http";
 import axios from "axios";

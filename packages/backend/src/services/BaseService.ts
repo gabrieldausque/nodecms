@@ -26,7 +26,7 @@ export abstract class BaseService {
       throw new NotImplemented('Federation of authentication not implemented. Will be done in further release');
     } else {
       const authenticationService = this.app.service('authentication');
-      if(!await authenticationService.get(authenticationService.encryptor.decryptClientId(params.clientId))) {
+      if(!await authenticationService.get(authenticationService.encryptor.decryptClientId(params.clientId), params)) {
         throw new NotAuthenticated('Please authenticate before using this application');
       }
     }

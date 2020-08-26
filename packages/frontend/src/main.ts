@@ -2,10 +2,7 @@ import App from './App.svelte';
 import {getBackendClient} from './NodeCMSClient';
 
 const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
+	target: document.body
 });
 
 (window as any).getBackendClient = getBackendClient;

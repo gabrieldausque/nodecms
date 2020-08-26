@@ -50,12 +50,11 @@ export default function (app: Application) {
     authenticationService, (req, res, next) => {
 
     if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
-      res.setHeader('ncms-uniqueId', `${authenticationService.encryptor.encryptClientId(req.params['login'])}`);
+      res.setHeader('ncms-uniqueId', `${authenticationService.encryptor.encryptClientId(req.body['login'])}`);
       const encryptedToken = res.data;
       const realm = app.get('authentication').realm;
       res.setHeader('Authorization', `Bearer ${encryptedToken}`);
       res.setHeader('www-authenticate', `Bearer realm=${realm}`)
-      console.log(`after authentication`);
       res.status(200).json('OK');
     } else {
       res.status(200).json(res.data);

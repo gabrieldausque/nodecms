@@ -2,6 +2,9 @@
     import {getBackendClient} from '../NodeCMSClient'
     export let isLogin = false;
     let backendService = null;
+    let login;
+    let password;
+
     window.addEventListener('backend-ready', () => {
         backendService = getBackendClient();
     });
@@ -12,12 +15,16 @@
     }
 
     let authenticate = async () => {
+        await backendService.authenticate(login, password);
         isLogin = true;
-        window.jQuery('#LoginModal').modal('toggle');
+        login = '';
+        password = '';
+        window.jQuery('#LoginModal').modal('hide');
     }
 
     let logout = async () => {
         isLogin = false;
+        await backendService.logOut();
     }
 </script>
 
@@ -40,13 +47,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Login</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="LoginClose" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- TODO : add login input -->
-                <p>Modal body text goes here.</p>
+                <form>
+                    <div class="form-group">
+                        <label for="login">Login</label>
+                        <input id="login" type="text" placeholder="Type your login here" bind:value={login}>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" placeholder="Type your password here" bind:value={password}>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" on:click={authenticate}>Login</button>
