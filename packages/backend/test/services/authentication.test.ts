@@ -55,8 +55,7 @@ describe('Authentication service', () => {
           method:'get',
           url: getUrl('document/0'),
           headers: {
-            "ncms-uniqueid": service.encryptor.encryptClientId('toto'),
-            "www-authenticate": 'Bearer realm=localhost.local.domain'
+            "cookie": `ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=myhost.domain`
           }
         });
       };
@@ -70,27 +69,18 @@ describe('Authentication service', () => {
         method:'get',
         url: getUrl('document/0'),
         headers: {
-          "authorization": `Bearer ${service.create({ login: 'localtest', password: 'apassword'})}`,
-          "www-authenticate": 'Bearer realm=otherdomain.com',
-          "ncms-uniqueid": service.encryptor.encryptClientId('localtes')
+          "cookie": `ncms-token=${service.create({ login: 'localtest', password: 'apassword'})} ; ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=other.domain`
         }
       });
     };
     await expect(fn()).to.be.rejectedWith('Request failed with status code 501');
   })
 
-  it('should throw error if authentication find, remove or patch method is called', async () => {
+  it('should throw error if authentication find or patch method is called', async () => {
     const find = async () => {
       const { data } = await axios.request({
         url: getUrl('authentication'),
         method:"GET"
-      });
-    };
-
-    const remove = async () => {
-      const { data } = await axios.request({
-        url:getUrl('authentication/0'),
-        method:"DELETE"
       });
     };
 
@@ -102,11 +92,11 @@ describe('Authentication service', () => {
         });
     };
 
-    await expect(find()).to.be.rejectedWith('Request failed with status code 405').then(async () => {
-      await expect(remove()).to.be.rejectedWith('Request failed with status code 405');
-    }).then(async() => {
-      await expect(patch()).to.be.rejectedWith('Request failed with status code 405');
-    })
+    await Promise.all([
+      expect(find()).to.be.rejectedWith('Request failed with status code 405'),
+      expect(patch()).to.be.rejectedWith('Request failed with status code 405')
+    ])
+
   })
 
   it('should create authentication token, set it in the response header, and be able to use it in further request', async() => {
@@ -119,10 +109,20 @@ describe('Authentication service', () => {
         password: "apassword",
       }
     })
-    expect(response.headers['authorization']).to.be.ok;
+    expect(response.headers['set-cookie']).to.be.ok;
     const service = app.service('authentication') as Authentication;
-    const customToken = await service.encryptor.decryptCustomToken(response.headers['authorization'].replace('Bearer ', ''));
-    expect(customToken.login).to.be.eq('localtest');
+    const tokenFromCookie = response.headers['set-cookie'].find((c:any) => {
+      return c.includes('ncms-token');
+    });
+    const regexp = /ncms-token=(?<token>.*) +;/g
+    const m = regexp.exec(tokenFromCookie);
+    if(m && m.groups && m.groups.token)
+    {
+      const customToken = await service.encryptor.decryptCustomToken(m.groups.token);
+      expect(customToken.login).to.be.eq('localtest');
+    } else {
+      throw new Error('Token not found');
+    }
   })
 
   it('should have the right realm set on create authentication', async () => {
@@ -134,10 +134,18 @@ describe('Authentication service', () => {
         password: "apassword",
       }
     })
-    const regexp = /Bearer[ ]+realm=(?<realm>[^ ]+)/g
-    const authenticateHeader = response.headers['www-authenticate'];
-    const realm = regexp.exec(authenticateHeader)?.groups?.realm;
-    expect(realm).to.be.eql('localhost.local.domain');
+    const service = app.service('authentication') as Authentication;
+    const realmFromCookie = response.headers['set-cookie'].find((c:any) => {
+      return c.includes('realm');
+    });
+    const regexp = /realm=(?<realm>.*) +;/g
+    const m = regexp.exec(realmFromCookie);
+    if(m && m.groups && m.groups.realm)
+    {
+      expect(m.groups.realm).to.be.eql('myhost.domain');
+    } else {
+      throw new Error('realm not found');
+    }
   })
 
   it('should invalidate a wrong login token', async () => {

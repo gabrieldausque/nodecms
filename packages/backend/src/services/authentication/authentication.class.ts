@@ -103,10 +103,19 @@ export class Authentication extends BaseService implements ServiceMethods<Data> 
   }
 
   async remove (id: NullableId, params?: Params): Promise<any> {
-    return { id };
+    return 'logged out';
   }
 
   [key: string]: any;
+
+  getDomain() {
+    const realm = this.app.get('authentication').realm;
+    let domain = `${realm}`;
+    if(realm === 'localhost'){
+      domain = '127.0.0.1'
+    }
+    return domain
+  }
 
   needAuthentication(): boolean {
     return false;

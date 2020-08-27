@@ -14,10 +14,7 @@ export default {
       disallowMethod,
       (ctx:any) => {}
     ],
-    remove: [
-      disallowMethod,
-      (ctx:any) => {}
-    ]
+    remove: []
   },
 
   after: {

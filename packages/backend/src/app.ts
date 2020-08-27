@@ -28,7 +28,29 @@ app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet());
 app.use(cors({
-  exposedHeaders: ['Authorization','ncms-uniqueid','www-authenticate']
+  credentials: true,
+  origin: (origin, callback) => {
+    const validOriginsRegexps = app.get('cors').validOrigins;
+    let isOriginValid = false;
+    if(Array.isArray(validOriginsRegexps) && origin){
+      for(const regexpString of validOriginsRegexps) {
+        const regexp = new RegExp(regexpString);
+        const match = regexp.exec(origin);
+        if(match) {
+          isOriginValid = true;
+          break;
+        }
+      }
+      if(isOriginValid) {
+        callback(null, true);
+        return;
+      }
+    } else if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test' ) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error(`${origin} is not an authorized origin.`))
+  }
 }));
 app.use(compress());
 app.use(express.json());

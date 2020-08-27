@@ -15,7 +15,7 @@ describe('Metadata service', () => {
 
   it('should return the title when asking for it', async () => {
     const service = app.service('metadata');
-    expect((await service.get('title') as any).value).to.eql('My Node CMS application');
+    expect((await service.get('title') as any).value).to.eql('The A Team');
   })
 
   it('should reject request when asking for a private metadata', async () => {

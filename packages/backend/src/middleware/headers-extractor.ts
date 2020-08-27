@@ -7,22 +7,28 @@ export default () => {
     if(request.feathers){
       if(request.feathers.headers){
 
-        if(request.feathers.headers['ncms-uniqueid'])
-          request.feathers.clientId = request.feathers.headers['ncms-uniqueid']
-
-        if(request.feathers.headers['authorization']) {
-          const regexp = /Bearer[ ]+(?<token>[^ ]+)/g
-          const match = regexp.exec(request.feathers.headers['authorization']);
-          if(match && match.groups && match.groups.token)
-            request.feathers.authenticationToken = match.groups.token
+        //parse the cookie to set parameters
+        let cookie:any = {};
+        if(request.feathers.headers['cookie']) {
+          request.feathers.headers['cookie'].split(';').map((cookieFieldLiteral:string) => {
+            const cookieField = cookieFieldLiteral.split('=');
+            if(cookieField.length >= 2){
+              const cookieFieldName:string = cookieField[0].trim();
+              const cookieFieldValue:string = cookieField[1].trim();
+              cookie[cookieFieldName] = cookieFieldValue;
+            }
+          })
         }
 
-        if(request.feathers.headers['www-authenticate']) {
-          const regexp = /Bearer[ ]+realm=(?<realm>[^ ]+)/g
-          const match = regexp.exec(request.feathers.headers['www-authenticate']);
-          if(match && match.groups && match.groups.realm) {
-            request.feathers.realm = match.groups.realm;
-          }
+        if(cookie['ncms-uniqueid'])
+          request.feathers.clientId = cookie['ncms-uniqueid']
+
+        if(cookie['ncms-token']) {
+          request.feathers.authenticationToken = cookie['ncms-token']
+        }
+
+        if(cookie['realm']) {
+          request.feathers.realm = cookie['realm'];
         }
 
       }

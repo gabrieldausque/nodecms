@@ -41,22 +41,27 @@ export default function (app: Application) {
   const authenticationService = new Authentication(options, app);
   configureSwagger(authenticationService);
   // Initialize our service with any options it requires
-  app.use('/authentication',(req,res,next) => {
-    if(req.feathers && req.headers && req.headers['authorization']) {
-      req.feathers.authenticationToken = req.headers['authorization'].replace('Bearer ', '');
-    }
-    next();
-  },
+  app.use('/authentication',
     authenticationService, (req, res, next) => {
-
     if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
-      res.setHeader('ncms-uniqueId', `${authenticationService.encryptor.encryptClientId(req.body['login'])}`);
       const encryptedToken = res.data;
       const realm = app.get('authentication').realm;
-      res.setHeader('Authorization', `Bearer ${encryptedToken}`);
-      res.setHeader('www-authenticate', `Bearer realm=${realm}`)
+      const domain = authenticationService.getDomain();
+      const cookie = [
+        `ncms-uniqueid=${authenticationService.encryptor.encryptClientId(req.body['login'])} ; Domain=${domain}; HttpOnly; SameSite:Lax`,
+        `ncms-token=${encryptedToken} ; Domain=${domain}; HttpOnly; SameSite:Lax`,
+        `realm=${realm} ; Domain=${domain}; HttpOnly; SameSite:Lax`
+      ];
+      res.setHeader('Set-Cookie', cookie);
       res.status(200).json('OK');
-    } else {
+    } else if (req.method.toLowerCase() === 'delete'){
+      const domain = authenticationService.getDomain();
+      res.clearCookie('ncms-uniqueid', {domain:domain});
+      res.clearCookie('ncms-token', {domain:domain});
+      res.clearCookie('realm', {domain:domain});
+      res.status(205).json('Logged Out');
+    }
+    else {
       res.status(200).json(res.data);
     }
 

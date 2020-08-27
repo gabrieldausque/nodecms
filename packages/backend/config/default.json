@@ -6,6 +6,9 @@
     "default": 10,
     "max": 50
   },
+  "cors": {
+    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://myhost.domain[:0-9]*"]
+  },
   "authentication": {
     "authentication" : {
       "contractName": "Default",
@@ -21,6 +24,6 @@
         "salt":"MySalt"
       }
     },
-    "realm": "localhost.local.domain"
+    "realm": "myhost.domain"
   }
 }

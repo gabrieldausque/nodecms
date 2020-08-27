@@ -8,17 +8,13 @@ export class NodeCMSClient {
     private id: number;
     constructor(cmsUrl:string = "http://localhost:3030") {
         this.url = cmsUrl;
+        axios.defaults.withCredentials = true;
     }
 
     createHeaders() {
-        if(this.authorization && this.clientId && this.realm) {
-            return {
-                authorization: this.authorization,
-                'ncms-uniqueid': this.clientId,
-                'www-authenticate': this.realm
-            }
-        }
-        return null;
+        return {
+            crossDomain:true
+        };
     }
 
     async getMetadata(key:string) {
@@ -34,36 +30,41 @@ export class NodeCMSClient {
     }
 
     async authenticate(login:string, password:string){
-        const response = await axios.request({
+        await axios.request({
             method:'post',
             baseURL:this.url,
             url:'authentication',
             data: {
                 login,
                 password
+            },
+            withCredentials: true,
+            headers:{
+                credentials: 'same-origin'
             }
         })
-        console.log(response);
-        if(response.status === 200) {
-            this.authorization = response.headers['authorization'];
-            this.clientId = response.headers['ncms-uniqueid'];
-            this.realm = response.headers['www-authenticate'];
-        }
     }
 
     async logOut() {
-        this.clientId = '';
-        this.authorization = '';
-        this.realm = '';
+        await axios.request({
+            method:'delete',
+            baseURL:this.url,
+            url:'authentication',
+            withCredentials: true,
+            headers:this.createHeaders()
+        })
     }
 }
 
 const getClientConfig = async () => {
-    const xmlRequest = new XMLHttpRequest()
-    xmlRequest.open('GET', `${window.location.href}/clientConfiguration.json`);
+    const xmlRequest = new XMLHttpRequest();
+    xmlRequest.open('GET', `${window.location.href}/clientConfiguration.json`, true);
+    xmlRequest.responseType = 'json';
     return new Promise((resolve, reject) => {
         xmlRequest.onreadystatechange = () => {
-            resolve(xmlRequest.responseText);
+            if(xmlRequest.readyState === 4) {
+                resolve(xmlRequest.response);
+            }
         }
         xmlRequest.send();
     });
