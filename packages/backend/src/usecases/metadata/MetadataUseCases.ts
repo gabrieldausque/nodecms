@@ -13,6 +13,7 @@ export class MetadataUseCases  {
   }) {
    this.storage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage', configuration.storage.contractName, configuration.storage.configuration);
   }
+
   get(key:string):any {
     return this.storage.get(key);
   }

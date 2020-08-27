@@ -4,18 +4,9 @@ import {BaseService} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {MetadataUseCases} from "../../usecases/metadata/MetadataUseCases";
 import {NotFound} from "@feathersjs/errors";
+import {ServiceOptions} from "../helpers";
 
 interface Data { }
-
-interface ServiceOptions {
-  paginate?: any,
-  useCase?: {
-    storage: {
-      contractName:string;
-      configuration:{ [key:string] : any } | null
-    }
-  }
-}
 
 export class Metadata extends BaseService implements ServiceMethods<Data> {
   options: ServiceOptions;
