@@ -1,5 +1,6 @@
 <script>
-    import {getBackendClient} from '../NodeCMSClient'
+    import {getBackendClient} from '../NodeCMSClient';
+    import { onMount } from 'svelte';
     export let isLogin = false;
     let backendService = null;
     let login;
@@ -17,15 +18,28 @@
     let authenticate = async () => {
         await backendService.authenticate(login, password);
         isLogin = true;
-        login = '';
-        password = '';
         window.jQuery('#LoginModal').modal('hide');
+    }
+
+    let onKeyPress = async (event) => {
+        if(event.code === 'Enter') {
+            await authenticate();
+        }
+
     }
 
     let logout = async () => {
         isLogin = false;
         await backendService.logOut();
     }
+
+    onMount(async () => {
+        window.jQuery('#LoginModal').on('hidden.bs.modal', (e) => {
+            login = '';
+            password = '';
+        })
+    })
+
 </script>
 
 {#if !isLogin}
@@ -42,7 +56,7 @@
     </div>
 {/if}
 
-<div id="LoginModal" class="modal fade">
+<div id="LoginModal" class="modal fade" data-keyboard="false" on:keypress={onKeyPress}>
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
