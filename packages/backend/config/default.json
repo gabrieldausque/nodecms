@@ -9,6 +9,12 @@
   "cors": {
     "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://myhost.domain[:0-9]*"]
   },
+  "storage": {
+    "users" : {
+      "contractName": "Default",
+      "configuration" : "data/users.csv"
+    }
+  },
   "authentication": {
     "authentication" : {
       "contractName": "Default",

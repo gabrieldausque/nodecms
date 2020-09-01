@@ -34,7 +34,8 @@ function configureSwagger(app: Application): void {
     include: {
       paths: [
         '^authentication',
-        '^document'
+        '^document',
+        '^user'
       ]
     }
   }));

@@ -111,3 +111,5 @@ $RECYCLE.BIN/
 lib/
 /package-lock.json
 /src/frontend/package-lock.json
+/packages/backend/data/users-copy.csv
+/packages/backend/data/users-copy-bck.csv

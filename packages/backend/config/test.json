@@ -1,5 +1,11 @@
 {
   "cors": {
     "validOrigins": ""
+  },
+  "storage": {
+    "users" : {
+      "contractName": "Default",
+      "configuration" : "data/users-copy.csv"
+    }
   }
 }

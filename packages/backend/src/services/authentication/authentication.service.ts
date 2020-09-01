@@ -38,6 +38,14 @@ export default function (app: Application) {
       }
   };
 
+  if(!options.authentication.configuration){
+    options.authentication.configuration = {}
+  }
+
+  if(!options.authentication.configuration.storage) {
+    options.authentication.configuration.storage = app.get('storage').users
+  }
+
   const authenticationService = new Authentication(options, app);
   configureSwagger(authenticationService);
   // Initialize our service with any options it requires

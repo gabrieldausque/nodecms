@@ -1,8 +1,12 @@
+//@ts-ignore
 import assert from 'assert';
 import { Server } from 'http';
+//@ts-ignore
 import url from 'url';
 import axios from 'axios';
-
+import * as fs from 'fs';
+const fsPromises = fs.promises;
+fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
 //@ts-ignore
 import app from '../src/app';
 
@@ -14,16 +18,19 @@ const getUrl = (pathname?: string) => url.format({
   pathname
 });
 
+
+
 describe('Feathers application tests', () => {
   let server: Server;
 
-  before(function(done) {
+  before((done) => {
+    fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
     server = app.listen(port);
     server.once('listening', () => done());
   });
 
-  after(function(done) {
-    server.close(done);
+  after(async () => {
+    server.close();
   });
 
   it('starts and shows the index page', async () => {

@@ -1,18 +1,18 @@
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from '../../interfaces/AuthenticationPlugin';
 import * as process from "process";
 import * as os from "os";
-import {AuthenticationStorage, User} from "../../interfaces/AuthenticationStorage";
+import {UserStorage, User} from "../../interfaces/UserStorage";
 import {globalInstancesFactory} from "@hermes/composition";
 const dataLoader = require('csv-load-sync');
 
 export interface LocalAuthenticationConfiguration {
   storage?: {
     contractName:string;
-    options:any[]
+    configuration:any
   };
   authorityKey: string;
   userFile: string;
-  tokenTTLInSecond: number
+  tokenTTLInSecond: number;
 }
 
 export default class LocalAuthentication implements AuthenticationPlugin{
@@ -24,39 +24,38 @@ export default class LocalAuthentication implements AuthenticationPlugin{
     }
   ]
 
-  public userStorage: AuthenticationStorage;
+  public userStorage: UserStorage;
   private authorityKey: string;
   private tokenTTL: number;
 
   constructor(configuration?:LocalAuthenticationConfiguration) {
     if(configuration) {
       if (configuration.storage && configuration.storage.contractName) {
-        this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationStorage', configuration.storage.contractName, ...configuration.storage.options);
+        this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', configuration.storage.contractName, configuration.storage.configuration);
       } else {
         console.warn('Default storage used.')
-        this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationStorage', 'Default');
+        this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'Default');
       }
 
       if (configuration.authorityKey) {
         this.authorityKey = configuration.authorityKey
       } else {
-        console.warn(`Beware : no authority key provided, default will be used, and it is not secure` )
+        console.warn(`Beware : no authority key provided, default will be used, and it is not secure.` )
         this.authorityKey = os.hostname()
       }
 
       if(configuration.tokenTTLInSecond) {
         this.tokenTTL = configuration.tokenTTLInSecond;
       } else {
+        console.warn('Default token TTL used.')
         this.tokenTTL = 86400;
       }
-
     } else {
-      console.warn(`Beware : no authority key provided, default will be used, and it is not secure` )
-      console.warn('Default storage used.')
+      console.warn(`Beware : no authority key provided, default will be used, and it is not secure.` )
       this.authorityKey = os.hostname();
-
-      this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationStorage', 'Default');
-
+      console.warn('Default storage used.')
+      this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'Default');
+      console.warn('Default token TTL used.')
       this.tokenTTL = 86400;
     }
   }
