@@ -1,4 +1,4 @@
-"key","value","isPublic"
-"title","The A Team",true
-"logo","http://localhost:3030/a-team_logo.png","true"
-"private-metadata","my private value","false"
+"id","key","value","isPublic","ownerType","ownerId"
+"0","title","The A Team"","true","",""
+"1","logo","http://localhost:3030/a-team_logo.png"","true","",""
+"2","private-metadata","my private value"","false","",""

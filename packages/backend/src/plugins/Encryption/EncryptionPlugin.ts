@@ -1,4 +1,4 @@
-import {CustomAuthenticatedUserToken} from "./AuthenticationPlugin";
+import {CustomAuthenticatedUserToken} from "../Authentication/AuthenticationPlugin";
 
 export interface EncryptionPlugin {
   encryptCustomToken(tokenDecrypted: CustomAuthenticatedUserToken): Promise<string>;

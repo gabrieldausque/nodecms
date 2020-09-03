@@ -6,6 +6,10 @@
     "users" : {
       "contractName": "Default",
       "configuration" : "data/users-copy.csv"
+    },
+    "metadata" : {
+      "contractName": "Default",
+      "configuration" : "data/metadata-copy.csv"
     }
   }
 }

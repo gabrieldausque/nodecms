@@ -1,8 +1,8 @@
-import AuthenticationPlugin, {CustomAuthenticatedUserToken} from '../../interfaces/AuthenticationPlugin';
+import AuthenticationPlugin, {CustomAuthenticatedUserToken} from '../AuthenticationPlugin';
 import * as process from "process";
-import * as os from "os";
-import {UserStorage, User} from "../../interfaces/UserStorage";
-import {globalInstancesFactory} from "@hermes/composition";
+import * as os from 'os';
+import {UserStorage, User} from '../../Storages/User/UserStorage';
+import {globalInstancesFactory} from '@hermes/composition';
 const dataLoader = require('csv-load-sync');
 
 export interface LocalAuthenticationConfiguration {
@@ -61,7 +61,7 @@ export default class LocalAuthentication implements AuthenticationPlugin{
   }
 
   getUserDatabase():User[] {
-    return this.userStorage.getAllUsers();
+    return this.userStorage.find();
   }
 
   async authenticate(login: string, password: string): Promise<CustomAuthenticatedUserToken> {
@@ -92,7 +92,7 @@ export default class LocalAuthentication implements AuthenticationPlugin{
 
   userIsActive(login: string) {
     if(this.userExists(login)) {
-      const user = this.userStorage.readUser(login);
+      const user = this.userStorage.get(login);
       return (user)?user.isActive:false;
     }
     return  false;

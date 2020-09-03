@@ -6,10 +6,8 @@ export function disallowMethod(context:any) {
 
 export interface ServiceOptions {
   paginate?: any,
-  useCase?: {
-    storage: {
-      contractName:string;
-      configuration:{ [key:string] : any } | null
-    }
+  storage: {
+    contractName:string;
+    configuration?:{ [key:string] : any }
   }
 }

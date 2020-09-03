@@ -6,7 +6,7 @@ chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 
 import {InstancesFactory} from '@hermes/composition';
-import {CustomAuthenticatedUserToken} from "../../../src/plugins/interfaces/AuthenticationPlugin";
+import {CustomAuthenticatedUserToken} from "../../../src/plugins/Authentication/AuthenticationPlugin";
 const factory = new InstancesFactory();
 factory.loadExportedClassesFromDirectory(__dirname + '/../../../src/plugins');
 

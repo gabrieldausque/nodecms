@@ -6,7 +6,7 @@ chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 import * as url from "url";
 import * as fs from 'fs';
-import {User} from "../../src/plugins/interfaces/UserStorage";
+import {User} from '../../src/plugins/Storages/User/UserStorage';
 const dataLoader = require('csv-load-sync');
 fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
 
@@ -15,7 +15,7 @@ import {Server} from "http";
 import axios from "axios";
 import { promisify } from 'util';
 import {globalInstancesFactory} from "@hermes/composition";
-import {CSVUserStorage} from "../../src/plugins/User/UserStorage/CSVUserStorage";
+import {CSVUserStorage} from "../../src/plugins/Storages/User/CSVUserStorage";
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string) => url.format({
   hostname: app.get('host') || 'localhost',
@@ -70,7 +70,7 @@ describe('User service', () => {
       method: "POST",
       data: {
         login: "aNewUser",
-        password: "aNewPassword",
+        password: "aNewP@ssw0rd",
         isActive: true
       },
       headers: {
@@ -81,7 +81,7 @@ describe('User service', () => {
     const newUser = database.find((u:User) => u.login === 'aNewUser');
     expect(newUser.id).to.be.eql('3');
     expect(newUser).to.be.ok;
-    expect(newUser.password).to.be.eql('aNewPassword');
+    expect(newUser.password).to.be.eql('aNewP@ssw0rd');
     expect(newUser.isActive).to.be.eql('true');
 
   })
@@ -92,7 +92,7 @@ describe('User service', () => {
       method: "POST",
       data: {
         login: "aNewUser",
-        password: "aNewPassword",
+        password: "aNewP@ssw0rd",
         isActive: true
       },
       headers: {
@@ -104,7 +104,7 @@ describe('User service', () => {
     }
     const newUser = database().find((u:User) => u.login === 'aNewUser');
     expect(newUser).to.be.ok;
-    expect(newUser.password).to.be.eql('aNewPassword');
+    expect(newUser.password).to.be.eql('aNewP@ssw0rd');
     expect(newUser.isActive).to.be.eql('true');
     const response = await axios.request({
       url: getUrl(`user/${newUser.id}`),
@@ -112,7 +112,7 @@ describe('User service', () => {
       data: {
         id: "3",
         login: "aNewUser",
-        password: "aNewPasswordUpdated",
+        password: "aNewP@ssw0rdUpdated",
         isActive: true
       },
       headers: {
@@ -126,7 +126,7 @@ describe('User service', () => {
       updatedUser = database().find((u:User) => u.login === 'aNewUser');
     }
     await f();
-    expect(updatedUser.password).to.be.eql('aNewPasswordUpdated');
+    expect(updatedUser.password).to.be.eql('aNewP@ssw0rdUpdated');
   })
 
   it('Should reject update if id is not related to the login in the data', async () => {
@@ -135,7 +135,7 @@ describe('User service', () => {
       method: "POST",
       data: {
         login: "aNewUser",
-        password: "aNewPassword",
+        password: "aNewP@ssw0rd",
         isActive: true
       },
       headers: {
@@ -147,15 +147,15 @@ describe('User service', () => {
     }
     const newUser = database().find((u:User) => u.login === 'aNewUser');
     expect(newUser).to.be.ok;
-    expect(newUser.password).to.be.eql('aNewPassword');
+    expect(newUser.password).to.be.eql('aNewP@ssw0rd');
     expect(newUser.isActive).to.be.eql('true');
     expect(axios.request({
         url: getUrl(`user/${newUser.id}`),
         method: "PUT",
         data: {
-          id: "2",
+          id: 2,
           login: "aNewUser",
-          password: "aNewPasswordUpdated",
+          password: "aNewP@ssw0rdUpdated",
           isActive: true
         },
         headers: {
@@ -170,7 +170,7 @@ describe('User service', () => {
       method: "POST",
       data: {
         login: "aNewUser",
-        password: "aNewPassword",
+        password: "aNewP@ssw0rd",
         isActive: true
       },
       headers: {

@@ -1,9 +1,9 @@
 import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/feathers';
 import {Application} from '../../declarations';
 import {globalInstancesFactory} from "@hermes/composition";
-import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/interfaces/AuthenticationPlugin";
+import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/Authentication/AuthenticationPlugin";
 import {NotAcceptable} from "@feathersjs/errors";
-import {EncryptionPlugin} from "../../plugins/interfaces/EncryptionPlugin";
+import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService} from "../BaseService";
 
 interface Data {

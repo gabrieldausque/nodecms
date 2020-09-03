@@ -1,5 +1,5 @@
-import {EncryptionPlugin} from '../interfaces/EncryptionPlugin';
-import {CustomAuthenticatedUserToken} from '../interfaces/AuthenticationPlugin';
+import {EncryptionPlugin} from './EncryptionPlugin';
+import {CustomAuthenticatedUserToken} from '../Authentication/AuthenticationPlugin';
 import * as os from 'os';
 import crypto from 'crypto';
 import {NotAcceptable} from "@feathersjs/errors";

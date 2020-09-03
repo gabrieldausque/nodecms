@@ -1,4 +1,4 @@
-import {UserStorage, User} from "../../interfaces/UserStorage";
+import {UserStorage, User} from './UserStorage';
 import * as fs from "fs";
 const fsPromises = fs.promises;
 import * as path from "path";
@@ -48,7 +48,7 @@ export class CSVUserStorage implements UserStorage {
     }
   }
 
-  readUser(loginOrId: string | number): User {
+  get(loginOrId: string | number): User {
     let user = null;
     if(typeof loginOrId === 'string')
       user = this.database.find((u) => u.login === loginOrId)
@@ -59,11 +59,20 @@ export class CSVUserStorage implements UserStorage {
     return user;
   }
 
-  getAllUsers(): User[] {
+  find(filter: User): User[] {
+    if(filter) {
+      const filtered = [];
+      for(const user of this.database) {
+        if(user.id === filter.id) {
+          filtered.push(user);
+        }
+      }
+      return filtered
+    }
     return [...this.database];
   }
 
-  async createUser(user: User): Promise<User> {
+  async create(user: User): Promise<User> {
     if(!this.exists(user.login)) {
       const newUser:User = {
         id: this.getNewId(),
@@ -77,7 +86,7 @@ export class CSVUserStorage implements UserStorage {
     } else {
       console.debug('user already exists');
     }
-    return this.readUser(user.login);
+    return this.get(user.login);
   }
 
   async saveDatabase() {
@@ -98,8 +107,8 @@ export class CSVUserStorage implements UserStorage {
     }
   }
 
-  async deleteUser(loginOrId: string | number): Promise<User> {
-    const user = this.readUser(loginOrId);
+  async delete(loginOrId: string | number): Promise<User> {
+    const user = this.get(loginOrId);
     if(user) {
       this.database.splice(this.database.indexOf(user), 1);
       await this.saveDatabase();
@@ -107,13 +116,13 @@ export class CSVUserStorage implements UserStorage {
     return user;
   }
 
-  async updateUser(user: User): Promise<User> {
-    const oldUser = this.readUser(user.login);
+  async update(user: User): Promise<User> {
+    const oldUser = this.get(user.login);
     if(oldUser) {
       this.database.splice(this.database.indexOf(oldUser), 1, user);
       await this.saveDatabase();
     } else {
-      await this.createUser(user)
+      await this.create(user)
     }
     return user;
   }

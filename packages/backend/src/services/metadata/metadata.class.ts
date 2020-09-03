@@ -1,37 +1,47 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
-import {globalInstancesFactory} from "@hermes/composition";
 import {MetadataUseCases} from "../../usecases/metadata/MetadataUseCases";
-import {NotFound} from "@feathersjs/errors";
+import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {ServiceOptions} from "../helpers";
+import {MetadataEntity} from "../../entities/MetadataEntity";
 
-interface Data { }
+interface MetadataDTO {
+  id?: number;
+  key: string;
+  value?: any;
+  isPublic?: boolean;
+  ownerType?:string | null;
+  ownerId?:number | null;
+}
 
-export class Metadata extends BaseService implements ServiceMethods<Data> {
+export class Metadata extends BaseService implements ServiceMethods<MetadataDTO> {
   options: ServiceOptions;
   useCase: MetadataUseCases;
 
   constructor (options: ServiceOptions = {
-    useCase: {
-      storage:{
-        contractName:'Default',
-        configuration: null
-      }
+    storage:{
+      contractName:'Default'
     }
   }, app: Application) {
     super(app);
     this.options = options;
-    this.useCase = new MetadataUseCases(options.useCase);
+    this.useCase = new MetadataUseCases(options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-    return [];
+  async find (params?: Params): Promise<MetadataDTO[] | Paginated<MetadataDTO>> {
+    if(params && params.query)
+      return this.useCase.findAll({
+        key: params.query.key,
+        ownerType: params.query.ownerType,
+        ownerId: params.query.ownerId
+      });
+    return []
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<MetadataDTO> {
     const metadata = this.useCase.get(id.toString());
     if(metadata)
       return this.useCase.get(id.toString());
@@ -39,27 +49,24 @@ export class Metadata extends BaseService implements ServiceMethods<Data> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create (data: Data, params?: Params): Promise<Data> {
+  async create (data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
+    return this.useCase.create(data);
+  }
 
-    /* if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }*/
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async update (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
+    if(!id)
+      throw new NotAcceptable('Please provide a correct id for update');
+    return this.useCase.update(id, data);
+  }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async patch (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
     return data;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
-    return data;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
-    return data;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async remove (id: NullableId, params?: Params): Promise<Data> {
+  async remove (id: NullableId, params?: Params): Promise<MetadataDTO> {
     if(id){
       const metadata = this.useCase.get(id.toString())
       if(metadata) {
@@ -70,11 +77,20 @@ export class Metadata extends BaseService implements ServiceMethods<Data> {
   }
 
   needAuthentication(context:any): boolean {
-    if(context.method.toLowerCase() === 'get') {
+    if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id){
         const data = this.useCase.get(context.id)
         if(data)
           return !data.isPublic;
+      } else {
+        const filtered = this.useCase.findAll(context.params.query);
+        let needAuthent = true;
+        for(const m of filtered){
+          needAuthent = !m.isPublic;
+          if(needAuthent)
+            return true
+        }
+        return false;
       }
     }
     return true;

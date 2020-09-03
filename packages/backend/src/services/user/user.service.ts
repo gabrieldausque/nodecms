@@ -12,7 +12,7 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application): void {
-  const options = {
+  let options = {
     paginate: app.get('paginate'),
     storage:{
       contractName:'Default'
@@ -20,13 +20,10 @@ export default function (app: Application): void {
   };
 
   const globalUsersStorageConfiguration = app.get('storage').users;
-  options.storage = {...options.storage, ...globalUsersStorageConfiguration.storage}
+  options.storage = {...options.storage, ...globalUsersStorageConfiguration}
 
-  const userConfiguration = app.get('user')
-
-  if(userConfiguration && userConfiguration.storage) {
-    options.storage = {...options.storage, ...userConfiguration.storage}
-  }
+  const userConfiguration = app.get('user');
+  options = {...options, ...userConfiguration};
 
   const userService = new User(options, app)
   configureSwagger(userService);
