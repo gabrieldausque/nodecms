@@ -3,6 +3,7 @@ import {ServiceAddons, ServiceMethods} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { User } from './user.class';
 import hooks from './user.hooks';
+import {isNumber} from "../../helpers";
 
 // Add this service to the service type index
 declare module '../../declarations' {
@@ -29,6 +30,27 @@ export default function (app: Application): void {
   configureSwagger(userService);
   // Initialize our service with any options it requires
   app.use('/user', userService);
+
+  // Initialize relationships :
+  app.use('/user/:idOrLogin/metadata', async (req,res,next) => {
+    const user = await userService.get(req.params.idOrLogin);
+
+    if(req.method.toLowerCase() !== 'post') {
+      if(!isNumber(req.params.__feathersId)) {
+        req.query.key = req.params.__feathersId;
+        req.query.ownerType = 'user';
+        req.query.ownerId = user.id?.toString();
+      }
+    }
+
+    if(req.method.toLowerCase() !== 'get' && req.method.toLowerCase() !== 'delete') {
+      req.body.ownerType = 'user';
+      req.body.ownerId = user.id;
+      req.body.isPublic = false;
+    }
+
+    next()
+  }, app.service('metadata'))
 
   // Get our initialized service so that we can register hooks
   const service = app.service('user');

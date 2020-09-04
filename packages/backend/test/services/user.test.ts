@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import {User} from '../../src/plugins/Storages/User/UserStorage';
 const dataLoader = require('csv-load-sync');
 fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
+fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
 
 import app from '../../src/app';
 import {Server} from "http";
@@ -16,6 +17,7 @@ import axios from "axios";
 import { promisify } from 'util';
 import {globalInstancesFactory} from "@hermes/composition";
 import {CSVUserStorage} from "../../src/plugins/Storages/User/CSVUserStorage";
+import {CSVMetadataStorage} from "../../src/plugins/Storages/Metadata/CSVMetadataStorage";
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string) => url.format({
   hostname: app.get('host') || 'localhost',
@@ -30,6 +32,7 @@ describe('User service', () => {
   let server: Server;
   let finalCookie = '';
   let userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage','Default');
+  let metadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage','Default');
 
   before((done) => {
     server = app.listen(port);
@@ -51,7 +54,9 @@ describe('User service', () => {
 
   beforeEach((done) => {
     fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
+    fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
     (userStorage as CSVUserStorage).reloadDatabase();
+    (metadataStorage as CSVMetadataStorage).reloadDatabase();
     done();
   })
 
@@ -63,6 +68,16 @@ describe('User service', () => {
     const service = app.service('user');
     assert.ok(service, 'Registered the service');
   });
+
+  it('Should return a user from its login without password', async () => {
+    const response = await axios.request({
+      url: getUrl('user/localtest'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    })
+  })
 
   it('Should create a user if asked for', async () => {
     const response = await axios.request({
@@ -190,6 +205,162 @@ describe('User service', () => {
     });
     expect(database().find((u:User) => u.login === 'aNewUser')).not.to.be.ok;
   })
+
+  it('should return metadata of a user using login and key', async () => {
+    const response = await axios.request({
+      url: getUrl('user/localtest/metadata/pseudonym'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data.key).to.be.eql('pseudonym');
+    expect(response.data.value).to.be.eql('MyPseudo');
+    expect(response.data.isPublic).to.be.eql(false);
+    expect(response.data.ownerType).to.be.eql('user');
+    expect(response.data.ownerId).to.be.eql(0);
+
+  })
+
+  it('should create metadata for a user using login', async () => {
+    const createResponse = await axios.request({
+      url: getUrl('user/localtest/metadata'),
+      method: "POST",
+      data: {
+        key: "ANewMeta",
+        value: "MyNewValue"
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    const response = await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data.key).to.be.eql('ANewMeta');
+    expect(response.data.value).to.be.eql('MyNewValue');
+    expect(response.data.isPublic).to.be.eql(false);
+    expect(response.data.ownerType).to.be.eql('user');
+    expect(response.data.ownerId).to.be.eql(0);
+  })
+
+  it('should update or patch metadata for a user using login', async () => {
+    await axios.request({
+      url: getUrl('user/localtest/metadata'),
+      method: "POST",
+      data: {
+        key: "ANewMeta",
+        value: "MyNewValue"
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    let response = await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data.key).to.be.eql('ANewMeta');
+    expect(response.data.value).to.be.eql('MyNewValue');
+    expect(response.data.isPublic).to.be.eql(false);
+    expect(response.data.ownerType).to.be.eql('user');
+    expect(response.data.ownerId).to.be.eql(0);
+    await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "PUT",
+      data: {
+        key: "ANewMeta",
+        value: "MyNewValueUpdated"
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    response = await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data.key).to.be.eql('ANewMeta');
+    expect(response.data.value).to.be.eql('MyNewValueUpdated');
+    expect(response.data.isPublic).to.be.eql(false);
+    expect(response.data.ownerType).to.be.eql('user');
+    expect(response.data.ownerId).to.be.eql(0);
+    await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "PATCH",
+      data: {
+        key: "ANewMeta",
+        value: "MyNewValuePatch"
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    response = await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data.key).to.be.eql('ANewMeta');
+    expect(response.data.value).to.be.eql('MyNewValuePatch');
+    expect(response.data.isPublic).to.be.eql(false);
+    expect(response.data.ownerType).to.be.eql('user');
+    expect(response.data.ownerId).to.be.eql(0);
+  })
+
+  it('should delete a metadata for a user using login', async () => {
+    await axios.request({
+      url: getUrl('user/localtest/metadata'),
+      method: "POST",
+      data: {
+        key: "ANewMeta",
+        value: "MyNewValue"
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    let response = await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data.key).to.be.eql('ANewMeta');
+    expect(response.data.value).to.be.eql('MyNewValue');
+    expect(response.data.isPublic).to.be.eql(false);
+    expect(response.data.ownerType).to.be.eql('user');
+    expect(response.data.ownerId).to.be.eql(0);
+    await axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "DELETE",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    const p = axios.request({
+      url: getUrl('user/localtest/metadata/ANewMeta'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    return expect(p).to.be.rejectedWith('Request failed with status code 404');
+  })
+
 });
 
 

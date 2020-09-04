@@ -2,6 +2,7 @@ import {Metadata, MetadataStorage} from "./MetadataStorage";
 import path from "path";
 const dataLoader = require('csv-load-sync');
 import * as fs from 'fs';
+import {isNumber} from '../../../helpers';
 const fsPromises = fs.promises;
 
 export class CSVMetadataStorage implements MetadataStorage {
@@ -29,24 +30,22 @@ export class CSVMetadataStorage implements MetadataStorage {
     this.reloadDatabase();
   }
 
-  get(keyOrId:string | number, ownerType?:string |null, ownerId?:number | null):Metadata {
-    ownerType = ownerType?ownerType:''
-    ownerId = ownerId?ownerId:null;
-    if(typeof keyOrId === 'string') {
-      const metadata = this.database.find(m  =>
+  get(keyOrId:string | number, ownerType:string |null = '', ownerId:number | null = null):Metadata {
+    let metadata;
+    if(typeof keyOrId === 'number') {
+      metadata = this.database.find(m  => m.id === keyOrId)
+    } else if(isNumber(keyOrId)) {
+      keyOrId = parseInt(keyOrId.toString())
+      metadata = this.database.find(m  => m.id === keyOrId);
+    } else {
+      metadata = this.database.find(m  =>
         m.key === keyOrId &&
         m.ownerType === ownerType &&
         m.ownerId === ownerId
       );
-      if(metadata)
-        return metadata;
-    } else {
-      const metadata = this.database.find(m  => m.id === keyOrId &&
-        m.ownerType === ownerType &&
-        m.ownerId === ownerId);
-      if(metadata)
-        return metadata;
     }
+    if(metadata)
+      return metadata;
     throw new Error(`Metadata with key or id ${keyOrId} doesn't exists`)
   }
 
@@ -59,7 +58,7 @@ export class CSVMetadataStorage implements MetadataStorage {
         value: m.value,
         isPublic: (m.isPublic.toLowerCase() === 'true'),
         ownerType: (m.ownerType)?m.ownerType:'',
-        ownerId: (m.ownerId)?parseInt(m.ownerType):null
+        ownerId: (m.ownerId)?parseInt(m.ownerId):null
       }
     });
   }
@@ -72,7 +71,7 @@ export class CSVMetadataStorage implements MetadataStorage {
         value: data.value,
         isPublic: data.isPublic,
         ownerType: (data.ownerType)?data.ownerType:"",
-        ownerId: (data.ownerId)?data.ownerId:null
+        ownerId: (isNumber(data.ownerId))?data.ownerId:null
       }
       this.database.push(newMetadata);
       await this.saveDatabase();
@@ -81,12 +80,29 @@ export class CSVMetadataStorage implements MetadataStorage {
     return this.get(data.key, data.ownerType, data.ownerId);
   }
 
-  delete(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {
-    throw new Error('Not implemented');
+  async delete(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {
+    let metadata = this.get(keyOrId, ownerType, ownerId);
+    this.database.splice(this.database.indexOf(metadata),1);
+    await this.saveDatabase();
+    return metadata
   }
 
   exists(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): boolean {
-    return false;
+    let metadata;
+    if(typeof keyOrId === 'number') {
+      metadata = this.database.find(m  => m.id === keyOrId)
+    } else if(isNumber(keyOrId)) {
+      keyOrId = parseInt(keyOrId.toString())
+      metadata = this.database.find(m  => m.id === keyOrId);
+    } else {
+      metadata = this.database.find(m  =>
+        m.key === keyOrId &&
+        m.ownerType === ownerType &&
+        m.ownerId === ownerId
+      );
+    }
+    return !!metadata;
+
   }
 
   find(filter?: Metadata): Metadata[] {
@@ -115,7 +131,11 @@ export class CSVMetadataStorage implements MetadataStorage {
   }
 
   async update(data: Metadata): Promise<Metadata> {
-    throw new Error('Not implemented');
+    this.database.splice(this.database.findIndex((m:Metadata) =>
+      m.id === data.id
+    ), 1, data);
+    await this.saveDatabase();
+    return data;
   }
 
   private getNewId() {
@@ -131,7 +151,7 @@ export class CSVMetadataStorage implements MetadataStorage {
   async saveDatabase() {
     let dbAsString = '"id","key","value","isPublic","ownerType","ownerId"\n';
     for(const metadata of this.database) {
-      dbAsString += `"${metadata.id}","${metadata.key}",${(metadata.value)?JSON.stringify(metadata.value):''}","${metadata.isPublic}","${metadata.ownerType?metadata.ownerType:''}","${metadata.ownerId?metadata.ownerId:''}"\n`;
+      dbAsString += `"${metadata.id}","${metadata.key}",${(metadata.value)?JSON.stringify(metadata.value):''},"${typeof metadata.isPublic === 'boolean'?metadata.isPublic:false}","${metadata.ownerType ? metadata.ownerType:''}","${isNumber(metadata.ownerId)?metadata.ownerId:''}"\n`;
     }
     const backupPath = `${path.dirname(this.filePath)}/${path.basename(this.filePath).split('.')[0]}-bck.csv`
     await fsPromises.copyFile(this.filePath, backupPath)

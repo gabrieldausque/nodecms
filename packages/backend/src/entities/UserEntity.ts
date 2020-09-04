@@ -1,6 +1,6 @@
 export class UserEntity {
 
-  static validateId(id? : string| number):number {
+  static convertId(id? : string| number):number {
     if(typeof id === 'number')
       return id;
     if(typeof id === 'string') {
@@ -15,21 +15,28 @@ export class UserEntity {
     throw new Error('id must be a number');
   }
 
+  static validateId(id? : string| number):boolean {
+    if(typeof id === 'number')
+      return true;
+    if(typeof id === 'string') {
+      try {
+        let idToParse = parseInt(id);
+        if(idToParse)
+          return true;
+      }catch(err) {
+        //DO nothing, just a test to parse id to number
+      }
+    }
+    return false;
+  }
+
   static validatePassword(password: string):boolean {
     let regexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g
-    const valid = regexp.test(password);
-    if(!valid) {
-      throw new Error('Password must be 8 characters minimum, contains UpperCase and LowerCase, at least 1 number and 1 special character except < or >')
-    }
-    return valid;
+    return regexp.test(password);
   }
 
   static validateLogin(login: string):boolean {
     let regexp = /^[a-zA-Z0-9]{5,}$/g
-    const valid = regexp.test(login);
-    if(!valid) {
-      throw new Error('Login must be 5 characters minimum, with only letters and numbers ')
-    }
-    return valid;
+    return regexp.test(login);
   }
 }

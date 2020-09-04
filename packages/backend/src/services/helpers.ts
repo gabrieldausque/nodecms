@@ -11,3 +11,4 @@ export interface ServiceOptions {
     configuration?:{ [key:string] : any }
   }
 }
+

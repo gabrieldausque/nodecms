@@ -40,7 +40,6 @@ function configureSwagger(service:ServiceMethods<{ [key:string] : any | any[] }>
     definitions: {
       metadata: {
         type: 'object',
-        required: ['key', 'value'],
         properties: {
           id: { type:'number', description:'The id of the metadata'},
           key: { type: 'string', description:'The key that identifies the metadata'},

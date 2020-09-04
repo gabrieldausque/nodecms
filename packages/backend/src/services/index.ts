@@ -11,8 +11,8 @@ export default function (app: Application) {
   configureSwagger(app);
   app.configure(authentication);
   app.configure(metadata);
-  app.configure(user);
   app.configure(role);
+  app.configure(user);
   app.configure(document);
 }
 

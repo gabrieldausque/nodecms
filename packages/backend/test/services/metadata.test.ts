@@ -70,6 +70,15 @@ describe('Metadata service', () => {
 
   it('should return the title when asking for it', async () => {
     const service = app.service('metadata');
+    expect((await service.find({
+      query:{
+        key:'title'
+      }
+    }) as any)[0].value).to.eql('The A Team');
+  })
+
+  it('should return the title when asking for it with get method', async () => {
+    const service = app.service('metadata');
     expect((await service.get('title') as any).value).to.eql('The A Team');
   })
 
@@ -110,6 +119,7 @@ describe('Metadata service', () => {
         cookie:finalCookie
       }
     });
+    const metadataFromResponse = response.data;
     const newMetadata = database().find((m:any) => m.key === "newMetadata" &&
       m.ownerType === "document" &&
       m.ownerId === "5"
@@ -129,7 +139,7 @@ describe('Metadata service', () => {
     })
     expect(getResponse.data.length).to.eql(1);
     const readData:Metadata = getResponse.data[0];
-    expect(readData.id).to.eql(3);
+    expect(readData.id).to.eql(metadataFromResponse.id);
     expect(readData.key).to.eql("newMetadata");
     expect(readData.value).to.eql("newValue");
     expect(readData.isPublic).to.eql(false);
@@ -138,10 +148,11 @@ describe('Metadata service', () => {
   })
 
   it('should update a metadata (no owner type, not owner id)', async () => {
-    let response = await axios.request({
+    await axios.request({
       url: getUrl('metadata/title'),
       method: "PUT",
       data: {
+        id: 0,
         key:"title",
         value:"My New Title",
       },
@@ -149,17 +160,14 @@ describe('Metadata service', () => {
         cookie:finalCookie
       }
     });
-    response = await axios.request({
-      url: getUrl('metadata/0'),
-      method: "PUT",
-      data: {
-        key:"title",
-        value:"My New Title",
-      },
+    const response = await axios.request({
+      method:'GET',
+      url:getUrl('metadata/title'),
       headers: {
         cookie:finalCookie
       }
-    });
+    })
+    expect(response.data.value).to.be.eql("My New Title")
   })
 
 });

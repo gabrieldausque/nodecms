@@ -1,6 +1,6 @@
 import {globalInstancesFactory} from "@hermes/composition";
-import {User, UserStorage} from '../../plugins/Storages/User/UserStorage';
-import {UserEntity} from "../../entities/UserEntity";
+import {User, UserStorage} from '../plugins/Storages/User/UserStorage';
+import {UserEntity} from "../entities/UserEntity";
 
 export interface UserUseCasesConfiguration {
   storage: {
@@ -20,6 +20,22 @@ export class UserUseCases {
       configuration.storage.contractName, configuration.storage.configuration)
   }
 
+  validate(data: any): User {
+    if(data.id) {
+      data.id = UserEntity.convertId(data.id);
+    }
+
+    if(data.login) {
+      UserEntity.validateLogin(data.login)
+    }
+
+    if(data.password) {
+      UserEntity.validatePassword(data.password);
+    }
+
+    return data;
+  }
+
   async create(user:User): Promise<User> {
     UserEntity.validatePassword(user.password);
     UserEntity.validateLogin(user.login);
@@ -29,20 +45,19 @@ export class UserUseCases {
   }
 
   get(idOrLogin: string | number) : User {
-    const id = UserEntity.validateId(idOrLogin);
-    let user:User;
-    if(id && typeof id === 'number') {
+    if(UserEntity.validateId(idOrLogin)) {
+      const id = UserEntity.convertId(idOrLogin);
       return this.storage.get(id);
     }
     return this.storage.get(idOrLogin);
   }
 
-  findAll(filter: User) {
+  find(filter: User) {
     return this.storage.find(filter);
   }
 
   async update(id: number | string, usertoUpdate: User) : Promise<User> {
-    const usableId = UserEntity.validateId(id);
+    const usableId = UserEntity.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.')
     const existingUser = this.get(usableId);
@@ -56,7 +71,7 @@ export class UserUseCases {
   }
 
   async delete(id: number | string): Promise<User> {
-    const usableId = UserEntity.validateId(id);
+    const usableId = UserEntity.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for delete.')
     return await this.storage.delete(usableId)

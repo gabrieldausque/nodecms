@@ -4,7 +4,7 @@ import {BaseService} from '../BaseService';
 import {globalInstancesFactory} from '@hermes/composition';
 import {UserStorage} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
-import {UserUseCases} from '../../usecases/user/UserUseCases';
+import {UserUseCases} from '../../usecases/UserUseCases';
 
 interface UserDTO {
   id?:number
@@ -43,7 +43,7 @@ export class User extends BaseService implements ServiceMethods<UserDTO>  {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
-      return this.useCase.findAll(params.filter);
+      return this.useCase.find(params.filter);
     }
     return [];
   }
@@ -62,7 +62,8 @@ export class User extends BaseService implements ServiceMethods<UserDTO>  {
   async update (id: NullableId, data: UserDTO, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for update');
-    return await this.useCase.update(id, data)
+    const user = this.useCase.validate(data);
+    return await this.useCase.update(id, user)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

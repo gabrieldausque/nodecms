@@ -1,10 +1,11 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
-import {MetadataUseCases} from "../../usecases/metadata/MetadataUseCases";
+import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {ServiceOptions} from "../helpers";
-import {MetadataEntity} from "../../entities/MetadataEntity";
+import {isNumber} from "../../helpers";
+
 
 interface MetadataDTO {
   id?: number;
@@ -32,7 +33,7 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<MetadataDTO[] | Paginated<MetadataDTO>> {
     if(params && params.query)
-      return this.useCase.findAll({
+      return this.useCase.find({
         key: params.query.key,
         ownerType: params.query.ownerType,
         ownerId: params.query.ownerId
@@ -42,9 +43,39 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<MetadataDTO> {
-    const metadata = this.useCase.get(id.toString());
-    if(metadata)
-      return this.useCase.get(id.toString());
+    if(id) {
+      if(isNumber(id)) {
+        try {
+          return this.useCase.get(id.toString());
+        } catch(err) {
+          throw new NotFound(err.message);
+        }
+      } else {
+        const filter = { key: id.toString()}
+        const found = this.useCase.find(filter)
+        if(found) {
+          if(found.length === 1)
+            return found[0];
+          else
+            throw new NotFound(`Current filter ${filter} has returned more than one element. Use find method instead or correct filter`);
+        }
+      }
+    } else {
+      if (params && params.query && params.query.key) {
+        const filter = {
+          key: params.query.key,
+          ownerType: params.query.ownerType?params.query.ownerType:'',
+          ownerId: params.query.ownerId?params.query.ownerId:null
+        }
+        const found = this.useCase.find(filter)
+        if(found) {
+          if(found.length === 1)
+            return found[0];
+          else
+            throw new NotFound(`Current filter ${filter} has returned more than one element. Use find method instead or correct filter`);
+        }
+      }
+    }
     throw new NotFound(`no metadata with key : ${id}`);
   }
 
@@ -55,22 +86,26 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
-    if(!id)
-      throw new NotAcceptable('Please provide a correct id for update');
-    return this.useCase.update(id, data);
+    if(id) {
+      const existing = await this.get(id, params);
+      if(existing && isNumber(existing.id) && typeof existing.id !== 'undefined') {
+        return this.useCase.update(existing.id, data)
+      }
+    }
+    throw new NotFound(`id ${id} or filter ${params?.filter} are incorrect for update.`)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async patch (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
-    return data;
+    return this.update(id,data, params);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<MetadataDTO> {
     if(id){
-      const metadata = this.useCase.get(id.toString())
-      if(metadata) {
-        // TODO delete the metadata
+      const existing = await this.get(id, params);
+      if(existing && existing.id) {
+        return this.useCase.delete(existing.id)
       }
     }
     throw new NotFound(`No metadata with key : ${id}`);
@@ -79,18 +114,31 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
   needAuthentication(context:any): boolean {
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id){
-        const data = this.useCase.get(context.id)
-        if(data)
-          return !data.isPublic;
-      } else {
-        const filtered = this.useCase.findAll(context.params.query);
-        let needAuthent = true;
-        for(const m of filtered){
-          needAuthent = !m.isPublic;
-          if(needAuthent)
-            return true
+        if(isNumber(context.id)) {
+          const data = this.useCase.get(context.id)
+          if(data)
+            return !data.isPublic;
+        } else {
+          const filtered = this.useCase.find({ key: context.id.toString()})
+          if(filtered && filtered.length > 0) {
+            for(const m of filtered){
+              if(!m.isPublic)
+                return true
+            }
+            return false;
+          }
         }
-        return false;
+      } else {
+        if(context.params.query) {
+          const filtered = this.useCase.find(context.params.query);
+          if(filtered && filtered.length > 0) {
+            for(const m of filtered){
+              if(!m.isPublic)
+                return true
+            }
+            return false;
+          }
+        }
       }
     }
     return true;
