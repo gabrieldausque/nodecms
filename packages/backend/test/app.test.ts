@@ -7,6 +7,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 const fsPromises = fs.promises;
 fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
+fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
 //@ts-ignore
 import app from '../src/app';
 
