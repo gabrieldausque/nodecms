@@ -1,11 +1,10 @@
+import {CSVStorage} from "../CSVStorage";
 import {UserStorage, User} from './UserStorage';
 import * as fs from "fs";
 const fsPromises = fs.promises;
 import * as path from "path";
 
-const dataLoader = require('csv-load-sync');
-
-export class CSVUserStorage implements UserStorage {
+export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
   public static metadata : any[] = [
     {
       contractType:'UserStorage',
@@ -19,25 +18,17 @@ export class CSVUserStorage implements UserStorage {
     }
   ]
 
-  private database: User[];
-  private filePath: string;
-
   constructor(filePath:string = 'data/users.csv') {
-    if(!filePath){
-      filePath = 'data/users.csv';
-    }
-    this.database = [];
-    console.log(`Users file ${filePath}`);
-    for(const userFromFile of dataLoader(filePath)) {
-      this.database.push({
-        id: parseInt(userFromFile.id),
-        isActive: (userFromFile.isActive.toLowerCase().trim() === 'true'),
-        login: userFromFile.login,
-        password: userFromFile.password
-      })
-    }
-    this.filePath = filePath;
+    super(filePath)
+  }
 
+  loadEntity(userFromFile: any): User {
+    return {
+      id: parseInt(userFromFile.id),
+      isActive: (userFromFile.isActive.toLowerCase().trim() === 'true'),
+      login: userFromFile.login,
+      password: userFromFile.password
+    }
   }
 
   exists(loginOrId: string|number): boolean {
@@ -89,24 +80,6 @@ export class CSVUserStorage implements UserStorage {
     return this.get(user.login);
   }
 
-  async saveDatabase() {
-    let dbAsString = '"id","login","password","isActive"\n';
-    for(const user of this.database) {
-      dbAsString += `"${user.id}","${user.login}","${user.password}","${user.isActive}"\n`
-    }
-    const backupPath = `${path.dirname(this.filePath)}/${path.basename(this.filePath).split('.')[0]}-bck.csv`
-    await fsPromises.copyFile(this.filePath, backupPath)
-    try {
-      await fsPromises.writeFile(this.filePath, dbAsString, {
-        encoding:'utf8'
-      })
-    }catch(err) {
-      console.error(err);
-      await fsPromises.copyFile(backupPath, this.filePath);
-      throw err
-    }
-  }
-
   async delete(loginOrId: string | number): Promise<User> {
     const user = this.get(loginOrId);
     if(user) {
@@ -127,25 +100,12 @@ export class CSVUserStorage implements UserStorage {
     return user;
   }
 
-  private getNewId():number {
-    let lastId = 0;
-    for(const user of this.database) {
-      if(user.id && user.id > lastId) {
-        lastId = user.id;
-      }
-    }
-    return lastId + 1;
+  stringifyEntity(entity: User): string {
+    return `"${entity.id}","${entity.login}","${entity.password}","${entity.isActive}"`;
   }
 
-  public reloadDatabase() {
-    this.database = [];
-    for(const userFromFile of dataLoader(this.filePath)) {
-      this.database.push({
-        id: parseInt(userFromFile.id),
-        isActive: (userFromFile.isActive.toLowerCase().trim() === 'true'),
-        login: userFromFile.login,
-        password: userFromFile.password
-      })
-    }
+  getHeaders(): string[] {
+    return ["id","login","password","isActive"];
   }
+
 }

@@ -3,9 +3,10 @@ import path from "path";
 const dataLoader = require('csv-load-sync');
 import * as fs from 'fs';
 import {isNumber} from '../../../helpers';
+import {CSVStorage} from "../CSVStorage";
 const fsPromises = fs.promises;
 
-export class CSVMetadataStorage implements MetadataStorage {
+export class CSVMetadataStorage extends CSVStorage<Metadata> implements MetadataStorage {
   public static metadata:any[] = [
     {
       contractType:'MetadataStorage',
@@ -18,16 +19,9 @@ export class CSVMetadataStorage implements MetadataStorage {
       isShared:true
     },
   ]
-  private database: Metadata[];
-  private readonly filePath: string;
 
   constructor(filePath:string = 'data/metadata.csv') {
-    if(!filePath){
-      filePath = 'data/metadata.csv';
-    }
-    this.database = [];
-    this.filePath = filePath;
-    this.reloadDatabase();
+    super(filePath);
   }
 
   get(keyOrId:string | number, ownerType:string |null = '', ownerId:number | null = null):Metadata {
@@ -47,44 +41,6 @@ export class CSVMetadataStorage implements MetadataStorage {
     if(metadata)
       return metadata;
     throw new Error(`Metadata with key or id ${keyOrId} doesn't exists`)
-  }
-
-  reloadDatabase() {
-    const fromFile = dataLoader(this.filePath)
-    this.database = fromFile.map((m:any) => {
-      return {
-        id: parseInt(m.id),
-        key: m.key,
-        value: m.value,
-        isPublic: (m.isPublic.toLowerCase() === 'true'),
-        ownerType: (m.ownerType)?m.ownerType:'',
-        ownerId: (m.ownerId)?parseInt(m.ownerId):null
-      }
-    });
-  }
-
-  async create(data: Metadata): Promise<Metadata> {
-    if(!this.exists(data.key, data.ownerType,data.ownerId)) {
-      const newMetadata:Metadata = {
-        id: this.getNewId(),
-        key: data.key,
-        value: data.value,
-        isPublic: data.isPublic,
-        ownerType: (data.ownerType)?data.ownerType:"",
-        ownerId: (isNumber(data.ownerId))?data.ownerId:null
-      }
-      this.database.push(newMetadata);
-      await this.saveDatabase();
-      return newMetadata;
-    }
-    return this.get(data.key, data.ownerType, data.ownerId);
-  }
-
-  async delete(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {
-    let metadata = this.get(keyOrId, ownerType, ownerId);
-    this.database.splice(this.database.indexOf(metadata),1);
-    await this.saveDatabase();
-    return metadata
   }
 
   exists(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): boolean {
@@ -118,7 +74,7 @@ export class CSVMetadataStorage implements MetadataStorage {
             return m.ownerType === filter.ownerType && m.ownerId === filter.ownerId;
           return m.ownerType === filter.ownerType;
         }
-           return false;
+        return false;
       });
       if(found) {
         if(Array.isArray(found))
@@ -130,6 +86,30 @@ export class CSVMetadataStorage implements MetadataStorage {
     return [];
   }
 
+  async create(data: Metadata): Promise<Metadata> {
+    if(!this.exists(data.key, data.ownerType,data.ownerId)) {
+      const newMetadata:Metadata = {
+        id: this.getNewId(),
+        key: data.key,
+        value: data.value,
+        isPublic: data.isPublic,
+        ownerType: (data.ownerType)?data.ownerType:"",
+        ownerId: (isNumber(data.ownerId))?data.ownerId:null
+      }
+      this.database.push(newMetadata);
+      await this.saveDatabase();
+      return newMetadata;
+    }
+    return this.get(data.key, data.ownerType, data.ownerId);
+  }
+
+  async delete(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {
+    let metadata = this.get(keyOrId, ownerType, ownerId);
+    this.database.splice(this.database.indexOf(metadata),1);
+    await this.saveDatabase();
+    return metadata
+  }
+
   async update(data: Metadata): Promise<Metadata> {
     this.database.splice(this.database.findIndex((m:Metadata) =>
       m.id === data.id
@@ -138,31 +118,23 @@ export class CSVMetadataStorage implements MetadataStorage {
     return data;
   }
 
-  private getNewId() {
-    let lastId = 0;
-    for(const m of this.database) {
-      if(m.id && m.id > lastId) {
-        lastId = m.id;
-      }
-    }
-    return lastId + 1;
+  loadEntity(entityFromFile: any): Metadata {
+    return {
+      id: parseInt(entityFromFile.id),
+      key: entityFromFile.key,
+      value: entityFromFile.value,
+      isPublic: (entityFromFile.isPublic.toLowerCase() === 'true'),
+      ownerType: (entityFromFile.ownerType)?entityFromFile.ownerType:'',
+      ownerId: (entityFromFile.ownerId)?parseInt(entityFromFile.ownerId):null
+    };
   }
 
-  async saveDatabase() {
-    let dbAsString = '"id","key","value","isPublic","ownerType","ownerId"\n';
-    for(const metadata of this.database) {
-      dbAsString += `"${metadata.id}","${metadata.key}",${(metadata.value)?JSON.stringify(metadata.value):''},"${typeof metadata.isPublic === 'boolean'?metadata.isPublic:false}","${metadata.ownerType ? metadata.ownerType:''}","${isNumber(metadata.ownerId)?metadata.ownerId:''}"\n`;
-    }
-    const backupPath = `${path.dirname(this.filePath)}/${path.basename(this.filePath).split('.')[0]}-bck.csv`
-    await fsPromises.copyFile(this.filePath, backupPath)
-    try {
-      await fsPromises.writeFile(this.filePath, dbAsString, {
-        encoding:'utf8'
-      })
-    }catch(err) {
-      console.error(err);
-      await fsPromises.copyFile(backupPath, this.filePath);
-      throw err
-    }
+  stringifyEntity(entity: Metadata): string {
+    return `"${entity.id}","${entity.key}",${(entity.value)?JSON.stringify(entity.value):''},"${typeof entity.isPublic === 'boolean'?entity.isPublic:false}","${entity.ownerType ? entity.ownerType:''}","${isNumber(entity.ownerId)?entity.ownerId:''}"\n`;
   }
+
+  getHeaders(): string[] {
+    return ["id","key","value","isPublic","ownerType","ownerId"];
+  }
+
 }
