@@ -116,3 +116,5 @@ lib/
 /packages/backend/data/metadata-copy.csv
 /packages/backend/data/metadata-bck.csv
 /packages/backend/data/metadata-copy-bck.csv
+/packages/backend/data/roles-copy.csv
+/packages/backend/data/roles-copy-bck.csv

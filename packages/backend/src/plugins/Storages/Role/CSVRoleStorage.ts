@@ -21,7 +21,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
     },
   ]
 
-  constructor(filePath:string = 'data/role.csv') {
+  constructor(filePath:string = 'data/roles.csv') {
     super(filePath);
   }
 
@@ -31,7 +31,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
 
   loadEntity(entityFromFile: any): Role {
     return {
-      id: entityFromFile.id,
+      id: parseInt(entityFromFile.id),
       key: entityFromFile.key,
       description: entityFromFile.description
     };
@@ -63,7 +63,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
   }
 
   exists(keyOrId: string | number): boolean {
-    let existing;
+    let existing:any;
     if(isNumber(keyOrId))
     {
       const usableId = parseInt(keyOrId.toString());
@@ -73,7 +73,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
         key: keyOrId.toString()
       })
     }
-    return existing !== null && typeof existing !== 'undefined';
+    return (Array.isArray(existing) && existing.length > 0)
   }
 
   find(filter?: Role): Role[] {

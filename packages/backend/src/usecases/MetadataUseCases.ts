@@ -1,47 +1,38 @@
-import {globalInstancesFactory} from "@hermes/composition";
 import {Metadata, MetadataStorage} from "../plugins/Storages/Metadata/MetadataStorage";
-import {MetadataEntity} from "../entities/MetadataEntity";
-import {User} from "../plugins/Storages/User/UserStorage";
-import {UserEntity} from "../entities/UserEntity";
+import {MetadataEntityRules} from "../entities/MetadataEntityRules";
+import {UseCaseConfiguration} from "./UseCaseConfiguration";
+import {UseCases} from "./UseCases";
 
-export interface MetadataUseCasesConfiguration {
-  storage: {
-    contractName:string,
-    configuration?: any
-  }
+export interface MetadataUseCasesConfiguration extends UseCaseConfiguration {
 }
 
-export class MetadataUseCases  {
-
-  private storage: MetadataStorage;
+export class MetadataUseCases extends UseCases<Metadata>  {
 
   constructor(configuration:MetadataUseCasesConfiguration = {
     storage: {
       contractName:'Default',
     }
   }) {
-   this.storage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage',
-     configuration.storage.contractName,
-     configuration.storage.configuration);
+   super('MetadataStorage',configuration);
   }
 
   get(id:string | number):any {
-    const usableId = MetadataEntity.convertId(id);
+    const usableId = MetadataEntityRules.convertId(id);
     return this.storage.get(usableId);
   }
 
   find(filter: Metadata) {
-    MetadataEntity.convertFilter(filter);
+    MetadataEntityRules.convertFilter(filter);
     return this.storage.find(filter);
   }
 
   async create(data: Metadata):Promise<Metadata> {
-    MetadataEntity.convert(data);
+    MetadataEntityRules.convert(data);
     return this.storage.create(data);
   }
 
   async update(id: string | number, metadataToUpdate: Metadata):Promise<Metadata> {
-    const usableId = MetadataEntity.convertId(id);
+    const usableId = MetadataEntityRules.convertId(id);
     const found = this.get(usableId)
     if(found) {
       const updatedMetadata = { ...found, ...metadataToUpdate}
@@ -51,7 +42,7 @@ export class MetadataUseCases  {
   }
 
   async delete(id: string | number) {
-    const usableId = MetadataEntity.convertId(id);
+    const usableId = MetadataEntityRules.convertId(id);
     return await this.storage.delete(usableId);
   }
 

@@ -14,18 +14,11 @@ fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
 import app from '../../src/app';
 import {Server} from "http";
 import axios from "axios";
-import { promisify } from 'util';
 import {globalInstancesFactory} from "@hermes/composition";
 import {CSVUserStorage} from "../../src/plugins/Storages/User/CSVUserStorage";
 import {CSVMetadataStorage} from "../../src/plugins/Storages/Metadata/CSVMetadataStorage";
-const port = app.get('port') || 8998;
-const getUrl = (pathname?: string) => url.format({
-  hostname: app.get('host') || 'localhost',
-  protocol: 'http',
-  port,
-  pathname
-});
-const sleep = promisify(setTimeout);
+import {getUrl} from "../../src/tests/TestsHelpers";
+const port = app.get('port') || 3030;
 
 describe('User service', () => {
 
@@ -38,7 +31,7 @@ describe('User service', () => {
     server = app.listen(port);
     server.once('listening', async () => {
       const authResponse = await axios.request({
-        url: getUrl('authentication'),
+        url: getUrl('authentication', 'localhost', port),
         method: "POST",
         data: {
           login: "localtest",

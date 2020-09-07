@@ -12,19 +12,20 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application): void {
-  const defaultOptions = {
+  let options = {
     paginate: app.get('paginate'),
-    useCase:{
-      storage:{
-        contractName:'Default',
-        configuration: null
-      }
+    storage:{
+      contractName:'Default'
     }
   };
 
-  const configFromFile = app.get('role');
+  const globalUsersStorageConfiguration = app.get('storage').roles;
+  options.storage = {...options.storage, ...globalUsersStorageConfiguration}
 
-  const options = {...defaultOptions, ...configFromFile};
+  const userConfiguration = app.get('role');
+  options = {...options, ...userConfiguration};
+
+  const roleService = new Role(options, app);
 
   // Initialize our service with any options it requires
   app.use('/role', new Role(options, app));

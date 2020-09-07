@@ -57,7 +57,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
         m.ownerId === ownerId
       );
     }
-    return !!metadata;
+    return Array.isArray(metadata) && metadata.length > 0;
 
   }
 

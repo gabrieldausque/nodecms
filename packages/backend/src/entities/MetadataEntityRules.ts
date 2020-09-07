@@ -1,7 +1,8 @@
 import {Metadata} from "../plugins/Storages/Metadata/MetadataStorage";
 import {isNumber} from "../helpers";
+import {EntityRules} from "./EntityRules";
 
-export class MetadataEntity {
+export class MetadataEntityRules extends EntityRules {
   static validateKey(key:string):boolean {
     const regexp = /[a-zA-Z0-9_\-]{3,}/g
     if(!regexp.test(key)) {
@@ -22,17 +23,8 @@ export class MetadataEntity {
     return filter;
   }
 
-  static convertId(id: string | number):number {
-    if(typeof id === 'number')
-      return id;
-    if(isNumber(id)) {
-      return parseInt(id.toString());
-    }
-    throw new Error('id must be a number');
-  }
-
   static convert(metadata: Metadata) {
-    MetadataEntity.validateKey(metadata.key);
+    MetadataEntityRules.validateKey(metadata.key);
     if(metadata.ownerType) {
       metadata.ownerType = metadata.ownerType.toLowerCase();
       if(!isNumber(metadata.ownerId))
@@ -40,7 +32,7 @@ export class MetadataEntity {
     }
 
     if(metadata.ownerId) {
-      metadata.ownerId = MetadataEntity.convertId(metadata.ownerId);
+      metadata.ownerId = MetadataEntityRules.convertId(metadata.ownerId);
       if(!metadata.ownerType)
         throw new Error('If ownerId is set, you must have a ownerType (string, lowercase)')
     }

@@ -1,6 +1,6 @@
-export class UserEntity {
+export abstract class EntityRules {
 
-  static convertId(id? : string| number):number {
+  public static convertId(id? : string| number):number {
     if(typeof id === 'number')
       return id;
     if(typeof id === 'string') {
@@ -15,7 +15,7 @@ export class UserEntity {
     throw new Error('id must be a number');
   }
 
-  static validateId(id? : string| number):boolean {
+  public static validateId(id? : string| number):boolean {
     if(typeof id === 'number')
       return true;
     if(typeof id === 'string') {
@@ -28,15 +28,5 @@ export class UserEntity {
       }
     }
     return false;
-  }
-
-  static validatePassword(password: string):boolean {
-    let regexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g
-    return regexp.test(password);
-  }
-
-  static validateLogin(login: string):boolean {
-    let regexp = /^[a-zA-Z0-9]{5,}$/g
-    return regexp.test(login);
   }
 }
