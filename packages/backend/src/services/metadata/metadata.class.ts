@@ -91,8 +91,16 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
       if(existing && isNumber(existing.id) && typeof existing.id !== 'undefined') {
         return this.useCase.update(existing.id, data)
       }
+    } else if(params && params.query) {
+      const found = await this.find(params);
+      if(Array.isArray(found) && found.length > 0) {
+        const existing = found[0];
+        if (existing && isNumber(existing.id) && typeof existing.id !== 'undefined') {
+          return this.useCase.update(existing.id, data)
+        }
+      }
     }
-    throw new NotFound(`id ${id} or filter ${params?.filter} are incorrect for update.`)
+    throw new NotFound(`id ${id} or query ${params?.query} are incorrect for update.`)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -24,6 +24,40 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
     super(filePath);
   }
 
+  public reloadDatabase() {
+    this.database = [];
+    for(const entity of dataLoader(this.filePath, {
+      getColumns: (line:string, lineNumber:number) => {
+        if (lineNumber === 0) { // title line
+          return line.split(',')
+        }
+        //case for serialized array
+        const regexpArray = /("\[.+\]")/g;
+        const m = regexpArray.exec(line);
+        if(m){
+          for(const arrayToReplace of m){
+            const target = arrayToReplace.replace(',',':');
+            line = line.replace(arrayToReplace,target)
+          }
+          const splitLine = line.split(',');
+          const finalLine = []
+          for(const field of splitLine) {
+            if(regexpArray.test(field)){
+              finalLine.push(field.replace(':',','))
+            } else {
+              finalLine.push(field)
+            }
+          }
+          return finalLine;
+        } else {
+          return line.split(',')
+        }
+      }
+    })) {
+      this.database.push(this.loadEntity(entity))
+    }
+  }
+
   get(keyOrId:string | number, ownerType:string |null = '', ownerId:number | null = null):Metadata {
     let metadata;
     if(typeof keyOrId === 'number') {
@@ -66,7 +100,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
       const found = this.database.find((m:Metadata) => {
         if(filter.key) {
           if(filter.ownerType && filter.ownerId) {
-            return m.key === filter.key && m.ownerType === filter.ownerType;
+            return m.key === filter.key && m.ownerType === filter.ownerType && m.ownerId === filter.ownerId;
           }
           return m.key === filter.key;
         } else if(filter.ownerType) {
@@ -119,10 +153,16 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
   }
 
   loadEntity(entityFromFile: any): Metadata {
+    let value = entityFromFile.value;
+    try{
+      value = JSON.parse(value);
+    }catch(err) {
+      //Do nothing, it's only when we are trying to parse the value ...
+    }
     return {
       id: parseInt(entityFromFile.id),
       key: entityFromFile.key,
-      value: entityFromFile.value,
+      value: value,
       isPublic: (entityFromFile.isPublic.toLowerCase() === 'true'),
       ownerType: (entityFromFile.ownerType)?entityFromFile.ownerType:'',
       ownerId: (entityFromFile.ownerId)?parseInt(entityFromFile.ownerId):null
@@ -130,7 +170,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
   }
 
   stringifyEntity(entity: Metadata): string {
-    return `"${entity.id}","${entity.key}",${(entity.value)?JSON.stringify(entity.value):''},"${typeof entity.isPublic === 'boolean'?entity.isPublic:false}","${entity.ownerType ? entity.ownerType:''}","${isNumber(entity.ownerId)?entity.ownerId:''}"\n`;
+    return `"${entity.id}","${entity.key}",${(entity.value)?JSON.stringify(entity.value):''},"${typeof entity.isPublic === 'boolean'?entity.isPublic:false}","${entity.ownerType ? entity.ownerType:''}","${isNumber(entity.ownerId)?entity.ownerId:''}"`;
   }
 
   getHeaders(): string[] {

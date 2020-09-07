@@ -95,7 +95,7 @@ describe('Role service', () => {
   })
 
   it('should create a role when asked for', async () => {
-    await axios.request({
+    const create = await axios.request({
       url: getUrl('role'),
       method: "POST",
       data: {
@@ -114,14 +114,14 @@ describe('Role service', () => {
       }
     })
     expect(response.data).to.be.eql({
-      id:2,
+      id:create.data.id,
       key:"newRole",
       description:"A new role"
     })
   })
 
   it('should update a role when asked for', async () => {
-    await axios.request({
+    let create = await axios.request({
       url: getUrl('role'),
       method: "POST",
       data: {
@@ -140,15 +140,15 @@ describe('Role service', () => {
       }
     })
     expect(response.data).to.be.eql({
-      id:2,
+      id:create.data.id,
       key:"newRole",
       description:"A new role"
     })
-    await axios.request({
-      url: getUrl('role/2'),
+    let update = await axios.request({
+      url: getUrl(`role/${create.data.id}`),
       method: "PUT",
       data: {
-        id:2,
+        id:create.data.id,
         key:"newRole",
         description:"A new role updated"
       },
@@ -157,14 +157,14 @@ describe('Role service', () => {
       }
     })
     response = await axios.request({
-      url: getUrl('role/2'),
+      url: getUrl(`role/${create.data.id}`),
       method: "GET",
       headers: {
         cookie: finalCookie
       }
     })
     expect(response.data).to.be.eql({
-      id:2,
+      id:create.data.id,
       key:"newRole",
       description:"A new role updated"
     })
@@ -180,21 +180,21 @@ describe('Role service', () => {
       }
     })
     response = await axios.request({
-      url: getUrl('role/2'),
+      url: getUrl(`role/${create.data.id}`),
       method: "GET",
       headers: {
         cookie: finalCookie
       }
     })
     expect(response.data).to.be.eql({
-      id:2,
+      id:create.data.id,
       key:"newRole",
       description:"A new role patch"
     })
   })
 
   it('should delete a role when asked for', async () => {
-    await axios.request({
+    const create = await axios.request({
       url: getUrl('role'),
       method: "POST",
       data: {
@@ -213,12 +213,12 @@ describe('Role service', () => {
       }
     })
     expect(response.data).to.be.eql({
-      id:2,
+      id:create.data.id,
       key:"newRole",
       description:"A new role"
     })
     await axios.request({
-      url: getUrl('role/2'),
+      url: getUrl(`role/${create.data.id}`),
       method: "DELETE",
       headers: {
         cookie: finalCookie

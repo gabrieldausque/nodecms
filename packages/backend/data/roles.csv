@@ -1,3 +1,4 @@
 "id","key","description"
 "0","administrators","Administrators group"
 "1","users","Users group"
+"2","specialUsers","special Users group"

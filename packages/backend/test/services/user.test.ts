@@ -314,7 +314,7 @@ describe('User service', () => {
   })
 
   it('should delete a metadata for a user using login', async () => {
-    await axios.request({
+    const createResponse = await axios.request({
       url: getUrl('user/localtest/metadata'),
       method: "POST",
       data: {
@@ -332,11 +332,14 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data.key).to.be.eql('ANewMeta');
-    expect(response.data.value).to.be.eql('MyNewValue');
-    expect(response.data.isPublic).to.be.eql(false);
-    expect(response.data.ownerType).to.be.eql('user');
-    expect(response.data.ownerId).to.be.eql(0);
+    expect(response.data).to.be.eql({
+      id:createResponse.data.id,
+      key:'ANewMeta',
+      value:'MyNewValue',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
+    });
     await axios.request({
       url: getUrl('user/localtest/metadata/ANewMeta'),
       method: "DELETE",
@@ -354,6 +357,51 @@ describe('User service', () => {
     return expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
+  it('should get all role for a user', async() => {
+    let response = await axios.request({
+      url: getUrl('user/localtest/roles'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    expect(response.data).to.be.eql([0,2]);
+  })
+
+  it('should had a role for a user', async() => {
+    let response = await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "POST",
+      data: [1],
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    let list = (await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    })).data;
+    expect(list).to.be.eql([1]);
+    response = await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "PUT",
+      data: [2],
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    list = (await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    })).data;
+    expect(list).to.be.eql([2]);
+  })
 });
 
 

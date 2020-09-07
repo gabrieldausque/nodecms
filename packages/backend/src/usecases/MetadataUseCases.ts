@@ -27,6 +27,9 @@ export class MetadataUseCases extends UseCases<Metadata>  {
   }
 
   async create(data: Metadata):Promise<Metadata> {
+    //based on the data.key, a specific algorithm can be used to modify the way to store the value
+
+    //default algo is here :
     MetadataEntityRules.convert(data);
     return this.storage.create(data);
   }

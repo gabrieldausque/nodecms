@@ -3,3 +3,4 @@
 "1","logo","http://localhost:3030/a-team_logo.png","true","",""
 "2","private-metadata","my private value","false","",""
 "3","pseudonym","MyPseudo","false","user","0"
+"4","roles","[0,2]","false","user","0"

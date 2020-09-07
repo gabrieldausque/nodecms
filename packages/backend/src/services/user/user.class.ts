@@ -24,7 +24,7 @@ interface ServiceOptions {
 export class User extends BaseService implements ServiceMethods<UserDTO>  {
 
   options: ServiceOptions;
-  private useCase: UserUseCases
+  useCase: UserUseCases
 
   needAuthentication(context: any): boolean {
     return true;
