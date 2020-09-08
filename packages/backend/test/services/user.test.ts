@@ -207,12 +207,14 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data.key).to.be.eql('pseudonym');
-    expect(response.data.value).to.be.eql('MyPseudo');
-    expect(response.data.isPublic).to.be.eql(false);
-    expect(response.data.ownerType).to.be.eql('user');
-    expect(response.data.ownerId).to.be.eql(0);
-
+    expect(response.data).to.be.eql({
+      id:3,
+      key:'pseudonym',
+      value:'MyPseudo',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
+    })
   })
 
   it('should create metadata for a user using login', async () => {
@@ -234,15 +236,18 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data.key).to.be.eql('ANewMeta');
-    expect(response.data.value).to.be.eql('MyNewValue');
-    expect(response.data.isPublic).to.be.eql(false);
-    expect(response.data.ownerType).to.be.eql('user');
-    expect(response.data.ownerId).to.be.eql(0);
+    expect(response.data).to.be.eql({
+      id: createResponse.data.id,
+      key: 'ANewMeta',
+      value: 'MyNewValue',
+      isPublic: false,
+      ownerType: 'user',
+      ownerId: 0
+    })
   })
 
   it('should update or patch metadata for a user using login', async () => {
-    await axios.request({
+    const createResponse = await axios.request({
       url: getUrl('user/localtest/metadata'),
       method: "POST",
       data: {
@@ -260,11 +265,14 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data.key).to.be.eql('ANewMeta');
-    expect(response.data.value).to.be.eql('MyNewValue');
-    expect(response.data.isPublic).to.be.eql(false);
-    expect(response.data.ownerType).to.be.eql('user');
-    expect(response.data.ownerId).to.be.eql(0);
+    expect(response.data).to.be.eql({
+      id: createResponse.data.id,
+      key:'ANewMeta',
+      value:'MyNewValue',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
+    })
     await axios.request({
       url: getUrl('user/localtest/metadata/ANewMeta'),
       method: "PUT",
@@ -283,11 +291,14 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data.key).to.be.eql('ANewMeta');
-    expect(response.data.value).to.be.eql('MyNewValueUpdated');
-    expect(response.data.isPublic).to.be.eql(false);
-    expect(response.data.ownerType).to.be.eql('user');
-    expect(response.data.ownerId).to.be.eql(0);
+    expect(response.data).to.be.eql({
+      id: createResponse.data.id,
+      key:'ANewMeta',
+      value:'MyNewValueUpdated',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
+    })
     await axios.request({
       url: getUrl('user/localtest/metadata/ANewMeta'),
       method: "PATCH",
@@ -306,11 +317,14 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data.key).to.be.eql('ANewMeta');
-    expect(response.data.value).to.be.eql('MyNewValuePatch');
-    expect(response.data.isPublic).to.be.eql(false);
-    expect(response.data.ownerType).to.be.eql('user');
-    expect(response.data.ownerId).to.be.eql(0);
+    expect(response.data).to.be.eql({
+      id: createResponse.data.id,
+      key:'ANewMeta',
+      value:'MyNewValuePatch',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
+    })
   })
 
   it('should delete a metadata for a user using login', async () => {
@@ -354,7 +368,7 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    return expect(p).to.be.rejectedWith('Request failed with status code 404');
+    expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
   it('should get all role for a user', async() => {
@@ -365,7 +379,16 @@ describe('User service', () => {
         cookie: finalCookie
       }
     });
-    expect(response.data).to.be.eql([0,2]);
+    expect(response.data).to.be.eql([{
+      description: "Administrators group",
+      id: 0,
+      key: "administrators"
+      },
+      {
+        description: "special Users group",
+        id: 2,
+        key: "specialUsers"
+      }]);
   })
 
   it('should had a role for a user', async() => {
@@ -384,11 +407,14 @@ describe('User service', () => {
         cookie: finalCookie
       }
     })).data;
-    expect(list).to.be.eql([1]);
+    expect(list).to.be.eql([{
+      description: "Users group",
+      id: 1,
+      key: "users"
+    }]);
     response = await axios.request({
-      url: getUrl('user/otheruser/roles'),
+      url: getUrl('user/otheruser/roles/2'),
       method: "PUT",
-      data: [2],
       headers: {
         cookie: finalCookie
       }
@@ -400,7 +426,53 @@ describe('User service', () => {
         cookie: finalCookie
       }
     })).data;
-    expect(list).to.be.eql([2]);
+    expect(list).to.be.eql([{
+      description: "Users group",
+      id: 1,
+      key: "users"
+    },{
+      description: "special Users group",
+      id: 2,
+      key: "specialUsers"
+    }]);
+  })
+
+  it('should remove a role for a user', async() => {
+    let response = await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "POST",
+      data: [1],
+      headers: {
+        cookie: finalCookie
+      }
+    });
+    let list = (await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    })).data;
+    expect(list).to.be.eql([{
+      description: "Users group",
+      id: 1,
+      key: "users"
+    }]);
+    response = await axios.request({
+      url: getUrl('user/otheruser/roles/1'),
+      method: "DELETE",
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    list = (await axios.request({
+      url: getUrl('user/otheruser/roles'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    })).data;
+    expect(list).to.be.eql([]);
   })
 });
 

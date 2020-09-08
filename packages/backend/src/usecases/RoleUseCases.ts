@@ -8,6 +8,15 @@ interface RoleUseCasesConfiguration extends UseCaseConfiguration {
 
 export class RoleUseCases extends UseCases<Role> {
 
+  public static metadata:any[] = [
+    {
+      contractType:'UseCases',
+      contractName:'Role',
+      isShared:true
+    }
+  ]
+
+
   constructor(configuration:RoleUseCasesConfiguration) {
     super('RoleStorage', configuration);
   }

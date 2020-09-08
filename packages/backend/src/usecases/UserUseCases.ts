@@ -3,12 +3,27 @@ import {User, UserStorage} from '../plugins/Storages/User/UserStorage';
 import {UserEntityRules} from "../entities/UserEntityRules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
+import {Metadata} from "../plugins/Storages/Metadata/MetadataStorage";
+import {MetadataUseCases} from "./MetadataUseCases";
+import {isNumber} from "../helpers";
+import {Role} from "../plugins/Storages/Role/RoleStorage";
+import {RoleUseCases} from "./RoleUseCases";
 
 export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 
 }
 
 export class UserUseCases extends UseCases<User> {
+
+  public static metadata:any[] = [
+    {
+      contractType:'UseCases',
+      contractName:'User',
+      isShared:true
+    }
+  ]
+
+
   constructor(configuration: UserUseCasesConfiguration = {
     storage:{
       contractName:'Default'
@@ -72,5 +87,93 @@ export class UserUseCases extends UseCases<User> {
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for delete.')
     return await this.storage.delete(usableId)
+  }
+
+  async getMetadata(user:User, metadataKeyOrId:string | number):Promise<Metadata> {
+    const filter:any = {
+      ownerType:'user',
+      ownerId:user.id
+    }
+    const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+    if(isNumber(metadataKeyOrId)){
+      const metadata = metadataUseCase.get(metadataKeyOrId);
+      if(metadata.ownerType === 'user' && metadata.ownerId === filter.ownerId) {
+        return metadata;
+      }
+    } else {
+      filter.key = metadataKeyOrId;
+      const found = metadataUseCase.find(filter);
+      if(Array.isArray(found) && found.length > 0){
+        return found[0];
+      }
+    }
+    throw new Error(`No metadata with key ${metadataKeyOrId} exists for user with id ${user.id}`);
+  }
+
+  async createMetadata(user: User, data: Metadata) {
+    const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+    UserEntityRules.validateMetadata(user, data);
+    return await metadataUseCase.create(data);
+  }
+
+  async updateMetadata(user: User, data: Metadata) {
+    const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+    UserEntityRules.validateMetadata(user, data);
+    return await metadataUseCase.update(data.id, data);
+  }
+
+  async hasRole(user: User, role: Role):Promise<boolean> {
+    let rolesMetadata:Metadata
+    try {
+      rolesMetadata = await this.getMetadata(user,'roles');
+    }catch(err) {
+      rolesMetadata = await this.createMetadata(user, {
+        key:'roles',
+        value:[]
+      });
+    }
+    return Array.isArray(rolesMetadata.value) &&
+      rolesMetadata.value.length >= 1 &&
+      rolesMetadata.value.indexOf(role.id) >= 0
+  }
+
+  async getRoles(user: User) {
+    let rolesMetadata:Metadata;
+    try {
+      rolesMetadata = await this.getMetadata(user,'roles');
+    }catch(err) {
+      rolesMetadata = await this.createMetadata(user, {
+        key:'roles',
+        value:[]
+      })
+    }
+    if(!Array.isArray(rolesMetadata.value) ||
+      rolesMetadata.value.length <= 0
+    )
+      return [];
+    const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+    const roles:Role[] = [];
+    for(const roleId of rolesMetadata.value) {
+      roles.push(roleUseCases.get(roleId))
+    }
+    return roles;
+  }
+
+  async hadRole(user: User, role: Role) {
+    const hasRole = await this.hasRole(user,role)
+    if(!hasRole){
+      const rolesMetadata:Metadata = await this.getMetadata(user,'roles');
+      rolesMetadata.value.push(role.id);
+      await this.updateMetadata(user,rolesMetadata);
+    }
+  }
+
+  async removeRole(user: User, role: Role) {
+    const hasRole = await this.hasRole(user,role)
+    if(hasRole){
+      const rolesMetadata:Metadata = await this.getMetadata(user,'roles');
+      rolesMetadata.value.splice(rolesMetadata.value.indexOf(role.id),1);
+      await this.updateMetadata(user,rolesMetadata);
+    }
   }
 }

@@ -5,6 +5,9 @@ import { User } from './user.class';
 import hooks from './user.hooks';
 import {isNumber} from "../../helpers";
 import {UserUseCases} from "../../usecases/UserUseCases";
+import {Metadata} from "../../plugins/Storages/Metadata/MetadataStorage";
+import {NotAcceptable} from "@feathersjs/errors";
+import {globalInstancesFactory} from "@hermes/composition";
 
 // Add this service to the service type index
 declare module '../../declarations' {

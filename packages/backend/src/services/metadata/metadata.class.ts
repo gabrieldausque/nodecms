@@ -5,6 +5,7 @@ import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {ServiceOptions} from "../helpers";
 import {isNumber} from "../../helpers";
+import {globalInstancesFactory} from "@hermes/composition";
 
 
 interface MetadataDTO {
@@ -27,7 +28,7 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
   }, app: Application) {
     super(app);
     this.options = options;
-    this.useCase = new MetadataUseCases(options);
+    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata',options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

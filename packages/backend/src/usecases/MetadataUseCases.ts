@@ -8,6 +8,14 @@ export interface MetadataUseCasesConfiguration extends UseCaseConfiguration {
 
 export class MetadataUseCases extends UseCases<Metadata>  {
 
+  public static metadata:any[] = [
+    {
+      contractType:'UseCases',
+      contractName:'Metadata',
+      isShared:true
+    }
+  ]
+
   constructor(configuration:MetadataUseCasesConfiguration = {
     storage: {
       contractName:'Default',
