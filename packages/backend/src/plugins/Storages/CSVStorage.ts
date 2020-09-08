@@ -1,6 +1,7 @@
 import path from 'path';
 import * as fs from 'fs';
 import {Storage, Entity} from './Storage'
+import {Metadata} from "./Metadata/MetadataStorage";
 
 const fsPromises = fs.promises;
 
@@ -19,7 +20,12 @@ export abstract class CSVStorage<T extends Entity> implements Storage<T> {
 
   abstract create(data: T): Promise<T>;
 
-  abstract delete(keyOrId: string | number): Promise<T>;
+  async delete(keyOrId: string | number): Promise<T> {
+    let entity = this.get(keyOrId);
+    this.database.splice(this.database.indexOf(entity),1);
+    await this.saveDatabase();
+    return entity
+  }
 
   abstract exists(keyOrId: string | number): boolean
 
@@ -27,7 +33,13 @@ export abstract class CSVStorage<T extends Entity> implements Storage<T> {
 
   abstract get(keyOrId: string | number): T
 
-  abstract update(data: T): Promise<T>
+  async update(data: T): Promise<T> {
+    this.database.splice(this.database.findIndex((m:Entity) =>
+      m.id === data.id
+    ), 1, data);
+    await this.saveDatabase();
+    return data;
+  }
 
   public abstract loadEntity(entityFromFile:any):T
 

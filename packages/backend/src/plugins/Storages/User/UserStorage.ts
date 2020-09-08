@@ -1,3 +1,5 @@
+import {Storage} from "../Storage";
+
 export interface User {
   id?:number;
   login:string;
@@ -5,7 +7,7 @@ export interface User {
   isActive:boolean;
 }
 
-export interface UserStorage {
+export interface UserStorage extends Storage<User> {
   exists(loginOrId:string|number):boolean;
 
   get(loginOrId: string|number):User;

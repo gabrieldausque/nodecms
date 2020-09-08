@@ -1,3 +1,5 @@
+import {Storage} from '../Storage'
+
 export interface Metadata {
   id?:number;
   key:string;
@@ -7,7 +9,7 @@ export interface Metadata {
   ownerId?:number | null;
 }
 
-export interface MetadataStorage {
+export interface MetadataStorage extends Storage<Metadata> {
   exists(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):boolean;
 
   get(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):Metadata;

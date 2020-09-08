@@ -1,0 +1,7 @@
+"id","on","onType","for","rights","roles"
+0,"operation","create","*","x","[0]"
+1,"operation","update","*","x","[0]"
+2,"operation","patch","*","x","[0]"
+3,"operation","delete","*","x","[0]"
+4,"operation","find","*","x","[0,1]"
+5,"operation","get","*","x","[0,1]"

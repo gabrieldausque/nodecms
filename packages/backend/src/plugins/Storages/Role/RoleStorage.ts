@@ -1,10 +1,12 @@
+import {Storage} from '../Storage'
+
 export interface Role {
   id?:number;
   key:string;
   description?:any;
 }
 
-export interface RoleStorage {
+export interface RoleStorage extends Storage<Role> {
   exists(keyOrId:string | number):boolean;
 
   get(keyOrId:string | number):Role;

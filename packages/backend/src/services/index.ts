@@ -7,6 +7,7 @@ import user from './user/user.service';
 import role from './role/role.service';
 import userRoles from './user-roles/user-roles.service';
 import userMetadata from './user-metadata/user-metadata.service';
+import authorization from './authorization/authorization.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -18,6 +19,7 @@ export default function (app: Application) {
   app.configure(document);
   app.configure(userMetadata);
   app.configure(userRoles);
+  app.configure(authorization);
 }
 
 function configureSwagger(app: Application): void {

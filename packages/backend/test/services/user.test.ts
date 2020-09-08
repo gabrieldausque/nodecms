@@ -4,7 +4,6 @@ import assert from 'assert';
 import chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
-import * as url from "url";
 import * as fs from 'fs';
 import {User} from '../../src/plugins/Storages/User/UserStorage';
 const dataLoader = require('csv-load-sync');

@@ -118,3 +118,6 @@ lib/
 /packages/backend/data/metadata-copy-bck.csv
 /packages/backend/data/roles-copy.csv
 /packages/backend/data/roles-copy-bck.csv
+/packages/backend/package-lock.json
+/packages/frontend/package-lock.json
+/packages/backend/data/authorizations-copy.csv
