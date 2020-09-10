@@ -1,15 +1,17 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
+import {BaseService} from "../BaseService";
 
 interface Data {}
 
 interface ServiceOptions {}
 
-export class Authorization implements ServiceMethods<Data> {
+export class Authorization extends BaseService implements ServiceMethods<Data> {
   app: Application;
   options: ServiceOptions;
 
   constructor (options: ServiceOptions = {}, app: Application) {
+    super(app)
     this.options = options;
     this.app = app;
   }
@@ -48,5 +50,9 @@ export class Authorization implements ServiceMethods<Data> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<Data> {
     return { id };
+  }
+
+  needAuthentication(context: any): boolean {
+    return true;
   }
 }

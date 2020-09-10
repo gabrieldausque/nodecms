@@ -6,6 +6,19 @@ const dataLoader = require('csv-load-sync');
 
 export class CSVAuthorizationStorage extends CSVStorage<Authorization> implements AuthorizationStorage {
 
+  public static metadata:any[] = [
+    {
+      contractType:'AuthorizationStorage',
+      contractName:'CSV',
+      isShared:true
+    },
+    {
+      contractType:'AuthorizationStorage',
+      contractName:'Default',
+      isShared:true
+    },
+  ]
+
   constructor(filepath:string = 'data/authorizations.csv') {
     super(filepath);
   }
@@ -45,7 +58,7 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
   }
 
   getHeaders(): string[] {
-    return ["id","on","onType","for","right","roles"];
+    return ["id","on","onType","for","right","role"];
   }
 
   loadEntity(entityFromFile: any): Authorization {
@@ -53,14 +66,14 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
       id:parseInt(entityFromFile.id),
       on:entityFromFile.on,
       onType:entityFromFile.onType,
-      for:entityFromFile.for,
-      rights:(entityFromFile.rights)?entityFromFile.rights.split(':'):[],
-      roles:(entityFromFile.roles)?JSON.parse(entityFromFile.roles):[]
+      for:entityFromFile.for?entityFromFile.for:'*',
+      right:entityFromFile.right,
+      role:parseInt(entityFromFile.role)
     };
   }
 
   stringifyEntity(entity: Authorization): string {
-    return `"${entity.id}","${entity.on}","${entity.onType}","${entity.for}","${Array.isArray(entity.rights)?entity.rights.join(':'):''}","${Array.isArray(entity.roles)?JSON.stringify(entity.roles):JSON.stringify([])}"`;
+    return `"${entity.id}","${entity.on}","${entity.onType}","${entity.for}","${entity.right}","${entity.role}"`;
   }
 
   async create(data: Authorization): Promise<Authorization> {
@@ -70,14 +83,24 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
         id: this.getNewId(),
         on: data.on,
         onType: data.onType,
-        for:data.for,
-        rights:(Array.isArray(data.rights))?data.rights:[],
-        roles:(Array.isArray(data.roles))?data.roles:[]
+        for:data.for?data.for:'*',
+        right:data.right,
+        role:data.role
       }
       this.database.push(newAuthorization);
       await this.saveDatabase();
       return newAuthorization;
+    } else {
+      await this.update(data);
     }
+    return this.find(data)[0];
+  }
+
+  async update(data:Authorization) {
+    if(!this.exists(data)) {
+      await this.create(data);
+    }
+    //No update is done, right exists or not
     return this.find(data)[0];
   }
 
@@ -87,12 +110,26 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
         return [this.get(filter.id)];
       }
 
-      if(filter.on && filter.onType && filter.for) {
-        const found = this.database.find((a) => {
-          return a.on === filter.on &&
-            a.onType === filter.onType &&
-            (a.for === filter.for || a.for === '*')
-        })
+      if(filter.on && filter.onType && filter.right) {
+        let found:Authorization[];
+
+        if(!filter.role) {
+          found = this.database.filter((a) => {
+            return a.on === filter.on &&
+              a.onType === filter.onType &&
+              (a.for === filter.for || a.for === '*') &&
+              a.right === filter.right
+          });
+        } else {
+          found = this.database.filter((a) => {
+            return a.on === filter.on &&
+              a.onType === filter.onType &&
+              (a.for === filter.for || a.for === '*') &&
+              a.right === filter.right &&
+              a.role === filter.role
+          })
+        }
+
         if(found) {
           if(Array.isArray(found))
             return found;
@@ -105,22 +142,29 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
   }
 
   get(keyOrId: string | number): Authorization {
-    const found = this.find({
-      id:parseInt(keyOrId.toString()),
-      on:'',
-      onType:''
-    })
-    if(Array.isArray(found) && found.length > 0)
-      return found[0];
+    if(isNumber(keyOrId)) {
+      const usableId = (typeof keyOrId === 'string')?parseInt(keyOrId.toString()):keyOrId;
+      const found = this.database.find((a) => a.id === usableId);
+      if(found)
+        return found;
+    }
     throw new Error(`No authorization with id ${keyOrId}`);
   }
 
-  exists(keyOrId: string | number | Authorization): boolean {
-    const found = this.find({
-      id:parseInt(keyOrId.toString()),
-      on:'',
-      onType:''
-    })
+  exists(keyOrIdOrData: string | number | Authorization): boolean {
+    let found:Authorization[] | null = null;
+    if(isNumber(keyOrIdOrData)) {
+      found = this.find({
+        id:parseInt(keyOrIdOrData.toString()),
+        on:'',
+        onType:'',
+        for:'',
+        right:'',
+        role:0
+      })
+    } else {
+      found = this.find(keyOrIdOrData as Authorization)
+    }
     return Array.isArray(found) && found.length > 0;
   }
 

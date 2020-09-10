@@ -5,8 +5,8 @@ export interface Authorization extends Entity{
   on:string,
   onType:string,
   for?:string,
-  rights?:string[],
-  roles?:number[]
+  right:string,
+  role?:number
 }
 
 export interface AuthorizationStorage extends Storage<Authorization> {
