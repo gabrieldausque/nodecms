@@ -37,7 +37,7 @@ export class User extends BaseService implements ServiceMethods<UserDTO>  {
   }, app: Application) {
     super(app);
     this.options = options;
-    this.useCase = new UserUseCases(options);
+    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User', options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,6 +1,8 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
+import {globalInstancesFactory} from "@hermes/composition";
+import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 
 interface Data {}
 
@@ -9,11 +11,13 @@ interface ServiceOptions {}
 export class Authorization extends BaseService implements ServiceMethods<Data> {
   app: Application;
   options: ServiceOptions;
+  private useCase: AuthorizationUseCases;
 
   constructor (options: ServiceOptions = {}, app: Application) {
     super(app)
     this.options = options;
     this.app = app;
+    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization', options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

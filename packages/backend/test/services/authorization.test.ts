@@ -208,6 +208,45 @@ describe('Authorization service', () => {
       expect(updateCall).to.be.rejectedWith('Request failed with status code 405'),
       expect(patchCall).to.be.rejectedWith('Request failed with status code 405')
     ])
+
+  })
+
+  it('should create a new right of type operation/create for service metadata and role specialUsers',async () => {
+    const created = axios.request({
+      url:getUrl('authorization'),
+      method:"POST",
+      data:{
+        on:"operation",
+        onType:"create",
+        for:"metadata",
+        right:"x",
+        role:2
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    const check = await axios.request({
+      url:getUrl('authorization'),
+      method:'GET',
+      params: new URLSearchParams({
+        on:"operation",
+        onType:"create",
+        for:"metadata",
+        right:"x",
+      }).toString(),
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    expect(check.data).to.be.eql({
+      id:7,
+      on:"operation",
+      onType:"create",
+      for:"metadata",
+      right:"x",
+      role:2
+    })
   })
 
 });
