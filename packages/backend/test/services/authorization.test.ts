@@ -212,7 +212,7 @@ describe('Authorization service', () => {
   })
 
   it('should create a new right of type operation/create for service metadata and role specialUsers',async () => {
-    const created = axios.request({
+    const created = await axios.request({
       url:getUrl('authorization'),
       method:"POST",
       data:{
@@ -226,27 +226,91 @@ describe('Authorization service', () => {
         cookie: finalCookie
       }
     })
+
     const check = await axios.request({
       url:getUrl('authorization'),
       method:'GET',
-      params: new URLSearchParams({
+      params: {
         on:"operation",
         onType:"create",
         for:"metadata",
         right:"x",
-      }).toString(),
+        role:2
+      },
       headers: {
         cookie: finalCookie
       }
     })
-    expect(check.data).to.be.eql({
-      id:7,
+    expect(check.data[0]).to.be.eql({
+      id:created.data.id,
       on:"operation",
       onType:"create",
       for:"metadata",
       right:"x",
       role:2
     })
+
+  })
+
+  it('should remove a newly created right of type operation/create for service metadata and role specialUsers',async () => {
+    const created = await axios.request({
+      url:getUrl('authorization'),
+      method:"POST",
+      data:{
+        on:"operation",
+        onType:"create",
+        for:"metadata",
+        right:"x",
+        role:2
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    let check = await axios.request({
+      url:getUrl('authorization'),
+      method:'GET',
+      params: {
+        on:"operation",
+        onType:"create",
+        for:"metadata",
+        right:"x",
+        role:2
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    expect(check.data[0]).to.be.eql({
+      id:created.data.id,
+      on:"operation",
+      onType:"create",
+      for:"metadata",
+      right:"x",
+      role:2
+    })
+    const deleted = await axios.request({
+      url:getUrl( `authorization/${created.data.id}`),
+      method:"DELETE",
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    const checkPromise = axios.request({
+      url:getUrl('authorization'),
+      method:'GET',
+      params: {
+        on:"operation",
+        onType:"create",
+        for:"metadata",
+        right:"x",
+        role:2
+      },
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    return expect(checkPromise).to.be.rejectedWith('Request failed with status code 404');
   })
 
 });

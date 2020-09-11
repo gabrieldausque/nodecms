@@ -32,6 +32,9 @@ export class AuthorizationEntityRules extends EntityRules {
     if(!entity.for)
       entity.for = '*';
 
+    if(entity.role)
+      entity.role = parseInt(entity.role.toString());
+
     return entity
   }
 }

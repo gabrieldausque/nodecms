@@ -3,8 +3,11 @@ import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
+import {Authorization as AuthorizationEntity} from "../../plugins/Storages/Authorization/AuthorizationStorage";
+import {query} from "winston";
+import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
 
-interface Data {}
+type Data = AuthorizationEntity;
 
 interface ServiceOptions {}
 
@@ -22,38 +25,46 @@ export class Authorization extends BaseService implements ServiceMethods<Data> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-    return [];
+    if(params && params.query) {
+      const filter = {
+        on: params.query.on,
+        onType: params.query.onType,
+        for: params.query.for,
+        role: params.query.role,
+        right: params.query.right
+      }
+      const found = this.useCase.find(filter);
+      if(Array.isArray(found) && found.length > 0)
+        return found;
+    }
+    throw new NotFound();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<Data> {
-    return {
-      id, text: `A new message with ID: ${id}!`
-    };
+    throw new NotImplemented();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: Data, params?: Params): Promise<Data> {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
-
-    return data;
+    return this.useCase.create(data);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
-    return data;
+    throw new MethodNotAllowed();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
-    return data;
+    throw new MethodNotAllowed();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<Data> {
-    return { id };
+    if(!id)
+      throw new NotAcceptable('id must be set');
+    return this.useCase.delete(id)
   }
 
   needAuthentication(context: any): boolean {

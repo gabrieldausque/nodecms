@@ -2,7 +2,6 @@ import {Authorization} from "../plugins/Storages/Authorization/AuthorizationStor
 import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {AuthorizationEntityRules} from "../entities/AuthorizationEntityRules";
-import {NotImplemented} from "@feathersjs/errors";
 
 interface AuthorizationUseCasesConfiguration extends UseCaseConfiguration {
 }
@@ -31,19 +30,23 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
   }
 
   async delete(id: string | number): Promise<Authorization> {
-    throw new NotImplemented()
+    const authorization = this.get(id)
+    await this.storage.delete(id);
+    return authorization;
   }
 
   find(filter: Authorization): Authorization[] {
-    throw new NotImplemented()
+    AuthorizationEntityRules.convert(filter);
+    return this.storage.find(filter);
   }
 
   get(id: string | number): Authorization {
-    throw new NotImplemented()
+    const usableId = AuthorizationEntityRules.convertId(id);
+    return this.storage.get(usableId);
   }
 
   async update(id: string | number, entityToUpdate: Authorization): Promise<Authorization> {
-    throw new NotImplemented()
+    throw new Error('Not allowed');
   }
 
 }
