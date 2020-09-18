@@ -119,4 +119,12 @@ export class UserMetadata extends BaseService implements ServiceMethods<Data> {
     return true;
   }
 
+  isAuthorized(context: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isDataAuthorized(data: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+
+
 }

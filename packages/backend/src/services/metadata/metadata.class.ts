@@ -120,6 +120,15 @@ export class Metadata extends BaseService implements ServiceMethods<MetadataDTO>
     throw new NotFound(`No metadata with key : ${id}`);
   }
 
+  isAuthorized(context: any): boolean {
+    //check authorization for method
+    throw new Error("Method not implemented.");
+  }
+
+  isDataAuthorized(data:MetadataDTO):boolean{
+    throw new Error("Method not implemented.");
+  }
+
   needAuthentication(context:any): boolean {
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id){

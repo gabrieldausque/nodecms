@@ -10,7 +10,7 @@ export default {
     all: [
       async (context:any) => {
         const service:BaseService = app.service(context.path) as BaseService;
-        if(service.needAuthentication(context)) {
+        if(service.needAuthentication(context) && service.isAuthorized(context)) {
           await service.validAuthentication(context.params);
         }
       }
@@ -24,7 +24,12 @@ export default {
   },
 
   after: {
-    all: [],
+    all: [ async (context:any) => {
+      const service:BaseService = app.service(context.path) as BaseService;
+      if(service.isDataAuthorized(context.response)) {
+        return context.response;
+      }
+    }],
     find: [],
     get: [],
     create: [],

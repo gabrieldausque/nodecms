@@ -125,4 +125,12 @@ export class UserRoles extends BaseService implements ServiceMethods<Data> {
   needAuthentication(context: any): boolean {
     return true
   }
+
+  isAuthorized(context: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isDataAuthorized(data: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+
 }

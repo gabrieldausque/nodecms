@@ -22,7 +22,6 @@ interface ServiceOptions {
 }
 
 export class User extends BaseService implements ServiceMethods<UserDTO>  {
-
   options: ServiceOptions;
   useCase: UserUseCases
 
@@ -77,4 +76,12 @@ export class User extends BaseService implements ServiceMethods<UserDTO>  {
       throw new NotAcceptable('Please provide a correct id for delete');
     return await this.useCase.delete(id);
   }
+
+  isAuthorized(context: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isDataAuthorized(data: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+
 }

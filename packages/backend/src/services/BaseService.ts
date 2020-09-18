@@ -14,6 +14,8 @@ export abstract class BaseService {
 
   abstract isAuthorized(context:any):boolean
 
+  abstract isDataAuthorized(data:any):boolean;
+
   async validAuthentication(params:any) {
     if(!params.clientId){
       throw new NotAcceptable('You are missing your unique clientId. Please correct and retry.');

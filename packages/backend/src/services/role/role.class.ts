@@ -86,4 +86,12 @@ export class Role extends BaseService implements ServiceMethods<RoleDTO> {
   needAuthentication(context: any): boolean {
     return true;
   }
+
+  isAuthorized(context: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isDataAuthorized(data: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+
 }

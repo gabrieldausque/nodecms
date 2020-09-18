@@ -120,4 +120,12 @@ export class Authentication extends BaseService implements ServiceMethods<Data> 
   needAuthentication(): boolean {
     return false;
   }
+
+  isAuthorized(context: any): boolean {
+    return true;
+  }
+
+  isDataAuthorized(data: any): boolean {
+    return true;
+  }
 }

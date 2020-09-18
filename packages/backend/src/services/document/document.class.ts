@@ -49,4 +49,12 @@ export class Document extends BaseService implements ServiceMethods<Data> {
   needAuthentication(): boolean {
     return true;
   }
+
+  isAuthorized(context: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+  isDataAuthorized(data: any): boolean {
+    throw new Error("Method not implemented.");
+  }
+
 }
