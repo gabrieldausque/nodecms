@@ -21,7 +21,10 @@ interface ServiceOptions {
   }
 }
 
-export class User extends BaseService implements ServiceMethods<UserDTO>  {
+export class User extends BaseService<UserDTO>  {
+  isAuthorized(context: any): boolean {
+      throw new Error("Method not implemented.");
+  }
 
   options: ServiceOptions;
   useCase: UserUseCases

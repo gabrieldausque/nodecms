@@ -26,7 +26,11 @@ interface HoneyPot {
   token: CustomAuthenticatedUserToken;
 }
 
-export class Authentication extends BaseService implements ServiceMethods<Data> {
+export class Authentication extends BaseService<Data> {
+  isAuthorized(context: any): boolean {
+      throw new Error("Method not implemented.");
+  }
+
   options: ServiceOptions;
   authenticator: AuthenticationPlugin
   encryptor: EncryptionPlugin;

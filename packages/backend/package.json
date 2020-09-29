@@ -24,7 +24,7 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run compile && npm run mocha",
+    "test": "npm run compile && NODE_ENV=test npm run mocha",
     "dev": "ts-node-dev --no-notify src/",
     "start": "npm run compile && node lib/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",

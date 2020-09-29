@@ -13,7 +13,10 @@ type Data = Metadata
 
 interface ServiceOptions {}
 
-export class UserMetadata extends BaseService implements ServiceMethods<Data> {
+export class UserMetadata extends BaseService<Data> {
+  isAuthorized(context: any): boolean {
+      throw new Error("Method not implemented.");
+  }
   app: Application;
   options: ServiceOptions;
   private userUseCases: UserUseCases;
