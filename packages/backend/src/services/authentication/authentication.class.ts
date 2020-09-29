@@ -27,9 +27,6 @@ interface HoneyPot {
 }
 
 export class Authentication extends BaseService<Data> {
-  isAuthorized(context: any): boolean {
-      throw new Error("Method not implemented.");
-  }
 
   options: ServiceOptions;
   authenticator: AuthenticationPlugin

@@ -12,9 +12,7 @@ type Data = AuthorizationEntity;
 interface ServiceOptions {}
 
 export class Authorization extends BaseService<Data> {
-  isAuthorized(context: any): boolean {
-      throw new Error("Method not implemented.");
-  }
+
   app: Application;
   options: ServiceOptions;
   private useCase: AuthorizationUseCases;

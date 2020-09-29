@@ -18,9 +18,7 @@ interface MetadataDTO {
 }
 
 export class Metadata extends BaseService<MetadataDTO> {
-  isAuthorized(context: any): boolean {
-      throw new Error("Method not implemented.");
-  }
+
   options: ServiceOptions;
   useCase: MetadataUseCases;
 

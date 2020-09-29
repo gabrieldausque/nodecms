@@ -7,9 +7,7 @@ interface Data {}
 interface ServiceOptions {}
 
 export class Document extends BaseService<Data> {
-  isAuthorized(context: any): boolean {
-      throw new Error("Method not implemented.");
-  }
+
   options: ServiceOptions;
 
   constructor (options: ServiceOptions = {}, app: Application) {
