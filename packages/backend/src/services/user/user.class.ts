@@ -21,7 +21,8 @@ interface ServiceOptions {
   }
 }
 
-export class User extends BaseService implements ServiceMethods<UserDTO>  {
+export class User extends BaseService<UserDTO>  {
+
   options: ServiceOptions;
   useCase: UserUseCases
 

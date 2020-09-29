@@ -18,7 +18,10 @@ interface ServiceOptions {
   }
 }
 
-export class Role extends BaseService implements ServiceMethods<RoleDTO> {
+export class Role extends BaseService<RoleDTO> {
+  isAuthorized(context: any): boolean {
+      throw new Error("Method not implemented.");
+  }
   options: ServiceOptions;
   private useCase: RoleUseCases;
 

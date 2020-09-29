@@ -1,14 +1,27 @@
+import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import {Application} from "../declarations";
 import {NotAcceptable, NotAuthenticated, NotImplemented} from "@feathersjs/errors";
 import app from "../app";
 
-export abstract class BaseService {
+export abstract class BaseService<T> implements ServiceMethods<T> {
 
   app: Application;
 
   protected constructor(app:Application) {
     this.app = app;
   }
+
+    abstract async find(params?: Params | undefined): Promise<T | T[] | Paginated<T>>
+
+    abstract async get(id: Id, params?: Params | undefined): Promise<T>
+
+    abstract create(data: Partial<T> | Partial<T>[], params?: Params | undefined): Promise<T | T[]>
+
+    abstract update(id: NullableId, data: T, params?: Params | undefined): Promise<T | T[]>
+
+    abstract patch(id: NullableId, data: Partial<T>, params?: Params | undefined): Promise<T | T[]>
+
+    abstract remove(id: NullableId, params?: Params | undefined): Promise<T | T[]>
 
   abstract needAuthentication(context:any):boolean;
 

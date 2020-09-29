@@ -14,7 +14,10 @@ type Data = Role
 
 interface ServiceOptions {}
 
-export class UserRoles extends BaseService implements ServiceMethods<Data> {
+export class UserRoles extends BaseService<Data> {
+  isAuthorized(context: any): boolean {
+      throw new Error("Method not implemented.");
+  }
 
   app: Application;
   options: ServiceOptions;
