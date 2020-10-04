@@ -8,6 +8,8 @@ import {MetadataUseCases} from "./MetadataUseCases";
 import {isNumber} from "../helpers";
 import {Role} from "../plugins/Storages/Role/RoleStorage";
 import {RoleUseCases} from "./RoleUseCases";
+import {AuthorizationUseCases} from "./AuthorizationUseCases";
+import {Authorization} from "../plugins/Storages/Authorization/AuthorizationStorage";
 
 export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 
@@ -175,5 +177,30 @@ export class UserUseCases extends UseCases<User> {
       rolesMetadata.value.splice(rolesMetadata.value.indexOf(role.id),1);
       await this.updateMetadata(user,rolesMetadata);
     }
+  }
+
+  async isUserAuthorized(user: User, filter: Authorization) : Promise<boolean> {
+    for(const role of await this.getRoles(user)){
+       const authorizationUseCase:AuthorizationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization');
+       try{
+         const authorizations = authorizationUseCase.find({
+           ...filter,
+           ...{ role:role.id}
+         })
+         if(authorizations.length > 0){
+           return true;
+         }
+       }catch(err) {
+         console.error(err);const authorizations = authorizationUseCase.find({
+         ...filter,
+         ...{ role:role.id}
+       })
+       if(authorizations.length > 0){
+         return true;
+       }
+         throw err;
+       }
+    }
+    return false;
   }
 }

@@ -27,7 +27,7 @@ export class Metadata extends BaseService<MetadataDTO> {
       contractName:'Default'
     }
   }, app: Application) {
-    super(app);
+    super(app, 'metadata');
     this.options = options;
     this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata',options);
   }
@@ -121,12 +121,12 @@ export class Metadata extends BaseService<MetadataDTO> {
     throw new NotFound(`No metadata with key : ${id}`);
   }
 
-  isAuthorized(context: any): boolean {
+  async isAuthorized(context: any): Promise<boolean> {
     //check authorization for method
     throw new Error("Method not implemented.");
   }
 
-  isDataAuthorized(data:MetadataDTO):boolean{
+  async isDataAuthorized(data:MetadataDTO):Promise<boolean>{
     throw new Error("Method not implemented.");
   }
 

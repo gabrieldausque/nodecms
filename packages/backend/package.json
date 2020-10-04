@@ -28,7 +28,7 @@
     "dev": "ts-node-dev --no-notify src/",
     "start": "npm run compile && node lib/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
-    "compile": "shx rm -rf lib/ && tsc"
+    "build": "shx rm -rf lib/ && tsc"
   },
   "standard": {
     "env": [

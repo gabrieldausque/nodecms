@@ -43,7 +43,7 @@ export class Authentication extends BaseService<Data> {
     authentication: {contractName:'Default'},
     encryption: {contractName:'Default'}
     }, app: Application) {
-    super(app);
+    super(app, 'authentication');
     this.options = options;
     this.authenticator = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationPlugin',
       options.authentication.contractName,
@@ -122,11 +122,11 @@ export class Authentication extends BaseService<Data> {
     return false;
   }
 
-  isAuthorized(context: any): boolean {
+  async isAuthorized(context: any): Promise<boolean> {
     return true;
   }
 
-  isDataAuthorized(data: any): boolean {
+  async isDataAuthorized(data: any):Promise< boolean> {
     return true;
   }
 }

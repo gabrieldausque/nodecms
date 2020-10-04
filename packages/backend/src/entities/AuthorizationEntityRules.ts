@@ -16,7 +16,7 @@ export class AuthorizationEntityRules extends EntityRules {
     }
 
     if(entity.on === 'operation') {
-      const authorizedOperations = ['create','get','find','update','patch','delete']
+      const authorizedOperations = ['create','get','find','update','patch','remove']
       if(authorizedOperations.indexOf(entity.onType) < 0)
         throw new Error(`Authorized operations are ${authorizedOperations.join('|')}. please correct`);
 

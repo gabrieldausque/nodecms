@@ -6,6 +6,7 @@ import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 import {Authorization as AuthorizationEntity} from "../../plugins/Storages/Authorization/AuthorizationStorage";
 import {query} from "winston";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
+import {UserUseCases} from "../../usecases/UserUseCases";
 
 type Data = AuthorizationEntity;
 
@@ -15,10 +16,10 @@ export class Authorization extends BaseService<Data> {
 
   app: Application;
   options: ServiceOptions;
-  private useCase: AuthorizationUseCases;
+  public useCase: AuthorizationUseCases;
 
   constructor (options: ServiceOptions = {}, app: Application) {
-    super(app)
+    super(app, 'authorization')
     this.options = options;
     this.app = app;
     this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization', options);
@@ -72,10 +73,7 @@ export class Authorization extends BaseService<Data> {
     return true;
   }
 
-  isAuthorized(context: any): boolean {
-    return true;
-  }
-  isDataAuthorized(data: any): boolean {
+  async isDataAuthorized(data: any):Promise< boolean> {
     return true;
   }
 

@@ -35,7 +35,7 @@ export class User extends BaseService<UserDTO>  {
       contractName:'Default'
     }
   }, app: Application) {
-    super(app);
+    super(app, 'role');
     this.options = options;
     this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User', options);
   }
@@ -78,10 +78,10 @@ export class User extends BaseService<UserDTO>  {
     return await this.useCase.delete(id);
   }
 
-  isAuthorized(context: any): boolean {
+  isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  isDataAuthorized(data: any): boolean {
+  async isDataAuthorized(data: any):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

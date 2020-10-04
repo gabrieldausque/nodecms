@@ -22,7 +22,7 @@ export class UserRoles extends BaseService<Data> {
   private roleUseCases: RoleUseCases;
 
   constructor (options: ServiceOptions = {}, app: Application) {
-    super(app);
+    super(app, 'user-roles');
     this.options = options;
     this.app = app;
     this.userUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
@@ -32,7 +32,7 @@ export class UserRoles extends BaseService<Data> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
     if(!params || !params.route || !params.route.idOrLogin)
-      throw new NotAcceptable(`No user id`);
+      throw new NotFound(`No user id`);
     try {
       const user:User = this.userUseCases.get(params.route.idOrLogin);
       return await this.userUseCases.getRoles(user);
@@ -126,10 +126,10 @@ export class UserRoles extends BaseService<Data> {
     return true
   }
 
-  isAuthorized(context: any): boolean {
+  isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  isDataAuthorized(data: any): boolean {
+  async isDataAuthorized(data: any):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,4 +1,4 @@
-import {NotAcceptable, NotAuthenticated, NotImplemented} from "@feathersjs/errors";
+import {NotAcceptable, NotAuthenticated, NotImplemented, MethodNotAllowed} from "@feathersjs/errors";
 import app from "./app";
 import {BaseService} from "./services/BaseService";
 import Base = Mocha.reporters.Base;
@@ -10,8 +10,11 @@ export default {
     all: [
       async (context:any) => {
         const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-        if(service.needAuthentication(context) && service.isAuthorized(context)) {
+        if(service.needAuthentication(context)) {
           await service.validAuthentication(context.params);
+          if(!(await service.isAuthorized(context))) {
+            throw new MethodNotAllowed();
+          }
         }
       }
     ],
@@ -26,7 +29,7 @@ export default {
   after: {
     all: [ async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(service.isDataAuthorized(context.response)) {
+      if(await service.isDataAuthorized(context.response)) {
         return context.response;
       }
     }],

@@ -2,7 +2,7 @@
 0,"operation","create","*","x",0
 1,"operation","update","*","x",0
 2,"operation","patch","*","x",0
-3,"operation","delete","*","x",0
+3,"operation","remove","*","x",0
 4,"operation","find","*","x",0
 5,"operation","get","*","x",0
-6,"operation","delete","user","x",1
+6,"operation","remove","user","x",1

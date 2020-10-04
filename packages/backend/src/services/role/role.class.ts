@@ -28,7 +28,7 @@ export class Role extends BaseService<RoleDTO> {
       contractName:'Default'
     }
   }, app: Application) {
-    super(app);
+    super(app,'role');
     this.options = options;
     this.useCase = new RoleUseCases(options);
   }
@@ -88,10 +88,10 @@ export class Role extends BaseService<RoleDTO> {
     return true;
   }
 
-  isAuthorized(context: any): boolean {
+  isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  isDataAuthorized(data: any): boolean {
+  async isDataAuthorized(data: any):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

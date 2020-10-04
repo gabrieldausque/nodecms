@@ -12,14 +12,14 @@ import authorization from './authorization/authorization.service';
 
 export default function (app: Application) {
   configureSwagger(app);
-  app.configure(authentication);
   app.configure(metadata);
   app.configure(role);
   app.configure(user);
-  app.configure(document);
   app.configure(userMetadata);
   app.configure(userRoles);
+  app.configure(authentication);
   app.configure(authorization);
+  app.configure(document);
 }
 
 function configureSwagger(app: Application): void {

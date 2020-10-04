@@ -21,7 +21,7 @@ export class UserMetadata extends BaseService<Data> {
   private metadataUseCases: MetadataUseCases;
 
   constructor (options: ServiceOptions = {}, app: Application) {
-    super(app);
+    super(app,'user-metadata');
     this.options = options;
     this.app = app;
     this.userUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
@@ -120,10 +120,10 @@ export class UserMetadata extends BaseService<Data> {
     return true;
   }
 
-  isAuthorized(context: any): boolean {
+  isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  isDataAuthorized(data: any): boolean {
+  async isDataAuthorized(data: any):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

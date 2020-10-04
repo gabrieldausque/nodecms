@@ -1,6 +1,7 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
+import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 
 interface Data {}
 
@@ -11,7 +12,7 @@ export class Document extends BaseService<Data> {
   options: ServiceOptions;
 
   constructor (options: ServiceOptions = {}, app: Application) {
-    super(app);
+    super(app,'document');
     this.options = options;
   }
 
@@ -51,10 +52,11 @@ export class Document extends BaseService<Data> {
     return true;
   }
 
-  isAuthorized(context: any): boolean {
-    throw new Error("Method not implemented.");
+  async isAuthorized(context: any): Promise<boolean> {
+    return false;
   }
-  isDataAuthorized(data: any): boolean {
+
+  async isDataAuthorized(data: any):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

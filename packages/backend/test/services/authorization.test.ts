@@ -44,21 +44,21 @@ describe('Authorization CSV storage', function () {
 
     const found = storage.find({
       on:'operation',
-      onType:'delete',
+      onType:'remove',
       for:'user',
       right:'x'
     })
     expect(found).to.be.eql([{
       id:3,
       on:'operation',
-      onType:'delete',
+      onType:'remove',
       for:'*',
       right:'x',
       role:0
     },{
       id:6,
       on:'operation',
-      onType:'delete',
+      onType:'remove',
       for:'user',
       right:'x',
       role:1
