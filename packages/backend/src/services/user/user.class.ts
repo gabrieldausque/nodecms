@@ -2,7 +2,7 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {BaseService} from '../BaseService';
 import {globalInstancesFactory} from '@hermes/composition';
-import {UserStorage} from '../../plugins/Storages/User/UserStorage'
+import {UserStorage, User as UserEntity} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
 
@@ -81,7 +81,7 @@ export class User extends BaseService<UserDTO>  {
   isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  async isDataAuthorized(data: any):Promise< boolean> {
+  async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

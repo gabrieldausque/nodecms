@@ -6,6 +6,7 @@ import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {ServiceOptions} from "../helpers";
 import {isNumber} from "../../helpers";
 import {globalInstancesFactory} from "@hermes/composition";
+import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
 
 
 interface MetadataDTO {
@@ -121,13 +122,21 @@ export class Metadata extends BaseService<MetadataDTO> {
     throw new NotFound(`No metadata with key : ${id}`);
   }
 
-  async isAuthorized(context: any): Promise<boolean> {
-    //check authorization for method
-    throw new Error("Method not implemented.");
-  }
-
-  async isDataAuthorized(data:MetadataDTO):Promise<boolean>{
-    throw new Error("Method not implemented.");
+  async isDataAuthorized(data:MetadataDTO | MetadataDTO[],right:string='r',user?:UserEntity):Promise<boolean>{
+    if(Array.isArray(data)) {
+      for(const oneData of data){
+        if(!(await this.isDataAuthorized(oneData)))
+          return false;
+      }
+      return true;
+    } else {
+      const searchData = this.useCase.find(data);
+      if(Array.isArray(searchData) && searchData.length > 0) {
+        if(searchData[0].isPublic)
+          return searchData[0].isPublic;
+      }
+      return false;
+    }
   }
 
   needAuthentication(context:any): boolean {

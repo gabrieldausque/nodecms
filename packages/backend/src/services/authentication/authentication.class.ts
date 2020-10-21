@@ -5,6 +5,7 @@ import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/
 import {NotAcceptable} from "@feathersjs/errors";
 import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService} from "../BaseService";
+import {User as UserEntity} from '../../plugins/Storages/User/UserStorage';
 
 interface Data {
   login?:string,
@@ -126,7 +127,7 @@ export class Authentication extends BaseService<Data> {
     return true;
   }
 
-  async isDataAuthorized(data: any):Promise< boolean> {
+  async isDataAuthorized(data: any, right:string='r',user?:UserEntity):Promise< boolean> {
     return true;
   }
 }

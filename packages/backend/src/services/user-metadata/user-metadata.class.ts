@@ -4,7 +4,7 @@ import {BaseService} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {Metadata} from "../../plugins/Storages/Metadata/MetadataStorage";
-import {User} from "../../plugins/Storages/User/UserStorage";
+import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
 import {isNumber} from "../../helpers";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
@@ -37,7 +37,7 @@ export class UserMetadata extends BaseService<Data> {
   async get (id: Id, params?: Params): Promise<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
-    const user:User = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
     const metadataKeyOrId = id;
     try {
       return await this.userUseCases.getMetadata(user, metadataKeyOrId);
@@ -50,7 +50,7 @@ export class UserMetadata extends BaseService<Data> {
   async create (data: Data, params?: Params): Promise<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id indicated`);
-    const user:User = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
     return await this.userUseCases.createMetadata(user, data);
   }
 
@@ -61,7 +61,7 @@ export class UserMetadata extends BaseService<Data> {
       throw new NotAcceptable(`No user id indicated`);
     if(!id)
       throw new NotAcceptable(`No metadata id indicated`);
-    const user:User = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
 
     let metadata:Metadata;
     if(isNumber(id))
@@ -93,7 +93,7 @@ export class UserMetadata extends BaseService<Data> {
       throw new NotAcceptable(`No user id indicated`);
     if(!id)
       throw new NotAcceptable(`No metadata id indicated`);
-    const user:User = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
     let metadata:Metadata;
     if(isNumber(id))
       metadata = this.metadataUseCases.get(id);
@@ -123,7 +123,7 @@ export class UserMetadata extends BaseService<Data> {
   isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  async isDataAuthorized(data: any):Promise< boolean> {
+  async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

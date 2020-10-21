@@ -2,6 +2,7 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
+import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
 
 interface Data {}
 
@@ -56,7 +57,7 @@ export class Document extends BaseService<Data> {
     return false;
   }
 
-  async isDataAuthorized(data: any):Promise< boolean> {
+  async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

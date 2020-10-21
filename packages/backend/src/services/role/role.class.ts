@@ -3,6 +3,7 @@ import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
+import {User as UserEntity} from '../../plugins/Storages/User/UserStorage';
 
 interface RoleDTO {
   id?:number;
@@ -88,11 +89,8 @@ export class Role extends BaseService<RoleDTO> {
     return true;
   }
 
-  isAuthorized(context: any): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
-  async isDataAuthorized(data: any):Promise< boolean> {
-    throw new Error("Method not implemented.");
+  async isDataAuthorized(data: any, right:string='r',user?:UserEntity):Promise< boolean> {
+    return this.useCase.isDataAuthorized(data,right,user);
   }
 
 }

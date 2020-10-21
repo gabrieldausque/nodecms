@@ -6,3 +6,6 @@
 4,"operation","find","*","x",0
 5,"operation","get","*","x",0
 6,"operation","remove","user","x",1
+7,"data","role",*,"r",0
+8,"data","role",*,"r",1
+9,"data","role",*,"w",0

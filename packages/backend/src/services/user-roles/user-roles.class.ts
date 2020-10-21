@@ -5,7 +5,7 @@ import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
-import {User} from "../../plugins/Storages/User/UserStorage";
+import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
 import {Role} from "../../plugins/Storages/Role/RoleStorage";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {isNumber} from "../../helpers";
@@ -34,7 +34,7 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotFound(`No user id`);
     try {
-      const user:User = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
       return await this.userUseCases.getRoles(user);
     } catch(err) {
       throw new NotFound(err.message);
@@ -46,7 +46,7 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
-      const user:User = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
       const role:Role = this.roleUseCases.get(id);
       if(await this.userUseCases.hasRole(user, role))
         return role;
@@ -61,7 +61,7 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
-      const user:User = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(data)) {
         role = this.roleUseCases.get(parseInt(data.toString()));
@@ -82,7 +82,7 @@ export class UserRoles extends BaseService<Data> {
     if(!id)
       throw new NotAcceptable(`No Role id to had`);
     try {
-      const user:User = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(id)) {
         role = this.roleUseCases.get(parseInt(id.toString()));
@@ -108,7 +108,7 @@ export class UserRoles extends BaseService<Data> {
     if(!id)
       throw new NotAcceptable(`No Role id to had`);
     try {
-      const user:User = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(id)) {
         role = this.roleUseCases.get(parseInt(id.toString()));
@@ -129,7 +129,8 @@ export class UserRoles extends BaseService<Data> {
   isAuthorized(context: any): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  async isDataAuthorized(data: any):Promise< boolean> {
+
+  async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
     throw new Error("Method not implemented.");
   }
 

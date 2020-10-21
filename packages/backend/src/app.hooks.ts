@@ -20,21 +20,46 @@ export default {
     ],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [async (context:any) => {
+      const service:BaseService<any> = app.service(context.path) as BaseService<any>;
+      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        return context.result;
+      }
+    }],
+    update: [async (context:any) => {
+      const service:BaseService<any> = app.service(context.path) as BaseService<any>;
+      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        return context.result;
+      }
+    }],
+    patch: [async (context:any) => {
+      const service:BaseService<any> = app.service(context.path) as BaseService<any>;
+      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        return context.result;
+      }
+    }],
+    remove: [async (context:any) => {
+      const service:BaseService<any> = app.service(context.path) as BaseService<any>;
+      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        return context.result;
+      }
+    }]
   },
 
   after: {
-    all: [ async (context:any) => {
+    all: [],
+    find: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.response)) {
-        return context.response;
+      if(await service.isDataAuthorized(context.result, 'r',context.params.user)) {
+        return context.result;
       }
     }],
-    find: [],
-    get: [],
+    get: [async (context:any) => {
+      const service:BaseService<any> = app.service(context.path) as BaseService<any>;
+      if(await service.isDataAuthorized(context.result, 'r',context.params.user)) {
+        return context.result;
+      }
+    }],
     create: [],
     update: [],
     patch: [],

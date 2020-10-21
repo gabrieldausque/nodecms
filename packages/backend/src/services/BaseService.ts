@@ -42,8 +42,7 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
     return false;
   }
 
-
-  abstract isDataAuthorized(data:any):Promise<boolean>;
+  abstract isDataAuthorized(data:any, right:string, user?:any):Promise<boolean>;
 
   async validAuthentication(params:any) {
     if(!params.clientId){

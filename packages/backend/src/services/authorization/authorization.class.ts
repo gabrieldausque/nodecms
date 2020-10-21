@@ -7,6 +7,7 @@ import {Authorization as AuthorizationEntity} from "../../plugins/Storages/Autho
 import {query} from "winston";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
 import {UserUseCases} from "../../usecases/UserUseCases";
+import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
 
 type Data = AuthorizationEntity;
 
@@ -69,11 +70,19 @@ export class Authorization extends BaseService<Data> {
     return this.useCase.delete(id)
   }
 
+  async isAuthorized(context: any): Promise<boolean> {
+    if(context.method.toLowerCase() === 'update' ||
+    context.method.toLowerCase() === 'patch'
+    )
+      throw new MethodNotAllowed(`Method ${context.method} is not allowed`);
+    return super.isAuthorized(context);
+  }
+
   needAuthentication(context: any): boolean {
     return true;
   }
 
-  async isDataAuthorized(data: any):Promise< boolean> {
+  async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
     return true;
   }
 
