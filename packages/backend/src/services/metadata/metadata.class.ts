@@ -132,8 +132,14 @@ export class Metadata extends BaseService<MetadataDTO> {
     } else {
       const searchData = this.useCase.find(data);
       if(Array.isArray(searchData) && searchData.length > 0) {
-        if(searchData[0].isPublic)
-          return searchData[0].isPublic;
+        const oneData = searchData[0];
+        if(oneData.isPublic)
+          return oneData.isPublic;
+        else
+        {
+          //TODO : find roles of user, and search for the right authorization for reading this data
+          return this.useCase.isDataAuthorized(oneData, right, user);
+        }
       }
       return false;
     }

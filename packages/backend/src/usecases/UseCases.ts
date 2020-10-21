@@ -18,7 +18,9 @@ export abstract class UseCases<T extends Entity> {
   abstract async create(entity:T): Promise<T>;
   abstract async update(id: string | number, entityToUpdate:T): Promise<T>;
   abstract async delete(id: string | number): Promise<T>;
+
   async isDataAuthorized(data:any, right:string='r', user?:any):Promise<boolean> {
-    return true;
+    //TODO : search for the right authorization for data id, expected right and all user roles
+    return false;
   }
 }

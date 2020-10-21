@@ -1,4 +1,4 @@
-import {NotAcceptable, NotAuthenticated, NotImplemented, MethodNotAllowed} from "@feathersjs/errors";
+import {NotAcceptable, Forbidden, NotAuthenticated, NotImplemented, MethodNotAllowed} from "@feathersjs/errors";
 import app from "./app";
 import {BaseService} from "./services/BaseService";
 import Base = Mocha.reporters.Base;
@@ -20,28 +20,23 @@ export default {
     ],
     find: [],
     get: [],
-    create: [async (context:any) => {
-      const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
-        return context.result;
-      }
-    }],
+    create: [],
     update: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
-        return context.result;
+      if(!await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        throw new Forbidden('Data asked is not authorized for your account');
       }
     }],
     patch: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
-        return context.result;
+      if(!await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        throw new Forbidden('Data asked is not authorized for your account');
       }
     }],
     remove: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.result, 'w',context.params.user)) {
-        return context.result;
+      if(!await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+        throw new Forbidden('Data asked is not authorized for your account');
       }
     }]
   },
@@ -50,14 +45,14 @@ export default {
     all: [],
     find: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.result, 'r',context.params.user)) {
-        return context.result;
+      if(!await service.isDataAuthorized(context.result, 'r',context.params.user)) {
+        throw new Forbidden('Data asked is not authorized for your account');
       }
     }],
     get: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(await service.isDataAuthorized(context.result, 'r',context.params.user)) {
-        return context.result;
+      if(!await service.isDataAuthorized(context.result, 'r',context.params.user)) {
+        throw new Forbidden('Data asked is not authorized for your account');
       }
     }],
     create: [],

@@ -6,7 +6,6 @@ chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 //@ts-ignore
 import app from '../../src/app';
-
 import {Server} from "http";
 import axios from "axios";
 import { promisify } from 'util';
@@ -15,6 +14,7 @@ import * as url from 'url';
 import * as fs from "fs";
 import {Metadata, MetadataStorage} from "../../src/plugins/Storages/Metadata/MetadataStorage";
 import {CSVMetadataStorage} from "../../src/plugins/Storages/Metadata/CSVMetadataStorage";
+import {Metadata as MetadataService} from '../../src/services/metadata/metadata.class';
 const dataLoader = require('csv-load-sync');
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string) => url.format({
@@ -28,6 +28,7 @@ const sleep = promisify(setTimeout);
 describe('Metadata service', () => {
 
   let server: Server;
+  let params:any = {};
   let finalCookie = '';
   let metadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage','Default');
 
@@ -43,7 +44,23 @@ describe('Metadata service', () => {
         }
       })
       for(const cookie of authResponse.headers['set-cookie']) {
-        finalCookie += `${cookie.split(';')[0]}; `
+        const cookieString = cookie.split(';')[0];
+        const cookieName = cookieString.split('=')[0];
+        const cookieValue = cookieString.split('=')[1];
+        switch(cookieName) {
+          case 'ncms-uniqueid': {
+            params.clientId = cookieValue
+            break;
+          }
+          case 'ncms-token': {
+            params.authenticationToken = cookieValue;
+            break;
+          }
+          default: {
+            params[cookieName] = cookieValue;
+          }
+        }
+        finalCookie += `${cookieString}; `
       }
       done();
     });
@@ -87,7 +104,7 @@ describe('Metadata service', () => {
     expect(service.get('private-metadata')).to.be.rejected
   })
 
-  it('should create a new metadata for the application (no owner type, no owner id)', async () => {
+  it('should create a new metadata for the application (no owner type, no owner id) from external client', async () => {
     const response = await axios.request({
       url: getUrl('metadata'),
       method: "POST",
@@ -104,7 +121,49 @@ describe('Metadata service', () => {
     expect(newMetadata).to.be.ok;
   })
 
+  it('should create a new metadata for the application (no owner type, no owner id)', async () => {
+    const service:MetadataService = app.service('metadata');
+    await service.create({
+      key:"newMetadata",
+      value:"newValue",
+      isPublic:true,
+    }, params)
+    const newMetadata = database().find((m:any) => m.key === "newMetadata");
+    expect(newMetadata).to.be.ok;
+  })
+
   it('should create a new metadata for a document with id 5)', async () => {
+    const service:MetadataService = app.service('metadata');
+    const metadataFromResponse = await service.create(
+      {
+        key:"newMetadata",
+        value:"newValue",
+        isPublic:false,
+        ownerType: "document",
+        ownerId: 5
+      }
+    ,params);
+    const newMetadata:any = database().find((m:any) => m.key === "newMetadata" &&
+      m.ownerType === "document" &&
+      m.ownerId === "5"
+    );
+    expect(newMetadata).to.be.ok;
+    params.query = {
+      key:"newMetadata",
+      ownerType: "document",
+      ownerId: 5
+    };
+    const readData:Metadata = (await service.find(params) as any)[0];
+    expect(readData.id).to.eql(metadataFromResponse.id);
+    expect(readData.key).to.eql("newMetadata");
+    expect(readData.value).to.eql("newValue");
+    expect(readData.isPublic).to.eql(false);
+    expect(readData.ownerType).to.eql("document");
+    expect(readData.ownerId).to.eql(5);
+  })
+
+
+  it('should create a new metadata for a document with id 5) from external client', async () => {
     const response = await axios.request({
       url: getUrl('metadata'),
       method: "POST",

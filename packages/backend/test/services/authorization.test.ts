@@ -7,6 +7,7 @@ import {expect, getUrl} from '../../src/tests/TestsHelpers'
 import {Server} from "http";
 import axios from "axios";
 import {globalInstancesFactory} from "@hermes/composition";
+import {Authorization} from "../../src/services/authorization/authorization.class";
 const port = app.get('port') || 3030;
 
 describe('Authorization CSV storage', function () {
@@ -153,6 +154,7 @@ describe('Authorization service', () => {
 
   let server: Server;
   let finalCookie = '';
+  let detailedCookie:any = {};
   let authorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'Default');
 
   before((done) => {
@@ -167,7 +169,11 @@ describe('Authorization service', () => {
         }
       })
       for(const cookie of authResponse.headers['set-cookie']) {
-        finalCookie += `${cookie.split(';')[0]}; `
+        const cookieString = cookie.split(';')[0];
+        const cookieName = cookieString.split('=')[0];
+        const cookieValue = cookieString.split('=')[1];
+        detailedCookie[cookieName] = cookieValue;
+        finalCookie += `${cookieString}; `
       }
       done();
     });
@@ -189,6 +195,24 @@ describe('Authorization service', () => {
   });
 
   it('should reject call for update method', async () => {
+
+    const service:Authorization = app.service('authorization');
+    const updateCall = service.update(0,{
+      on:'operation',
+      onType:'create',
+      right:'x',
+      role:1
+    },{
+      clientId: detailedCookie['ncms-uniqueid'],
+      authenticationToken: detailedCookie['ncms-token'],
+      realm:detailedCookie['realm']
+    });
+    return Promise.all([
+      expect(updateCall).to.be.rejectedWith('Method update is not allowed'),
+    ])
+  })
+
+  it('should reject call for update method from external client', async () => {
     const updateCall = axios.request({
       url:getUrl('authorization/0'),
       method:"PUT",

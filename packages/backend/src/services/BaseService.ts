@@ -53,7 +53,8 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
       throw new NotAuthenticated('No realm specified, authentication can\'t be checked. Please authenticate.');
     }
 
-    if(params.realm !== app.get('authentication').realm) {
+    const appRealm = app.get('authentication').realm;
+    if(params.realm.trim() !== appRealm.trim()) {
       // TODO : if not local authority keys, call other www-authenticate realm to check token
       throw new NotImplemented('Federation of authentication not implemented. Will be done in further release');
     } else {
