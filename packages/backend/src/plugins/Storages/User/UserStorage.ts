@@ -1,11 +1,5 @@
 import {Storage} from "../Storage";
-
-export interface User {
-  id?:number;
-  login:string;
-  password:string;
-  isActive:boolean;
-}
+import {User} from "../../../entities/User";
 
 export interface UserStorage extends Storage<User> {
   exists(loginOrId:string|number):boolean;

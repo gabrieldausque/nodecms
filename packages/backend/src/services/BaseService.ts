@@ -58,12 +58,15 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
       // TODO : if not local authority keys, call other www-authenticate realm to check token
       throw new NotImplemented('Federation of authentication not implemented. Will be done in further release');
     } else {
+      //TODO : replace this by a useCase (Currently not implemented)
       const authenticationService = this.app.service('authentication');
-      const user = await authenticationService.get(authenticationService.encryptor.decryptClientId(params.clientId), params);
-      if(!user) {
+      const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
+      const login = authenticationService.encryptor.decryptClientId(params.clientId);
+      const userIsAuthenticated = await authenticationService.get(login, params);
+      if(!userIsAuthenticated) {
         throw new NotAuthenticated('Please authenticate before using this application');
       } else {
-        params.user = user;
+        params.user = await userUseCase.get(login);
         //TODO : add user role from local or other www-authenticate realm
       }
     }

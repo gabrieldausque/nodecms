@@ -12,9 +12,10 @@ import { promisify } from 'util';
 import {globalInstancesFactory} from '@hermes/composition';
 import * as url from 'url';
 import * as fs from "fs";
-import {Metadata, MetadataStorage} from "../../src/plugins/Storages/Metadata/MetadataStorage";
+import {MetadataStorage} from "../../src/plugins/Storages/Metadata/MetadataStorage";
 import {CSVMetadataStorage} from "../../src/plugins/Storages/Metadata/CSVMetadataStorage";
 import {Metadata as MetadataService} from '../../src/services/metadata/metadata.class';
+import {Metadata} from "../../src/entities/Metadata";
 const dataLoader = require('csv-load-sync');
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string) => url.format({

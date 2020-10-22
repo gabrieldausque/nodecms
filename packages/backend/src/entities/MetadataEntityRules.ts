@@ -1,6 +1,6 @@
-import {Metadata} from "../plugins/Storages/Metadata/MetadataStorage";
 import {isNumber} from "../helpers";
 import {EntityRules} from "./EntityRules";
+import {Metadata} from "./Metadata";
 
 export class MetadataEntityRules extends EntityRules {
   static validateKey(key:string):boolean {

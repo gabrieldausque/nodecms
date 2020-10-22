@@ -3,10 +3,6 @@ import {ServiceAddons, ServiceMethods} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { Metadata } from './metadata.class';
 import hooks from './metadata.hooks';
-import {isNumber} from "../../helpers";
-import {Entity} from "../../plugins/Storages/Storage";
-import {User} from "../../plugins/Storages/User/UserStorage";
-import {NotAcceptable} from "@feathersjs/errors";
 
 // Add this service to the service type index
 declare module '../../declarations' {

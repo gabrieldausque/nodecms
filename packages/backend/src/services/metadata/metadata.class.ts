@@ -6,7 +6,7 @@ import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {ServiceOptions} from "../helpers";
 import {isNumber} from "../../helpers";
 import {globalInstancesFactory} from "@hermes/composition";
-import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
+import {User as UserEntity} from "../../entities/User";
 
 
 interface MetadataDTO {
@@ -125,7 +125,7 @@ export class Metadata extends BaseService<MetadataDTO> {
   async isDataAuthorized(data:MetadataDTO | MetadataDTO[],right:string='r',user?:UserEntity):Promise<boolean>{
     if(Array.isArray(data)) {
       for(const oneData of data){
-        if(!(await this.isDataAuthorized(oneData)))
+        if(!(await this.isDataAuthorized(oneData, right,user)))
           return false;
       }
       return true;

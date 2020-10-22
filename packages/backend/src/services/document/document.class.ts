@@ -2,7 +2,7 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
-import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
+import {User as UserEntity} from "../../entities/User";
 
 interface Data {}
 

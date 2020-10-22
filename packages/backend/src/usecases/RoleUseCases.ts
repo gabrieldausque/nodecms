@@ -1,7 +1,7 @@
 import {UseCases} from "./UseCases";
-import {Role} from "../plugins/Storages/Role/RoleStorage";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {RoleEntityRules} from "../entities/RoleEntityRules";
+import {Role} from "../entities/Role";
 
 interface RoleUseCasesConfiguration extends UseCaseConfiguration {
 }
@@ -18,7 +18,7 @@ export class RoleUseCases extends UseCases<Role> {
 
 
   constructor(configuration:RoleUseCasesConfiguration) {
-    super('RoleStorage', configuration);
+    super('role','RoleStorage', configuration);
   }
 
   async create(entity: Role): Promise<Role> {

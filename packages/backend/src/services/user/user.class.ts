@@ -2,9 +2,10 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {BaseService} from '../BaseService';
 import {globalInstancesFactory} from '@hermes/composition';
-import {UserStorage, User as UserEntity} from '../../plugins/Storages/User/UserStorage'
+import {UserStorage} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
+import {User as UserEntity} from "../../entities/User";
 
 interface UserDTO {
   id?:number
@@ -50,6 +51,7 @@ export class User extends BaseService<UserDTO>  {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
+    //TODO : maybe hide password in object, if calling user is not the asked user
     return this.useCase.get(id);
   }
 

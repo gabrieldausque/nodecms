@@ -1,7 +1,8 @@
-import {Metadata, MetadataStorage} from "../plugins/Storages/Metadata/MetadataStorage";
+import {MetadataStorage} from "../plugins/Storages/Metadata/MetadataStorage";
 import {MetadataEntityRules} from "../entities/MetadataEntityRules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
+import {Metadata} from "../entities/Metadata";
 
 export interface MetadataUseCasesConfiguration extends UseCaseConfiguration {
 }
@@ -21,7 +22,7 @@ export class MetadataUseCases extends UseCases<Metadata>  {
       contractName:'Default',
     }
   }) {
-   super('MetadataStorage',configuration);
+   super('metadata','MetadataStorage',configuration);
   }
 
   get(id:string | number):any {

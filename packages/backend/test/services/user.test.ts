@@ -5,7 +5,6 @@ import chai from 'chai';
 chai.use(require('chai-as-promised'));
 import {expect} from 'chai';
 import * as fs from 'fs';
-import {User} from '../../src/plugins/Storages/User/UserStorage';
 const dataLoader = require('csv-load-sync');
 fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
 fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
@@ -17,6 +16,7 @@ import {globalInstancesFactory} from "@hermes/composition";
 import {CSVUserStorage} from "../../src/plugins/Storages/User/CSVUserStorage";
 import {CSVMetadataStorage} from "../../src/plugins/Storages/Metadata/CSVMetadataStorage";
 import {getUrl} from "../../src/tests/TestsHelpers";
+import {User} from "../../src/entities/User";
 const port = app.get('port') || 3030;
 
 describe('User service', () => {
@@ -69,6 +69,7 @@ describe('User service', () => {
         cookie: finalCookie
       }
     })
+    //TODO : implement the test .... to check if the user is send without password
   })
 
   it('Should create a user if asked for', async () => {

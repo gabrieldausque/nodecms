@@ -1,10 +1,5 @@
 import {Storage} from '../Storage'
-
-export interface Role {
-  id?:number;
-  key:string;
-  description?:any;
-}
+import {Role} from "../../../entities/Role";
 
 export interface RoleStorage extends Storage<Role> {
   exists(keyOrId:string | number):boolean;

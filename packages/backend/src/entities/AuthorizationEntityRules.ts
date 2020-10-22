@@ -1,5 +1,5 @@
 import {EntityRules} from "./EntityRules";
-import {Authorization} from "../plugins/Storages/Authorization/AuthorizationStorage";
+import {Authorization} from "./Authorization";
 
 export class AuthorizationEntityRules extends EntityRules {
   static convert(entity:Authorization):Authorization {

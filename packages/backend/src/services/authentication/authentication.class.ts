@@ -5,7 +5,7 @@ import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/
 import {NotAcceptable} from "@feathersjs/errors";
 import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService} from "../BaseService";
-import {User as UserEntity} from '../../plugins/Storages/User/UserStorage';
+import {User as UserEntity} from "../../entities/User";
 
 interface Data {
   login?:string,

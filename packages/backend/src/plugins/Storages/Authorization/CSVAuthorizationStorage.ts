@@ -1,7 +1,8 @@
 import {CSVStorage} from "../CSVStorage";
-import {Authorization, AuthorizationStorage} from "./AuthorizationStorage";
-import {Metadata} from "../Metadata/MetadataStorage";
+import {AuthorizationStorage} from "./AuthorizationStorage";
 import {isNumber} from "../../../helpers";
+import {Metadata} from "../../../entities/Metadata";
+import {Authorization} from "../../../entities/Authorization";
 const dataLoader = require('csv-load-sync');
 
 export class CSVAuthorizationStorage extends CSVStorage<Authorization> implements AuthorizationStorage {

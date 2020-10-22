@@ -1,6 +1,6 @@
 import {EntityRules} from "./EntityRules";
-import {User} from "../plugins/Storages/User/UserStorage";
-import {Metadata} from "../plugins/Storages/Metadata/MetadataStorage";
+import {Metadata} from "./Metadata";
+import {User} from "./User";
 
 export class UserEntityRules extends EntityRules {
 

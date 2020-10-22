@@ -1,15 +1,16 @@
 import {globalInstancesFactory} from "@hermes/composition";
-import {User, UserStorage} from '../plugins/Storages/User/UserStorage';
+import {UserStorage} from '../plugins/Storages/User/UserStorage';
 import {UserEntityRules} from "../entities/UserEntityRules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
-import {Metadata} from "../plugins/Storages/Metadata/MetadataStorage";
 import {MetadataUseCases} from "./MetadataUseCases";
 import {isNumber} from "../helpers";
-import {Role} from "../plugins/Storages/Role/RoleStorage";
 import {RoleUseCases} from "./RoleUseCases";
 import {AuthorizationUseCases} from "./AuthorizationUseCases";
-import {Authorization} from "../plugins/Storages/Authorization/AuthorizationStorage";
+import {Metadata} from "../entities/Metadata";
+import {Authorization} from "../entities/Authorization";
+import {Role} from "../entities/Role";
+import {User} from "../entities/User";
 
 export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 
@@ -31,7 +32,7 @@ export class UserUseCases extends UseCases<User> {
       contractName:'Default'
     }
   }) {
-    super('UserStorage',configuration);
+    super('user','UserStorage',configuration);
   }
 
   validate(data: any): User {

@@ -1,7 +1,7 @@
-import {Authorization} from "../plugins/Storages/Authorization/AuthorizationStorage";
 import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {AuthorizationEntityRules} from "../entities/AuthorizationEntityRules";
+import {Authorization} from "../entities/Authorization";
 
 interface AuthorizationUseCasesConfiguration extends UseCaseConfiguration {
 }
@@ -21,7 +21,7 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
       contractName:'Default'
     }
   }) {
-    super('AuthorizationStorage',configuration);
+    super('authorization','AuthorizationStorage',configuration);
   }
 
   async create(entity: Authorization): Promise<Authorization> {

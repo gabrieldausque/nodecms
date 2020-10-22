@@ -1,13 +1,5 @@
-import {Entity, Storage} from "../Storage";
-
-export interface Authorization extends Entity{
-  id?: number
-  on:string,
-  onType:string,
-  for?:string,
-  right:string,
-  role?:number
-}
+import {Storage} from "../Storage";
+import {Authorization} from "../../../entities/Authorization";
 
 export interface AuthorizationStorage extends Storage<Authorization> {
   exists(keyOrId:string | number):boolean;

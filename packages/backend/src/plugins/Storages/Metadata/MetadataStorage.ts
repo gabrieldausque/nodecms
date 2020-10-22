@@ -1,13 +1,5 @@
 import {Storage} from '../Storage'
-
-export interface Metadata {
-  id?:number;
-  key:string;
-  value?:any;
-  isPublic?:boolean;
-  ownerType?:string | null;
-  ownerId?:number | null;
-}
+import {Metadata} from "../../../entities/Metadata";
 
 export interface MetadataStorage extends Storage<Metadata> {
   exists(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):boolean;

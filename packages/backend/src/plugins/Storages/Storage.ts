@@ -1,7 +1,4 @@
-export interface Entity {
-  id?: number
-  [key: string]: any
-}
+import {Entity} from "../../entities/Entity";
 
 export interface Storage<T extends Entity> {
   exists(keyOrId:string | number):boolean;

@@ -5,10 +5,10 @@ import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
-import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
-import {Role} from "../../plugins/Storages/Role/RoleStorage";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {isNumber} from "../../helpers";
+import {Role} from "../../entities/Role";
+import {User as UserEntity} from "../../entities/User";
 
 type Data = Role
 

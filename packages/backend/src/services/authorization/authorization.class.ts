@@ -3,11 +3,11 @@ import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
-import {Authorization as AuthorizationEntity} from "../../plugins/Storages/Authorization/AuthorizationStorage";
 import {query} from "winston";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
 import {UserUseCases} from "../../usecases/UserUseCases";
-import {User as UserEntity} from "../../plugins/Storages/User/UserStorage";
+import {Authorization as AuthorizationEntity} from "../../entities/Authorization";
+import {User as UserEntity} from "../../entities/User";
 
 type Data = AuthorizationEntity;
 

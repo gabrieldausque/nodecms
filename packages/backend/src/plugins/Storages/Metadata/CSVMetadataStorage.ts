@@ -1,9 +1,10 @@
-import {Metadata, MetadataStorage} from "./MetadataStorage";
+import {MetadataStorage} from "./MetadataStorage";
 import path from "path";
 const dataLoader = require('csv-load-sync');
 import * as fs from 'fs';
 import {isNumber} from '../../../helpers';
 import {CSVStorage} from "../CSVStorage";
+import {Metadata} from "../../../entities/Metadata";
 const fsPromises = fs.promises;
 
 export class CSVMetadataStorage extends CSVStorage<Metadata> implements MetadataStorage {

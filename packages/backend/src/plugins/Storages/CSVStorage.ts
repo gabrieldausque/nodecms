@@ -1,7 +1,8 @@
 import path from 'path';
 import * as fs from 'fs';
-import {Storage, Entity} from './Storage'
-import {Metadata} from "./Metadata/MetadataStorage";
+import {Storage} from './Storage';
+import {Metadata} from "../../entities/Metadata";
+import {Entity} from "../../entities/Entity";
 
 const fsPromises = fs.promises;
 

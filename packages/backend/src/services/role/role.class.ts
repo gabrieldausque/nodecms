@@ -3,7 +3,7 @@ import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
-import {User as UserEntity} from '../../plugins/Storages/User/UserStorage';
+import {User as UserEntity} from "../../entities/User";
 
 interface RoleDTO {
   id?:number;

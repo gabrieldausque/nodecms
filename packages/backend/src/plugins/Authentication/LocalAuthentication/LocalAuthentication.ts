@@ -1,8 +1,9 @@
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from '../AuthenticationPlugin';
 import * as process from "process";
 import * as os from 'os';
-import {UserStorage, User} from '../../Storages/User/UserStorage';
+import {UserStorage} from '../../Storages/User/UserStorage';
 import {globalInstancesFactory} from '@hermes/composition';
+import {User} from "../../../entities/User";
 const dataLoader = require('csv-load-sync');
 
 export interface LocalAuthenticationConfiguration {
