@@ -46,7 +46,7 @@ export class Metadata extends BaseService<MetadataDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<MetadataDTO> {
-    if(id) {
+    if(id || id === 0) {
       if(isNumber(id)) {
         try {
           return this.useCase.get(id.toString());
@@ -89,7 +89,7 @@ export class Metadata extends BaseService<MetadataDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
-    if(id) {
+    if(id || id === 0) {
       const existing = await this.get(id, params);
       if(existing && isNumber(existing.id) && typeof existing.id !== 'undefined') {
         return this.useCase.update(existing.id, data)

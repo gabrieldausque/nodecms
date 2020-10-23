@@ -6,7 +6,7 @@ export abstract class EntityRules {
     if(typeof id === 'string') {
       try {
         let idToParse = parseInt(id);
-        if(idToParse)
+        if(idToParse || idToParse === 0)
           return idToParse;
       }catch(err) {
         //DO nothing, just a test to parse id to number

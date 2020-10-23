@@ -80,7 +80,7 @@ export class Role extends BaseService<RoleDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<RoleDTO> {
-    if(!id)
+    if(!id && id !== 0)
       throw new NotAcceptable('Please provide a correct id for delete');
     return await this.useCase.delete(id);
   }

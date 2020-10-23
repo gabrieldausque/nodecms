@@ -8,6 +8,8 @@ import {Server} from "http";
 import axios from "axios";
 import {globalInstancesFactory} from "@hermes/composition";
 import {Authorization} from "../../src/services/authorization/authorization.class";
+import {Authorization as AuthorizationEntity} from '../../src/entities/Authorization';
+
 const port = app.get('port') || 3030;
 
 describe('Authorization CSV storage', function () {
@@ -154,7 +156,7 @@ describe('Authorization service', () => {
 
   let server: Server;
   let finalCookie = '';
-  let detailedCookie:any = {};
+  let params:any = {};
   let authorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'Default');
 
   before((done) => {
@@ -172,7 +174,19 @@ describe('Authorization service', () => {
         const cookieString = cookie.split(';')[0];
         const cookieName = cookieString.split('=')[0];
         const cookieValue = cookieString.split('=')[1];
-        detailedCookie[cookieName] = cookieValue;
+        switch(cookieName) {
+          case 'ncms-uniqueid': {
+            params.clientId = cookieValue
+            break;
+          }
+          case 'ncms-token': {
+            params.authenticationToken = cookieValue;
+            break;
+          }
+          default: {
+            params[cookieName] = cookieValue;
+          }
+        }
         finalCookie += `${cookieString}; `
       }
       done();
@@ -202,11 +216,7 @@ describe('Authorization service', () => {
       onType:'create',
       right:'x',
       role:1
-    },{
-      clientId: detailedCookie['ncms-uniqueid'],
-      authenticationToken: detailedCookie['ncms-token'],
-      realm:detailedCookie['realm']
-    });
+    },params);
     return Promise.all([
       expect(updateCall).to.be.rejectedWith('Method update is not allowed'),
     ])
@@ -276,7 +286,7 @@ describe('Authorization service', () => {
 
   })
 
-  it('should remove a newly created right of type operation/create for service metadata and role specialUsers',async () => {
+  it('should remove a newly created right of type operation/create for service metadata and role specialUsers from external client',async () => {
     const created = await axios.request({
       url:getUrl('authorization'),
       method:"POST",
@@ -335,6 +345,37 @@ describe('Authorization service', () => {
       }
     })
     return expect(checkPromise).to.be.rejectedWith('Request failed with status code 404');
+  })
+
+  it('should remove a newly created right of type operation/create for service metadata and role specialUsers',async () => {
+    const service:Authorization = app.service('authorization');
+    const created = await service.create({
+      on:"operation",
+      onType:"create",
+      for:"metadata",
+      right:"x",
+      role:2
+    }, params);
+    params.query = {
+      on:"operation",
+      onType:"create",
+      for:"metadata",
+      right:"x",
+      role:2
+    };
+    let check:AuthorizationEntity[] = await service.find(params) as AuthorizationEntity[];
+    expect(check[0]).to.be.eql({
+      id:created.id,
+      on:"operation",
+      onType:"create",
+      for:"metadata",
+      right:"x",
+      role:2
+    })
+    if(created.id)
+      await service.remove(created.id,params);
+    const checkPromise = service.find(params);
+    return expect(checkPromise).to.be.rejectedWith('No authorization found');
   })
 
 });

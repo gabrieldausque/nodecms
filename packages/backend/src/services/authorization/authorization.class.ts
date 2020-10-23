@@ -40,12 +40,12 @@ export class Authorization extends BaseService<Data> {
       if(Array.isArray(found) && found.length > 0)
         return found;
     }
-    throw new NotFound();
+    throw new NotFound('No authorization found');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<Data> {
-    throw new NotImplemented();
+    return this.useCase.get(id);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

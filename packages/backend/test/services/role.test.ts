@@ -13,12 +13,14 @@ import {globalInstancesFactory} from "@hermes/composition";
 import {Storage} from "../../src/plugins/Storages/Storage";
 import {RoleStorage} from "../../src/plugins/Storages/Role/RoleStorage";
 import {CSVRoleStorage} from "../../src/plugins/Storages/Role/CSVRoleStorage";
+import {Role} from "../../src/services/role/role.class";
 const port = app.get('port') || 3030;
 
 describe('Role service', () => {
 
   let server: Server;
   let finalCookie = '';
+  let params:any = {}
   let roleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage','Default');
 
 
@@ -34,7 +36,23 @@ describe('Role service', () => {
         }
       })
       for(const cookie of authResponse.headers['set-cookie']) {
-        finalCookie += `${cookie.split(';')[0]}; `
+        const cookieString = cookie.split(';')[0];
+        const cookieName = cookieString.split('=')[0];
+        const cookieValue = cookieString.split('=')[1];
+        switch(cookieName) {
+          case 'ncms-uniqueid': {
+            params.clientId = cookieValue
+            break;
+          }
+          case 'ncms-token': {
+            params.authenticationToken = cookieValue;
+            break;
+          }
+          default: {
+            params[cookieName] = cookieValue;
+          }
+        }
+        finalCookie += `${cookieString}; `
       }
       done();
     });
@@ -193,7 +211,7 @@ describe('Role service', () => {
     })
   })
 
-  it('should delete a role when asked for', async () => {
+  it('should delete a role when asked for from external client', async () => {
     const create = await axios.request({
       url: getUrl('role'),
       method: "POST",
@@ -232,5 +250,23 @@ describe('Role service', () => {
       }
     });
     return expect(p).to.be.rejectedWith('Request failed with status code 404');
+  })
+
+  it('should delete a role when asked for', async () => {
+    const service:Role = app.service('role');
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, params);
+    const getted = await service.get('newRole',params);
+    expect(getted).to.be.eql({
+      id:created.id,
+      key:"newRole",
+      description:"A new role"
+    });
+    if(created.id || created.id === 0)
+      await service.remove(created.id, params);
+    const p = service.get('newRole',params);
+    return expect(p).to.be.rejectedWith('Role with key or id newRole doesn\'t exists');
   })
 });

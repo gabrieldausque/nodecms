@@ -207,7 +207,7 @@ describe('Metadata service', () => {
     expect(readData.ownerId).to.eql(5);
   })
 
-  it('should update a metadata (no owner type, not owner id)', async () => {
+  it('should update a metadata (no owner type, not owner id) from external client', async () => {
     await axios.request({
       url: getUrl('metadata/title'),
       method: "PUT",
@@ -228,6 +228,22 @@ describe('Metadata service', () => {
       }
     })
     expect(response.data.value).to.be.eql("My New Title")
+  })
+
+  it('should update a metadata (no owner type, not owner id)', async () => {
+    const service:MetadataService = app.service('metadata');
+    await service.update('title',{
+      key:'title',
+      value:'My New Title'
+    }, params);
+    let updated = await service.get('title', params);
+    expect(updated.value).to.be.eql("My New Title");
+    await service.update(0,{
+      key:'title',
+      value:'My New Title With Id'
+    }, params);
+    updated = await service.get(0, params);
+    expect(updated.value).to.be.eql("My New Title With Id");
   })
 
 });

@@ -23,19 +23,20 @@ export default {
     create: [],
     update: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(!await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+      if(!await service.isDataAuthorized(context.data, 'w',context.params.user)) {
         throw new Forbidden('Data asked is not authorized for your account');
       }
     }],
     patch: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(!await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+      if(!await service.isDataAuthorized(context.data, 'w',context.params.user)) {
         throw new Forbidden('Data asked is not authorized for your account');
       }
     }],
     remove: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(!await service.isDataAuthorized(context.result, 'w',context.params.user)) {
+      const entity = await service.get(context.id,context.params);
+      if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
         throw new Forbidden('Data asked is not authorized for your account');
       }
     }]
