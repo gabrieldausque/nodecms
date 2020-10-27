@@ -74,7 +74,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
       }
       this.database.push(newUser);
       await this.saveDatabase();
-      return user;
+      return newUser;
     } else {
       console.debug('user already exists');
     }

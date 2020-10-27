@@ -11,6 +11,7 @@ import {Metadata} from "../entities/Metadata";
 import {Authorization} from "../entities/Authorization";
 import {Role} from "../entities/Role";
 import {User} from "../entities/User";
+import {Entity} from "../entities/Entity";
 
 export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 
@@ -203,5 +204,9 @@ export class UserUseCases extends UseCases<User> {
        }
     }
     return false;
+  }
+
+  async isDataAuthorized(data:Entity, right:string='r', user?:any):Promise<boolean> {
+    return super.isDataAuthorized(data,right,user);
   }
 }

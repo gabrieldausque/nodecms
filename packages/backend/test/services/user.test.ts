@@ -8,6 +8,7 @@ import * as fs from 'fs';
 const dataLoader = require('csv-load-sync');
 fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
 fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
+fs.copyFileSync('data/authorizations.csv', 'data/authorizations-copy.csv');
 
 import app from '../../src/app';
 import {Server} from "http";
@@ -17,14 +18,18 @@ import {CSVUserStorage} from "../../src/plugins/Storages/User/CSVUserStorage";
 import {CSVMetadataStorage} from "../../src/plugins/Storages/Metadata/CSVMetadataStorage";
 import {getUrl} from "../../src/tests/TestsHelpers";
 import {User} from "../../src/entities/User";
+import {User as UserService} from '../../src/services/user/user.class';
+import {CSVAuthorizationStorage} from "../../src/plugins/Storages/Authorization/CSVAuthorizationStorage";
 const port = app.get('port') || 3030;
 
 describe('User service', () => {
 
   let server: Server;
   let finalCookie = '';
+  let params:any = {};
   let userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage','Default');
   let metadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage','Default');
+  let authorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage','Default');
 
   before((done) => {
     server = app.listen(port);
@@ -38,7 +43,23 @@ describe('User service', () => {
         }
       })
       for(const cookie of authResponse.headers['set-cookie']) {
-        finalCookie += `${cookie.split(';')[0]}; `
+        const cookieString = cookie.split(';')[0];
+        const cookieName = cookieString.split('=')[0];
+        const cookieValue = cookieString.split('=')[1];
+        switch(cookieName) {
+          case 'ncms-uniqueid': {
+            params.clientId = cookieValue
+            break;
+          }
+          case 'ncms-token': {
+            params.authenticationToken = cookieValue;
+            break;
+          }
+          default: {
+            params[cookieName] = cookieValue;
+          }
+        }
+        finalCookie += `${cookieString}; `
       }
       done();
     });
@@ -47,8 +68,10 @@ describe('User service', () => {
   beforeEach((done) => {
     fs.copyFileSync('data/users.csv', 'data/users-copy.csv');
     fs.copyFileSync('data/metadata.csv', 'data/metadata-copy.csv');
+    fs.copyFileSync('data/authorizations.csv', 'data/authorizations-copy.csv');
     (userStorage as CSVUserStorage).reloadDatabase();
     (metadataStorage as CSVMetadataStorage).reloadDatabase();
+    (authorizationStorage as CSVAuthorizationStorage).reloadDatabase();
     done();
   })
 
@@ -62,14 +85,30 @@ describe('User service', () => {
   });
 
   it('Should return a user from its login without password', async () => {
+    const service:UserService = app.service('user');
+    const user:User = await service.get('localtest',params);
+    expect(user).to.be.eql({
+      id: 0,
+      isActive: true,
+      login: 'localtest',
+      password: '******'
+    })
+  })
+
+  it('Should return a user from its login without password from external client', async () => {
     const response = await axios.request({
       url: getUrl('user/localtest'),
       method: "GET",
       headers: {
         cookie: finalCookie
       }
+    });
+    expect(response.data).to.be.eql({
+      id: 0,
+      isActive: true,
+      login: 'localtest',
+      password: '******'
     })
-    //TODO : implement the test .... to check if the user is send without password
   })
 
   it('Should create a user if asked for', async () => {
@@ -91,10 +130,38 @@ describe('User service', () => {
     expect(newUser).to.be.ok;
     expect(newUser.password).to.be.eql('aNewP@ssw0rd');
     expect(newUser.isActive).to.be.eql('true');
-
   })
 
   it('Should update a user if asked for', async () => {
+    const service:UserService = app.service('user');
+    const createdUser = await service.create({
+      login: "aNewUser",
+      password: "aNewP@ssw0rd",
+      isActive: true
+    }, params);
+    let database = () => {
+      return dataLoader('data/users-copy.csv');
+    }
+    let newUser = database().find((u:User) => u.login === 'aNewUser');
+    expect(newUser).to.be.ok;
+    expect(newUser.password).to.be.eql('aNewP@ssw0rd');
+    expect(newUser.isActive).to.be.eql('true');
+    if(createdUser && createdUser.id){
+      const updatedUser = await service.update(createdUser.id,
+        {
+          id: createdUser.id,
+          login: "aNewUser",
+          password: "aNewP@ssw0rdUpdated",
+          isActive: true
+        }, params);
+      newUser = database().find((u:User) => u.login === 'aNewUser');
+      expect(newUser.password).to.be.eql('aNewP@ssw0rdUpdated');
+    } else {
+      assert.fail('createdUser is null or id is null')
+    }
+  })
+
+  it('Should update a user if asked for from external client', async () => {
     const creationResponse = await axios.request({
       url: getUrl('user'),
       method: "POST",

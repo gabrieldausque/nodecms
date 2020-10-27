@@ -51,8 +51,9 @@ export class User extends BaseService<UserDTO>  {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
-    //TODO : maybe hide password in object, if calling user is not the asked user
-    return this.useCase.get(id);
+    const user = this.useCase.get(id);
+    user.password = '******';
+    return user;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,11 +81,8 @@ export class User extends BaseService<UserDTO>  {
     return await this.useCase.delete(id);
   }
 
-  isAuthorized(context: any): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
   async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
-    throw new Error("Method not implemented.");
+    return this.useCase.isDataAuthorized(data,right,user);
   }
 
 }

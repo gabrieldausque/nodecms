@@ -10,3 +10,5 @@
 8,"data","role",*,"r",1
 9,"data","role",*,"w",0
 10,"data","metadata",*,"r",0
+11,"data","user",*,"r",0
+12,"data","user",*,"w",0

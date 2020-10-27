@@ -33,7 +33,7 @@ export abstract class UseCases<T extends Entity> {
       right:right,
       on:'data',
       onType:this.dataType,
-      for:(data.id)?data.id.toString():'*'
+      for:(data.id || data.id === 0)?data.id.toString():'*'
     });
     for(const authorization of authorizations) {
       if(authorization.role || authorization.role === 0){
