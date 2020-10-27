@@ -126,12 +126,8 @@ export class UserRoles extends BaseService<Data> {
     return true
   }
 
-  isAuthorized(context: any): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
-
   async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
-    throw new Error("Method not implemented.");
+    return this.roleUseCases.isDataAuthorized(data,right,user);
   }
 
 }

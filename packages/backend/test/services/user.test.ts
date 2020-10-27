@@ -20,6 +20,8 @@ import {getUrl} from "../../src/tests/TestsHelpers";
 import {User} from "../../src/entities/User";
 import {User as UserService} from '../../src/services/user/user.class';
 import {CSVAuthorizationStorage} from "../../src/plugins/Storages/Authorization/CSVAuthorizationStorage";
+import {UserMetadata} from "../../src/services/user-metadata/user-metadata.class";
+import {UserRoles} from "../../src/services/user-roles/user-roles.class";
 const port = app.get('port') || 3030;
 
 describe('User service', () => {
@@ -314,6 +316,60 @@ describe('User service', () => {
   })
 
   it('should update or patch metadata for a user using login', async () => {
+    const service:UserMetadata = app.service('user/:idOrLogin/metadata');
+    if(!params.route)
+      params.route = {};
+    params.route.idOrLogin = 'localtest';
+    const createdMetadata = await service.create({
+      key: "ANewMeta",
+      value: "MyNewValue"
+    }, params);
+    let gottenMetadata = await service.get('ANewMeta', params);
+    expect(gottenMetadata).to.be.eql({
+      id: createdMetadata.id,
+      key:'ANewMeta',
+      value:'MyNewValue',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
+    })
+    if(gottenMetadata && (gottenMetadata.id || gottenMetadata.id === 0)) {
+      await service.update(gottenMetadata.id, {
+        key: "ANewMeta",
+        value: "MyNewValueUpdated"
+      }, params);
+      gottenMetadata = await service.get('ANewMeta', params);
+      expect(gottenMetadata).to.be.eql({
+        id: createdMetadata.id,
+        key:'ANewMeta',
+        value:'MyNewValueUpdated',
+        isPublic:false,
+        ownerType:'user',
+        ownerId:0
+      })
+      if(gottenMetadata && (gottenMetadata.id || gottenMetadata.id === 0)) {
+        await service.patch(gottenMetadata.id, {
+          key: "ANewMeta",
+          value: "MyNewValuePatch"
+        }, params);
+        gottenMetadata = await service.get('ANewMeta', params);
+        expect(gottenMetadata).to.be.eql({
+          id: createdMetadata.id,
+          key:'ANewMeta',
+          value:'MyNewValuePatch',
+          isPublic:false,
+          ownerType:'user',
+          ownerId:0
+        })
+      } else {
+        assert.fail('metadata not obtained')
+      }
+    } else {
+      assert.fail('metadata not obtained')
+    }
+  })
+
+  it('should update or patch metadata for a user using login for external client', async () => {
     const createResponse = await axios.request({
       url: getUrl('user/localtest/metadata'),
       method: "POST",
@@ -439,6 +495,24 @@ describe('User service', () => {
   })
 
   it('should get all role for a user', async() => {
+    const service:UserRoles = app.service('user/:idOrLogin/roles');
+    if(!params.route)
+      params.route = {}
+    params.route.idOrLogin = 'localtest';
+    const roles = await service.find(params);
+    expect(roles).to.be.eql([{
+      description: "Administrators group",
+      id: 0,
+      key: "administrators"
+      },
+      {
+        description: "special Users group",
+        id: 2,
+        key: "specialUsers"
+      }]);
+  })
+
+  it('should get all role for a user from external client', async() => {
     let response = await axios.request({
       url: getUrl('user/localtest/roles'),
       method: "GET",

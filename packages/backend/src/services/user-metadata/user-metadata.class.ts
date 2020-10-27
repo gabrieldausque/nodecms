@@ -120,12 +120,8 @@ export class UserMetadata extends BaseService<Data> {
     return true;
   }
 
-  isAuthorized(context: any): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
   async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {
-    throw new Error("Method not implemented.");
+    return this.metadataUseCases.isDataAuthorized(data,right,user);
   }
-
 
 }
