@@ -116,7 +116,7 @@ export class Metadata extends BaseService<MetadataDTO> {
     if(id){
       const existing = await this.get(id, params);
       if(existing && existing.id) {
-        return this.useCase.delete(existing.id)
+        return await this.useCase.delete(existing.id)
       }
     }
     throw new NotFound(`No metadata with key : ${id}`);
@@ -130,7 +130,7 @@ export class Metadata extends BaseService<MetadataDTO> {
       }
       return true;
     } else {
-      const searchData = this.useCase.find(data);
+      const searchData = await this.useCase.find(data);
       if(Array.isArray(searchData) && searchData.length > 0) {
         const oneData = searchData[0];
         if(oneData.isPublic)

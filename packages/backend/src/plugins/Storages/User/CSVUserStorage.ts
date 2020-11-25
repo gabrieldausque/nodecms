@@ -65,7 +65,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
   }
 
   async create(user: User): Promise<User> {
-    if(!this.exists(user.login)) {
+    if(!await this.exists(user.login)) {
       const newUser:User = {
         id: this.getNewId(),
         login: user.login,

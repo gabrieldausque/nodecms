@@ -32,7 +32,7 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
   async isAuthorized(context: any): Promise<boolean> {
     if(context.params.user){
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      return userUseCase.isUserAuthorized(context.params.user, {
+      return await userUseCase.isUserAuthorized(context.params.user, {
         on:'operation',
         onType: context.method,
         for: this.serviceLabel,

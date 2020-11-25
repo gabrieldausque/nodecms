@@ -55,7 +55,7 @@ export class UserUseCases extends UseCases<User> {
   async create(user:User): Promise<User> {
     UserEntityRules.validatePassword(user.password);
     UserEntityRules.validateLogin(user.login);
-    if(this.storage.exists(user.login))
+    if(await this.storage.exists(user.login))
       throw new Error(`Login ${user.login} already exists. Please change.`)
     return await this.storage.create(user);
   }
@@ -98,15 +98,15 @@ export class UserUseCases extends UseCases<User> {
       ownerType:'user',
       ownerId:user.id
     }
-    const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+    const metadataUseCase:MetadataUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
     if(isNumber(metadataKeyOrId)){
-      const metadata = metadataUseCase.get(metadataKeyOrId);
+      const metadata:Metadata = await metadataUseCase.get(metadataKeyOrId);
       if(metadata.ownerType === 'user' && metadata.ownerId === filter.ownerId) {
         return metadata;
       }
     } else {
       filter.key = metadataKeyOrId;
-      const found = metadataUseCase.find(filter);
+      const found:Metadata[] = await metadataUseCase.find(filter);
       if(Array.isArray(found) && found.length > 0){
         return found[0];
       }
@@ -182,7 +182,8 @@ export class UserUseCases extends UseCases<User> {
   }
 
   async isUserAuthorized(user: User, filter: Authorization) : Promise<boolean> {
-    for(const role of await this.getRoles(user)){
+    const userRoles = await this.getRoles(user)
+    for(const role of userRoles){
        const authorizationUseCase:AuthorizationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization');
        try{
          const authorizations = await authorizationUseCase.find({

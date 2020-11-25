@@ -43,7 +43,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
   }
 
   async create(data: Role): Promise<Role> {
-    if(!this.exists(data.key)){
+    if(!await this.exists(data.key)){
       const newRole = {
         id:this.getNewId(),
         key:data.key,

@@ -5,7 +5,6 @@ import axios from "axios";
 import * as fs from "fs";
 import {getUrl, expect} from "../../src/tests/TestsHelpers";
 
-
 fs.copyFileSync('data/roles.csv', 'data/roles-copy.csv');
 
 import app from '../../src/app';
@@ -14,6 +13,7 @@ import {Storage} from "../../src/plugins/Storages/Storage";
 import {RoleStorage} from "../../src/plugins/Storages/Role/RoleStorage";
 import {CSVRoleStorage} from "../../src/plugins/Storages/Role/CSVRoleStorage";
 import {Role} from "../../src/services/role/role.class";
+import {Role as RoleEntity} from '../../src/entities/Role';
 const port = app.get('port') || 3030;
 
 describe('Role service', () => {
@@ -112,7 +112,7 @@ describe('Role service', () => {
     return expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
-  it('should create a role when asked for', async () => {
+  it('should create a role when asked for from external client', async () => {
     const create = await axios.request({
       url: getUrl('role'),
       method: "POST",
@@ -133,6 +133,23 @@ describe('Role service', () => {
     })
     expect(response.data).to.be.eql({
       id:create.data.id,
+      key:"newRole",
+      description:"A new role"
+    })
+  })
+
+  it('should create a role when asked for', async () => {
+    const service:Role = app.service('role');
+    const created:RoleEntity = await service.create(
+      {
+        key:"newRole",
+        description:"A new role"
+      },
+      params
+    )
+    const gotten:RoleEntity = await service.get('newRole', params);
+    expect(gotten).to.be.eql({
+      id:created.id,
       key:"newRole",
       description:"A new role"
     })

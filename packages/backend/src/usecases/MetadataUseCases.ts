@@ -45,7 +45,7 @@ export class MetadataUseCases extends UseCases<Metadata>  {
 
   async update(id: string | number, metadataToUpdate: Metadata):Promise<Metadata> {
     const usableId = MetadataEntityRules.convertId(id);
-    const found = this.get(usableId)
+    const found:Metadata = await this.get(usableId)
     if(found) {
       const updatedMetadata = { ...found, ...metadataToUpdate}
       return await this.storage.update(updatedMetadata);

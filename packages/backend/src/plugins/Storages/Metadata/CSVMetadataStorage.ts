@@ -33,7 +33,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
           return line.split(',')
         }
         //case for serialized array
-        const regexpArray = /("\[.+\]")/g;
+        const regexpArray = /("*\[.+\]"*)/g;
         const m = regexpArray.exec(line);
         if(m){
           for(const arrayToReplace of m){
@@ -122,7 +122,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
   }
 
   async create(data: Metadata): Promise<Metadata> {
-    if(!this.exists(data.key, data.ownerType,data.ownerId)) {
+    if(!await this.exists(data.key, data.ownerType,data.ownerId)) {
       const newMetadata:Metadata = {
         id: this.getNewId(),
         key: data.key,
@@ -135,7 +135,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
       await this.saveDatabase();
       return newMetadata;
     }
-    return this.get(data.key, data.ownerType, data.ownerId);
+    return await this.get(data.key, data.ownerType, data.ownerId);
   }
 
   async delete(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {

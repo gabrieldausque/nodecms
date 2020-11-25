@@ -23,7 +23,7 @@ export class RoleUseCases extends UseCases<Role> {
 
   async create(entity: Role): Promise<Role> {
     RoleEntityRules.validateKey(entity.key);
-    if(this.storage.exists(entity.key))
+    if(await this.storage.exists(entity.key))
       throw new Error(`Role with key ${entity.key} already exists. Please change.`)
     return await this.storage.create(entity);
   }
