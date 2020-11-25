@@ -49,7 +49,7 @@ export class Document extends BaseService<Data> {
 
   [key: string]: any;
 
-  needAuthentication(): boolean {
+  async needAuthentication(): Promise<boolean> {
     return true;
   }
 

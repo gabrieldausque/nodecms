@@ -36,7 +36,7 @@ export class Metadata extends BaseService<MetadataDTO> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<MetadataDTO[] | Paginated<MetadataDTO>> {
     if(params && params.query)
-      return this.useCase.find({
+      return await this.useCase.find({
         key: params.query.key,
         ownerType: params.query.ownerType,
         ownerId: params.query.ownerId
@@ -49,13 +49,13 @@ export class Metadata extends BaseService<MetadataDTO> {
     if(id || id === 0) {
       if(isNumber(id)) {
         try {
-          return this.useCase.get(id.toString());
+          return await this.useCase.get(id.toString());
         } catch(err) {
           throw new NotFound(err.message);
         }
       } else {
         const filter = { key: id.toString()}
-        const found = this.useCase.find(filter)
+        const found = await this.useCase.find(filter)
         if(found) {
           if(found.length === 1)
             return found[0];
@@ -70,7 +70,7 @@ export class Metadata extends BaseService<MetadataDTO> {
           ownerType: params.query.ownerType?params.query.ownerType:'',
           ownerId: params.query.ownerId?params.query.ownerId:null
         }
-        const found = this.useCase.find(filter)
+        const found = await this.useCase.find(filter)
         if(found) {
           if(found.length === 1)
             return found[0];
@@ -145,15 +145,15 @@ export class Metadata extends BaseService<MetadataDTO> {
     }
   }
 
-  needAuthentication(context:any): boolean {
+  async needAuthentication(context:any): Promise<boolean> {
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id){
         if(isNumber(context.id)) {
-          const data = this.useCase.get(context.id)
+          const data = await this.useCase.get(context.id)
           if(data)
             return !data.isPublic;
         } else {
-          const filtered = this.useCase.find({ key: context.id.toString()})
+          const filtered = await this.useCase.find({ key: context.id.toString()})
           if(filtered && filtered.length > 0) {
             for(const m of filtered){
               if(!m.isPublic)
@@ -164,7 +164,7 @@ export class Metadata extends BaseService<MetadataDTO> {
         }
       } else {
         if(context.params.query) {
-          const filtered = this.useCase.find(context.params.query);
+          const filtered = await this.useCase.find(context.params.query);
           if(filtered && filtered.length > 0) {
             for(const m of filtered){
               if(!m.isPublic)

@@ -32,7 +32,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
     }
   }
 
-  exists(loginOrId: string|number): boolean {
+  async exists(loginOrId: string|number): Promise<boolean> {
     if(typeof loginOrId === 'string'){
       return this.database.findIndex((u) => u.login === loginOrId) > -1
     } else {
@@ -40,7 +40,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
     }
   }
 
-  get(loginOrId: string | number): User {
+  async get(loginOrId: string | number): Promise<User> {
     let user = null;
     if(typeof loginOrId === 'string')
       user = this.database.find((u) => u.login === loginOrId)
@@ -51,7 +51,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
     return user;
   }
 
-  find(filter: User): User[] {
+  async find(filter: User): Promise<User[]> {
     if(filter) {
       const filtered = [];
       for(const user of this.database) {
@@ -82,7 +82,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
   }
 
   async delete(loginOrId: string | number): Promise<User> {
-    const user = this.get(loginOrId);
+    const user = await this.get(loginOrId);
     if(user) {
       this.database.splice(this.database.indexOf(user), 1);
       await this.saveDatabase();
@@ -91,7 +91,7 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
   }
 
   async update(user: User): Promise<User> {
-    const oldUser = this.get(user.login);
+    const oldUser = await this.get(user.login);
     if(oldUser) {
       this.database.splice(this.database.indexOf(oldUser), 1, user);
       await this.saveDatabase();

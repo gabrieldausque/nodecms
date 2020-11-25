@@ -37,7 +37,7 @@ export class Role extends BaseService<RoleDTO> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<RoleDTO[] | Paginated<RoleDTO>> {
     if(params) {
-      return this.useCase.find(params.filter)
+      return await this.useCase.find(params.filter)
     }
     return [];
   }
@@ -45,7 +45,7 @@ export class Role extends BaseService<RoleDTO> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<RoleDTO> {
     try {
-      return this.useCase.get(id);
+      return await this.useCase.get(id);
     }catch(error) {
       throw new NotFound(error.message);
     }
@@ -85,7 +85,7 @@ export class Role extends BaseService<RoleDTO> {
     return await this.useCase.delete(id);
   }
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true;
   }
 

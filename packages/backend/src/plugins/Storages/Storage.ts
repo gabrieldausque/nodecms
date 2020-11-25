@@ -1,11 +1,11 @@
 import {Entity} from "../../entities/Entity";
 
 export interface Storage<T extends Entity> {
-  exists(keyOrId:string | number):boolean;
+  exists(keyOrId:string | number):Promise<boolean>;
 
-  get(keyOrId:string | number):T;
+  get(keyOrId:string | number):Promise<T>;
 
-  find(filter? : T): T[]
+  find(filter? : T): Promise<T[]>
 
   create(data: T): Promise<T>;
 

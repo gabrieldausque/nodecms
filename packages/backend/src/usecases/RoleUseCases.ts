@@ -35,23 +35,23 @@ export class RoleUseCases extends UseCases<Role> {
     return await this.storage.delete(usableId)
   }
 
-  find(filter: Role): Role[] {
-    return this.storage.find(filter);
+  async find(filter: Role): Promise<Role[]> {
+    return await this.storage.find(filter);
   }
 
-  get(id: string | number): Role {
+  async get(id: string | number): Promise<Role> {
     if(RoleEntityRules.validateId(id)) {
       const usableId = RoleEntityRules.convertId(id);
-      return this.storage.get(usableId)
+      return await this.storage.get(usableId)
     }
-    return this.storage.get(id);
+    return await this.storage.get(id);
   }
 
   async update(id: string | number, entityToUpdate: Role): Promise<Role> {
     const usableId = RoleEntityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.');
-    const existingRole = this.get(usableId);
+    const existingRole = await this.get(usableId);
 
     if(existingRole.id !== entityToUpdate.id || existingRole.key !== entityToUpdate.key) {
       throw new Error('Only description can be updated');

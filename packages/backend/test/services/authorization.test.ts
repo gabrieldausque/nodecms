@@ -23,7 +23,7 @@ describe('Authorization CSV storage', function () {
 
   it('should get an authorization for an operation of type create and service user', async () => {
     const storage = new CSVAuthorizationStorage(testPath);
-    const found = storage.find({
+    const found = await storage.find({
       on:'operation',
       onType:'create',
       for:'user',
@@ -45,7 +45,7 @@ describe('Authorization CSV storage', function () {
     const t = [1,0,1];
     const t2 = t.find((i) => i === 1);
 
-    const found = storage.find({
+    const found = await storage.find({
       on:'operation',
       onType:'remove',
       for:'user',
@@ -77,7 +77,7 @@ describe('Authorization CSV storage', function () {
       right:'x',
       role:1
     })
-    const found = storage.find({
+    const found = await storage.find({
       on:'operation',
       onType:'create',
       right:'x',
@@ -109,7 +109,7 @@ describe('Authorization CSV storage', function () {
       right:'x',
       role:1
     })
-    let found = storage.find({
+    let found = await storage.find({
       on:'operation',
       onType:'create',
       right:'x',
@@ -134,7 +134,7 @@ describe('Authorization CSV storage', function () {
       assert.fail('No creation done');
     else {
       await storage.delete(created.id.toString());
-      found = storage.find({
+      found = await storage.find({
         on:'operation',
         onType:'create',
         right:'x',

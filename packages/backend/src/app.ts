@@ -11,13 +11,14 @@ import socketio from '@feathersjs/socketio';
 
 
 import { Application } from './declarations';
-import logger from './logger';
 import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
 
 import {globalInstancesFactory} from '@hermes/composition';
+import {Logger} from "./plugins/Logging/Logger";
+import {error} from "winston";
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/plugins');
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/usecases');
 // Don't remove this comment. It's needed to format import lines nicely.
@@ -27,19 +28,28 @@ const app: Application = express(feathers());
 // Load app configuration
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
+//TODO : add a configuration to manager logger type
+const logger:Logger = globalInstancesFactory.getInstanceFromCatalogs('Logger','Default');
+logger.info('Application starting');
+
 app.use(helmet());
+logger.debug('Initializing cors');
 app.use(cors({
   credentials: true,
   origin: (origin, callback) => {
+    logger.debug(`Request from origin : ${origin}`);
     const validOriginsRegexps = app.get('cors').validOrigins;
     let isOriginValid = false;
-    if(Array.isArray(validOriginsRegexps) && origin){
-      for(const regexpString of validOriginsRegexps) {
-        const regexp = new RegExp(regexpString);
-        const match = regexp.exec(origin);
-        if(match) {
-          isOriginValid = true;
-          break;
+    if(!origin || (origin && Array.isArray(validOriginsRegexps))){
+      let isOriginValid = (typeof origin === 'undefined');
+      if(origin){
+        for(const regexpString of validOriginsRegexps) {
+          const regexp = new RegExp(regexpString);
+          const match = regexp.exec(origin);
+          if(match) {
+            isOriginValid = true;
+            break;
+          }
         }
       }
       if(isOriginValid) {
@@ -50,7 +60,9 @@ app.use(cors({
       callback(null, true);
       return;
     }
-    callback(new Error(`${origin} is not an authorized origin.`))
+    const errorMessage = `${origin} is not an authorized origin.`;
+    console.error(errorMessage)
+    callback(new Error(errorMessage))
   }
 }));
 app.use(compress());

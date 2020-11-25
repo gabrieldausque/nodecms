@@ -36,7 +36,7 @@ export class Authorization extends BaseService<Data> {
         role: params.query.role,
         right: params.query.right
       }
-      const found = this.useCase.find(filter);
+      const found = await this.useCase.find(filter);
       if(Array.isArray(found) && found.length > 0)
         return found;
     }
@@ -45,7 +45,7 @@ export class Authorization extends BaseService<Data> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<Data> {
-    return this.useCase.get(id);
+    return await this.useCase.get(id);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,7 +78,7 @@ export class Authorization extends BaseService<Data> {
     return super.isAuthorized(context);
   }
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true;
   }
 

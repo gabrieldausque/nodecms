@@ -57,13 +57,13 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
   }
 
   async delete(keyOrId: string | number): Promise<Role> {
-    let role = this.get(keyOrId);
+    let role = await this.get(keyOrId);
     this.database.splice(this.database.indexOf(role),1);
     await this.saveDatabase();
     return role;
   }
 
-  exists(keyOrId: string | number): boolean {
+  async exists(keyOrId: string | number): Promise<boolean> {
     let existing:any;
     if(isNumber(keyOrId))
     {
@@ -77,7 +77,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
     return (Array.isArray(existing) && existing.length > 0)
   }
 
-  find(filter?: Role): Role[] {
+  async find(filter?: Role): Promise<Role[]> {
     if(filter) {
       let found;
       if(filter.id) {
@@ -99,14 +99,14 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
     return [];
   }
 
-  get(keyOrId: string | number): Role {
+  async get(keyOrId: string | number): Promise<Role> {
     let existing;
     if(isNumber(keyOrId))
     {
       const usableId = parseInt(keyOrId.toString());
       existing = this.database.find((r) => r.id === usableId);
     } else {
-      existing = this.find({
+      existing = await this.find({
         key: keyOrId.toString()
       })
     }

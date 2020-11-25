@@ -27,7 +27,7 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
 
     abstract remove(id: NullableId, params?: Params | undefined): Promise<T | T[]>
 
-  abstract needAuthentication(context:any):boolean;
+  abstract needAuthentication(context:any):Promise<boolean>;
 
   async isAuthorized(context: any): Promise<boolean> {
     if(context.params.user){

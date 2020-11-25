@@ -2,11 +2,11 @@ import {Storage} from '../Storage'
 import {Role} from "../../../entities/Role";
 
 export interface RoleStorage extends Storage<Role> {
-  exists(keyOrId:string | number):boolean;
+  exists(keyOrId:string | number):Promise<boolean>;
 
-  get(keyOrId:string | number):Role;
+  get(keyOrId:string | number):Promise<Role>;
 
-  find(filter? : Role): Role[]
+  find(filter? : Role): Promise<Role[]>
 
   create(data: Role): Promise<Role>;
 

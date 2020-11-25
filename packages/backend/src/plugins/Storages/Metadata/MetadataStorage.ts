@@ -2,11 +2,11 @@ import {Storage} from '../Storage'
 import {Metadata} from "../../../entities/Metadata";
 
 export interface MetadataStorage extends Storage<Metadata> {
-  exists(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):boolean;
+  exists(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):Promise<boolean>;
 
-  get(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):Metadata;
+  get(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):Promise<Metadata>;
 
-  find(filter? : Metadata): Metadata[]
+  find(filter? : Metadata): Promise<Metadata[]>
 
   create(data: Metadata): Promise<Metadata>;
 

@@ -27,7 +27,7 @@ export class User extends BaseService<UserDTO>  {
   options: ServiceOptions;
   useCase: UserUseCases
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true;
   }
 
@@ -44,14 +44,14 @@ export class User extends BaseService<UserDTO>  {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
-      return this.useCase.find(params.filter);
+      return await this.useCase.find(params.filter);
     }
     return [];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
-    const user = this.useCase.get(id);
+    const user = await this.useCase.get(id);
     user.password = '******';
     return user;
   }

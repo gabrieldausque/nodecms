@@ -119,7 +119,7 @@ export class Authentication extends BaseService<Data> {
     return domain
   }
 
-  needAuthentication(): boolean {
+  async needAuthentication(): Promise<boolean> {
     return false;
   }
 

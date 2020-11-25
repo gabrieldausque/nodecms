@@ -60,23 +60,23 @@ export class UserUseCases extends UseCases<User> {
     return await this.storage.create(user);
   }
 
-  get(idOrLogin: string | number) : User {
+  async get(idOrLogin: string | number) : Promise<User> {
     if(UserEntityRules.validateId(idOrLogin)) {
       const id = UserEntityRules.convertId(idOrLogin);
-      return this.storage.get(id);
+      return await this.storage.get(id);
     }
-    return this.storage.get(idOrLogin);
+    return await this.storage.get(idOrLogin);
   }
 
-  find(filter: User) {
-    return this.storage.find(filter);
+  async find(filter: User):Promise<User[]> {
+    return await this.storage.find(filter);
   }
 
   async update(id: number | string, usertoUpdate: User) : Promise<User> {
     const usableId = UserEntityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.')
-    const existingUser = this.get(usableId);
+    const existingUser = await this.get(usableId);
 
     if(existingUser.id !== usertoUpdate.id ||
     existingUser.login !== usertoUpdate.login) {
@@ -158,7 +158,7 @@ export class UserUseCases extends UseCases<User> {
     const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
     const roles:Role[] = [];
     for(const roleId of rolesMetadata.value) {
-      roles.push(roleUseCases.get(roleId))
+      roles.push(await roleUseCases.get(roleId))
     }
     return roles;
   }
@@ -185,7 +185,7 @@ export class UserUseCases extends UseCases<User> {
     for(const role of await this.getRoles(user)){
        const authorizationUseCase:AuthorizationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization');
        try{
-         const authorizations = authorizationUseCase.find({
+         const authorizations = await authorizationUseCase.find({
            ...filter,
            ...{ role:role.id}
          })
@@ -193,7 +193,8 @@ export class UserUseCases extends UseCases<User> {
            return true;
          }
        }catch(err) {
-         console.error(err);const authorizations = authorizationUseCase.find({
+         console.error(err);
+         const authorizations = await authorizationUseCase.find({
          ...filter,
          ...{ role:role.id}
        })

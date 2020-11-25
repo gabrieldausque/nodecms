@@ -34,7 +34,7 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotFound(`No user id`);
     try {
-      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
       return await this.userUseCases.getRoles(user);
     } catch(err) {
       throw new NotFound(err.message);
@@ -46,8 +46,8 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
-      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
-      const role:Role = this.roleUseCases.get(id);
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
+      const role:Role = await this.roleUseCases.get(id);
       if(await this.userUseCases.hasRole(user, role))
         return role;
     } catch(err) {
@@ -61,12 +61,12 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
-      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(data)) {
-        role = this.roleUseCases.get(parseInt(data.toString()));
+        role = await this.roleUseCases.get(parseInt(data.toString()));
       } else {
-        role = await this.roleUseCases.find(data as Role)[0]
+        role = (await this.roleUseCases.find(data as Role))[0]
       }
       await this.userUseCases.hadRole(user, role);
       return role;
@@ -82,12 +82,12 @@ export class UserRoles extends BaseService<Data> {
     if(!id)
       throw new NotAcceptable(`No Role id to had`);
     try {
-      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(id)) {
-        role = this.roleUseCases.get(parseInt(id.toString()));
+        role = await this.roleUseCases.get(parseInt(id.toString()));
       } else {
-        role = await this.roleUseCases.find({key:id.toString()})[0]
+        role = (await this.roleUseCases.find({key:id.toString()}))[0]
       }
       await this.userUseCases.hadRole(user, role);
       return role;
@@ -108,12 +108,12 @@ export class UserRoles extends BaseService<Data> {
     if(!id)
       throw new NotAcceptable(`No Role id to had`);
     try {
-      const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(id)) {
-        role = this.roleUseCases.get(parseInt(id.toString()));
+        role = await this.roleUseCases.get(parseInt(id.toString()));
       } else {
-        role = await this.roleUseCases.find({key:id.toString()})[0]
+        role = (await this.roleUseCases.find({key:id.toString()}))[0]
       }
       await this.userUseCases.removeRole(user, role);
       return role;
@@ -122,7 +122,7 @@ export class UserRoles extends BaseService<Data> {
     }
   }
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true
   }
 

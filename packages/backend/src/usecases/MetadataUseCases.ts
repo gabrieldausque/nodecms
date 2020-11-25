@@ -25,14 +25,14 @@ export class MetadataUseCases extends UseCases<Metadata>  {
    super('metadata','MetadataStorage',configuration);
   }
 
-  get(id:string | number):any {
+  async get(id:string | number):Promise<Metadata> {
     const usableId = MetadataEntityRules.convertId(id);
-    return this.storage.get(usableId);
+    return await this.storage.get(usableId);
   }
 
-  find(filter: Metadata) {
+  async find(filter: Metadata):Promise<Metadata[]> {
     MetadataEntityRules.convertFilter(filter);
-    return this.storage.find(filter);
+    return await this.storage.find(filter);
   }
 
   async create(data: Metadata):Promise<Metadata> {

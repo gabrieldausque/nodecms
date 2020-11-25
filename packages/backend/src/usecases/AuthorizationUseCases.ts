@@ -35,14 +35,14 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
     return authorization;
   }
 
-  find(filter: Authorization): Authorization[] {
+  async find(filter: Authorization): Promise<Authorization[]> {
     AuthorizationEntityRules.convert(filter);
-    return this.storage.find(filter);
+    return await this.storage.find(filter);
   }
 
-  get(id: string | number): Authorization {
+  async get(id: string | number): Promise<Authorization> {
     const usableId = AuthorizationEntityRules.convertId(id);
-    return this.storage.get(usableId);
+    return await this.storage.get(usableId);
   }
 
   async update(id: string | number, entityToUpdate: Authorization): Promise<Authorization> {

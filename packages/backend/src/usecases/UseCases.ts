@@ -8,7 +8,7 @@ import {RoleUseCases} from "./RoleUseCases";
 
 export abstract class UseCases<T extends Entity> {
   protected storage: Storage<T>;
-  private dataType: string;
+  private readonly dataType: string;
 
   protected constructor(dataType:string, contractType:string, configuration:UseCaseConfiguration = {
     storage:{
@@ -19,8 +19,8 @@ export abstract class UseCases<T extends Entity> {
     this.storage = globalInstancesFactory.getInstanceFromCatalogs(contractType, configuration.storage.contractName, configuration.storage.configuration);
   }
 
-  abstract get(id : string | number) : T;
-  abstract find(filter:T) : T[];
+  abstract async get(id : string | number) : Promise<T>;
+  abstract async find(filter:T) : Promise<T[]>;
   abstract async create(entity:T): Promise<T>;
   abstract async update(id: string | number, entityToUpdate:T): Promise<T>;
   abstract async delete(id: string | number): Promise<T>;

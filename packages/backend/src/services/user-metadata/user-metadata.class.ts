@@ -37,7 +37,7 @@ export class UserMetadata extends BaseService<Data> {
   async get (id: Id, params?: Params): Promise<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
-    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
     const metadataKeyOrId = id;
     try {
       return await this.userUseCases.getMetadata(user, metadataKeyOrId);
@@ -50,7 +50,7 @@ export class UserMetadata extends BaseService<Data> {
   async create (data: Data, params?: Params): Promise<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id indicated`);
-    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
     return await this.userUseCases.createMetadata(user, data);
   }
 
@@ -61,14 +61,14 @@ export class UserMetadata extends BaseService<Data> {
       throw new NotAcceptable(`No user id indicated`);
     if(!id)
       throw new NotAcceptable(`No metadata id indicated`);
-    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
 
     let metadata:Metadata;
     if(isNumber(id))
-      metadata = this.metadataUseCases.get(id);
+      metadata = await this.metadataUseCases.get(id);
     else
     {
-      const found = this.metadataUseCases.find({
+      const found = await this.metadataUseCases.find({
         key:id.toString(),
         ownerType:'user',
         ownerId:user.id
@@ -93,13 +93,13 @@ export class UserMetadata extends BaseService<Data> {
       throw new NotAcceptable(`No user id indicated`);
     if(!id)
       throw new NotAcceptable(`No metadata id indicated`);
-    const user:UserEntity = this.userUseCases.get(params.route.idOrLogin);
+    const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
     let metadata:Metadata;
     if(isNumber(id))
-      metadata = this.metadataUseCases.get(id);
+      metadata = await this.metadataUseCases.get(id);
     else
     {
-      const found = this.metadataUseCases.find({
+      const found = await this.metadataUseCases.find({
         key:id.toString(),
         ownerType:'user',
         ownerId:user.id
@@ -116,7 +116,7 @@ export class UserMetadata extends BaseService<Data> {
     return metadata;
   }
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true;
   }
 

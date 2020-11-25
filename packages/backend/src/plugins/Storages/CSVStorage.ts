@@ -22,17 +22,17 @@ export abstract class CSVStorage<T extends Entity> implements Storage<T> {
   abstract create(data: T): Promise<T>;
 
   async delete(keyOrId: string | number): Promise<T> {
-    let entity = this.get(keyOrId);
+    let entity = await this.get(keyOrId);
     this.database.splice(this.database.indexOf(entity),1);
     await this.saveDatabase();
     return entity
   }
 
-  abstract exists(keyOrId: string | number): boolean
+  abstract exists(keyOrId: string | number): Promise<boolean>
 
-  abstract find(filter?: T): T[]
+  abstract find(filter?: T): Promise<T[]>
 
-  abstract get(keyOrId: string | number): T
+  abstract get(keyOrId: string | number): Promise<T>
 
   async update(data: T): Promise<T> {
     this.database.splice(this.database.findIndex((m:Entity) =>

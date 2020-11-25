@@ -10,7 +10,7 @@ export default {
     all: [
       async (context:any) => {
         const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-        if(service.needAuthentication(context)) {
+        if(await service.needAuthentication(context)) {
           await service.validAuthentication(context.params);
           if(!(await service.isAuthorized(context))) {
             throw new MethodNotAllowed();
