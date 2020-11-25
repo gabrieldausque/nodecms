@@ -2,7 +2,7 @@ import {Storage} from "../Storage";
 import {User} from "../../../entities/User";
 
 export interface UserStorage extends Storage<User> {
-  exists(loginOrId:string|number):Promise<boolean>;
+  exists(loginOrId:string|number|User):Promise<boolean>;
 
   get(loginOrId: string|number):Promise<User>;
 
@@ -12,5 +12,5 @@ export interface UserStorage extends Storage<User> {
 
   update(user: User):Promise<User>;
 
-  delete(loginOrId: string | number):Promise<User>;
+  delete(loginOrId: string | number | User):Promise<User>;
 }

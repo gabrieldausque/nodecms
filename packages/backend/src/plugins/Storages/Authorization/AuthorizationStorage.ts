@@ -2,7 +2,7 @@ import {Storage} from "../Storage";
 import {Authorization} from "../../../entities/Authorization";
 
 export interface AuthorizationStorage extends Storage<Authorization> {
-  exists(keyOrId:string | number):Promise<boolean>;
+  exists(keyOrId:string | number | Authorization):Promise<boolean>;
 
   get(keyOrId:string | number):Promise<Authorization>;
 

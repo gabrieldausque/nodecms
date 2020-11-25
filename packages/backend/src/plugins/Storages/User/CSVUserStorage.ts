@@ -81,8 +81,12 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
     return this.get(user.login);
   }
 
-  async delete(loginOrId: string | number): Promise<User> {
-    const user = await this.get(loginOrId);
+  async delete(loginOrIdOrUser: string | number | User): Promise<User> {
+    let user:User;
+    if(typeof loginOrIdOrUser === 'string' || typeof loginOrIdOrUser === 'number')
+        user = await this.get(loginOrIdOrUser);
+    else
+      user = loginOrIdOrUser;
     if(user) {
       this.database.splice(this.database.indexOf(user), 1);
       await this.saveDatabase();

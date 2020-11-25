@@ -91,4 +91,12 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     return decryptedToken;
   }
 
+  decrypt(stringToDecrypt: string): string {
+    return this.decryptClientId(stringToDecrypt);
+  }
+
+  encrypt(stringToEncrypt: string): string {
+    return this.encryptClientId(stringToEncrypt);
+  }
+
 }
