@@ -49,6 +49,10 @@ export class UserUseCases extends UseCases<User> {
       UserEntityRules.validatePassword(data.password);
     }
 
+    if(!data.isActive){
+      data.isActive = false;
+    }
+
     return data;
   }
 
@@ -72,11 +76,15 @@ export class UserUseCases extends UseCases<User> {
     return await this.storage.find(filter);
   }
 
+  //TODO : create a usecase where only admin users can update the active state
   async update(id: number | string, usertoUpdate: User) : Promise<User> {
     const usableId = UserEntityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.')
+
     const existingUser = await this.get(usableId);
+    if(!usertoUpdate.isActive)
+      usertoUpdate.isActive = existingUser.isActive;
 
     if(existingUser.id !== usertoUpdate.id ||
     existingUser.login !== usertoUpdate.login) {
@@ -210,5 +218,9 @@ export class UserUseCases extends UseCases<User> {
 
   async isDataAuthorized(data:Entity, right:string='r', user?:any):Promise<boolean> {
     return super.isDataAuthorized(data,right,user);
+  }
+
+  secureUserForExternal(user:User):User {
+    return { ...user,...{ password:"******" } }
   }
 }

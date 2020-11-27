@@ -1,5 +1,7 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
 import {Role} from "../../../entities/Role";
+import {isNumber} from "../../../helpers";
+import {Authorization} from "../../../entities/Authorization";
 
 export class MongoDbRoleStorage extends MongoDbStorage<Role> {
 
@@ -15,28 +17,75 @@ export class MongoDbRoleStorage extends MongoDbStorage<Role> {
     super(configuration);
   }
 
-  create(data: Role): Promise<Role> {
-    throw new Error('Not implemented')
+  async create(data: Role): Promise<Role> {
+    if(!await this.exists(data.key)){
+      const newRole = {
+        id:await this.getNewId(),
+        key:data.key,
+        description:data.description
+      }
+      await this.internalCreate(newRole)
+    }
+    return this.get(data.key);
   }
 
-  delete(keyOrId: string | number | Role): Promise<Role> {
-    throw new Error('Not implemented')
+  async delete(keyOrIdOrRole: string | number | Role): Promise<Role> {
+    let keyOrId : string | number = '';
+    if(!(typeof keyOrIdOrRole === 'number') &&
+      !(typeof keyOrIdOrRole === 'string') &&
+      keyOrIdOrRole && keyOrIdOrRole.id) {
+      keyOrId = keyOrIdOrRole.id.toString()
+    }
+    let role = await this.get(keyOrId);
+    await this.get(keyOrId);
+    return role;
   }
 
-  exists(keyOrId: string | number | Role): Promise<boolean> {
-    throw new Error('Not implemented')
+  async exists(keyOrIdOrRole: string | number | Role): Promise<boolean> {
+    let found:Role[] = [];
+    if(isNumber(keyOrIdOrRole)) {
+      found = await this.find({
+        id:parseInt(keyOrIdOrRole.toString()),
+        key:''
+      })
+    } else if(typeof keyOrIdOrRole === 'string'){
+      found = await this.find({
+        key:keyOrIdOrRole
+      })
+    } else if((keyOrIdOrRole as Role)) {
+      found = await this.find(keyOrIdOrRole as Role)
+    }
+    return Array.isArray(found) && found.length > 0;
   }
 
-  find(filter: Role | undefined): Promise<Role[]> {
-    throw new Error('Not implemented')
+  async find(filter: Role | undefined): Promise<Role[]> {
+    if(filter)
+      return await this.internalFind(filter);
+    return [];
   }
 
-  get(keyOrId: string | number): Promise<Role> {
-    throw new Error('Not implemented')
+  async get(keyOrId: string | number): Promise<Role> {
+    if(isNumber(keyOrId)) {
+      const usableId = (typeof keyOrId === 'string')?parseInt(keyOrId.toString()):keyOrId;
+      const found = await this.internalGet(usableId)
+      if(found)
+        return found;
+    } else if (typeof keyOrId === 'string') {
+      const found = await this.internalFind({
+        key:keyOrId
+      })
+      if(Array.isArray(found) &&  found.length > 0){
+        return found[0];
+      }
+    }
+    throw new Error(`No role with id or key ${keyOrId}`);
   }
 
-  update(data: Role): Promise<Role> {
-    throw new Error('Not implemented')
+  async update(data: Role): Promise<Role> {
+    if(!await this.exists(data)) {
+      await this.create(data);
+    }
+    return (await this.find(data))[0];
   }
 
 }

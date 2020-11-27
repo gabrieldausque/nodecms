@@ -124,8 +124,8 @@ describe('Authorization service With Mongodb', () => {
     }, params);
     if(created.id){
       const check = await service.get(created.id,params);
-      expect(check.data[0]).to.be.eql({
-        id:created.data.id,
+      expect(check).to.be.eql({
+        id:created.id,
         on:"operation",
         onType:"create",
         for:"metadata",

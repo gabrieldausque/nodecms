@@ -1,5 +1,14 @@
 import url from "url";
 import {promisify} from "util";
+const config = require('config');
+import chai from 'chai';
+import {MongoClient} from "mongodb";
+import {MongoDbUserStorage} from "../plugins/Storages/User/MongoDbUserStorage";
+import {globalInstancesFactory} from "@hermes/composition";
+import {MongoDbAuthorizationStorage} from "../plugins/Storages/Authorization/MongoDbAuthorizationStorage";
+import {MongoDbMetadataStorage} from "../plugins/Storages/Metadata/MongoDbMetadataStorage";
+import {MongoDbRoleStorage} from "../plugins/Storages/Role/MongoDbRoleStorage";
+import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
 
 export function getUrl(pathname?: string, host?:string, port?:number):string {
   if(!port)
@@ -14,12 +23,16 @@ export function getUrl(pathname?: string, host?:string, port?:number):string {
 export const sleep = promisify(setTimeout);
 
 export async function initMongoDbTestDatabase():Promise<void> {
+  const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin','Default', config.get("encryption").configuration)
   const userStorage:MongoDbUserStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'MongoDb');
   const authorizationStorage:MongoDbAuthorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'MongoDb');
   const metadataStorage:MongoDbMetadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage', 'MongoDb');
   const roleStorage:MongoDbRoleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage', 'MongoDb');
 
-  const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017");
+
+  const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017", {
+    useUnifiedTopology:true
+  });
   await mongoDbClient.connect();
   try {
     await mongoDbClient.db('teama_test').collection('users').drop();
@@ -77,12 +90,5 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"data",onType:"user",for:"*",right:"w",role:0});
 }
 
-import chai from 'chai';
-import {MongoClient} from "mongodb";
-import {MongoDbUserStorage} from "../plugins/Storages/User/MongoDbUserStorage";
-import {globalInstancesFactory} from "@hermes/composition";
-import {MongoDbAuthorizationStorage} from "../plugins/Storages/Authorization/MongoDbAuthorizationStorage";
-import {MongoDbMetadataStorage} from "../plugins/Storages/Metadata/MongoDbMetadataStorage";
-import {MongoDbRoleStorage} from "../plugins/Storages/Role/MongoDbRoleStorage";
 chai.use(require('chai-as-promised'));
 export {expect} from 'chai';

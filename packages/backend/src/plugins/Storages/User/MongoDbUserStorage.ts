@@ -3,6 +3,7 @@ import {User} from "../../../entities/User";
 import {Logger} from "../../Logging/Logger";
 import {globalInstancesFactory} from "@hermes/composition";
 import {EncryptionPlugin} from "../../Encryption/EncryptionPlugin";
+import {isNumber} from "../../../helpers";
 
 export interface MongoDbUserStorageConfiguration extends MongoDbStorageConfiguration{
   encryptionPluginContractName:string
@@ -36,30 +37,77 @@ export class MongoDbUserStorage extends MongoDbStorage<User> {
     } else {
       this.logger?.debug('user already exists');
     }
-    return await this.get(data.login);
+    const justCreated = await this.get(data.login);
+    return justCreated;
   }
 
-  delete(keyOrId: string | number | User): Promise<User> {
-    throw new Error("Not implemented");
-  }
-
-  exists(keyOrId: string | number | User): Promise<boolean> {
-    return Promise.resolve(false);
-  }
-
-  async find(filter: User | undefined): Promise<User[]> {
-    if(filter){
-      return await this.internalFind(filter);
+  async delete(loginOrIdOrUser: string | number | User): Promise<User> {
+    let user:User;
+    if(typeof loginOrIdOrUser === 'string' || typeof loginOrIdOrUser === 'number')
+      user = await this.get(loginOrIdOrUser);
+    else
+      user = loginOrIdOrUser;
+    if(user) {
+      await this.internalDelete(user)
     }
-    return this.internalFind();
+    return user;
   }
 
-  get(keyOrId: string | number): Promise<User> {
-    throw new Error("Not implemented");
+  async exists(loginOrIdOrUser: string | number | User): Promise<boolean> {
+    let found:User[] = [];
+    if(isNumber(loginOrIdOrUser)){
+      found = await this.find({ id: parseInt(loginOrIdOrUser.toString())});
+    } else if(typeof loginOrIdOrUser === 'string') {
+      found = await this.find({login: loginOrIdOrUser.toString()});
+    } else if((loginOrIdOrUser as User) && (loginOrIdOrUser as User).login) {
+      found = await this.find((loginOrIdOrUser as User));
+    }
+    return Array.isArray(found) && found.length > 0;
   }
 
-  update(data: User): Promise<User> {
-    throw new Error("Not implemented");
+  async find(filter: Partial<User> | undefined): Promise<User[]> {
+    let users:User[] = []
+    if(filter){
+      users = await this.internalFind(filter);
+    }
+    else {
+      users = await this.internalFind({});
+    }
+    for(const user of users){
+      try{
+        user.password = this.encryption.decrypt(user.password);
+      }catch(err){
+          throw err
+      }
+
+    }
+    return users;
   }
 
+  async get(loginOrId: string | number): Promise<User> {
+    let user:User | null = null;
+    let toDecrypt = false;
+    if(isNumber(loginOrId)){
+      user = await this.internalGet(parseInt(loginOrId.toString()))
+      toDecrypt = true;
+    }else {
+      const found = await this.find({login:loginOrId.toString()})
+      if(Array.isArray(found) && found.length > 0){
+        user = found[0];
+      }
+    }
+    if(!user)
+      throw new Error(`No user with login or id ${loginOrId} exists`);
+    if(toDecrypt)
+      user.password = this.encryption.decrypt(user.password);
+    return user;
+  }
+
+  async update(data: User): Promise<User> {
+    if(data.password) {
+      data.password = this.encryption.encrypt(data.password);
+    }
+    await this.internalUpdate(data);
+    return await this.get(data.login)
+  }
 }

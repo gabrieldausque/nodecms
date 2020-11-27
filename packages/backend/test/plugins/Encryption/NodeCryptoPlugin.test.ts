@@ -37,4 +37,17 @@ describe('NodeCrypto plugin tests', () => {
     const testToken:string = 'toto'
     expect(encryptor.decryptClientId(encryptor.encryptClientId('toto'))).to.be.equal('toto');
   })
+
+  it('should encrypt and decrypt a string', async () => {
+
+    const encryptor = new NodeCryptoPlugin({
+      password:"MySecret",
+      cipherAlgorithm:"aes-128-gcm",
+      keyLength:16,
+      salt:"MySalt"
+    })
+    const testToken:string = 'anotherpassword';
+    const encrypted:string = encryptor.encrypt('anotherpassword')
+    expect(encryptor.decrypt(encrypted)).to.be.equal('anotherpassword');
+  })
 });

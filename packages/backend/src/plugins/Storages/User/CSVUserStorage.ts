@@ -51,11 +51,11 @@ export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
     return user;
   }
 
-  async find(filter: User): Promise<User[]> {
+  async find(filter?: Partial<User>): Promise<User[]> {
     if(filter) {
       const filtered = [];
       for(const user of this.database) {
-        if(user.id === filter.id) {
+        if(user.id === filter.id || user.login === filter.login) {
           filtered.push(user);
         }
       }

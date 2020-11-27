@@ -6,7 +6,7 @@ export interface UserStorage extends Storage<User> {
 
   get(loginOrId: string|number):Promise<User>;
 
-  find(filter?: User): Promise<User[]>;
+  find(filter?: Partial<User>): Promise<User[]>;
 
   create(user: User):Promise<User>;
 

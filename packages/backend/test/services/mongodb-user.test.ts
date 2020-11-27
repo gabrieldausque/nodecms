@@ -31,7 +31,7 @@ describe('User service', () => {
   let metadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage','MongoDb');
   let authorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage','MondoDb');
 
-  before(async (done) => {
+  before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
     server.once('listening', async () => {
@@ -62,13 +62,11 @@ describe('User service', () => {
         }
         finalCookie += `${cookieString}; `
       }
-      done();
     });
   })
 
-  beforeEach((done) => {
-    //TODO : clear the database
-    done();
+  beforeEach(async () => {
+    await initMongoDbTestDatabase();
   })
 
   after((done) => {
@@ -108,45 +106,112 @@ describe('User service', () => {
   })
 
   it('Should create a user if asked for', async () => {
-    const response = await axios.request({
-      url: getUrl('user'),
-      method: "POST",
-      data: {
+    const service:UserService = app.service('user');
+    const created = await service.create(
+      {
         login: "aNewUser",
         password: "aNewP@ssw0rd",
         isActive: true
-      },
-      headers: {
-        cookie: finalCookie
       }
-    })
-    assert.fail('To be reimplemented for mongodb case')
+    , params);
+    let gotten = await service.useCase.get(created.login);
+    expect(created.id).to.be.eql(gotten.id);
+    expect(created.login).to.be.eql(gotten.login);
+    expect(created.isActive).to.be.eql(gotten.isActive);
+    expect(gotten.password).to.be.eql('aNewP@ssw0rd')
+    expect(created.id).to.be.ok;
+    if(created.id){
+      const id:number = created.id
+      gotten = await service.useCase.get(id);
+      expect(created.id).to.be.eql(gotten.id);
+      expect(created.login).to.be.eql(gotten.login);
+      expect(created.isActive).to.be.eql(gotten.isActive);
+      expect(gotten.password).to.be.eql('aNewP@ssw0rd')
+    } else {
+      assert.fail('No id for created user');
+    }
+
   })
 
   it('Should update a user if asked for', async () => {
     const service:UserService = app.service('user');
-    const createdUser = await service.create({
+    const created = await service.create({
       login: "aNewUser",
       password: "aNewP@ssw0rd",
       isActive: true
     }, params);
-    assert.fail('to be reimplemented')
+    let gotten = await service.useCase.storage.get(created.login);
+    expect({
+      ...created,
+      ...{ password: "aNewP@ssw0rd" }
+    }).to.be.eql(gotten);
+    if(created.id){
+      const updatedUser = await service.update(created.id, {
+        id:created.id,
+        login: "aNewUser",
+        password: "UpdatedPassword"
+      }, params)
+      gotten =  await service.useCase.get(created.login);
+      expect(gotten).to.be.eql({
+        id: created.id,
+        login: created.login,
+        password: "UpdatedPassword",
+        isActive: true
+      })
+    } else {
+      assert.fail("no id for created user")
+    }
+
   })
 
   it('Should update a user if asked for from external client', async () => {
-    const creationResponse = await axios.request({
-      url: getUrl('user'),
-      method: "POST",
+    let creationResponse:any;
+    const service:UserService = app.service('user');
+    try{
+      creationResponse = await axios.request({
+        url: getUrl('user'),
+        method: "POST",
+        data: {
+          login: "aNewUser",
+          password: "aNewP@ssw0rd",
+          isActive: true
+        },
+        headers: {
+          cookie: finalCookie
+        }
+      })
+    }catch(err){
+      throw err;
+    }
+
+    let gotten:any = await axios.request({
+      url: getUrl('user/aNewUser'),
+      method: "GET",
+      headers: {
+        cookie: finalCookie
+      }
+    })
+    expect(gotten.data).to.be.eql(creationResponse.data);
+    const updatedResponse = await axios.request({
+      url: getUrl(`user/${creationResponse.data.id}`),
+      method: "PUT",
       data: {
+        id:creationResponse.data.id,
         login: "aNewUser",
-        password: "aNewP@ssw0rd",
+        password: "UpdatedPassword",
         isActive: true
       },
       headers: {
         cookie: finalCookie
       }
-    })
-    assert.fail('to be reimplemented with mongodb')
+    });
+    gotten = await service.useCase.storage.get(creationResponse.data.login);
+    expect(gotten).to.be.eql({
+      id:creationResponse.data.id,
+      login:creationResponse.data.login,
+      password:"UpdatedPassword",
+      isActive:creationResponse.data.isActive
+    });
   })
 
   it('Should reject update if id is not related to the login in the data', async () => {

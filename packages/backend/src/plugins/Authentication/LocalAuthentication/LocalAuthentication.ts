@@ -66,18 +66,16 @@ export default class LocalAuthentication implements AuthenticationPlugin{
   }
 
   async authenticate(login: string, password: string): Promise<CustomAuthenticatedUserToken> {
-    const users = await this.getUserDatabase();
-    for(const allowedUsers of users){
-      if(allowedUsers.login === login && allowedUsers.password === password) {
-        const token:CustomAuthenticatedUserToken = {
-          authenticationDate: new Date(),
-          authorityKey: this.authorityKey,
-          login: allowedUsers.login.toString()
-        };
-        return Promise.resolve(token);
-      }
+    const user = await this.userStorage.get(login);
+    if(user && user.isActive){
+      const token:CustomAuthenticatedUserToken = {
+        authenticationDate: new Date(),
+        authorityKey: this.authorityKey,
+        login: user.login.toString()
+      };
+      return token;
     }
-    return Promise.reject(`User ${login} doesn't exist or wrong password`);
+    throw new Error(`User ${login} doesn't exist or wrong password or user is deactivated`);
   }
 
   isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken): boolean {
@@ -95,7 +93,7 @@ export default class LocalAuthentication implements AuthenticationPlugin{
   async userIsActive(login: string):Promise<boolean> {
     if(await this.userExists(login)) {
       const user = await this.userStorage.get(login);
-      return (user)?user.isActive:false;
+      return (user && user.isActive)?user.isActive:false;
     }
     return  false;
   }

@@ -17,8 +17,6 @@ export default function (app: Application) {
   const authenticationConfiguration =  app.get('authentication');
   if(!authenticationConfiguration.authentication ||
     !authenticationConfiguration.authentication.contractName ||
-    !authenticationConfiguration.encryption ||
-    !authenticationConfiguration.encryption.contractName ||
     !authenticationConfiguration.realm
   ) {
     throw new Error('Authentication configuration is incomplete, please correct');
@@ -33,8 +31,8 @@ export default function (app: Application) {
       },
     encryption:
       {
-        contractName: app.get('authentication').encryption.contractName,
-        configuration: app.get('authentication').encryption.configuration
+        contractName: app.get('encryption').contractName,
+        configuration: app.get('encryption').configuration
       }
   };
 

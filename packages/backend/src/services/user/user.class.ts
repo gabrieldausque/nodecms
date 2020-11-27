@@ -11,7 +11,7 @@ interface UserDTO {
   id?:number
   login:string
   password:string
-  isActive:boolean
+  isActive?:boolean
 }
 
 interface ServiceOptions {
@@ -52,21 +52,22 @@ export class User extends BaseService<UserDTO>  {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
     const user = await this.useCase.get(id);
-    user.password = '******';
-    return user;
+    return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: UserDTO, params?: Params): Promise<UserDTO> {
-    return await this.useCase.create(data);
+    const user = await this.useCase.create(data);
+    return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: UserDTO, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for update');
-    const user = this.useCase.validate(data);
-    return await this.useCase.update(id, user)
+    let user = this.useCase.validate(data);
+    user = await this.useCase.update(id, user)
+    return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,7 +79,8 @@ export class User extends BaseService<UserDTO>  {
   async remove (id: NullableId, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for delete');
-    return await this.useCase.delete(id);
+    const user = await this.useCase.delete(id);
+    return this.useCase.secureUserForExternal(user);
   }
 
   async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {

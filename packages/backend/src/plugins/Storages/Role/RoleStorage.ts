@@ -6,7 +6,7 @@ export interface RoleStorage extends Storage<Role> {
 
   get(keyOrId:string | number):Promise<Role>;
 
-  find(filter? : Role): Promise<Role[]>
+  find(filter? : Partial<Role>): Promise<Role[]>
 
   create(data: Role): Promise<Role>;
 

@@ -1,12 +1,13 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
 import {Metadata} from "../../../entities/Metadata";
+import {isNumber} from "../../../helpers";
 
 export class MongoDbMetadataStorage extends MongoDbStorage<Metadata> {
 
   public static metadata:any[] = [
     {
       contractType:'MetadataStorage',
-      contractName:'CSV',
+      contractName:'MongoDb',
       isShared:true
     }
   ]
@@ -15,28 +16,87 @@ export class MongoDbMetadataStorage extends MongoDbStorage<Metadata> {
     super(configuration);
   }
 
-  create(data: Metadata): Promise<Metadata> {
-    throw new Error('Not implemented')
+  async create(data: Metadata): Promise<Metadata> {
+    if(!await this.exists(data.key, data.ownerType,data.ownerId)) {
+      const newMetadata:Metadata = {
+        id: await this.getNewId(),
+        key: data.key,
+        value: data.value,
+        isPublic: data.isPublic,
+        ownerType: (data.ownerType)?data.ownerType:"",
+        ownerId: (isNumber(data.ownerId))?data.ownerId:null
+      }
+      await this.internalCreate(newMetadata);
+    }
+    return await this.get(data.key, data.ownerType, data.ownerId);
   }
 
-  delete(keyOrId: string | number | Metadata): Promise<Metadata> {
-    throw new Error('Not implemented')
+  async delete(keyOrIdOrMetadata: string | number | Metadata, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {
+    let metadata:Metadata;
+    if(typeof keyOrIdOrMetadata === 'number' || typeof keyOrIdOrMetadata === 'string'){
+      metadata = await this.get(keyOrIdOrMetadata, ownerType, ownerId)
+    } else {
+      metadata = keyOrIdOrMetadata
+    }
+    if(metadata){
+      await this.internalDelete(metadata);
+    }
+    return metadata
   }
 
-  exists(keyOrId: string | number | Metadata): Promise<boolean> {
-    throw new Error('Not implemented')
+  async exists(keyOrId: string | number , ownerType?: string | null, ownerId?: number | null): Promise<boolean> {
+    let metadata:Metadata[] = [];
+    if(isNumber(keyOrId)) {
+      metadata = await this.find({
+        id:parseInt(keyOrId.toString())
+      })
+    } else {
+      metadata = await this.find({
+        key: keyOrId.toString(),
+        ownerType: ownerType,
+        ownerId: ownerId
+      })
+    }
+    return Array.isArray(metadata) && metadata.length > 0;
   }
 
-  find(filter: Metadata | undefined): Promise<Metadata[]> {
-    throw new Error('Not implemented')
+  async find(filter: Partial<Metadata> | undefined): Promise<Metadata[]> {
+    if(filter) {
+      if(filter.key) {
+        if(!filter.ownerType){
+          filter.ownerType = '';
+        }
+        if(!filter.ownerId && filter.ownerId !== 0){
+          filter.ownerId = null;
+        }
+      }
+      return await this.internalFind(filter);
+    }
+    return [];
   }
 
-  get(keyOrId: string | number): Promise<Metadata> {
-    throw new Error('Not implemented')
+  async get(keyOrId:string | number, ownerType:string |null = '', ownerId:number | null = null): Promise<Metadata> {
+    let metadata:Metadata | null = null;
+    if(isNumber(keyOrId)){
+      metadata = await this.internalGet(parseInt(keyOrId.toString()))
+    } else {
+      const filter = {
+        key:keyOrId.toString(),
+        ownerType: ownerType,
+        ownerId: ownerId
+      };
+      const found = await this.find(filter);
+      if(Array.isArray(found) && found.length > 0)
+        metadata = found[0];
+    }
+    if(metadata)
+      return metadata;
+    throw new Error(`Metadata with key or id ${keyOrId} doesn't exists`)
   }
 
-  update(data: Metadata): Promise<Metadata> {
-    throw new Error('Not implemented')
+  async update(data: Metadata): Promise<Metadata> {
+    await this.internalCreate(data);
+    return await this.get(data.key, data.ownerType, data.ownerId);
   }
 
 }

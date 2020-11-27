@@ -15,20 +15,23 @@
       "configuration" : "data/users.csv"
     }
   },
+  "logger" : {
+    "contractName": "Default",
+    "configuration": {}
+  },
+  "encryption" : {
+    "contractName": "Default",
+    "configuration": {
+      "password":"MySecret",
+      "cipherAlgorithm":"aes-128-gcm",
+      "keyLength":16,
+      "salt":"MySalt"
+    }
+  },
   "authentication": {
     "authentication" : {
       "contractName": "Default",
-      "configuration": {
-      }
-    },
-    "encryption" : {
-      "contractName": "Default",
-      "configuration": {
-        "password":"MySecret",
-        "cipherAlgorithm":"aes-128-gcm",
-        "keyLength":16,
-        "salt":"MySalt"
-      }
+      "configuration": {}
     },
     "realm": "myhost.domain"
   }

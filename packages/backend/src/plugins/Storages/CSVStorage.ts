@@ -31,7 +31,7 @@ export abstract class CSVStorage<T extends Entity> extends Storage<T> {
 
   abstract exists(keyOrId: string | number | T): Promise<boolean>
 
-  abstract find(filter?: T): Promise<T[]>
+  abstract find(filter?: Partial<T>): Promise<T[]>
 
   abstract get(keyOrId: string | number): Promise<T>
 

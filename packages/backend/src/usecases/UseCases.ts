@@ -7,7 +7,7 @@ import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
 
 export abstract class UseCases<T extends Entity> {
-  protected storage: Storage<T>;
+  public storage: Storage<T>;
   private readonly dataType: string;
 
   protected constructor(dataType:string, contractType:string, configuration:UseCaseConfiguration = {

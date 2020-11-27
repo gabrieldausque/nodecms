@@ -42,16 +42,25 @@ export class MongoDbAuthorizationStorage extends MongoDbStorage<Authorization> {
         right:'',
         role:0
       })
+    } else if(typeof keyOrIdOrData === 'string' ){
+      found = await (await this.getCollection()).findOne({
+        key:keyOrIdOrData
+      })
     } else {
       found = await this.find(keyOrIdOrData as Authorization)
     }
     return Array.isArray(found) && found.length > 0;
   }
 
+
+
   async find(filter: Authorization | undefined): Promise<Authorization[]> {
-    if(filter)
-      return this.internalFind(filter);
-    return [];
+    let found:Authorization[] = [];
+    if(filter){
+      found.push(...(await this.internalFind(filter)));
+      found.push(...(await this.internalFind({...filter,...{ for: '*' }})));
+    }
+    return found;
   }
 
   async get(keyOrId: string | number): Promise<Authorization> {

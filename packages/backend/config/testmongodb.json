@@ -20,7 +20,8 @@
         "mongodbUser": "admin_teama",
         "mongodbPassword": "admin",
         "dbName": "teama_test",
-        "collectionName": "users"
+        "collectionName": "users",
+        "encryptionPluginContractName": "Default"
       }
     },
     "metadata" : {

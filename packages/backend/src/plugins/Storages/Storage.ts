@@ -5,7 +5,7 @@ export abstract class Storage<T extends Entity> {
 
   abstract get(keyOrId:string | number):Promise<T>;
 
-  abstract find(filter? : T): Promise<T[]>
+  abstract find(filter? : Partial<T>): Promise<T[]>
 
   abstract create(data: T): Promise<T>;
 

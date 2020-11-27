@@ -3,6 +3,7 @@ import {Storage} from './Storage'
 import {Collection, Db, MongoClient} from 'mongodb';
 import {globalInstancesFactory} from "@hermes/composition";
 import {Logger} from "../Logging/Logger";
+import {User} from "../../entities/User";
 
 export interface MongoDbStorageConfiguration {
   mongodbUser:string,
@@ -42,14 +43,14 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     }
   }
 
-  private async getMongoDb():Promise<Db> {
+  protected async getMongoDb():Promise<Db> {
     if(!this.mongoClient.isConnected()){
       await this.init()
     }
     return this.mongoClient.db(this.dbName);
   }
 
-  private async getCollection():Promise<Collection> {
+  protected async getCollection():Promise<Collection> {
     return (await this.getMongoDb()).collection<T>(this.collectionName);
   }
 
@@ -64,8 +65,9 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     });
     if(result.value){
       return result.value.lastId
+    } else {
+      return 0
     }
-    throw new Error(`No counter for collection ${this.collectionName} in db ${this.dbName}`);
   }
 
   protected async internalCreate(entity:T) {
@@ -74,22 +76,39 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     )
   }
 
+  protected async internalUpdate(data: User) {
+    await (await this.getCollection()).findOneAndUpdate({
+      id: data.id
+    },{
+      $set: data
+    })
+  }
+
   protected async internalDelete(entity:T) {
     await (await this.getCollection()).deleteOne(
       entity
     )
   }
 
-  protected async internalFind(filter?:T | null | undefined):Promise<T[]> {
-    if(filter)
-      return (await this.getCollection()).find(filter).toArray();
-    return (await  this.getCollection()).find().toArray()
+  protected async internalFind(filter?:Partial<T> | null | undefined):Promise<T[]> {
+    let found:T[] = [];
+    if(filter){
+      found = await (await this.getCollection())
+        .find(filter)
+        .toArray();
+    }
+    found.map((f:any) => {
+      delete f._id
+    })
+    return found;
   }
 
   protected async internalGet(searchId:number):Promise<T | null> {
-    return (await this.getCollection()).findOne<T>({
+    const found = await (await this.getCollection()).findOne<T>({
       id:searchId
     })
+    delete (found as any)._id
+    return found;
   }
 
   abstract create(data: T): Promise<T>;
@@ -98,7 +117,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   abstract exists(keyOrId: string | number | T): Promise<boolean>;
 
-  abstract find(filter?: T): Promise<T[]>;
+  abstract find(filter?: Partial<T>): Promise<T[]>;
 
   abstract get(keyOrId: string | number): Promise<T>;
 
