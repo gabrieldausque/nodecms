@@ -20,8 +20,10 @@ import {globalInstancesFactory} from '@hermes/composition';
 import {Logger} from "./plugins/Logging/Logger";
 import {error} from "winston";
 import {EncryptionPlugin} from "./plugins/Encryption/EncryptionPlugin";
+import {TopicServiceConfiguration} from "@hermes/topicservice";
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/plugins');
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/usecases');
+globalInstancesFactory.loadExportedClassesFromDirectory( path.dirname(require.resolve('@hermes/topicservice')));
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
@@ -29,9 +31,11 @@ const app: Application = express(feathers());
 // Load app configuration
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
+const topicServiceConfiguration:any = app.get("topicService");
 
 const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', app.get('encryption').contractName, app.get('encryption').configuration);
 const logger:Logger = globalInstancesFactory.getInstanceFromCatalogs('Logger',app.get('logger').contractName, app.get('logger').configuration);
+
 logger.info('Application starting');
 
 app.use(helmet());

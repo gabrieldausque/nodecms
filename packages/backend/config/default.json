@@ -34,5 +34,13 @@
       "configuration": {}
     },
     "realm": "myhost.domain"
+  },
+  "topicService":{
+    "contractName": "Default",
+    "configuration": {
+      "host":"http://localhost:3030",
+      "standAlone": true,
+      "clusterNodes":[]
+    }
   }
 }
