@@ -70,7 +70,11 @@ export class MongoDbMetadataStorage extends MongoDbStorage<Metadata> {
           filter.ownerId = null;
         }
       }
-      return await this.internalFind(filter);
+      return await this.internalFind({
+        key:filter.key,
+        ownerType: filter.ownerType,
+        ownerId: filter.ownerId
+      });
     }
     return [];
   }
@@ -95,7 +99,7 @@ export class MongoDbMetadataStorage extends MongoDbStorage<Metadata> {
   }
 
   async update(data: Metadata): Promise<Metadata> {
-    await this.internalUpdate(data);
+    await this.internalUpdate(data)
     return await this.get(data.key, data.ownerType, data.ownerId);
   }
 
