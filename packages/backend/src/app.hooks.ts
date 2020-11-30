@@ -13,7 +13,7 @@ export default {
         if(await service.needAuthentication(context)) {
           await service.validAuthentication(context.params);
           if(!(await service.isAuthorized(context))) {
-            throw new MethodNotAllowed();
+            throw new MethodNotAllowed(`Method ${context.method} for service ${context.path} is not authorized for user ${context?.params?.user?.login}`);
           }
         }
       }

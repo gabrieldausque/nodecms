@@ -95,7 +95,7 @@ export class MongoDbMetadataStorage extends MongoDbStorage<Metadata> {
   }
 
   async update(data: Metadata): Promise<Metadata> {
-    await this.internalCreate(data);
+    await this.internalUpdate(data);
     return await this.get(data.key, data.ownerType, data.ownerId);
   }
 

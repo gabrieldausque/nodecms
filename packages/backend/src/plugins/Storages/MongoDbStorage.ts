@@ -76,15 +76,15 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     )
   }
 
-  protected async internalUpdate(data: User) {
+  protected async internalUpdate(entity: Partial<T>) {
     await (await this.getCollection()).findOneAndUpdate({
-      id: data.id
+      id: entity.id
     },{
-      $set: data
+      $set: entity
     })
   }
 
-  protected async internalDelete(entity:T) {
+  protected async internalDelete(entity:Partial<T>) {
     await (await this.getCollection()).deleteOne(
       entity
     )
@@ -107,7 +107,8 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     const found = await (await this.getCollection()).findOne<T>({
       id:searchId
     })
-    delete (found as any)._id
+    if(found && found._id)
+      delete (found as any)._id
     return found;
   }
 

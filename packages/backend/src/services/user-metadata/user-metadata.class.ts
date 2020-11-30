@@ -39,8 +39,9 @@ export class UserMetadata extends BaseService<Data> {
       throw new NotAcceptable(`No user id`);
     const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
     const metadataKeyOrId = id;
+    const executingUser:UserEntity = params?.user as UserEntity;
     try {
-      return await this.userUseCases.getMetadata(user, metadataKeyOrId);
+      return await this.userUseCases.getMetadata(user, metadataKeyOrId, executingUser);
     } catch(err) {
       throw new NotFound(err.message);
     }
@@ -51,7 +52,8 @@ export class UserMetadata extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id indicated`);
     const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
-    return await this.userUseCases.createMetadata(user, data);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    return await this.userUseCases.createMetadata(user, data, executingUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -61,11 +63,11 @@ export class UserMetadata extends BaseService<Data> {
       throw new NotAcceptable(`No user id indicated`);
     if(!id)
       throw new NotAcceptable(`No metadata id indicated`);
-    const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
-
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin, executingUser);
     let metadata:Metadata;
     if(isNumber(id))
-      metadata = await this.metadataUseCases.get(id);
+      metadata = await this.metadataUseCases.get(id, executingUser);
     else
     {
       const found = await this.metadataUseCases.find({
@@ -79,7 +81,7 @@ export class UserMetadata extends BaseService<Data> {
         throw new NotAcceptable(`More than one metadata with key ${id} for user ${user.id}. Please contact administrators`)
       metadata = found[0];
     }
-    return await this.userUseCases.updateMetadata(user, {...metadata, ...data});
+    return await this.userUseCases.updateMetadata(user, {...metadata, ...data}, executingUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -94,9 +96,10 @@ export class UserMetadata extends BaseService<Data> {
     if(!id)
       throw new NotAcceptable(`No metadata id indicated`);
     const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
+    const executingUser:UserEntity = params?.user as UserEntity;
     let metadata:Metadata;
     if(isNumber(id))
-      metadata = await this.metadataUseCases.get(id);
+      metadata = await this.metadataUseCases.get(id, executingUser);
     else
     {
       const found = await this.metadataUseCases.find({
@@ -112,7 +115,7 @@ export class UserMetadata extends BaseService<Data> {
     }
     if(!metadata || !metadata.id)
       throw new NotFound(`No metadata with id or key ${id}`);
-    await this.metadataUseCases.delete(metadata.id);
+    await this.metadataUseCases.delete(metadata.id, executingUser);
     return metadata;
   }
 

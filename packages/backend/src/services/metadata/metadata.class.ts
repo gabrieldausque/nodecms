@@ -35,27 +35,31 @@ export class Metadata extends BaseService<MetadataDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<MetadataDTO[] | Paginated<MetadataDTO>> {
-    if(params && params.query)
+    if(params && params.query) {
+      const executingUser:UserEntity = params?.user as UserEntity;
       return await this.useCase.find({
         key: params.query.key,
         ownerType: params.query.ownerType,
         ownerId: params.query.ownerId
-      });
+      }, executingUser)
+    };
     return []
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<MetadataDTO> {
+    const executingUser:UserEntity = params?.user as UserEntity;
     if(id || id === 0) {
       if(isNumber(id)) {
         try {
-          return await this.useCase.get(id.toString());
+
+          return await this.useCase.get(id.toString(), executingUser);
         } catch(err) {
           throw new NotFound(err.message);
         }
       } else {
         const filter = { key: id.toString()}
-        const found = await this.useCase.find(filter)
+        const found = await this.useCase.find(filter, executingUser)
         if(found) {
           if(found.length === 1)
             return found[0];
@@ -70,7 +74,7 @@ export class Metadata extends BaseService<MetadataDTO> {
           ownerType: params.query.ownerType?params.query.ownerType:'',
           ownerId: params.query.ownerId?params.query.ownerId:null
         }
-        const found = await this.useCase.find(filter)
+        const found = await this.useCase.find(filter, executingUser)
         if(found) {
           if(found.length === 1)
             return found[0];
@@ -84,22 +88,24 @@ export class Metadata extends BaseService<MetadataDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
-    return this.useCase.create(data);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    return this.useCase.create(data, executingUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
+    const executingUser:UserEntity = params?.user as UserEntity;
     if(id || id === 0) {
       const existing = await this.get(id, params);
       if(existing && isNumber(existing.id) && typeof existing.id !== 'undefined') {
-        return this.useCase.update(existing.id, data)
+        return this.useCase.update(existing.id, data, executingUser)
       }
     } else if(params && params.query) {
       const found = await this.find(params);
       if(Array.isArray(found) && found.length > 0) {
         const existing = found[0];
         if (existing && isNumber(existing.id) && typeof existing.id !== 'undefined') {
-          return this.useCase.update(existing.id, data)
+          return this.useCase.update(existing.id, data, executingUser)
         }
       }
     }
@@ -113,10 +119,11 @@ export class Metadata extends BaseService<MetadataDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<MetadataDTO> {
+    const executingUser:UserEntity = params?.user as UserEntity;
     if(id){
       const existing = await this.get(id, params);
       if(existing && existing.id) {
-        return await this.useCase.delete(existing.id)
+        return await this.useCase.delete(existing.id, executingUser)
       }
     }
     throw new NotFound(`No metadata with key : ${id}`);
@@ -130,7 +137,7 @@ export class Metadata extends BaseService<MetadataDTO> {
       }
       return true;
     } else {
-      const searchData = await this.useCase.find(data);
+      const searchData = await this.useCase.find(data, user);
       if(Array.isArray(searchData) && searchData.length > 0) {
         const oneData = searchData[0];
         if(oneData.isPublic)
@@ -146,10 +153,11 @@ export class Metadata extends BaseService<MetadataDTO> {
   }
 
   async needAuthentication(context:any): Promise<boolean> {
+    const executingUser:UserEntity = context?.user as UserEntity;
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id){
         if(isNumber(context.id)) {
-          const data = await this.useCase.get(context.id)
+          const data = await this.useCase.get(context.id, executingUser)
           if(data)
             return !data.isPublic;
         } else {

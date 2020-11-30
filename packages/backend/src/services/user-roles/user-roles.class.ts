@@ -9,8 +9,9 @@ import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {isNumber} from "../../helpers";
 import {Role} from "../../entities/Role";
 import {User as UserEntity} from "../../entities/User";
+import {exceptions} from "winston";
 
-type Data = Role
+type Data = any
 
 interface ServiceOptions {}
 
@@ -35,7 +36,8 @@ export class UserRoles extends BaseService<Data> {
       throw new NotFound(`No user id`);
     try {
       const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
-      return await this.userUseCases.getRoles(user);
+      const executingUser:UserEntity = params?.user as UserEntity;
+      return await this.userUseCases.getRoles(user, executingUser);
     } catch(err) {
       throw new NotFound(err.message);
     }
@@ -46,9 +48,10 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
-      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
-      const role:Role = await this.roleUseCases.get(id);
-      if(await this.userUseCases.hasRole(user, role))
+      const executingUser:UserEntity = params?.user as UserEntity;
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin, executingUser);
+      const role:Role = await this.roleUseCases.get(id, executingUser);
+      if(await this.userUseCases.hasRole(user, role, executingUser))
         return role;
     } catch(err) {
       throw new NotFound(err.message);
@@ -61,14 +64,15 @@ export class UserRoles extends BaseService<Data> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
-      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
+      const executingUser:UserEntity = params?.user as UserEntity;
+      const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin, executingUser);
       let role:Role;
       if(isNumber(data)) {
-        role = await this.roleUseCases.get(parseInt(data.toString()));
+        role = await this.roleUseCases.get(parseInt(data.toString()), executingUser);
       } else {
-        role = (await this.roleUseCases.find(data as Role))[0]
+        role = (await this.roleUseCases.find(data as Role, executingUser))[0]
       }
-      await this.userUseCases.hadRole(user, role);
+      await this.userUseCases.addRole(user, role, executingUser);
       return role;
     } catch(err) {
       throw new Error(err.message);
@@ -82,14 +86,15 @@ export class UserRoles extends BaseService<Data> {
     if(!id)
       throw new NotAcceptable(`No Role id to had`);
     try {
+      const executingUser:UserEntity = params?.user as UserEntity;
       const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
       let role:Role;
       if(isNumber(id)) {
-        role = await this.roleUseCases.get(parseInt(id.toString()));
+        role = await this.roleUseCases.get(parseInt(id.toString()), executingUser);
       } else {
-        role = (await this.roleUseCases.find({key:id.toString()}))[0]
+        role = (await this.roleUseCases.find({key:id.toString()}, executingUser))[0]
       }
-      await this.userUseCases.hadRole(user, role);
+      await this.userUseCases.addRole(user, role, executingUser);
       return role;
     } catch(err) {
       throw new Error(err.message);
@@ -109,13 +114,14 @@ export class UserRoles extends BaseService<Data> {
       throw new NotAcceptable(`No Role id to had`);
     try {
       const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
+      const executingUser:UserEntity = params?.user as UserEntity;
       let role:Role;
       if(isNumber(id)) {
-        role = await this.roleUseCases.get(parseInt(id.toString()));
+        role = await this.roleUseCases.get(parseInt(id.toString()), executingUser);
       } else {
-        role = (await this.roleUseCases.find({key:id.toString()}))[0]
+        role = (await this.roleUseCases.find({key:id.toString()}, executingUser))[0]
       }
-      await this.userUseCases.removeRole(user, role);
+      await this.userUseCases.removeRole(user, role, executingUser);
       return role;
     } catch(err) {
       throw new Error(err.message);

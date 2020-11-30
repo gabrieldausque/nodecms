@@ -10,7 +10,7 @@ import app from '../../src/app';
 import {Server} from "http";
 import axios from "axios";
 import {globalInstancesFactory} from "@hermes/composition";
-import {getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
+import {getAuthenticationParams, getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {User} from "../../src/entities/User";
 import {User as UserService} from '../../src/services/user/user.class';
 import {UserMetadata} from "../../src/services/user-metadata/user-metadata.class";
@@ -20,16 +20,11 @@ import {MongoDbUserStorage} from "../../src/plugins/Storages/User/MongoDbUserSto
 
 const port = app.get('port') || 3030;
 
-
-
 describe('User service', () => {
 
   let server: Server;
   let finalCookie = '';
   let params:any = {};
-  let userStorage:MongoDbUserStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage','MongoDb');
-  let metadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage','MongoDb');
-  let authorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage','MondoDb');
 
   before(async () => {
     await initMongoDbTestDatabase();
@@ -215,35 +210,60 @@ describe('User service', () => {
   })
 
   it('Should reject update if id is not related to the login in the data', async () => {
-    await axios.request({
-      url: getUrl('user'),
-      method: "POST",
-      data: {
-        login: "aNewUser",
-        password: "aNewP@ssw0rd",
+    const service:UserService = app.service('user');
+    const created = await service.create({
+      login: "aNewUser",
+      password: "aNewP@ssw0rd",
+      isActive: true
+    }, params);
+    if(created.id){
+      const wrongUpdatePromise = service.update(created.id, {
+        id:666,
+        login: "aNewUSer",
+        password: "UpdatedPassword",
         isActive: true
-      },
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    assert.fail('to be reimplemented for mongodb')
+      }, params)
+      return expect(wrongUpdatePromise).to.be.rejectedWith('Only active state or password can be updated for user by administrators.');
+    } else {
+      assert.fail('No id in created user');
+    }
+  })
+
+  it('Should reject update if executing user is not the user and if it is not admin', async () => {
+    const service:UserService = app.service('user');
+    const created = await service.create({
+      login: "aNewUser",
+      password: "aNewP@ssw0rd",
+      isActive: true
+    }, params);
+    const otherUserParam:any = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    if(created.id){
+      const wrongUpdatePromise = service.update(created.id, {
+        id:created.id,
+        login: "aNewUser",
+        password: "UpdatedPassword",
+        isActive: true
+      }, otherUserParam);
+      return expect(wrongUpdatePromise).to.be.rejectedWith(`User otheruser can't update aNewUser. Not same user and has not role administrators`);
+    } else {
+      assert.fail('No id in created user');
+    }
   })
 
   it('Should remove a user', async() => {
-    await axios.request({
-      url: getUrl('user'),
-      method: "POST",
-      data: {
-        login: "aNewUser",
-        password: "aNewP@ssw0rd",
-        isActive: true
-      },
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    assert.fail('to be reimplemented with mongodb')
+    const service:UserService = app.service('user');
+    const created:User = await service.create({
+      login: "aNewUser",
+      password: "aNewP@ssw0rd",
+      isActive: true
+    }, params);
+    if(created.id){
+      expect(await service.get(created.id, params)).to.be.eql(created);
+      const deleted = await service.remove(created.id, params);
+      expect(deleted).to.be.eql(created);
+      return expect(service.get(created.id, params)).to.be.rejectedWith(`No user with login or id ${created.id} exists`);
+    }
+    assert.fail('No id on created user');
   })
 
   it('should return metadata of a user using login and key', async () => {
@@ -527,32 +547,13 @@ describe('User service', () => {
       }
     })).data;
     expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    }]);
-    response = await axios.request({
-      url: getUrl('user/otheruser/roles/2'),
-      method: "PUT",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },{
       description: "special Users group",
       id: 2,
       key: "specialUsers"
+    },{
+      description: "Users group",
+      id: 1,
+      key: "users"
     }]);
   })
 
@@ -573,6 +574,10 @@ describe('User service', () => {
       }
     })).data;
     expect(list).to.be.eql([{
+      description: "special Users group",
+      id: 2,
+      key: "specialUsers"
+    },{
       description: "Users group",
       id: 1,
       key: "users"
@@ -591,8 +596,22 @@ describe('User service', () => {
         cookie: finalCookie
       }
     })).data;
-    expect(list).to.be.eql([]);
+    expect(list).to.be.eql([{
+      description: "special Users group",
+      id: 2,
+      key: "specialUsers"
+    }]);
   })
+
+  it('non administrators should not be able to add role for itself or another user', async() => {
+    const service = app.service('user/:idOrLogin/roles');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    if(!otherUserParams.route)
+      otherUserParams.route = {}
+    otherUserParams.route.idOrLogin = 'otheruser';
+    return expect(service.create([1], otherUserParams)).to.be.rejectedWith('Method create for service user/:idOrLogin/roles is not authorized for user otheruser');
+  })
+
 });
 
 

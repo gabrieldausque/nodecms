@@ -35,9 +35,11 @@ export class MongoDbRoleStorage extends MongoDbStorage<Role> {
       !(typeof keyOrIdOrRole === 'string') &&
       keyOrIdOrRole && keyOrIdOrRole.id) {
       keyOrId = keyOrIdOrRole.id.toString()
+    } else {
+      keyOrId = keyOrIdOrRole.toString();
     }
     let role = await this.get(keyOrId);
-    await this.get(keyOrId);
+    await this.internalDelete(role);
     return role;
   }
 
@@ -82,10 +84,8 @@ export class MongoDbRoleStorage extends MongoDbStorage<Role> {
   }
 
   async update(data: Role): Promise<Role> {
-    if(!await this.exists(data)) {
-      await this.create(data);
-    }
-    return (await this.find(data))[0];
+    await this.internalUpdate(data);
+    return await this.get(data.key)
   }
 
 }

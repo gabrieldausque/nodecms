@@ -48,7 +48,9 @@ export class MongoDbUserStorage extends MongoDbStorage<User> {
     else
       user = loginOrIdOrUser;
     if(user) {
-      await this.internalDelete(user)
+      await this.internalDelete({
+        id:user.id
+      })
     }
     return user;
   }

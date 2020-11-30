@@ -9,6 +9,7 @@ import {MongoDbAuthorizationStorage} from "../plugins/Storages/Authorization/Mon
 import {MongoDbMetadataStorage} from "../plugins/Storages/Metadata/MongoDbMetadataStorage";
 import {MongoDbRoleStorage} from "../plugins/Storages/Role/MongoDbRoleStorage";
 import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
+import axios from "axios";
 
 export function getUrl(pathname?: string, host?:string, port?:number):string {
   if(!port)
@@ -73,10 +74,13 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await metadataStorage.create({ key:"private-metadata",value:"my private value",isPublic:false,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"pseudonym",value:"MyPseudo",isPublic:false,ownerType:"user",ownerId:0});
   await metadataStorage.create({ key:"roles",value:[0,2],isPublic:false,ownerType:"user",ownerId:0});
+  await metadataStorage.create({ key:"roles",value:[2],isPublic:false,ownerType:"user",ownerId:1});
 
   await authorizationStorage.create({on:"operation",onType:"create",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"update",for:"*",right:"x",role:0});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"*",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"patch",for:"*",right:"x",role:0});
+  await authorizationStorage.create({on:"operation",onType:"patch",for:"*",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"find",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"get",for:"*",right:"x",role:0});
@@ -88,6 +92,37 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"data",onType:"metadata",for:"*",right:"w",role:0});
   await authorizationStorage.create({on:"data",onType:"user",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"user",for:"*",right:"w",role:0});
+}
+
+export const getAuthenticationParams = async (login:string, password:string, serverPort:number) => {
+  const authResponse = await axios.request({
+    url: getUrl('authentication', 'localhost', serverPort),
+    method: "POST",
+    data: {
+      login: login,
+      password: password,
+    }
+  })
+  const authParams:any = {};
+  for(const cookie of authResponse.headers['set-cookie']) {
+    const cookieString = cookie.split(';')[0];
+    const cookieName = cookieString.split('=')[0];
+    const cookieValue = cookieString.split('=')[1];
+    switch(cookieName) {
+      case 'ncms-uniqueid': {
+        authParams.clientId = cookieValue
+        break;
+      }
+      case 'ncms-token': {
+        authParams.authenticationToken = cookieValue;
+        break;
+      }
+      default: {
+        authParams[cookieName] = cookieValue;
+      }
+    }
+  }
+  return authParams;
 }
 
 chai.use(require('chai-as-promised'));

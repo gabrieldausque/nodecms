@@ -44,20 +44,23 @@ export class User extends BaseService<UserDTO>  {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
-      return await this.useCase.find(params.filter);
+      const executingUser:UserEntity = params?.user as UserEntity;
+      return await this.useCase.find(params.filter, executingUser);
     }
     return [];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
-    const user = await this.useCase.get(id);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user = await this.useCase.get(id, executingUser);
     return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: UserDTO, params?: Params): Promise<UserDTO> {
-    const user = await this.useCase.create(data);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user = await this.useCase.create(data, executingUser);
     return this.useCase.secureUserForExternal(user);
   }
 
@@ -65,8 +68,9 @@ export class User extends BaseService<UserDTO>  {
   async update (id: NullableId, data: UserDTO, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for update');
+    const executingUser:UserEntity = params?.user as UserEntity;
     let user = this.useCase.validate(data);
-    user = await this.useCase.update(id, user)
+    user = await this.useCase.update(id, user, executingUser);
     return this.useCase.secureUserForExternal(user);
   }
 
@@ -79,7 +83,8 @@ export class User extends BaseService<UserDTO>  {
   async remove (id: NullableId, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for delete');
-    const user = await this.useCase.delete(id);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user = await this.useCase.delete(id, executingUser);
     return this.useCase.secureUserForExternal(user);
   }
 
