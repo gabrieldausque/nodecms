@@ -4,6 +4,7 @@ import {BaseService} from "../BaseService";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {User as UserEntity} from "../../entities/User";
+import {globalInstancesFactory} from "@hermes/composition";
 
 interface RoleDTO {
   id?:number;
@@ -31,7 +32,7 @@ export class Role extends BaseService<RoleDTO> {
   }, app: Application) {
     super(app,'role');
     this.options = options;
-    this.useCase = new RoleUseCases(options);
+    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role', options)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,6 +52,7 @@ export class Role extends BaseService<RoleDTO> {
     }catch(error) {
       throw new NotFound(error.message);
     }
+    throw new NotFound(`No role with id ${id}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

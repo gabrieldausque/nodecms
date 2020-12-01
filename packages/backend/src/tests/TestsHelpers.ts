@@ -10,6 +10,9 @@ import {MongoDbMetadataStorage} from "../plugins/Storages/Metadata/MongoDbMetada
 import {MongoDbRoleStorage} from "../plugins/Storages/Role/MongoDbRoleStorage";
 import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
 import axios from "axios";
+import {MongoDbChannelStorage} from "../plugins/Storages/Channel/MongoDbChannelStorage";
+import {MongoDbChannelPostStorage} from "../plugins/Storages/Channel/MongoDbChannelPostStorage";
+import {ChannelVisibility} from "../entities/Channel";
 
 export function getUrl(pathname?: string, host?:string, port?:number):string {
   if(!port)
@@ -29,7 +32,8 @@ export async function initMongoDbTestDatabase():Promise<void> {
   const authorizationStorage:MongoDbAuthorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'MongoDb');
   const metadataStorage:MongoDbMetadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage', 'MongoDb');
   const roleStorage:MongoDbRoleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage', 'MongoDb');
-
+  const channelStorage:MongoDbChannelStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelStorage', 'MongoDb');
+  const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb');
 
   const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017", {
     useUnifiedTopology:true
@@ -61,6 +65,17 @@ export async function initMongoDbTestDatabase():Promise<void> {
     //ignoring
   }
 
+  try {
+    await mongoDbClient.db('teama_test').collection('channels').drop();
+  }catch(err) {
+    //ignoring
+  }
+  try {
+    await mongoDbClient.db('teama_test').collection('channel#news').drop();
+  }catch(err) {
+    //ignoring
+  }
+
   await roleStorage.create({ key:"administrators", description:"Administrators group"});
   await roleStorage.create({ key:"users", description:"Users group"});
   await roleStorage.create({ key:"specialUsers", description:"special Users group"});
@@ -85,6 +100,16 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"find",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"get",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"channel-posts",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"channel-posts",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"channel-posts",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"channel-posts",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"channel-posts",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"channel-posts",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:1});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"w",role:0});
@@ -92,6 +117,15 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"data",onType:"metadata",for:"*",right:"w",role:0});
   await authorizationStorage.create({on:"data",onType:"user",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"user",for:"*",right:"w",role:0});
+
+  await channelStorage.create({ key:'news', label:'Actualités', visibility:ChannelVisibility.public});
+
+  await channelPostStorage.create({ author:0,
+    channelKey:'news',
+    content:`<h1> Bienvenue Sur le Channel news</h1><br>
+<div>Bienvenu sur le fil public des news du site communataire de l'Agence tous risques !</div>`,
+    tags:['Welcome']
+  }, 'news');
 }
 
 export const getAuthenticationParams = async (login:string, password:string, serverPort:number) => {

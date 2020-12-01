@@ -10,8 +10,8 @@ export interface Channel extends Entity {
   key:string,
   visibility:string,
   label:string,
-  readers:number[],
-  contributors:number[],
-  editors:number[]
-  administrators:number[]
+  readers?:number[],
+  contributors?:number[],
+  editors?:number[]
+  administrators?:number[]
 }

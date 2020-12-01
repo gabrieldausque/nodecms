@@ -9,12 +9,23 @@ export default {
   before: {
     all: [
       async (context:any) => {
-        const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-        if(await service.needAuthentication(context)) {
-          await service.validAuthentication(context.params);
-          if(!(await service.isAuthorized(context))) {
-            throw new MethodNotAllowed(`Method ${context.method} for service ${context.path} is not authorized for user ${context?.params?.user?.login}`);
+        try{
+          const service:BaseService<any> = app.service(context.path) as BaseService<any>;
+          if(await service.needAuthentication(context)) {
+            await service.validAuthentication(context.params);
+            if(!(await service.isAuthorized(context))) {
+              throw new MethodNotAllowed(`Method ${context.method} for service ${service.serviceLabel} is not authorized for user ${context?.params?.user?.login}`);
+            }
           }
+        }catch(error){
+          if(error instanceof NotAuthenticated){
+            throw error;
+          } else if(typeof error === 'string')
+           throw new MethodNotAllowed(error)
+         else if(error instanceof Error){
+           throw new MethodNotAllowed(error.message);
+         }
+         throw new MethodNotAllowed(`Unknown error during before hook : ${error}`);
         }
       }
     ],

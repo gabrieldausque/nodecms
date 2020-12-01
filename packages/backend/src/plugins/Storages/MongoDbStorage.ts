@@ -50,14 +50,16 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     return this.mongoClient.db(this.dbName);
   }
 
-  protected async getCollection():Promise<Collection> {
-    return (await this.getMongoDb()).collection<T>(this.collectionName);
+  protected async getCollection(collectionName?:string):Promise<Collection> {
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
+    return (await this.getMongoDb()).collection<T>(finalCollectionName);
   }
 
-  protected async getNewId():Promise<number>{
+  protected async getNewId(collectionName?:string):Promise<number>{
     const db = await this.getMongoDb();
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     const result = await db.collection<counterByCollection>('counters').findOneAndUpdate({
-      name:this.collectionName
+      name:finalCollectionName
     }, {
       $inc: {lastId:1}
     }, {
@@ -70,30 +72,34 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     }
   }
 
-  protected async internalCreate(entity:T) {
-    await (await this.getCollection()).insertOne(
+  protected async internalCreate(entity:T, collectionName?:string) {
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
+    await (await this.getCollection(finalCollectionName)).insertOne(
       entity
     )
   }
 
-  protected async internalUpdate(entity: Partial<T>) {
-    await (await this.getCollection()).findOneAndUpdate({
+  protected async internalUpdate(entity: Partial<T>, collectionName?:string) {
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
+    await (await this.getCollection(finalCollectionName)).findOneAndUpdate({
       id: entity.id
     },{
       $set: entity
     })
   }
 
-  protected async internalDelete(entity:Partial<T>) {
-    await (await this.getCollection()).deleteOne(
+  protected async internalDelete(entity:Partial<T>, collectionName?:string) {
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
+    await (await this.getCollection(finalCollectionName)).deleteOne(
       entity
     )
   }
 
-  protected async internalFind(filter?:Partial<T> | null | undefined):Promise<T[]> {
+  protected async internalFind(filter?:Partial<T> | null | undefined, collectionName?:string):Promise<T[]> {
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     let found:T[] = [];
     if(filter){
-      found = await (await this.getCollection())
+      found = await (await this.getCollection(finalCollectionName))
         .find(filter)
         .toArray();
     }
@@ -103,8 +109,9 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     return found;
   }
 
-  protected async internalGet(searchId:number):Promise<T | null> {
-    const found = await (await this.getCollection()).findOne<T>({
+  protected async internalGet(searchId:number, collectionName?:string):Promise<T | null> {
+    const finalCollectionName:string = collectionName?collectionName:this.collectionName;
+    const found = await (await this.getCollection(finalCollectionName)).findOne<T>({
       id:searchId
     })
     if(found && found._id)
@@ -112,16 +119,16 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     return found;
   }
 
-  abstract create(data: T): Promise<T>;
+  abstract create(data: T, collectionName?:string): Promise<T>;
 
-  abstract delete(keyOrId: string | number | T): Promise<T>;
+  abstract delete(keyOrId: string | number | T, collectionName?:string): Promise<T>;
 
-  abstract exists(keyOrId: string | number | T): Promise<boolean>;
+  abstract exists(keyOrId: string | number | T, collectionName?:string): Promise<boolean>;
 
-  abstract find(filter?: Partial<T>): Promise<T[]>;
+  abstract find(filter?: Partial<T>, collectionName?:string): Promise<T[]>;
 
-  abstract get(keyOrId: string | number): Promise<T>;
+  abstract get(keyOrId: string | number, collectionName?:string): Promise<T>;
 
-  abstract update(data: T): Promise<T>;
+  abstract update(data: T, collectionName?:string): Promise<T>;
 
 }

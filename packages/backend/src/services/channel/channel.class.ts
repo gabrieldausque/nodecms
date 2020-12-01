@@ -2,12 +2,12 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {Channel as ChannelEntity, ChannelVisibility} from '../../entities/Channel'
 import {BaseService} from "../BaseService";
-import {NotImplemented} from "@feathersjs/errors";
+import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
 import {TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
-
-type ChannelDTO = Partial<ChannelEntity>
+import {Channel as ChannelDTO} from '../../entities/Channel'
+import {User} from "../../entities/User";
 
 interface ServiceOptions {
   paginate?:number
@@ -33,7 +33,7 @@ export class Channel extends BaseService<ChannelDTO> {
   }, app: Application) {
     super(app, 'channel')
     this.options = options;
-    this.useCase = new ChannelUseCases(options);
+    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Channel', options)
     this.topicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService',
       options.topicService.contractName,
       TopicServiceConfiguration.load(options.topicService.configuration))
@@ -45,12 +45,17 @@ export class Channel extends BaseService<ChannelDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<ChannelDTO> {
-    throw new NotImplemented();
+    if(params && params.user){
+      return await this.useCase.get(id, params.user as User);
+    }
+    throw new NotFound(`No Channel with id ${id}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: ChannelDTO, params?: Params): Promise<ChannelDTO> {
-    throw new NotImplemented();
+    if(params && params.user)
+      return await this.useCase.create(data, params.user as User)
+    throw new NotAuthenticated('User is not authenticated.');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
