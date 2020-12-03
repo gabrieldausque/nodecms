@@ -33,7 +33,10 @@ export default function (app: Application) {
       {
         contractName: app.get('encryption').contractName,
         configuration: app.get('encryption').configuration
-      }
+      },
+    storage:{
+      contractName:'Default'
+    }
   };
 
   if(!options.authentication.configuration){

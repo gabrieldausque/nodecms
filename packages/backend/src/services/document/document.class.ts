@@ -3,6 +3,7 @@ import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 import {User as UserEntity} from "../../entities/User";
+import {DocumentUseCases} from "../../usecases/DocumentUseCases";
 
 interface Data {}
 
@@ -10,7 +11,7 @@ interface ServiceOptions extends BaseServiceConfiguration {
 
 }
 
-export class Document extends BaseService<Data> {
+export class Document extends BaseService<Data, DocumentUseCases> {
 
   options: ServiceOptions;
 

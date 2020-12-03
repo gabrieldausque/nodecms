@@ -4,15 +4,16 @@ import {globalInstancesFactory} from "@hermes/composition";
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/Authentication/AuthenticationPlugin";
 import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
 import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {User as UserEntity} from "../../entities/User";
+import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
 
 interface Data {
   login?:string,
   password?:string
 }
 
-interface ServiceOptions {
+interface ServiceOptions extends BaseServiceConfiguration {
   authentication: {
     contractName:string
     configuration?:any
@@ -27,7 +28,7 @@ interface HoneyPot {
   token: CustomAuthenticatedUserToken;
 }
 
-export class Authentication extends BaseService<Data> {
+export class Authentication extends BaseService<Data, AuthenticationUseCases> {
 
   options: ServiceOptions;
   authenticator: AuthenticationPlugin
@@ -42,9 +43,12 @@ export class Authentication extends BaseService<Data> {
 
   constructor (options: ServiceOptions = {
     authentication: {contractName:'Default'},
-    encryption: {contractName:'Default'}
+    encryption: {contractName:'Default'},
+    storage:{
+      contractName:'Default'
+    }
     }, app: Application) {
-    super(app, 'authentication');
+    super(app, 'authentication','Authentication',options);
     this.options = options;
     this.authenticator = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationPlugin',
       options.authentication.contractName,

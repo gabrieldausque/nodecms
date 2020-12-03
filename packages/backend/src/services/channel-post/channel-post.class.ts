@@ -2,7 +2,7 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {ChannelPost as ChannelPostEntity} from '../../entities/ChannelPost'
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {ChannelPostUseCases} from "../../usecases/ChannelPostUseCases";
@@ -13,36 +13,29 @@ import {User} from "../../entities/User";
 
 type Data = ChannelPostEntity
 
-interface ServiceOptions {
+interface ServiceOptions extends BaseServiceConfiguration {
   paginate?:number
   storage: {
     contractName:string;
     configuration?:any
   }
-  topicService:{
-    contractName:string
-    configuration?:any
-  }
 }
 
-export class ChannelPost extends BaseService<Data> {
+export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
 
   app: Application;
   options: ServiceOptions;
   private userUseCases: UserUseCases;
   private channelUseCases: ChannelUseCases;
-  private useCase: ChannelPostUseCases;
 
   constructor (options: ServiceOptions = {
     storage: { contractName: 'Default'},
-    topicService: { contractName: 'Default'}
   }, app: Application) {
-    super(app, 'channel-posts');
+    super(app, 'channel-posts','ChannelPost', options);
     this.options = options;
     this.app = app;
     this.userUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
     this.channelUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Channel');
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'ChannelPost', options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

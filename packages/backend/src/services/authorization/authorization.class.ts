@@ -1,6 +1,6 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 import {query} from "winston";
@@ -11,19 +11,21 @@ import {User as UserEntity} from "../../entities/User";
 
 type Data = AuthorizationEntity;
 
-interface ServiceOptions {}
+interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class Authorization extends BaseService<Data> {
+export class Authorization extends BaseService<Data, AuthorizationUseCases> {
 
   app: Application;
   options: ServiceOptions;
-  public useCase: AuthorizationUseCases;
 
-  constructor (options: ServiceOptions = {}, app: Application) {
-    super(app, 'authorization')
+  constructor (options: ServiceOptions = {
+    storage:{
+      contractName:'Default'
+    }
+  }, app: Application) {
+    super(app, 'authorization', 'Authorization', options)
     this.options = options;
     this.app = app;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization', options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -20,19 +20,17 @@ interface ServiceOptions {
   }
 }
 
-export class Role extends BaseService<RoleDTO> {
+export class Role extends BaseService<RoleDTO, RoleUseCases> {
 
   options: ServiceOptions;
-  private useCase: RoleUseCases;
 
   constructor (options: ServiceOptions = {
     storage:{
       contractName:'Default'
     }
   }, app: Application) {
-    super(app,'role');
+    super(app,'role', 'Role', options);
     this.options = options;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role', options)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

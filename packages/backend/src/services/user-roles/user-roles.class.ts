@@ -1,37 +1,39 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "../../usecases/UserUseCases";
-import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {isNumber} from "../../helpers";
 import {Role} from "../../entities/Role";
 import {User as UserEntity} from "../../entities/User";
-import {exceptions} from "winston";
 
-type Data = any
+type RoleDTO = Partial<Role>;
 
-interface ServiceOptions {}
+interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class UserRoles extends BaseService<Data> {
+export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
 
   app: Application;
   options: ServiceOptions;
   private userUseCases: UserUseCases;
   private roleUseCases: RoleUseCases;
 
-  constructor (options: ServiceOptions = {}, app: Application) {
-    super(app, 'user-roles');
+  constructor (options: ServiceOptions = {
+    storage:{
+      contractName:'Default'
+    }
+  }, app: Application) {
+    super(app, 'user-roles', 'Role', options);
     this.options = options;
     this.app = app;
     this.userUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-    this.roleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+    this.roleUseCases = this.useCase;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
+  async find (params?: Params): Promise<RoleDTO[] | Paginated<RoleDTO>> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotFound(`No user id`);
     try {
@@ -44,7 +46,7 @@ export class UserRoles extends BaseService<Data> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<RoleDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
@@ -60,7 +62,7 @@ export class UserRoles extends BaseService<Data> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create (data: Data, params?: Params): Promise<Data> {
+  async create (data: RoleDTO, params?: Params): Promise<RoleDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     try {
@@ -80,7 +82,7 @@ export class UserRoles extends BaseService<Data> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async update (id: NullableId, data: RoleDTO, params?: Params): Promise<RoleDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     if(!id)
@@ -102,12 +104,12 @@ export class UserRoles extends BaseService<Data> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async patch (id: NullableId, data: RoleDTO, params?: Params): Promise<RoleDTO> {
     return this.update(id,data,params);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async remove (id: NullableId, params?: Params): Promise<Data> {
+  async remove (id: NullableId, params?: Params): Promise<RoleDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     if(!id)

@@ -1,7 +1,7 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {Channel as ChannelEntity, ChannelVisibility} from '../../entities/Channel'
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {NotAcceptable, NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
@@ -11,7 +11,7 @@ import {isNumber} from "../../helpers";
 
 type ChannelDTO = Partial<ChannelEntity>;
 
-interface ServiceOptions {
+interface ServiceOptions extends BaseServiceConfiguration {
   paginate?:number
   storage: {
     contractName:string;
@@ -23,19 +23,17 @@ interface ServiceOptions {
   }
 }
 
-export class Channel extends BaseService<ChannelDTO> {
+export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
 
   options: ServiceOptions;
-  private useCase: ChannelUseCases;
   private topicService: TopicService;
 
   constructor (options: ServiceOptions = {
     storage: { contractName: 'Default'},
     topicService: { contractName: 'Default'}
   }, app: Application) {
-    super(app, 'channel')
+    super(app, 'channel','Channel', options);
     this.options = options;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Channel', options)
     this.topicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService',
       options.topicService.contractName,
       TopicServiceConfiguration.load(options.topicService.configuration))

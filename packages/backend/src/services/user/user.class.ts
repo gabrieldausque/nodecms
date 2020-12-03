@@ -1,6 +1,6 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from '../BaseService';
+import {BaseService, BaseServiceConfiguration} from '../BaseService';
 import {globalInstancesFactory} from '@hermes/composition';
 import {UserStorage} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
@@ -14,18 +14,12 @@ interface UserDTO {
   isActive?:boolean
 }
 
-interface ServiceOptions {
-  paginate?:number
-  storage:{
-    contractName:string;
-    configuration?:any
-  }
+interface ServiceOptions extends BaseServiceConfiguration {
 }
 
-export class User extends BaseService<UserDTO>  {
+export class User extends BaseService<UserDTO, UserUseCases>  {
 
   options: ServiceOptions;
-  useCase: UserUseCases
 
   async needAuthentication(context: any): Promise<boolean> {
     return true;
@@ -36,9 +30,8 @@ export class User extends BaseService<UserDTO>  {
       contractName:'Default'
     }
   }, app: Application) {
-    super(app, 'role');
+    super(app, 'user','User', options);
     this.options = options;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User', options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

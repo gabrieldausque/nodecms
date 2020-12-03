@@ -1,15 +1,14 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
-import {ServiceOptions} from "../helpers";
 import {isNumber} from "../../helpers";
 import {globalInstancesFactory} from "@hermes/composition";
 import {User as UserEntity} from "../../entities/User";
 
 
-interface MetadataDTO {
+export interface MetadataDTO {
   id?: number;
   key: string;
   value?: any;
@@ -18,19 +17,21 @@ interface MetadataDTO {
   ownerId?:number | null;
 }
 
-export class Metadata extends BaseService<MetadataDTO> {
+interface ServiceOptions extends BaseServiceConfiguration {
+
+}
+
+export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
 
   options: ServiceOptions;
-  useCase: MetadataUseCases;
 
   constructor (options: ServiceOptions = {
     storage:{
       contractName:'Default'
     }
   }, app: Application) {
-    super(app, 'metadata');
+    super(app, 'metadata', 'Metadata',options);
     this.options = options;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata',options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

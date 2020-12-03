@@ -1,6 +1,6 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
@@ -11,21 +11,25 @@ import {User as UserEntity} from "../../entities/User";
 
 type Data = Metadata
 
-interface ServiceOptions {}
+interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class UserMetadata extends BaseService<Data> {
+export class UserMetadata extends BaseService<Data, MetadataUseCases> {
 
   app: Application;
   options: ServiceOptions;
   private userUseCases: UserUseCases;
   private metadataUseCases: MetadataUseCases;
 
-  constructor (options: ServiceOptions = {}, app: Application) {
-    super(app,'user-metadata');
+  constructor (options: ServiceOptions = {
+    storage:{
+      contractName:'Default'
+    }
+  }, app: Application) {
+    super(app,'user-metadata', 'Metadata', options);
     this.options = options;
     this.app = app;
     this.userUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-    this.metadataUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+    this.metadataUseCases = this.useCase;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

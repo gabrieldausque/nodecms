@@ -14,18 +14,19 @@ export interface BaseServiceConfiguration {
   }
 }
 
-export abstract class BaseService<T> implements ServiceMethods<T> {
+export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMethods<T> {
 
   app: Application;
   serviceLabel: string;
-  useCase?: UseCases<T>
+  useCase: U
 
-  protected constructor(app:Application, serviceLabel:string,useCaseContractName?:string, options?:BaseServiceConfiguration) {
+  protected constructor(app:Application, serviceLabel:string,useCaseContractName:string, options:BaseServiceConfiguration) {
     this.app = app;
     this.serviceLabel = serviceLabel;
-    if(useCaseContractName && options){
-      this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', useCaseContractName, options)
-    }
+    this.useCase = globalInstancesFactory.getInstanceFromCatalogs(
+      'UseCases',
+      useCaseContractName,
+      options) as U;
   }
 
     abstract async find(params?: Params | undefined): Promise<T | T[] | Paginated<T>>
