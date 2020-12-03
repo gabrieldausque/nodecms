@@ -12,9 +12,18 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application) {
-  const options = {
-    paginate: app.get('paginate')
+  let options = {
+    paginate: app.get('paginate'),
+    storage:{
+      contractName:'Default'
+    }
   };
+
+  const globalChannelStorageConfiguration = app.get('storage').documents;
+  options.storage = {...options.storage, ...globalChannelStorageConfiguration};
+
+  const documentConfiguration = app.get('document');
+  options = { ...options, ...documentConfiguration};
 
   // Initialize our service with any options it requires
   app.use('/document', new Document(options, app));

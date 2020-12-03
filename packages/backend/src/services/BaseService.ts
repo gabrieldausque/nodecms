@@ -4,15 +4,28 @@ import {NotAcceptable, NotAuthenticated, NotImplemented} from "@feathersjs/error
 import app from "../app";
 import {UserUseCases} from "../usecases/UserUseCases";
 import { globalInstancesFactory } from '@hermes/composition';
+import {UseCases} from "../usecases/UseCases";
+
+export interface BaseServiceConfiguration {
+  paginate?:number
+  storage: {
+    contractName:string;
+    configuration?:any
+  }
+}
 
 export abstract class BaseService<T> implements ServiceMethods<T> {
 
   app: Application;
   serviceLabel: string;
+  useCase?: UseCases<T>
 
-  protected constructor(app:Application, serviceLabel:string) {
+  protected constructor(app:Application, serviceLabel:string,useCaseContractName?:string, options?:BaseServiceConfiguration) {
     this.app = app;
     this.serviceLabel = serviceLabel;
+    if(useCaseContractName && options){
+      this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', useCaseContractName, options)
+    }
   }
 
     abstract async find(params?: Params | undefined): Promise<T | T[] | Paginated<T>>

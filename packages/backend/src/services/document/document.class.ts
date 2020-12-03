@@ -1,19 +1,25 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from "../BaseService";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 import {User as UserEntity} from "../../entities/User";
 
 interface Data {}
 
-interface ServiceOptions {}
+interface ServiceOptions extends BaseServiceConfiguration {
+
+}
 
 export class Document extends BaseService<Data> {
 
   options: ServiceOptions;
 
-  constructor (options: ServiceOptions = {}, app: Application) {
-    super(app,'document');
+  constructor (options: ServiceOptions = {
+    storage:{
+      contractName:'Default'
+    }
+  }, app: Application) {
+    super(app,'document', 'Document', options);
     this.options = options;
   }
 
