@@ -3,17 +3,23 @@ import {Channel, ChannelVisibility} from "./Channel";
 
 export class ChannelRules extends EntityRules {
 
-  static validate(channel:Channel){
-    if(channel.visibility !== ChannelVisibility.private &&
-    channel.visibility !== ChannelVisibility.protected &&
-    channel.visibility !== ChannelVisibility.public) {
-      channel.visibility = ChannelVisibility.private;
+  static validate(channel:Partial<Channel>){
+    if(!channel.key){
+      throw new Error('Channel must have a key. Please correct.')
     }
 
+    if(!ChannelRules.isAuthorizedVisibility(channel.visibility)) {
+      channel.visibility = ChannelVisibility.private;
+    }
     channel.readers = channel.readers ?? [];
     channel.contributors = channel.contributors ?? [];
     channel.editors = channel.editors ?? [];
     channel.administrators = channel.administrators ?? [];
   }
 
+  static isAuthorizedVisibility(visibility: string | undefined) {
+    return (visibility === ChannelVisibility.private ||
+      visibility === ChannelVisibility.protected ||
+      visibility === ChannelVisibility.public);
+  }
 }

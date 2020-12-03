@@ -65,8 +65,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
   }
 
   async isDataAuthorized(data: ChannelPost, right: string = 'r', user?: any): Promise<boolean> {
-    if(right === 'w' &&
-      typeof data.author === 'number' &&
+    if(typeof data.author === 'number' &&
       data.channelKey &&
       user &&
       typeof user.id === 'number'
@@ -74,11 +73,20 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
       if(data.author === user.id){
         return true;
       } else {
-        const channelUseCases:ChannelUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Channel');
-        const channel:Channel = await channelUseCases.get(data.channelKey, user);
-        if(await channelUseCases.isUserEditor(channel, user, user)){
-          return true;
+        if(right === 'w'){
+          const channelUseCases:ChannelUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Channel');
+          const channel:Channel = await channelUseCases.get(data.channelKey, user);
+          if(await channelUseCases.isUserEditor(channel, user, user)){
+            return true;
+          }
+        }else if(right === 'r'){
+          const channelUseCases:ChannelUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Channel');
+          const channel:Channel = await channelUseCases.get(data.channelKey, user);
+          if(await channelUseCases.isUserReader(channel, user, user)){
+            return true;
+          }
         }
+
       }
     }
 

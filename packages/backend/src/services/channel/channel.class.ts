@@ -2,12 +2,14 @@ import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/f
 import { Application } from '../../declarations';
 import {Channel as ChannelEntity, ChannelVisibility} from '../../entities/Channel'
 import {BaseService} from "../BaseService";
-import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
+import {NotAcceptable, NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
 import {TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
-import {Channel as ChannelDTO} from '../../entities/Channel'
-import {User} from "../../entities/User";
+import {User as UserEntity, User} from "../../entities/User";
+import {isNumber} from "../../helpers";
+
+type ChannelDTO = Partial<ChannelEntity>;
 
 interface ServiceOptions {
   paginate?:number
@@ -40,7 +42,11 @@ export class Channel extends BaseService<ChannelDTO> {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<ChannelDTO[] | Paginated<ChannelDTO>> {
-    throw new NotImplemented();
+    if(params){
+      const executingUser:UserEntity = params?.user as UserEntity;
+      return await this.useCase.find(params.query as Partial<Channel>,executingUser);
+    }
+    return [];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,17 +66,25 @@ export class Channel extends BaseService<ChannelDTO> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: ChannelDTO, params?: Params): Promise<ChannelDTO> {
-    throw new NotImplemented();
+    if(id !== null && data && params){
+      const executingUser:User = params.user as User;
+      return await this.useCase.update(id, data, executingUser);
+    }
+    throw new NotAcceptable('Id or data is null or undefined');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async patch (id: NullableId, data: ChannelDTO, params?: Params): Promise<ChannelDTO> {
-    throw new NotImplemented();
+    return await this.update(id,data, params);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<ChannelDTO> {
-    throw new NotImplemented();
+    const executingUser:UserEntity = params?.user as UserEntity;
+    if(id){
+      return await this.useCase.delete(id, executingUser)
+    }
+    throw new NotFound(`No channel with id : ${id}`);
   }
 
   async isDataAuthorized(data: any, right: string, user: any): Promise<boolean> {

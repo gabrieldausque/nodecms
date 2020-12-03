@@ -57,7 +57,10 @@ export class UserUseCases extends UseCases<User> {
     UserEntityRules.validateLogin(user.login);
     if(await this.storage.exists(user.login))
       throw new Error(`Login ${user.login} already exists. Please change.`)
-    return await this.storage.create(user);
+    const created = await this.storage.create(user);
+    const roleUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+    await this.addRole(created, await roleUseCase.get('users'), executingUser);
+    return created;
   }
 
   async get(idOrLogin: string | number, executingUser?:User) : Promise<User> {

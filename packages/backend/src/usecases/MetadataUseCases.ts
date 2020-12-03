@@ -69,7 +69,9 @@ export class MetadataUseCases extends UseCases<Metadata>  {
 
   async delete(id: string | number, executingUser:User) {
     const usableId = MetadataEntityRules.convertId(id);
-    return await this.storage.delete(usableId);
+    const existing = await this.get(id,executingUser);
+    existing.value = '';
+    return await this.update(usableId, existing, executingUser);
   }
 
 }

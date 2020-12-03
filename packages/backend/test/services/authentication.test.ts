@@ -64,16 +64,14 @@ describe('Authentication service', () => {
 
   it('should throw error if any service are called with authentication from other realm', async () => {
     const service = app.service('authentication');
-    const fn = async () => {
-      const { data } = await axios.request({
+    const p = axios.request({
         method:'get',
         url: getUrl('document/0'),
         headers: {
-          "cookie": `ncms-token=${service.create({ login: 'localtest', password: 'apassword'})} ; ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=other.domain`
+          "cookie": `ncms-token=${await service.create({ login: 'localtest', password: 'apassword'})} ; ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=other.domain`
         }
       });
-    };
-    await expect(fn()).to.be.rejectedWith('Request failed with status code 501');
+    await expect(p.catch((err) => { console.error(err); throw err; } )).to.be.rejectedWith('Request failed with status code 501');
   })
 
   it('should throw error if authentication find or patch method is called', async () => {

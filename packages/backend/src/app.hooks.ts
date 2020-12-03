@@ -1,4 +1,11 @@
-import {NotAcceptable, Forbidden, NotAuthenticated, NotImplemented, MethodNotAllowed} from "@feathersjs/errors";
+import {
+  NotAcceptable,
+  Forbidden,
+  NotAuthenticated,
+  NotImplemented,
+  MethodNotAllowed,
+  NotFound
+} from "@feathersjs/errors";
 import app from "./app";
 import {BaseService} from "./services/BaseService";
 import Base = Mocha.reporters.Base;
@@ -18,7 +25,11 @@ export default {
             }
           }
         }catch(error){
-          if(error instanceof NotAuthenticated){
+          if(error instanceof NotAuthenticated ||
+          error instanceof NotImplemented ||
+          error instanceof NotAcceptable ||
+          error instanceof NotFound ||
+          error instanceof MethodNotAllowed){
             throw error;
           } else if(typeof error === 'string')
            throw new MethodNotAllowed(error)
@@ -57,8 +68,13 @@ export default {
     all: [],
     find: [async (context:any) => {
       const service:BaseService<any> = app.service(context.path) as BaseService<any>;
-      if(!await service.isDataAuthorized(context.result, 'r',context.params.user)) {
-        throw new Forbidden('Data asked is not authorized for your account');
+      if(Array.isArray(context.result)){
+        const toCheck = [...context.result]
+        for(const data of toCheck) {
+          if(!await service.isDataAuthorized(data, 'r', context.params.user)){
+            context.result.splice(context.result.indexOf(data),1);
+          }
+        }
       }
     }],
     get: [async (context:any) => {

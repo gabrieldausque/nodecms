@@ -24,7 +24,9 @@ describe('User service', () => {
 
   let server: Server;
   let finalCookie = '';
-  let params:any = {};
+  let params:any = {
+    route:{}
+  };
 
   before(async () => {
     await initMongoDbTestDatabase();
@@ -449,47 +451,29 @@ describe('User service', () => {
   })
 
   it('should delete a metadata for a user using login', async () => {
-    const createResponse = await axios.request({
-      url: getUrl('user/localtest/metadata'),
-      method: "POST",
-      data: {
-        key: "ANewMeta",
-        value: "MyNewValue"
-      },
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    let response = await axios.request({
-      url: getUrl('user/localtest/metadata/ANewMeta'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    expect(response.data).to.be.eql({
-      id:createResponse.data.id,
+    const service:UserMetadata = app.service('user/:idOrLogin/metadata');
+    params.route.idOrLogin = "localtest";
+    const created = await service.create({
+      key: "ANewMeta",
+      value: "MyNewValue"
+    }, params);
+    expect(await service.get(created.key,params)).to.be.eql({
+      id:created.id,
       key:'ANewMeta',
       value:'MyNewValue',
       isPublic:false,
       ownerType:'user',
       ownerId:0
     });
-    await axios.request({
-      url: getUrl('user/localtest/metadata/ANewMeta'),
-      method: "DELETE",
-      headers: {
-        cookie: finalCookie
-      }
+    await service.remove(created.key, params);
+    return expect(await service.get(created.key,params)).to.be.eql({
+      id:created.id,
+      key:'ANewMeta',
+      value:'',
+      isPublic:false,
+      ownerType:'user',
+      ownerId:0
     });
-    const p = axios.request({
-      url: getUrl('user/localtest/metadata/ANewMeta'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
   it('should get all role for a user', async() => {
@@ -504,9 +488,9 @@ describe('User service', () => {
       key: "administrators"
       },
       {
-        description: "special Users group",
-        id: 2,
-        key: "specialUsers"
+        description: "Users group",
+        id: 1,
+        key: "users"
       }]);
   })
 
@@ -524,17 +508,17 @@ describe('User service', () => {
       key: "administrators"
       },
       {
-        description: "special Users group",
-        id: 2,
-        key: "specialUsers"
+        description: "Users group",
+        id: 1,
+        key: "users"
       }]);
   })
 
-  it('should had a role for a user', async() => {
+  it('should add a role for a user', async() => {
     let response = await axios.request({
       url: getUrl('user/otheruser/roles'),
       method: "POST",
-      data: [1],
+      data: [0],
       headers: {
         cookie: finalCookie
       }
@@ -547,21 +531,26 @@ describe('User service', () => {
       }
     })).data;
     expect(list).to.be.eql([{
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers"
-    },{
       description: "Users group",
       id: 1,
       key: "users"
-    }]);
+    },{
+      description: "special Users group",
+      id: 2,
+      key: "specialUsers"
+    },
+      {
+        description: "Administrators group",
+        id: 0,
+        key: "administrators"
+      }]);
   })
 
   it('should remove a role for a user', async() => {
     let response = await axios.request({
       url: getUrl('user/otheruser/roles'),
       method: "POST",
-      data: [1],
+      data: [0],
       headers: {
         cookie: finalCookie
       }
@@ -574,16 +563,21 @@ describe('User service', () => {
       }
     })).data;
     expect(list).to.be.eql([{
+      description: "Users group",
+      id: 1,
+      key: "users"
+    },
+      {
       description: "special Users group",
       id: 2,
       key: "specialUsers"
     },{
-      description: "Users group",
-      id: 1,
-      key: "users"
+      description: "Administrators group",
+      id: 0,
+      key: "administrators"
     }]);
     response = await axios.request({
-      url: getUrl('user/otheruser/roles/1'),
+      url: getUrl('user/otheruser/roles/0'),
       method: "DELETE",
       headers: {
         cookie: finalCookie
@@ -597,10 +591,15 @@ describe('User service', () => {
       }
     })).data;
     expect(list).to.be.eql([{
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers"
-    }]);
+      description: "Users group",
+      id: 1,
+      key: "users"
+    },
+      {
+        description: "special Users group",
+        id: 2,
+        key: "specialUsers"
+      }]);
   })
 
   it('non administrators should not be able to add role for itself or another user', async() => {
@@ -609,7 +608,7 @@ describe('User service', () => {
     if(!otherUserParams.route)
       otherUserParams.route = {}
     otherUserParams.route.idOrLogin = 'otheruser';
-    return expect(service.create([1], otherUserParams)).to.be.rejectedWith('Method create for service user/:idOrLogin/roles is not authorized for user otheruser');
+    return expect(service.create([1], otherUserParams)).to.be.rejectedWith('Method create for service user-roles is not authorized for user otheruser');
   })
 
 });

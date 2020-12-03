@@ -120,9 +120,9 @@ export class Metadata extends BaseService<MetadataDTO> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<MetadataDTO> {
     const executingUser:UserEntity = params?.user as UserEntity;
-    if(id){
+    if(typeof id === 'number'){
       const existing = await this.get(id, params);
-      if(existing && existing.id) {
+      if(existing && typeof existing.id === 'number') {
         return await this.useCase.delete(existing.id, executingUser)
       }
     }

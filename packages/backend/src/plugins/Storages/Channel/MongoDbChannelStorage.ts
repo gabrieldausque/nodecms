@@ -26,7 +26,24 @@ export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements Ch
   }
 
   async delete(keyOrId: string | number | Channel): Promise<Channel> {
-    throw new Error('Not implemented');
+    if(await this.exists(keyOrId)){
+      let usableId:number | null = null;
+      if(isNumber(keyOrId)){
+        usableId = parseInt(keyOrId.toString());
+      } else if (typeof keyOrId === 'string'){
+        const channel:Channel = await this.get(keyOrId);
+        usableId = channel.id as number;
+      } else {
+        const channel = keyOrId as Channel;
+        usableId = channel.id as number;
+      }
+      if(usableId !== null){
+        const deleted = await this.get(usableId);
+        await this.internalDelete(deleted);
+        return deleted;
+      }
+    }
+    throw new Error(`No Channel with key or id `)
   }
 
   async exists(keyOrId: string | number | Channel): Promise<boolean> {
@@ -47,7 +64,7 @@ export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements Ch
     if(filter){
       return await this.internalFind(filter);
     }
-    return []
+    return await this.internalFind({});
   }
 
   async get(keyOrId: string | number): Promise<Channel> {
@@ -68,7 +85,8 @@ export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements Ch
   }
 
   async update(data: Channel): Promise<Channel> {
-    throw new Error('Not implemented');
+    await this.internalUpdate(data);
+    return await this.get(data.id as number);
   }
 
 }

@@ -82,14 +82,16 @@ export async function initMongoDbTestDatabase():Promise<void> {
 
   await userStorage.create({ login:"localtest",password:"apassword",isActive:true});
   await userStorage.create({ login:"otheruser",password:"anotherpassword",isActive:true});
+  await userStorage.create({ login:"standarduser", password:"standard", isActive:true})
   await userStorage.create({ login:"inactiveuser",password:"anything",isActive:false});
 
   await metadataStorage.create({ key:"title",value:"The A Team",isPublic:true,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"logo",value:"http://localhost:3030/a-team_logo.png",isPublic:true,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"private-metadata",value:"my private value",isPublic:false,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"pseudonym",value:"MyPseudo",isPublic:false,ownerType:"user",ownerId:0});
-  await metadataStorage.create({ key:"roles",value:[0,2],isPublic:false,ownerType:"user",ownerId:0});
-  await metadataStorage.create({ key:"roles",value:[2],isPublic:false,ownerType:"user",ownerId:1});
+  await metadataStorage.create({ key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:0});
+  await metadataStorage.create({ key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:2});
+  await metadataStorage.create({ key:"roles",value:[1,2],isPublic:false,ownerType:"user",ownerId:1});
 
   await authorizationStorage.create({on:"operation",onType:"create",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"update",for:"*",right:"x",role:0});

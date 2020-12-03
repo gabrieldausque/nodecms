@@ -23,18 +23,34 @@ export class ChannelUseCases extends UseCases<Channel> {
     super('channel', 'ChannelStorage', configuration);
   }
 
-  async create(entity: Channel, executingUser: User): Promise<Channel> {
+  async create(entity: Partial<Channel>, executingUser: User): Promise<Channel> {
       ChannelRules.validate(entity);
+      if(entity.key && await this.storage.exists(entity.key))
+        throw new Error(`Channel with key ${entity.key} already exists`)
       const usableId = ChannelRules.convertId(executingUser.id);
       entity.administrators?.push(usableId);
       return await this.storage.create(entity);
   }
 
   async delete(id: string | number, executingUser: User): Promise<Channel> {
-    throw new Error('not implemented');
+    let channel:Channel|null = null;
+    if(isNumber(id)){
+      const usableId:number = parseInt(id.toString());
+      channel = await this.get(usableId, executingUser);
+    } else if(typeof id === 'string') {
+      const found = await this.find({
+        key: id
+      }, executingUser);
+      if(Array.isArray(found) && found.length > 0){
+        channel = found[0];
+      }
+    }
+    if(channel && typeof channel.id === 'number')
+      return await this.storage.delete(channel.id);
+    throw new Error(`Channel with id or key ${id} doesn't exists.`)
   }
 
-  async find(filter: Channel, executingUser: User | undefined): Promise<Channel[]> {
+  async find(filter: Partial<Channel>, executingUser: User | undefined): Promise<Channel[]> {
     const found = await this.storage.find(filter);
     found.map(c => {
       ChannelRules.validate(c)
@@ -51,8 +67,65 @@ export class ChannelUseCases extends UseCases<Channel> {
      return channel;
   }
 
-  async update(id: string | number, entityToUpdate: Channel, executingUser: User): Promise<Channel> {
-    throw new Error('not implemented');
+  async update(id: string | number, entityToUpdate: Partial<Channel>, executingUser: User): Promise<Channel> {
+    const existing:Channel = await this.get(id,executingUser);
+    if(
+      (typeof entityToUpdate.id === 'number' && existing.id != entityToUpdate.id) ||
+      (typeof entityToUpdate.key === 'string' && existing.key != entityToUpdate.key)
+    )
+      throw new Error('Only label and visibility can be changed or you can only add members from this service ' +
+        'API')
+
+    if(entityToUpdate.label){
+      existing.label = entityToUpdate.label;
+    }
+
+    if(ChannelRules.isAuthorizedVisibility(entityToUpdate.visibility) &&
+      typeof entityToUpdate.visibility === 'string'){
+      existing.visibility = entityToUpdate.visibility;
+    }
+
+    if(Array.isArray(entityToUpdate.readers) &&
+      Array.isArray(existing.readers) &&
+      await this.isUserEditor(existing,executingUser,executingUser)){
+      for(const userId of entityToUpdate.readers){
+        if(existing.readers.indexOf(userId) < 0){
+          existing.readers.push(userId);
+        }
+      }
+    }
+
+    if(Array.isArray(entityToUpdate.contributors) &&
+      Array.isArray(existing.contributors) &&
+      await this.isUserEditor(existing,executingUser,executingUser)){
+      for(const userId of entityToUpdate.contributors){
+        if(existing.contributors.indexOf(userId) < 0){
+          existing.contributors.push(userId);
+        }
+      }
+    }
+
+    if(Array.isArray(entityToUpdate.editors) &&
+      Array.isArray(existing.editors) &&
+      await this.isUserAdministrator(existing,executingUser,executingUser)){
+      for(const userId of entityToUpdate.editors){
+        if(existing.editors.indexOf(userId) < 0){
+          existing.editors.push(userId);
+        }
+      }
+    }
+
+    if(Array.isArray(entityToUpdate.administrators) &&
+      Array.isArray(existing.administrators) &&
+      await this.isUserAdministrator(existing,executingUser,executingUser)){
+      for(const userId of entityToUpdate.administrators){
+        if(existing.administrators.indexOf(userId) < 0){
+          existing.administrators.push(userId);
+        }
+      }
+    }
+
+    return await this.storage.update(existing);
   }
 
   async isUserMemberOf(channel:Channel, user:User, executingUser:User):Promise<boolean>{
@@ -69,17 +142,15 @@ export class ChannelUseCases extends UseCases<Channel> {
   }
 
   async isUserReader(channel:Channel, user:User, executingUser:User):Promise<boolean>{
-    if(channel.readers && user.id){
+    if(channel.readers && typeof user.id === 'number'){
       return channel.readers.indexOf(user.id) >= 0 ||
-        await this.isUserContributor(channel, user, user) ||
-        await this.isUserEditor(channel, user, user) ||
-        await this.isUserAdministrator(channel, user, user)
+        await this.isUserContributor(channel, user, user)
     }
     return false;
   }
 
   async isUserContributor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
-    if(channel.contributors && user.id){
+    if(channel.contributors && typeof user.id === 'number'){
       return channel.contributors.indexOf(user.id) >= 0 ||
         await this.isUserEditor(channel, user, user)
     }
@@ -87,7 +158,7 @@ export class ChannelUseCases extends UseCases<Channel> {
   }
 
   async isUserEditor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
-    if(channel.editors && user.id){
+    if(channel.editors && typeof user.id === 'number'){
       return channel.editors.indexOf(user.id) >= 0 ||
         await this.isUserAdministrator(channel, user, user)
     }
@@ -95,7 +166,7 @@ export class ChannelUseCases extends UseCases<Channel> {
   }
 
   async isUserAdministrator(channel:Channel, user:User, executingUser:User):Promise<boolean>{
-    if(channel.administrators && user.id){
+    if(channel.administrators && typeof user.id === 'number'){
       if(channel.administrators.indexOf(user.id) >= 0)
         return true;
       else

@@ -80,13 +80,13 @@ describe('Channel service With Mongodb', () => {
 
   it('should create a public channel and get its informations,', async() => {
     const service:Channel = app.service('channel');
-    const created:ChannelEntity = await service.create({
+    const created:Partial<ChannelEntity> = await service.create({
       visibility: ChannelVisibility.public,
       key: 'MyPublicChannel',
       label: 'A public channel',
     }, params);
     expect(created).to.be.eql({
-      id:0,
+      id:1,
       key:'MyPublicChannel',
       visibility:ChannelVisibility.public,
       label: 'A public channel',
@@ -96,6 +96,59 @@ describe('Channel service With Mongodb', () => {
       administrators:[0]
     })
     expect(await service.get(created.id as number, params)).to.be.eql(created);
+  })
+
+  it('should remove a public channel just created', async() => {
+    const service:Channel = app.service('channel');
+    const created:Partial<ChannelEntity> = await service.create({
+      visibility: ChannelVisibility.public,
+      key: 'MyPublicChannel',
+      label: 'A public channel',
+    }, params);
+    expect(created).to.be.eql({
+      id:1,
+      key:'MyPublicChannel',
+      visibility:ChannelVisibility.public,
+      label: 'A public channel',
+      readers:[],
+      contributors:[],
+      editors:[],
+      administrators:[0]
+    })
+    expect(await service.find(params)).to.be.eql([{
+      administrators: [],
+      contributors: [],
+      editors: [],
+      id: 0,
+      key: "news",
+      label: "Actualités",
+      readers: [],
+      visibility: "public"
+    },{
+        administrators: [0],
+        contributors: [],
+        editors: [],
+        id: 1,
+        key: "MyPublicChannel",
+        label: "A public channel",
+        readers: [],
+        visibility: "public"
+      }]);
+    if(typeof created.id === 'number'){
+      await service.remove(created.id, params);
+      expect(await service.find(params)).to.be.eql([{
+        administrators: [],
+        contributors: [],
+        editors: [],
+        id: 0,
+        key: "news",
+        label: "Actualités",
+        readers: [],
+        visibility: "public"
+      }]);
+    } else {
+      assert.fail('No id for created channel')
+    }
   })
 
   it('should access to public post from public channel',async () => {
@@ -135,6 +188,58 @@ describe('Channel service With Mongodb', () => {
       content: "test de nouveau post"
     }, anotherUserParams);
     return expect(creationPromise).to.be.rejectedWith('User otheruser is not a member or has not sufficient rights to execute undefined on channel news');
+  })
+
+  it('should be able to update the channel', async() => {
+    const service:Channel = app.service('channel');
+    const created:Partial<ChannelEntity> = await service.create({
+      visibility: ChannelVisibility.public,
+      key: 'MyPublicChannel',
+      label: 'A public channel',
+    }, params);
+    if(created.id){
+      await service.update(created.id, {
+        visibility: ChannelVisibility.protected,
+        label: "My new label",
+        readers:[1],
+        contributors:[1],
+        editors: [1],
+        administrators:[0,1]
+      }, params)
+      expect(await service.get(created.id, params)).to.be.eql(
+        {
+          id: created.id,
+          key: 'MyPublicChannel',
+          visibility: ChannelVisibility.protected,
+          label: "My new label",
+          readers:[1],
+          editors: [1],
+          contributors:[1],
+          administrators:[0,1]
+        }
+      );
+      await service.patch(created.id, {
+        visibility: ChannelVisibility.public,
+        label: "My patch label",
+        readers:[2],
+        contributors:[2],
+        editors: [2],
+        administrators:[2]
+      }, params)
+      return expect(await service.get(created.id, params)).to.be.eql(
+        {
+          id: created.id,
+          key: 'MyPublicChannel',
+          visibility: ChannelVisibility.public,
+          label: "My patch label",
+          readers:[1,2],
+          editors: [1,2],
+          contributors:[1,2],
+          administrators:[0,1,2]
+        }
+      )
+    }
+    assert.fail('No created id');
   })
 
 });

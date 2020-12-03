@@ -56,7 +56,7 @@ export class ChannelPost extends BaseService<Data> {
             channelKey:channel.key
           }
         }
-        return await this.useCase.find(filter, params.user as User);
+        return await this.useCase.find(filter, params.user as User, channel.key);
       }
     }
     return [];
@@ -118,9 +118,11 @@ export class ChannelPost extends BaseService<Data> {
         switch(context.method){
           case 'create':
             isAuthorized = await this.channelUseCases.isUserContributor(channel, user, user);
+            break;
           case 'get':
           case 'find':
             isAuthorized = await this.channelUseCases.isUserReader(channel, user, user)
+            break;
           case 'update':
           case 'patch':
           case 'remove': {
