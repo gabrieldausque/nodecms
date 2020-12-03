@@ -48,6 +48,14 @@ describe('Authentication service', () => {
     expect(service.authenticator).to.be.an.instanceof(LocalAuthentication);
   })
 
+  it('should throw error if wrong authentication', async () => {
+    const service = app.service('authentication');
+    return Promise.all([expect(service.create({
+      login:'toto',
+      password: 'wrongpassword'
+    })).to.be.rejectedWith('No user with login or id toto exists')])
+  })
+
   it('should throw error if any service are called without authentication', async () => {
       const service = app.service('authentication');
       const fn = async () => {
@@ -98,7 +106,6 @@ describe('Authentication service', () => {
   })
 
   it('should create authentication token, set it in the response header, and be able to use it in further request', async() => {
-
     const response = await axios.request({
       url: getUrl('authentication'),
       method: "POST",

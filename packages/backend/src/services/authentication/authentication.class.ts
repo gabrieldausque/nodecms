@@ -2,7 +2,7 @@ import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/fea
 import {Application} from '../../declarations';
 import {globalInstancesFactory} from "@hermes/composition";
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/Authentication/AuthenticationPlugin";
-import {NotAcceptable} from "@feathersjs/errors";
+import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
 import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService} from "../BaseService";
 import {User as UserEntity} from "../../entities/User";
@@ -87,10 +87,11 @@ export class Authentication extends BaseService<Data> {
       const tokenDecrypted = await this.authenticator.authenticate(login, password);
       tokenEncrypted = await this.encryptor.encryptCustomToken(tokenDecrypted);
 
-    } catch(ex) {
+    } catch(error) {
       // TODO : return the honey pot token, that give access to : you didn't say the magic word !!!!
-      tokenEncrypted = await this.encryptor.encryptCustomToken(this.honeyPot.token);
+      // tokenEncrypted = await this.encryptor.encryptCustomToken(this.honeyPot.token);
       // TODO : Make a specific exception for wrong password and nologin authorized in the time
+      throw new NotAuthenticated(error);
     }
 
     return tokenEncrypted;

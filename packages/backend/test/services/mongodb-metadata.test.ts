@@ -12,7 +12,7 @@ import { promisify } from 'util';
 import {globalInstancesFactory} from '@hermes/composition';
 import * as url from 'url';
 import * as fs from "fs";
-import {initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
+import {getAuthenticationParams, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {Metadata as MetaDataService} from '../../src/services/metadata/metadata.class';
 import {Metadata} from "../../src/entities/Metadata";
 
@@ -95,7 +95,8 @@ describe('Metadata service', () => {
 
   it('should reject request when asking for a private metadata', async () => {
     const service = app.service('metadata');
-    expect(service.get('private-metadata')).to.be.rejected
+    const otherParams = await getAuthenticationParams('otheruser','anotherpassword', port);
+    return expect(service.get('private-metadata', otherParams)).to.be.rejectedWith('Method get for service metadata is not authorized for user otheruser')
   })
 
   it('should create a new metadata for the application (no owner type, no owner id) from external client', async () => {

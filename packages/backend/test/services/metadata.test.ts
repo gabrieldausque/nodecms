@@ -102,7 +102,7 @@ describe('Metadata service', () => {
 
   it('should reject request when asking for a private metadata', async () => {
     const service = app.service('metadata');
-    expect(service.get('private-metadata')).to.be.rejected
+    return expect(Promise.all([service.get('private-metadata')])).to.be.rejectedWith('You are missing your unique clientId. Please correct and retry.');
   })
 
   it('should create a new metadata for the application (no owner type, no owner id) from external client', async () => {

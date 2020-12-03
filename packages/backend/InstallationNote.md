@@ -8,7 +8,7 @@ having mongodb client installed and an instance of mongodb.
 
 Connect with shell :
 
-mongo "mongodb://localhost:27017" -u "<username>" -p "<password>" --authenticationDatabase <auth database : default is admin>
+mongo "mongodb://localhost:27017/admin" -u "<username>" -p "<password>" --authenticationDatabase <auth database : default is admin>
 
 Create the database :
 use teama
