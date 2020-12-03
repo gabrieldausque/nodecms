@@ -1,11 +1,13 @@
 <script lang="ts">
 	import TopNavBar from './components/TopNavBar.svelte';
+	import Document from './components/Document.svelte';
 </script>
 
 <header>
 	<TopNavBar></TopNavBar>
 </header>
 <main>
+	<Document></Document>
 </main>
 
 <style>

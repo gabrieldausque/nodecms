@@ -18,7 +18,7 @@ export class MongoDbUserStorage extends MongoDbStorage<User> {
     }
   ]
 
-  private readonly encryption: EncryptionPlugin;
+  public readonly encryption: EncryptionPlugin;
 
   constructor(configuration:MongoDbUserStorageConfiguration) {
     super(configuration);

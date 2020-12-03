@@ -17,6 +17,18 @@ export class NodeCMSClient {
         };
     }
 
+    async getDocument(key:string) {
+        const response = await axios.request({
+            method:'get',
+            baseURL:this.url,
+            url:`document/${key}`,
+            headers: this.createHeaders()
+        })
+        //TODO : manage notauthenticate error
+        //TODO : manage renewal of method on notacceptable
+        return response.data.value;
+    }
+
     async getMetadata(key:string) {
         const response = await axios.request({
             method:'get',

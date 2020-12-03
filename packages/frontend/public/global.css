@@ -62,3 +62,20 @@ button:not(:disabled):active {
 button:focus {
 	border-color: #666;
 }
+
+.modal-content {
+	background-color: #333;
+	color: white
+}
+
+.modal-title {
+	margin-left:calc(50% - 15px);
+}
+
+.modal-content .form-group input {
+	width: 100%;
+}
+
+#errorOnLogin {
+	flex-grow: 3;
+}

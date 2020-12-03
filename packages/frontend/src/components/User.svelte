@@ -12,13 +12,29 @@
 
     let showOrHideAuthenticate = () => {
         //toggle the login modal to show
+        window.jQuery('#errorOnLoginContent').html('')
+        window.jQuery('#errorOnLogin').removeClass('show');
         window.jQuery('#LoginModal').modal('toggle');
     }
 
     let authenticate = async () => {
-        await backendService.authenticate(login, password);
-        isLogin = true;
-        window.jQuery('#LoginModal').modal('hide');
+        const alertBox = window.jQuery('#errorOnLogin')
+        try{
+            await backendService.authenticate(login, password);
+            isLogin = true;
+        }catch (e) {
+            let message;
+            if(e.response && e.response.data && e.response.data.message){
+                message = e.response.data.message;
+            } else {
+                message = e.message;
+            }
+            window.jQuery('#errorOnLoginContent').html(`${message}`);
+            alertBox.alert();
+            alertBox.addClass('show')
+        }
+        if(isLogin)
+          window.jQuery('#LoginModal').modal('hide');
     }
 
     let onKeyPress = async (event) => {
@@ -78,7 +94,13 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" on:click={authenticate}>Login</button>
+                <div id="errorOnLogin" class="alert alert-danger fade">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div id="errorOnLoginContent"></div>
+                </div>
+                <button type="button" class="btn btn-danger" on:click={authenticate}>Login</button>
             </div>
         </div>
     </div>
