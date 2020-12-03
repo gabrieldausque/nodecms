@@ -67,7 +67,7 @@ export default class LocalAuthentication implements AuthenticationPlugin{
 
   async authenticate(login: string, password: string): Promise<CustomAuthenticatedUserToken> {
     const user = await this.userStorage.get(login);
-    if(user && user.isActive){
+    if(user && user.isActive && user.password === password){
       const token:CustomAuthenticatedUserToken = {
         authenticationDate: new Date(),
         authorityKey: this.authorityKey,

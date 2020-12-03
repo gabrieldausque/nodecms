@@ -56,6 +56,14 @@ describe('Authentication service', () => {
     })).to.be.rejectedWith('No user with login or id toto exists')])
   })
 
+  it('should throw error if wrong password for existing user', async () => {
+    const service:Authentication = app.service('authentication');
+    return Promise.all([expect(service.create({
+      login:'localtest',
+      password: 'wrongpassword'
+    })).to.be.rejectedWith('User localtest doesn\'t exist or wrong password or user is deactivated')])
+  })
+
   it('should throw error if any service are called without authentication', async () => {
       const service = app.service('authentication');
       const fn = async () => {

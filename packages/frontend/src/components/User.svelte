@@ -19,6 +19,7 @@
 
     let authenticate = async () => {
         const alertBox = window.jQuery('#errorOnLogin')
+        alertBox.removeClass('show');
         try{
             await backendService.authenticate(login, password);
             isLogin = true;
@@ -95,9 +96,6 @@
             </div>
             <div class="modal-footer">
                 <div id="errorOnLogin" class="alert alert-danger fade">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                     <div id="errorOnLoginContent"></div>
                 </div>
                 <button type="button" class="btn btn-danger" on:click={authenticate}>Login</button>
