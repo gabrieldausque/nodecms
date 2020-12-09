@@ -75,6 +75,11 @@ export async function initMongoDbTestDatabase():Promise<void> {
   }catch(err) {
     //ignoring
   }
+  try {
+    await mongoDbClient.db('teama_test').collection('media').drop();
+  }catch(err) {
+    //ignoring
+  }
 
   await roleStorage.create({ key:"administrators", description:"Administrators group"});
   await roleStorage.create({ key:"users", description:"Users group"});

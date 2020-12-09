@@ -1,4 +1,5 @@
 import {Entity} from "./Entity";
+import {Buffer} from 'buffer'
 
 export const MediaVisibility = {
   public:"public",
@@ -11,5 +12,7 @@ export interface Media extends Entity {
   key: string,
   label: string,
   mediaType: string,
-  storagePath: string
+  storagePath: string,
+  ownerId: string,
+  blob?: Buffer
 }

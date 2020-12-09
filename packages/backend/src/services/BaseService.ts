@@ -58,7 +58,7 @@ export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMe
 
   abstract isDataAuthorized(data:any, right:string, user?:any):Promise<boolean>;
 
-  async validAuthentication(params:any) {
+  async validAuthentication(params:any, extractUser:boolean = false) {
     if(!params.clientId){
       throw new NotAuthenticated('You are missing your unique clientId. Please correct and retry.');
     }
@@ -77,7 +77,7 @@ export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMe
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
       const login = authenticationService.encryptor.decryptClientId(params.clientId);
       const userIsAuthenticated = await authenticationService.get(login, params);
-      if(!userIsAuthenticated) {
+      if(!userIsAuthenticated && !extractUser) {
         throw new NotAuthenticated('Please authenticate before using this application');
       } else {
         params.user = await userUseCase.get(login);

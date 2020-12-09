@@ -154,6 +154,7 @@ export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
   }
 
   async needAuthentication(context:any): Promise<boolean> {
+    await this.validAuthentication(context?.params, true);
     const executingUser:UserEntity = context?.user as UserEntity;
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id){

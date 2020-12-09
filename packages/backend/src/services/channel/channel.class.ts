@@ -57,7 +57,7 @@ export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: ChannelDTO, params?: Params): Promise<ChannelDTO> {
-    if(params && params.user)
+    if(params && params.user && params.user as User)
       return await this.useCase.create(data, params.user as User)
     throw new NotAuthenticated('User is not authenticated.');
   }

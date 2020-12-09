@@ -63,6 +63,17 @@
         "dbName": "teama_test",
         "collectionName": ""
       }
+    },
+    "media" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "admin",
+        "dbName": "teama_test",
+        "collectionName": "media",
+        "fsStore": "test/uploads"
+      }
     }
   }
 }

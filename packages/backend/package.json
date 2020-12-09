@@ -29,7 +29,8 @@
     "start": "npm run compile && node lib/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
     "build": "shx rm -rf lib/ && tsc",
-    "dev-backend": "npm run dev"
+    "dev-backend": "npm run dev",
+    "init-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
   },
   "standard": {
     "env": [
@@ -47,6 +48,10 @@
     "@feathersjs/transport-commons": "^4.5.10",
     "@hermes/composition": "^1.0.8",
     "@hermes/topicservice": "^1.0.31",
+    "abstract-blob-store": "^3.3.5",
+    "fs-blob-store": "^6.0.0",
+    "uuid": "^8.3.2",
+    "mmmagic": "^0.5.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "csv-load-sync": "^1.0.0",
@@ -69,6 +74,8 @@
     "@types/config": "^0.0.37",
     "@vue/cli": "^4.5.9",
     "@types/mongodb": "^3.5.34",
+    "@types/mmmagic": "^0.4.30",
+    "@types/uuid": "^8.3.0",
     "axios": "^0.19.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

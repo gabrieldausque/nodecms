@@ -12,9 +12,19 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application) {
-  const options = {
-    paginate: app.get('paginate')
+  let options = {
+    paginate: app.get('paginate'),
+    storage:{
+      contractName:'Default',
+      fsStore:"uploads",
+    }
   };
+
+  const globalMediaStorageConfiguration = app.get('storage').media;
+  options.storage = {...options.storage, ...globalMediaStorageConfiguration};
+
+  const mediaConfiguration = app.get('media');
+  options = { ...options, ...mediaConfiguration};
 
   // Initialize our service with any options it requires
   app.use('/media', new Media(options, app));
