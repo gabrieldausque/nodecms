@@ -5,7 +5,7 @@ import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {isNumber} from "../../helpers";
 import {globalInstancesFactory} from "@hermes/composition";
-import {User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "../../entities/User";
 
 
 export interface MetadataDTO {
@@ -154,12 +154,10 @@ export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
   }
 
   async needAuthentication(context:any): Promise<boolean> {
-    await this.validAuthentication(context?.params, true);
-    const executingUser:UserEntity = context?.user as UserEntity;
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
-      if(context.id){
+      if(context.id || context.id === 0){
         if(isNumber(context.id)) {
-          const data = await this.useCase.get(context.id, executingUser)
+          const data = await this.useCase.get(context.id)
           if(data)
             return !data.isPublic;
         } else {

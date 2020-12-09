@@ -27,7 +27,7 @@ export class MetadataUseCases extends UseCases<Metadata>  {
    super('metadata','MetadataStorage',configuration);
   }
 
-  async get(id:string | number, executingUser:User):Promise<Metadata> {
+  async get(id:string | number, executingUser?:User):Promise<Metadata> {
     const usableId = MetadataEntityRules.convertId(id);
     return await this.storage.get(usableId);
   }

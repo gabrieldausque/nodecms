@@ -40,7 +40,7 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
 
   async create (data: MediaDTO, params?: Params): Promise<MediaDTO> {
     if(params && params.user && params.user as User)
-      return this.useCase.create(data,params.user as User)
+      return await this.useCase.create(data,params.user as User)
     throw new NotAuthenticated('User is not authenticated.');
   }
 
@@ -53,10 +53,18 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async remove (id: NullableId, params?: Params): Promise<MediaDTO> {
-    throw new NotImplemented();
+    if(params && params.user && params.user as User && id){
+      return this.useCase.delete(id, params.user as User);
+    }
+    throw new NotAuthenticated('User is not authenticated.');
   }
 
   async isDataAuthorized(data: any, right: string, user: any): Promise<boolean> {
+    if(Array.isArray(data)){
+      for(const m of data){
+
+      }
+    }
     const media = data as MediaEntity;
     if(media &&
       right === 'r' &&
@@ -68,37 +76,35 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async needAuthentication(context: any): Promise<boolean> {
-    await this.validAuthentication(context?.params, true);
-    const executingUser:UserEntity = context?.user as UserEntity;
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
-      if(context.id){
+      if(context.id || context.id === 0){
         if(isNumber(context.id)) {
-          const data = await this.useCase.get(context.id, executingUser)
+          const data = await this.useCase.get(context.id)
           if(data)
-            return !(data.visibility === MediaVisibility.public);
+            return data.visibility !== MediaVisibility.public;
         } else {
-          const filtered = await this.useCase.find({ key: context.id.toString()}, executingUser)
+          const filtered = await this.useCase.find({ key: context.id.toString()})
           if(filtered && filtered.length > 0) {
             for(const m of filtered){
               if(m.visibility !== MediaVisibility.public)
-                return false
+                return true
             }
-            return true;
+            return false;
           }
         }
       } else {
         if(context.params.query) {
-          const filtered = await this.useCase.find(context.params.query, executingUser);
+          const filtered = await this.useCase.find(context.params.query);
           if(filtered && filtered.length > 0) {
             for(const m of filtered){
               if(m.visibility !== MediaVisibility.public)
-                return false
+                return true
             }
-            return true;
+            return false;
           }
         }
       }
     }
-    return false;
+    return true;
   }
 }

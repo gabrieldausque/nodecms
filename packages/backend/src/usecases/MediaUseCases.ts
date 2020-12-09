@@ -41,14 +41,14 @@ export class MediaUseCases extends UseCases<Media> {
   }
 
   async delete(id: string | number, executingUser: User): Promise<Media> {
+    return await this.storage.delete(id);
+  }
+
+  async find(filter: Partial<Media>, executingUser?: User | undefined): Promise<Media[]> {
     throw new Error('Not Implemented');
   }
 
-  async find(filter: Partial<Media>, executingUser: User | undefined): Promise<Media[]> {
-    throw new Error('Not Implemented');
-  }
-
-  async get(id: string | number, executingUser: User | undefined): Promise<Media> {
+  async get(id: string | number, executingUser?: User | undefined): Promise<Media> {
     const entity = await this.storage.get(id);
     if(await this.isDataAuthorized(entity, 'r', executingUser))
       return entity;

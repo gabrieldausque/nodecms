@@ -87,9 +87,14 @@ export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
 
   async isDataAuthorized(data: any, right: string, user: any): Promise<boolean> {
     const channel:ChannelEntity = data as ChannelEntity;
-    if(channel.visibility === ChannelVisibility.public ||
-       channel.visibility === ChannelVisibility.protected)
+    if(channel.visibility === ChannelVisibility.public)
       return true;
+    else if(channel.visibility === ChannelVisibility.protected)
+    {
+      const u:User = user as User;
+      const isActive:boolean = u.isActive?true:false;
+      return (typeof u !== 'undefined') && u !== null && isActive;
+    }
     else
       return this.useCase.isUserMemberOf(channel,user, user);
   }

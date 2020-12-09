@@ -3,6 +3,8 @@ import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { Media } from './media.class';
 import hooks from './media.hooks';
+import multer from 'multer';
+
 
 // Add this service to the service type index
 declare module '../../declarations' {
@@ -26,8 +28,12 @@ export default function (app: Application) {
   const mediaConfiguration = app.get('media');
   options = { ...options, ...mediaConfiguration};
 
+  const multipartMiddleWare = multer();
   // Initialize our service with any options it requires
-  app.use('/media', new Media(options, app));
+  app.use('/media',
+    multipartMiddleWare.single('blob'),
+    new Media(options, app)
+  );
 
   // Get our initialized service so that we can register hooks
   const service = app.service('media');

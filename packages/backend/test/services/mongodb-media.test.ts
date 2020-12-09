@@ -25,7 +25,7 @@ const getUrl = (pathname?: string) => url.format({
 });
 const sleep = promisify(setTimeout);
 
-describe('\'media\' service', () => {
+describe('Media service', () => {
 
   let server: Server;
   let params:any = {};
@@ -86,22 +86,58 @@ describe('\'media\' service', () => {
 
   it('Should create a media file and store it to disk', async() => {
     const service:MediaService = app.service('media');
-    const file = await readFile('test/data/foo.txt');
+    const file = await readFile('test/data/smiley.png');
     const created = await service.create({
       visibility: MediaVisibility.public,
       blob:file,
-      label: 'Foo',
-      key: 'foo.txt'
+      label: 'A smiley',
+      key: 'smiley'
     }, params);
     if(created && (created.id || created.id === 0)){
       const readFile = await service.get(created.id, params);
       if(readFile && readFile.blob){
-        expect(readFile).to.be.ok;
-        expect(readFile.blob).to.be.ok;
-        expect(readFile.blob.toString()).to.be.ok;
-        return expect(await readFile.blob.toString()).to.be.eql('Foo\n');
+        return Promise.all([
+          expect(readFile).to.be.ok,
+          expect(readFile.blob).to.be.ok,
+          expect(fs.existsSync(`${readFile.storagePath}`)).to.be.true,
+          expect(readFile.blob).to.be.eql(file)]);
       }
     }
     assert.fail('No id for created');
+  });
+
+  it('Should delete a media  when asked for', async() => {
+    const service:MediaService = app.service('media');
+    const file = await readFile('test/data/smiley.png');
+    const created = await service.create({
+      visibility: MediaVisibility.public,
+      blob:file,
+      label: 'Smiley',
+      key: 'A Smiley'
+    }, params);
+    await sleep(500);
+    if(created && (created.id || created.id === 0)){
+      const deletedFile = await service.remove(created.id.toString(), params);
+      if(deletedFile){
+        expect(deletedFile).to.be.ok;
+        expect(deletedFile.blob).to.be.undefined;
+        expect(fs.existsSync(`${deletedFile.storagePath}`)).to.be.false;
+        return expect(service.get(created.id)).to.be.rejectedWith(`No media with key or id ${created.id}.`);
+      }
+    }
+    assert.fail('No id for created');
+  });
+
+  it('Should reject not authorized file mime type', async() => {
+    const service:MediaService = app.service('media');
+    const file = await readFile('test/data/WrongFile.js');
+    const created = service.create({
+      visibility: MediaVisibility.public,
+      blob:file,
+      label: 'Wrong File',
+      key: 'gfmljfm fmlhjmh'
+    }, params);
+    return expect(created).to.be.rejectedWith('Mime types text/plain is not authorized for upload');
   })
+
 });
