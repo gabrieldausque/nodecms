@@ -67,9 +67,10 @@ describe('Media service', () => {
   })
 
   beforeEach(async () => {
-    fs.rmdirSync('test/uploads', {
-      recursive:true
-    });
+    if(fs.existsSync('test/uploads'))
+      fs.rmdirSync('test/uploads', {
+        recursive:true
+      });
     await initMongoDbTestDatabase();
     params.route = {};
   })

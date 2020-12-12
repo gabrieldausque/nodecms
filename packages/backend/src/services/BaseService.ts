@@ -23,7 +23,8 @@ export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMe
   protected constructor(app:Application, serviceLabel:string,useCaseContractName:string, options:BaseServiceConfiguration) {
     this.app = app;
     this.serviceLabel = serviceLabel;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs(
+    const f = globalInstancesFactory;
+    this.useCase = f.getInstanceFromCatalogs(
       'UseCases',
       useCaseContractName,
       options) as U;
