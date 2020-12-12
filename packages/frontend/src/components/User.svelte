@@ -62,13 +62,13 @@
 {#if !isLogin}
     <div>
         <button type="button" on:click={showOrHideAuthenticate}>
-            Login
+            Connexion
         </button>
     </div>
 {:else}
     <div>
         <button type="button" on:click={logout}>
-            Logout
+            Déconnexion
         </button>
     </div>
 {/if}

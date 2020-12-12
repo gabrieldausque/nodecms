@@ -69,17 +69,7 @@ export class NodeCMSClient {
 }
 
 const getClientConfig = async () => {
-    const xmlRequest = new XMLHttpRequest();
-    xmlRequest.open('GET', `${window.location.href}/clientConfiguration.json`, true);
-    xmlRequest.responseType = 'json';
-    return new Promise((resolve, reject) => {
-        xmlRequest.onreadystatechange = () => {
-            if(xmlRequest.readyState === 4) {
-                resolve(xmlRequest.response);
-            }
-        }
-        xmlRequest.send();
-    });
+    return await axios.get(`${window.location.href}/clientConfiguration.json`)
 }
 
 let backendClient = null;
