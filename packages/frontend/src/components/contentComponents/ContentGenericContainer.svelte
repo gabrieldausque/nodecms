@@ -19,7 +19,8 @@
 
                 globalStyle:`
             h2 {
-                font-family: Army, serif
+                font-family: Army, serif;
+                margin-top: 90px;
             }
 
             .documentContainer {
@@ -48,10 +49,100 @@
                         order:0,
                         type:'generic',
                         properties: {
+                            globalStyle: `
+                        @keyframes animatedBorderTop {
+                            0% {
+                                left:-30px; height:3px; width:0px;
+                            }
+                            50% {
+                                left:-30px; height: 3px; width: calc(100% + 60px);
+                            }
+                            100% {
+                                left: calc(100% + 27px); height:3px; width:3px;
+                            }
+                        }
+
+                        @keyframes animatedBorderRight {
+                            0% {
+                                top:-30px; left: calc(100% + 27px); height:0px; width:3px;
+                            }
+                            50% {
+                                top:-30px;left: calc(100% + 27px); height: calc(100% + 57px); width: 3px;
+                            }
+                            100% {
+                                top: calc(100% + 30px); height: 0px; width:3px;
+                            }
+                        }
+
+                        @keyframes animatedBorderBottom {
+                            0% {
+                                right: -30px; width:0px;
+                            }
+                            50% {
+                                right: -30px; width: calc(100% + 60px);
+                            }
+                            100% {
+                                right: calc(100% + 30px); width:0px;
+                            }
+                        }
+
+                        @keyframes animatedBorderLeft {
+                            0% {
+                                bottom:-30px; width:3px; height:0px;
+                            }
+                            50% {
+                                bottom: -30px; height: calc(100% + 60px)
+                            }
+                            100% {
+                                bottom: calc(100% + 30px); height: 0px;
+                            }
+                        }
+
+                        .main-logo-border-top {
+                        position:absolute;
+                        background: red;
+                        top:-30px;
+                        left:-30px;
+                        height:3px;
+                        width:0px;
+                        animation: 10s linear infinite animatedBorderTop;
+                        }
+
+                        .main-logo-border-right {
+                        position:absolute;
+                        background: red;
+                        top:-30px;
+                        left: calc(100% + 27px);
+                        height:0px;
+                        width:3px;
+                        animation: 10s linear 5s infinite animatedBorderRight;
+                        }
+
+                        .main-logo-border-bottom {
+                        position:absolute;
+                        background: red;
+                        bottom: -30px;
+                        right: -30px;
+                        height:3px;
+                        width:0px;
+                        animation: 10s linear infinite animatedBorderBottom;
+                        }
+
+                        .main-logo-border-left {
+                        position:absolute;
+                        background: red;
+                        bottom: -30px;
+                        left: -30px;
+                        height:0px;
+                        width:3px;
+                        animation: 10s linear 5s infinite animatedBorderLeft;
+                        }
+                        `,
                             classes: "main-logo",
                             style:"",
                             headers:[],
-                            bodies:[{
+                            bodies:[
+                                {
                                 order:1,
                                 type:'image',
                                 properties: {
@@ -59,7 +150,19 @@
                                     style:`
                         width:50vh;
                         height:50vh;
-                        border: red solid 1px;`
+                        border: red solid 1px;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        overflow: visible;
+                        position: relative;
+                        `,
+                                    content:  `
+                                    <div class="main-logo-border-top"></div>
+                                    <div class="main-logo-border-right"></div>
+                                    <div class="main-logo-border-bottom"></div>
+                                    <div class="main-logo-border-left"></div>
+                                    `
                                 }
                             }],
                             footers:[]
