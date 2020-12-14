@@ -49,7 +49,8 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
             channelKey:channel.key
           }
         }
-        return await this.useCase.find(filter, params.user as User, channel.key);
+        const found = await this.useCase.find(filter, params.user as User, channel.key);
+        return found;
       }
     }
     return [];

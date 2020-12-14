@@ -57,9 +57,9 @@ export default function (app: Application) {
       const realm = app.get('authentication').realm;
       const domain = authenticationService.getDomain();
       const cookie = [
-        `ncms-uniqueid=${authenticationService.encryptor.encryptClientId(req.body['login'])} ; Domain=${domain}; HttpOnly; SameSite:Lax`,
-        `ncms-token=${encryptedToken} ; Domain=${domain}; HttpOnly; SameSite:Lax`,
-        `realm=${realm} ; Domain=${domain}; HttpOnly; SameSite:Lax`
+        `ncms-uniqueid=${authenticationService.encryptor.encryptClientId(req.body['login'])} ; domain=${domain}; HttpOnly; SameSite=Lax`,
+        `ncms-token=${encryptedToken} ; domain=${domain}; HttpOnly; SameSite=Lax`,
+        `realm=${realm} ; domain=${domain}; HttpOnly; SameSite=Lax`
       ];
       res.setHeader('Set-Cookie', cookie);
       res.status(200).json('OK');

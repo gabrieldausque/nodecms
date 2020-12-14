@@ -64,7 +64,8 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
 
   async find(filter: Partial<ChannelPost> | undefined, channelName?:string): Promise<ChannelPost[]> {
     if(filter) {
-      return await this.internalFind(filter, this.getCollectionNameFromChannelName(channelName));
+      const collectionName = this.getCollectionNameFromChannelName(channelName);
+      return await this.internalFind(filter, collectionName);
     }
     return []
   }

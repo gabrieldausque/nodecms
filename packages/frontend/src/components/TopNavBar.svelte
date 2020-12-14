@@ -19,8 +19,8 @@
 
 <nav class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container d-flex justify-content-between">
-        <a href="#" class="navbar-brand d-flex align-items-center">
-            <img src="{imgSrc}" crossorigin="anonymous" height="45px" width="45px">
+        <a class="navbar-brand d-flex align-items-center">
+            <img src="{imgSrc}" crossorigin="anonymous" height="45px" width="45px" alt="an image">
             <strong>{title}</strong>
         </a>
         <User></User>

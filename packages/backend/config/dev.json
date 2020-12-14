@@ -1,6 +1,13 @@
 {
   "cors": {
-    "validOrigins": ""
+    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://.+\\.myhost.domain[:0-9]*"]
+  },
+  "authentication": {
+    "authentication" : {
+      "contractName": "Default",
+      "configuration": {}
+    },
+    "realm": "myhost.domain"
   },
   "storage": {
     "authorization" : {

@@ -63,6 +63,7 @@ app.use(cors({
         return;
       }
     } else if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test' ) {
+      logger.warning(`origin "${origin}" seems to be wrong, but we are in ${process.env.NODE_ENV}. Skipping check of domain`);
       callback(null, true);
       return;
     }

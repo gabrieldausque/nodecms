@@ -50,7 +50,8 @@ function configureSwagger(app: Application): void {
         '^role',
         '^user',
         '^metadata',
-        '^document'
+        '^document',
+        '^channel'
       ]
     }
   }));

@@ -1,5 +1,5 @@
 import {UseCases} from "./UseCases";
-import {Channel} from "../entities/Channel";
+import {Channel, ChannelVisibility} from "../entities/Channel";
 import {User} from "../entities/User";
 import {isNumber} from "../helpers";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
@@ -143,7 +143,8 @@ export class ChannelUseCases extends UseCases<Channel> {
 
   async isUserReader(channel:Channel, user:User, executingUser:User):Promise<boolean>{
     if(channel.readers && typeof user.id === 'number'){
-      return channel.readers.indexOf(user.id) >= 0 ||
+      return channel.visibility === ChannelVisibility.public ||
+        channel.readers.indexOf(user.id) >= 0 ||
         await this.isUserContributor(channel, user, user)
     }
     return false;
@@ -151,7 +152,8 @@ export class ChannelUseCases extends UseCases<Channel> {
 
   async isUserContributor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
     if(channel.contributors && typeof user.id === 'number'){
-      return channel.contributors.indexOf(user.id) >= 0 ||
+      return channel.visibility === ChannelVisibility.public ||
+        channel.contributors.indexOf(user.id) >= 0 ||
         await this.isUserEditor(channel, user, user)
     }
     return false;

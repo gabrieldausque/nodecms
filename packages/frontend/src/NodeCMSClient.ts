@@ -6,7 +6,7 @@ export class NodeCMSClient {
     private clientId: string;
     private realm:string;
     private id: number;
-    constructor(cmsUrl:string = "http://localhost:3030") {
+    constructor(cmsUrl:string = "/") {
         this.url = cmsUrl;
         axios.defaults.withCredentials = true;
     }
@@ -41,6 +41,15 @@ export class NodeCMSClient {
         return response.data.value
     }
 
+    async checkAuthentication() {
+        const value = await axios.request<boolean>({
+            method:'get',
+            baseURL:this.url,
+            url:'authentication/0'
+        })
+        return value.data;
+    }
+
     async authenticate(login:string, password:string){
         await axios.request({
             method:'post',
@@ -49,11 +58,11 @@ export class NodeCMSClient {
             data: {
                 login,
                 password
-            },
+            }/*
             withCredentials: true,
             headers:{
                 credentials: 'same-origin'
-            }
+            }*/
         })
     }
 
@@ -62,6 +71,23 @@ export class NodeCMSClient {
             method:'delete',
             baseURL:this.url,
             url:'authentication',
+            headers:this.createHeaders()
+        })
+    }
+
+    async getChannelPosts(channelName) {
+        return await axios.request({
+            method:'get',
+            baseURL:this.url,
+            url: `channel`
+        })
+    }
+
+    async getChannel(channelName) {
+        return await axios.request({
+            method: 'get',
+            baseURL: this.url,
+            url: 'channel',
             withCredentials: true,
             headers:this.createHeaders()
         })
@@ -74,7 +100,7 @@ const getClientConfig = async () => {
 
 let backendClient = null;
 getClientConfig().then((configuration:any) => {
-    backendClient = new NodeCMSClient(configuration.backendHost)
+    backendClient = new NodeCMSClient(configuration.data.backendHost)
     backendClient.getMetadata('title').then((value) => {
         document.querySelector('head title').innerHTML = value;
     });

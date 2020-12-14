@@ -1,23 +1,16 @@
 <script>
     import {globalContentContainerFactory} from "../../ContentContainerFactory";
     import {getBackendClient} from '../../NodeCMSClient';
-    import { onMount } from 'svelte';
+    import {beforeUpdate, onMount} from 'svelte';
     import ContentTitle from "./ContentTitle.svelte";
 
     let backEndService = null;
     export let properties;
     export let documentKey;
 
-    window.addEventListener('backend-ready', () => {
-        backEndService = getBackendClient();
-    })
-
-    onMount(async () => {
-        if(documentKey){
-            //let rawDocument =  await backEndService.getDocument(documentKey);
-            let rawDocument = {
-
-                globalStyle:`
+    const availableDocuments = {
+        welcome: {
+            globalStyle:`
             h2 {
                 font-family: Army, serif;
                 margin-top: 90px;
@@ -31,25 +24,31 @@
                 height:100%;
                 width:100%
             }
+
+            .main-logo {
+                height: initial !important;
+                width: initial !important;
+            }
+
             `,
-                style: ``,
-                classes: 'documentContainer',
-                headers:[],
-                bodies:[
-                    {
-                        order:1,
-                        type:'text',
-                        properties:{
-                            content:'<h2>Servir sans faillir</h2>',
-                            style:`font-family: Army; color: white`,
-                            classes:'myH2Class'
-                        }
-                    },
-                    {
-                        order:0,
-                        type:'generic',
-                        properties: {
-                            globalStyle: `
+            style: ``,
+            classes: 'documentContainer',
+            headers:[],
+            bodies:[
+                {
+                    order:1,
+                    type:'text',
+                    properties:{
+                        content:'<h2>Servir sans faillir</h2>',
+                        style:`font-family: Army; color: white`,
+                        classes:'myH2Class'
+                    }
+                },
+                {
+                    order:0,
+                    type:'generic',
+                    properties: {
+                        globalStyle: `
                         @keyframes animatedBorderTop {
                             0% {
                                 left:-30px; height:3px; width:0px;
@@ -138,15 +137,15 @@
                         animation: 10s linear 5s infinite animatedBorderLeft;
                         }
                         `,
-                            classes: "main-logo",
-                            style:"",
-                            headers:[],
-                            bodies:[
-                                {
+                        classes: "main-logo",
+                        style:"",
+                        headers:[],
+                        bodies:[
+                            {
                                 order:1,
                                 type:'image',
                                 properties: {
-                                    uri:"http://localhost:3030/a-team_logo.png",
+                                    uri:"http://myhost.domain:3030/a-team_logo.png",
                                     style:`
                         width:50vh;
                         height:50vh;
@@ -158,19 +157,41 @@
                         position: relative;
                         `,
                                     content:  `
-                                    <div class="main-logo-border-top"></div>
-                                    <div class="main-logo-border-right"></div>
-                                    <div class="main-logo-border-bottom"></div>
-                                    <div class="main-logo-border-left"></div>
-                                    `
+                        <div class="main-logo-border-top"></div>
+                        <div class="main-logo-border-right"></div>
+                        <div class="main-logo-border-bottom"></div>
+                        <div class="main-logo-border-left"></div>
+                        `
                                 }
                             }],
-                            footers:[]
-                        }
+                        footers:[]
                     }
-                ],
-                footers:[]
-            }
+                }
+            ],
+            footers:[]
+        },
+        welcomePrivate: {
+            bodies:[
+                {
+                    order:0,
+                    type:'channel',
+                    properties:{
+                        channelKey:"news"
+                    }
+                }
+            ]
+        }
+    }
+
+    window.addEventListener('backend-ready', () => {
+        backEndService = getBackendClient();
+    })
+
+    function getDocument() {
+        if(documentKey && availableDocuments.hasOwnProperty(documentKey)){
+            properties = null;
+            //let rawDocument =  await backEndService.getDocument(documentKey);
+            let rawDocument = availableDocuments[documentKey];
             let sortFunction = (a,b) =>{
                 if(a.order < b.order)
                     return -1
@@ -189,11 +210,31 @@
                 rawDocument.footers = rawDocument.footers.sort(sortFunction)
             }
             properties = rawDocument
+        } else if(documentKey && ! availableDocuments.hasOwnProperty(documentKey)){
+            properties = null;
         }
+    }
+
+    onMount(async () => {
+        getDocument()
+    })
+
+    beforeUpdate(async() => {
+        getDocument();
     })
 
 </script>
 
+<style>
+    main {
+        height:100%;
+        width:100%;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 {#if properties}
     {#if typeof properties.globalStyle === "string"}
         {@html "<style>" + properties.globalStyle + "</style>"}

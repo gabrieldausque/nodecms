@@ -1,6 +1,8 @@
 <script>
     import {getBackendClient} from '../NodeCMSClient';
     import { onMount } from 'svelte';
+    import {UserState} from "../stores/UserState";
+
     export let isLogin = false;
     let backendService = null;
     let login;
@@ -18,24 +20,31 @@
     }
 
     let authenticate = async () => {
-        const alertBox = window.jQuery('#errorOnLogin')
-        alertBox.removeClass('show');
-        try{
-            await backendService.authenticate(login, password);
-            isLogin = true;
-        }catch (e) {
-            let message;
-            if(e.response && e.response.data && e.response.data.message){
-                message = e.response.data.message;
-            } else {
-                message = e.message;
+        if(login && password){
+            const alertBox = window.jQuery('#errorOnLogin')
+            alertBox.removeClass('show');
+            try{
+                await backendService.authenticate(login, password);
+                isLogin = true;
+            }catch (e) {
+                let message;
+                if(e.response && e.response.data && e.response.data.message){
+                    message = e.response.data.message;
+                } else {
+                    message = e.message;
+                }
+                window.jQuery('#errorOnLoginContent').html(`${message}`);
+                alertBox.alert();
+                alertBox.addClass('show')
             }
-            window.jQuery('#errorOnLoginContent').html(`${message}`);
-            alertBox.alert();
-            alertBox.addClass('show')
+            if(isLogin){
+                UserState.set({
+                    isLogin:isLogin,
+                    login
+                })
+                window.jQuery('#LoginModal').modal('hide');
+            }
         }
-        if(isLogin)
-          window.jQuery('#LoginModal').modal('hide');
     }
 
     let onKeyPress = async (event) => {
@@ -48,6 +57,10 @@
     let logout = async () => {
         isLogin = false;
         await backendService.logOut();
+        UserState.set({
+            isLogin:false,
+            login:undefined
+        })
     }
 
     onMount(async () => {

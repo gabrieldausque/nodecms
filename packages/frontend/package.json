@@ -2,8 +2,9 @@
   "name": "svelte-app",
   "version": "1.0.0",
   "scripts": {
-    "compile": "rollup -c",
+    "build": "rollup -c",
     "dev": "rollup -c -w",
+    "dev-front": "npm run dev",
     "start": "sirv public",
     "validate": "svelte-check"
   },

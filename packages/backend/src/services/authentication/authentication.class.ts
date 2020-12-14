@@ -67,11 +67,16 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     if(!params || !params.authenticationToken)
       return false;
     const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(params.authenticationToken);
+    if(!id && params.user)
+    {
+      return this.authenticator.isAuthenticated(params.user.id, decryptedToken);
+    }
     return this.authenticator.isAuthenticated(id.toString(), decryptedToken);
   }
 
   async create (data: Data, params?: Params): Promise<any> {
     let tokenEncrypted:string;
+
     try {
       const login = (data.login)?data.login:'anonymous';
       const password = (data.password)?data.password:'nopass';
@@ -124,8 +129,16 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     return domain
   }
 
-  async needAuthentication(): Promise<boolean> {
-    return false;
+  async needAuthentication(context:any): Promise<boolean> {
+    if(context.method === 'remove')
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+
   }
 
   async isAuthorized(context: any): Promise<boolean> {

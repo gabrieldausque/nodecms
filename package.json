@@ -9,6 +9,7 @@
     "test": "lerna run test",
     "dev": "lerna run --stream dev",
     "dev-backend": "lerna run --stream dev-backend",
+    "dev-front": "lerna run --stream dev-front",
     "build": "lerna run build"
   }
 }

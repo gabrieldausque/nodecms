@@ -1,5 +1,5 @@
 // Initializes the `ChannelPost` service on path `/channel/:idOrKey/posts`
-import { ServiceAddons } from '@feathersjs/feathers';
+import {ServiceAddons, ServiceMethods} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { ChannelPost } from './channel-post.class';
 import hooks from './channel-post.hooks';
@@ -31,10 +31,13 @@ export default function (app: Application): void {
   options = { ...options, ...channelConfiguration};
 
   // Initialize our service with any options it requires
-  app.use('/channel/:channelNameOrId/posts', new ChannelPost(options, app));
+  const channelPostService = new ChannelPost(options, app);
+
+  app.use('/channel/:channelNameOrId/posts', channelPostService);
 
   // Get our initialized service so that we can register hooks
   const service:any = app.service('channel/:channelNameOrId/posts');
 
   service.hooks(hooks);
 }
+

@@ -65,12 +65,11 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
   }
 
   async isDataAuthorized(data: ChannelPost, right: string = 'r', user?: any): Promise<boolean> {
-    if(typeof data.author === 'number' &&
-      data.channelKey &&
+    if(data.channelKey &&
       user &&
       typeof user.id === 'number'
     ){
-      if(data.author === user.id){
+      if(typeof data.author === 'number' && data.author === user.id){
         return true;
       } else {
         if(right === 'w'){
