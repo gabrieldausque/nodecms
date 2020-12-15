@@ -26,6 +26,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
   }
 
   async create(data: ChannelPost, channelName?:string): Promise<ChannelPost> {
+
     if(!channelName){
       throw new Error('No channel name for the current post');
     }
@@ -35,7 +36,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
       newId = await this.getNewId(collectionName);
       let post = {
         ...data,
-        ...{ id:  newId}
+        ...{ id:  newId, creationDate: new Date()}
       }
       await this.internalCreate(post, collectionName);
     }

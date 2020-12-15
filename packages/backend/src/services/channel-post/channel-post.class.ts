@@ -50,6 +50,10 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
           }
         }
         const found = await this.useCase.find(filter, params.user as User, channel.key);
+        for(const f of found){
+          if(typeof f.author === 'number')
+            f.author = await this.userUseCases.get(f.author, params.user as User);
+        }
         return found;
       }
     }

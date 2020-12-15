@@ -154,8 +154,14 @@ describe('Channel service With Mongodb', () => {
   it('should access to public post from public channel',async () => {
     const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
     params.route.channelNameOrId = 'news';
-    const posts = await service.find(params);
-    expect(posts).to.be.eql([{
+    const posts:any = await service.find(params);
+    expect([{
+      author: posts[0].author.id,
+      channelKey: posts[0].channelKey,
+      content: posts[0].content,
+      id: posts[0].id,
+      tags: posts[0].tags
+    }]).to.be.eql([{
       author: 0,
       channelKey: "news",
       content: "<h1> Bienvenue Sur le Channel news</h1><br>\n<div>Bienvenu sur le fil public des news du site communataire de l'Agence tous risques !</div>",

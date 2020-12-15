@@ -3,7 +3,7 @@
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
-	import ContentChannelContainer from './components/contentComponents/ContentChannelContainer.svelte';
+	import ContentChannelsContainer from './components/contentComponents/ContentChannelsContainer.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {createEventDispatcher, onMount} from "svelte";
 	import {UserState} from "./stores/UserState";
@@ -20,31 +20,14 @@
 	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer);
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer);
-	globalContentContainerFactory.registerContentContainer('channel', ContentChannelContainer)
+	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
 
 	const unsubscribe = UserState.subscribe( value => {
+		console.log(`new login : ${value.isLogin} & ${value.login}`)
 		if(value && value.isLogin)
 			documentKey = "welcomePrivate";
 		else
 			documentKey= "welcome"
-	})
-
-	window.addEventListener('backend-ready', async () => {
-		backendClient = await getBackendClient();
-		try {
-			const isAuthenticate = await backendClient.checkAuthentication();
-			if(isAuthenticate)
-			{
-				console.log('is authenticated')
-				documentKey = "welcomePrivate";
-			}
-			else
-				console.log('not authenticated')
-
-		} catch(error) {
-			console.warn('authentication invalid. Please reauthenticate');
-			console.warn(error);
-		}
 	})
 
 </script>

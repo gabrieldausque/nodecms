@@ -8,8 +8,16 @@
     let login;
     let password;
 
-    window.addEventListener('backend-ready', () => {
+    window.addEventListener('backend-ready', async () => {
         backendService = getBackendClient();
+        let loginOrFalse = await backendService.checkAuthentication();
+        console.log(loginOrFalse);
+        if(loginOrFalse && typeof loginOrFalse === "string"){
+            isLogin = true;
+            login = loginOrFalse;
+            console.log(`${loginOrFalse} is logged in`)
+            onLoggedIn();
+        }
     });
 
     let showOrHideAuthenticate = () => {
@@ -17,6 +25,14 @@
         window.jQuery('#errorOnLoginContent').html('')
         window.jQuery('#errorOnLogin').removeClass('show');
         window.jQuery('#LoginModal').modal('toggle');
+    }
+
+    function onLoggedIn() {
+        UserState.set({
+            isLogin: isLogin,
+            login
+        })
+        window.jQuery('#LoginModal').modal('hide');
     }
 
     let authenticate = async () => {
@@ -38,11 +54,7 @@
                 alertBox.addClass('show')
             }
             if(isLogin){
-                UserState.set({
-                    isLogin:isLogin,
-                    login
-                })
-                window.jQuery('#LoginModal').modal('hide');
+                onLoggedIn();
             }
         }
     }

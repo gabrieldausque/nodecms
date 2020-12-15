@@ -42,7 +42,7 @@ export class NodeCMSClient {
     }
 
     async checkAuthentication() {
-        const value = await axios.request<boolean>({
+        const value = await axios.request({
             method:'get',
             baseURL:this.url,
             url:'authentication/0'
@@ -58,11 +58,7 @@ export class NodeCMSClient {
             data: {
                 login,
                 password
-            }/*
-            withCredentials: true,
-            headers:{
-                credentials: 'same-origin'
-            }*/
+            }
         })
     }
 
@@ -76,21 +72,25 @@ export class NodeCMSClient {
     }
 
     async getChannelPosts(channelName) {
-        return await axios.request({
+        console.log('tata');
+        return (await axios.request({
             method:'get',
             baseURL:this.url,
-            url: `channel`
-        })
+            url: `channel/${channelName}/posts/`
+        })).data;
     }
 
     async getChannel(channelName) {
-        return await axios.request({
+        console.log(`getting channel ${channelName}`)
+        const result = (await axios.request({
             method: 'get',
             baseURL: this.url,
             url: 'channel',
             withCredentials: true,
             headers:this.createHeaders()
-        })
+        }));
+        console.log(result);
+        return result.data[0];
     }
 }
 

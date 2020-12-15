@@ -21,10 +21,12 @@
     "@rollup/plugin-typescript": "^4.0.0",
     "typescript": "^3.9.3",
     "tslib": "^2.0.0",
-    "@tsconfig/svelte": "^1.0.0"
+    "@tsconfig/svelte": "^1.0.0",
+    "@editorjs/editorjs": "^2.19.1"
   },
   "dependencies": {
     "sirv-cli": "^1.0.0",
-    "axios": "^0.20.0"
+    "axios": "^0.20.0",
+    "cl-editor": "^2.1.1"
   }
 }

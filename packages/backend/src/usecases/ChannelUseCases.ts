@@ -152,8 +152,7 @@ export class ChannelUseCases extends UseCases<Channel> {
 
   async isUserContributor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
     if(channel.contributors && typeof user.id === 'number'){
-      return channel.visibility === ChannelVisibility.public ||
-        channel.contributors.indexOf(user.id) >= 0 ||
+      return channel.contributors.indexOf(user.id) >= 0 ||
         await this.isUserEditor(channel, user, user)
     }
     return false;

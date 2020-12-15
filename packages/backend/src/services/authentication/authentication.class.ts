@@ -5,8 +5,10 @@ import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/
 import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
 import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "../../entities/User";
 import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
+import {UserUseCases} from "../../usecases/UserUseCases";
+import {isNumber} from "../../helpers";
 
 interface Data {
   login?:string,
@@ -67,11 +69,10 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     if(!params || !params.authenticationToken)
       return false;
     const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(params.authenticationToken);
-    if(!id && params.user)
-    {
-      return this.authenticator.isAuthenticated(params.user.id, decryptedToken);
-    }
-    return this.authenticator.isAuthenticated(id.toString(), decryptedToken);
+    if(this.authenticator.isAuthenticated(decryptedToken.login, decryptedToken))
+      return decryptedToken.login;
+    else
+      return false;
   }
 
   async create (data: Data, params?: Params): Promise<any> {

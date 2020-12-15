@@ -100,7 +100,7 @@ function initData(){
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',
     content:`<h1> Bienvenue Sur le Channel news</h1><br>
 <div>Bienvenu sur le fil public des news du site communataire de l'Agence tous risques !</div>`,
-    tags:['Welcome']});
+    tags:['Welcome'], author:0, creationDate: new Date()});
 };
 
 initData()

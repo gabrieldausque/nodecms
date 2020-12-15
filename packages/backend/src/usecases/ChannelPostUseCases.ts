@@ -31,6 +31,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
 
   async create(entity: ChannelPost, executingUser: User, channelKey?:string): Promise<ChannelPost> {
     entity.author = executingUser.id;
+    entity.creationDate = new Date();
     if(entity.channelKey !== channelKey){
       entity.channelKey = channelKey
     }
