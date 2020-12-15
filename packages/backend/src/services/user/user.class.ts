@@ -7,12 +7,7 @@ import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
 import {User as UserEntity} from "../../entities/User";
 
-interface UserDTO {
-  id?:number
-  login:string
-  password:string
-  isActive?:boolean
-}
+export type UserDTO = Partial<UserEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
 }

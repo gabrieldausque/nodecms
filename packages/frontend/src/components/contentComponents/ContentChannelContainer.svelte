@@ -19,46 +19,54 @@
     })
 
     window.setTimeout(async () => {
-        channelPosts = await backEndService.getChannelPosts(channel.key);
-        for(const post of channelPosts) {
-            post.author
+        if(channel && channel.key) {
+            channelPosts = await backEndService.getChannelPosts(channel.key);
+            for(const post of channelPosts) {
+                post.author
+            }
+            await backEndService.subscribeToChannel(channel.key, async (m) => {
+                channelPosts.push(m);
+                channelPosts = channelPosts;
+            })
+            editor = new Editor({
+                target: document.getElementById('message'),
+                props: {
+                    height: '54px',
+                    actions: ['b','i','u','strike','ul','ol','viewHtml']
+                }
+            })
+
+            document.getElementById('message').addEventListener('keypress', async (event) => {
+                if(event.key === 'Enter' && event.ctrlKey) {
+                    event.stopPropagation();
+                    //TODO : send the message to the service + add publication on realtime
+                    await backEndService.createPost(channel.key, editor.getHtml(false))
+                }
+            })
         }
-        console.log(channelPosts);
-
-        editor = new Editor({
-            target: document.getElementById('message'),
-            props: {
-                height: '54px',
-                actions: ['b','i','u','strike','ul','ol','viewHtml']
-            }
-        })
-
-        document.getElementById('message').addEventListener('keypress', (event) => {
-            if(event.key === 'Enter' && event.ctrlKey) {
-                console.log(editor.getHtml(true));
-                event.stopPropagation();
-                //TODO : send the message to the service + add publication on realtime
-            }
-        })
-
-
     }, 1000)
+
+    function createHtmlContent(content) {
+        const element = document.createElement('div');
+        element.innerHTML = content;
+        return element.outerHTML;
+    }
 
 </script>
 
 <style>
     .channel {
         background: white;
+        display: flex;
+        flex-direction: column;
         height:100%;
         width:100%;
-        overflow-y:auto;
         flex-grow: 4;
         position: relative;
-        padding-top:70px;
     }
 
     .channelInfo {
-        position:absolute;
+        position:sticky;
         top:0px;
         left:0px;
         width: 100%;
@@ -66,6 +74,7 @@
         display: flex;
         align-items: center;
         border-bottom: solid lightgray 1px;
+        background: white;
     }
 
     .channelHeader {
@@ -80,6 +89,8 @@
     }
 
     .channelContent {
+        height: calc(100% - 100px);
+        overflow-y: auto;
     }
 
     .post {
@@ -106,22 +117,14 @@
 
     .postCreation {
         border: solid lightgray 1px;
-        position : absolute;
+        position : sticky;
+        top:calc(100% - 105px);
         bottom : 5px;
         margin: 5px;
         height: 100px;
         width: calc(100% - 10px);
     }
 
-    .postCreation form {
-        height:50%;
-        width:100%;
-    }
-
-    .postCreation form > input {
-        height:100%;
-        width:100%;
-    }
  </style>
 
 <div class="channel">
@@ -147,9 +150,18 @@
                                 text-align: start;
                                 font-size: 25px;
                             }
+
+                            .cl-content,
+                            .cl-actionbar {
+                                text-align: start;
+                            }
+
+                            div {
+                                text-align: start;
+                            }
                         </style>
                         <div>{(new Date(post.creationDate)).toLocaleDateString()} {(new Date(post.creationDate)).toLocaleTimeString()}</div>
-                        {@html post.content}
+                        {@html createHtmlContent(post.content)}
                     </div>
                 </div>
             {/each}

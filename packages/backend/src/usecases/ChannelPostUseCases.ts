@@ -8,6 +8,7 @@ import {ChannelPostRules} from "../entities/ChannelPostRules";
 import {ChannelUseCases} from "./ChannelUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
 import {Channel} from "../entities/Channel";
+import {UserUseCases} from "./UserUseCases";
 
 interface ChannelPostUseCasesConfiguration extends UseCaseConfiguration {
 }
@@ -38,7 +39,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
     ChannelPostRules.validate(entity);
     const created = await this.channelPostStorage.create(entity, entity.channelKey);
     if(isNumber(created.id) && typeof created.id === 'number')
-      return this.channelPostStorage.get(created.id, created.channelKey)
+      return await this.get(created.id, executingUser, channelKey);
     throw new Error('No id for created post');
   }
 
@@ -51,14 +52,26 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
       filter.channelKey = (filter.channelKey && filter.channelKey === channelName)?
         filter.channelKey:
         channelName
-      return await this.channelPostStorage.find(filter, filter.channelKey);
+      const found =  await this.channelPostStorage.find(filter, filter.channelKey);
+      for(const p of found){
+        if(typeof p.author === 'number') {
+          const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+          p.author = userUseCases.secureUserForExternal(await userUseCases.get(p.author, executingUser));
+        }
+      }
+      return found;
     }
     return [];
   }
 
   async get(id: string | number, executingUser: User | undefined, channelName?:string): Promise<ChannelPost> {
     const usableId = ChannelPostRules.convertId(id);
-    return await this.channelPostStorage.get(usableId, channelName)
+    const p = await this.channelPostStorage.get(usableId, channelName);
+    if(typeof p.author === 'number') {
+      const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+      p.author = userUseCases.secureUserForExternal(await userUseCases.get(p.author, executingUser));
+    }
+    return p;
   }
 
   async update(id: string | number, entityToUpdate: ChannelPost, executingUser: User): Promise<ChannelPost> {

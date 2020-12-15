@@ -20,7 +20,8 @@ import {globalInstancesFactory} from '@hermes/composition';
 import {Logger} from "./plugins/Logging/Logger";
 import {error} from "winston";
 import {EncryptionPlugin} from "./plugins/Encryption/EncryptionPlugin";
-import {TopicServiceConfiguration} from "@hermes/topicservice";
+import {SocketIOTopicServiceClient, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
+import {ServerOptions} from "mongodb";
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/plugins');
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/usecases');
 globalInstancesFactory.loadExportedClassesFromDirectory( path.dirname(require.resolve('@hermes/topicservice')));
@@ -32,6 +33,7 @@ const app: Application = express(feathers());
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
 const topicServiceConfiguration:any = app.get("topicService");
+const topicService:TopicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService',topicServiceConfiguration.contractName, TopicServiceConfiguration.load(topicServiceConfiguration.configuration))
 
 const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', app.get('encryption').contractName, app.get('encryption').configuration);
 const logger:Logger = globalInstancesFactory.getInstanceFromCatalogs('Logger',app.get('logger').contractName, app.get('logger').configuration);
@@ -81,7 +83,14 @@ app.use('/', express.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(express.rest());
-app.configure(socketio());
+app.configure(socketio((io) => {
+  io.on('connection', (socket) => {
+    const topicClient = new SocketIOTopicServiceClient(topicService, socket);
+    setTimeout(() => {
+      socket.emit('clientId','toto')
+    }, 5000);
+  })
+}));
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);

@@ -22,11 +22,13 @@
     "typescript": "^3.9.3",
     "tslib": "^2.0.0",
     "@tsconfig/svelte": "^1.0.0",
-    "@editorjs/editorjs": "^2.19.1"
+    "@editorjs/editorjs": "^2.19.1",
+    "@types/socket.io-client": "^1.4.34"
   },
   "dependencies": {
     "sirv-cli": "^1.0.0",
     "axios": "^0.20.0",
-    "cl-editor": "^2.1.1"
+    "cl-editor": "^2.1.1",
+    "socket.io-client": "^2.3.1"
   }
 }

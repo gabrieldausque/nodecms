@@ -10,6 +10,8 @@ import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {globalInstancesFactory} from "@hermes/composition";
 import {Channel, ChannelVisibility} from "../../entities/Channel";
 import {User} from "../../entities/User";
+import {TopicMessage, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
+import {Logger} from "../../plugins/Logging/Logger";
 
 type Data = ChannelPostEntity
 
@@ -17,6 +19,10 @@ interface ServiceOptions extends BaseServiceConfiguration {
   paginate?:number
   storage: {
     contractName:string;
+    configuration?:any
+  },
+  topicService:{
+    contractName:string
     configuration?:any
   }
 }
@@ -27,15 +33,20 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   options: ServiceOptions;
   private userUseCases: UserUseCases;
   private channelUseCases: ChannelUseCases;
+  private topicService: TopicService;
+  private logger: Logger;
 
   constructor (options: ServiceOptions = {
     storage: { contractName: 'Default'},
+    topicService: { contractName: 'Default'}
   }, app: Application) {
     super(app, 'channel-posts','ChannelPost', options);
     this.options = options;
     this.app = app;
+    this.logger = globalInstancesFactory.getInstanceFromCatalogs('Logger', app.get('logger').contractName, app.get('logger').configuration);
     this.userUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
     this.channelUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Channel');
+    this.topicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService', options.topicService.contractName, TopicServiceConfiguration.load(options.topicService.configuration));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,10 +61,6 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
           }
         }
         const found = await this.useCase.find(filter, params.user as User, channel.key);
-        for(const f of found){
-          if(typeof f.author === 'number')
-            f.author = await this.userUseCases.get(f.author, params.user as User);
-        }
         return found;
       }
     }
@@ -78,7 +85,14 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   async create (data: Data, params?: Params): Promise<Data> {
     if(params && params.route && params.route.channelNameOrId){
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
-      return await this.useCase.create(data, params.user as User, channel.key);
+      const post = await this.useCase.create(data, params.user as User, channel.key);
+      this.topicService.publish(`channels.${channel.key}.posts`, new TopicMessage(
+        post,
+        (params.user as User).login
+      )).catch((error) => {
+        console.log(error);
+      })
+      return post;
     }
     throw new NotAuthenticated('User not authenticated');
   }

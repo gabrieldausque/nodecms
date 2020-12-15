@@ -2,7 +2,7 @@ import {Storage} from "../Storage";
 import {User} from "../../../entities/User";
 
 export interface UserStorage extends Storage<User> {
-  exists(loginOrId:string|number|User):Promise<boolean>;
+  exists(loginOrId:string|number|Partial<User>):Promise<boolean>;
 
   get(loginOrId: string|number):Promise<User>;
 

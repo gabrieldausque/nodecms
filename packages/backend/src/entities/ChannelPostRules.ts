@@ -7,5 +7,9 @@ export class ChannelPostRules extends EntityRules {
     if(!post.channelKey){
       throw new Error(`Post must have a associated channel`);
     }
+
+    if(!post.content){
+      throw new Error('Post must have a content !');
+    }
   }
 }

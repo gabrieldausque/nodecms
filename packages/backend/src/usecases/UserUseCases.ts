@@ -52,10 +52,10 @@ export class UserUseCases extends UseCases<User> {
     return data;
   }
 
-  async create(user:User, executingUser:User): Promise<User> {
+  async create(user:Partial<User>, executingUser:User): Promise<User> {
     UserEntityRules.validatePassword(user.password);
     UserEntityRules.validateLogin(user.login);
-    if(await this.storage.exists(user.login))
+    if(user.login && await this.storage.exists(user.login))
       throw new Error(`Login ${user.login} already exists. Please change.`)
     const created = await this.storage.create(user);
     const roleUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
@@ -250,8 +250,9 @@ export class UserUseCases extends UseCases<User> {
     return super.isDataAuthorized(data,right,user);
   }
 
-  secureUserForExternal(user:User):User {
-    return { ...user,...{ password:"******" } }
+  secureUserForExternal(user:User):Partial<User> {
+    delete user.password
+    return user;
   }
 
   async isMemberOf(roleName:string, user:User, executingUser:User):Promise<boolean>{
