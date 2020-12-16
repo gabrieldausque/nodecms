@@ -16,35 +16,60 @@
     onMount(async () => {
         if(!backEndService)
             backEndService = getBackendClient();
-    })
+        window.setTimeout(async () => {
+            if(channel && channel.key) {
+                channelPosts = await backEndService.getChannelPosts(channel.key);
+                const channelContent = document.querySelector('.channelContent')
+                for(const post of channelPosts) {
+                    post.author
+                }
+                await backEndService.subscribeToChannel(channel.key, async (m) => {
+                    channelPosts.push(m);
+                    channelPosts = channelPosts;
+                    window.setTimeout(() => {
+                        channelContent.scrollTop = channelContent.scrollHeight;
+                    })
+                })
+                editor = new Editor({
+                    target: document.getElementById('message'),
+                    props: {
+                        height: '54px',
+                        actions: ['b','i','u','strike','ul','ol','viewHtml']
+                    }
+                })
+                const messageContent = document.getElementById('message');
+                messageContent.addEventListener('keyup', async (event) => {
+                    if(event.key === 'Enter') {
+                        if(!event.ctrlKey) {
+                            event.stopPropagation();
+                            messageContent.querySelector('br')?.remove();
+                            //TODO : send the message to the service + add publication on realtime
+                            await backEndService.createPost(channel.key, editor.getHtml(false))
+                            editor.setHtml('');
+                        } else {
+                            window.setTimeout(() => {
+                                const carriageReturn = document.createElement('div');
+                                carriageReturn.innerHTML = '<br>'
+                                const content = messageContent.querySelector('.cl-content');
+                                content.append(carriageReturn);
+                                const sel = document.getSelection();
+                                const range = sel.getRangeAt(0);
+                                range.setStart(carriageReturn, 0)
+                                range.collapse(true)
+                                sel.removeAllRanges();
+                                sel.addRange(range);
+                                sel.collapseToEnd();
+                                content.scrollTop = content.scrollHeight;
+                            },150)
 
-    window.setTimeout(async () => {
-        if(channel && channel.key) {
-            channelPosts = await backEndService.getChannelPosts(channel.key);
-            for(const post of channelPosts) {
-                post.author
+                        }
+                    }
+                })
+                channelContent.scrollTop = channelContent.scrollHeight;
             }
-            await backEndService.subscribeToChannel(channel.key, async (m) => {
-                channelPosts.push(m);
-                channelPosts = channelPosts;
-            })
-            editor = new Editor({
-                target: document.getElementById('message'),
-                props: {
-                    height: '54px',
-                    actions: ['b','i','u','strike','ul','ol','viewHtml']
-                }
-            })
+        }, 100)
 
-            document.getElementById('message').addEventListener('keypress', async (event) => {
-                if(event.key === 'Enter' && event.ctrlKey) {
-                    event.stopPropagation();
-                    //TODO : send the message to the service + add publication on realtime
-                    await backEndService.createPost(channel.key, editor.getHtml(false))
-                }
-            })
-        }
-    }, 1000)
+    })
 
     function createHtmlContent(content) {
         const element = document.createElement('div');
