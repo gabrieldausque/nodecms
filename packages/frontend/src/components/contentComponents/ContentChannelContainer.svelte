@@ -34,7 +34,16 @@
                     target: document.getElementById('message'),
                     props: {
                         height: '54px',
-                        actions: ['b','i','u','strike','ul','ol','viewHtml']
+                        actions: ['b','i','u','strike','ul','ol','viewHtml',
+                            {
+                                name: 'paste',
+                                icon: '<i class="fas fa-paste"></i>',
+                                title: 'Paste',
+                                result: () => {
+                                    alert('Paste !!')
+                                }
+                            }
+                        ]
                     }
                 })
                 const messageContent = document.getElementById('message');
