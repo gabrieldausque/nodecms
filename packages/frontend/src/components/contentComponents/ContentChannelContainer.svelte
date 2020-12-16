@@ -30,8 +30,24 @@
                         channelContent.scrollTop = channelContent.scrollHeight;
                     })
                 })
+                const messageContent = document.getElementById('message');
+                messageContent.addEventListener('paste', async (event) => {
+                    console.log(event);
+                    // TODO : convert the data to the right type, and paste it as wanted to the editor :
+                    // maybe use a factory to create the right items regarding the type : string, url, file
+                    for(const i of event.clipboardData.items){
+                        console.log(i);
+                        const b = i.getAsFile();
+                        console.log(b);
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    messageContent.querySelector('pre')?.remove();
+                    await customPaste();
+                })
                 editor = new Editor({
-                    target: document.getElementById('message'),
+                    target: messageContent,
                     props: {
                         height: '54px',
                         actions: ['b','i','u','strike','ul','ol','viewHtml',
@@ -40,20 +56,20 @@
                                 icon: '<i class="fas fa-paste"></i>',
                                 title: 'Paste',
                                 result: () => {
-                                    alert('Paste !!')
+                                    customPaste()
                                 }
                             }
                         ]
                     }
                 })
-                const messageContent = document.getElementById('message');
+                messageContent.removeAttribute('onpaste');
                 messageContent.addEventListener('keyup', async (event) => {
                     if(event.key === 'Enter') {
+                        event.preventDefault();
+                        event.stopPropagation();
                         if(!event.ctrlKey) {
-                            event.stopPropagation();
                             messageContent.querySelector('br')?.remove();
-                            //TODO : send the message to the service + add publication on realtime
-                            await backEndService.createPost(channel.key, editor.getHtml(false))
+                            await backEndService.createPost(channel.key, editor.getHtml(false));
                             editor.setHtml('');
                         } else {
                             window.setTimeout(() => {
@@ -70,7 +86,6 @@
                                 sel.collapseToEnd();
                                 content.scrollTop = content.scrollHeight;
                             },150)
-
                         }
                     }
                 })
@@ -79,6 +94,26 @@
         }, 100)
 
     })
+
+    async function customPaste() {
+        let text;
+        const messageEdit = document.querySelector('.cl-content');
+        try{
+            text = await navigator.clipboard.readText()
+        }catch(error){
+            text = undefined;
+        }
+        console.log(text);
+        console.log(text.indexOf('file://'));
+        if(!text){
+            const ci = await navigator.clipboard.read()
+            console.log(ci);
+        } else if(text.indexOf('file://') >=0) {
+            window.setTimeout(() => {
+                document.querySelector('.cl-content').innerHTML = messageEdit.innerHTML.replace(text.toString(),'');
+            });
+        }
+    }
 
     function createHtmlContent(content) {
         const element = document.createElement('div');

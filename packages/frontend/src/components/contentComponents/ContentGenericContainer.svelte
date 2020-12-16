@@ -145,7 +145,7 @@
                                 order:1,
                                 type:'image',
                                 properties: {
-                                    uri:"http://myhost.domain:3030/a-team_logo.png",
+                                    uri:"https://backend.myhost.domain/a-team_logo.png",
                                     style:`
                         width:50vh;
                         height:50vh;

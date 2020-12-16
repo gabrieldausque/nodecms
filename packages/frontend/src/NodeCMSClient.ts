@@ -1,4 +1,6 @@
-import axios from "axios";
+import axios, {AxiosInstance} from "axios";
+//@ts-ignore
+import https from 'https';
 import io from 'socket.io-client';
 import {SocketIOTopicServiceClientProxy} from "../includes/SocketIOTopicServiceClientProxy.js";
 
@@ -11,10 +13,19 @@ export class NodeCMSClient {
     private realm:string;
     private id: number;
     private topicServiceClient: SocketIOTopicServiceClientProxy;
+    private axiosInstance: AxiosInstance;
+    private env:string;
 
-    constructor(cmsUrl:string = "/") {
+    constructor(cmsUrl:string = "/", env?) {
         this.url = cmsUrl;
         axios.defaults.withCredentials = true;
+        this.env = env;
+        if(this.env === 'dev') {
+            axios.defaults.httpsAgent = new https.Agent({
+                rejectUnauthorized: false
+            })
+        }
+        this.axiosInstance = axios.create();
     }
 
     createHeaders() {
@@ -55,11 +66,9 @@ export class NodeCMSClient {
         })
         if(!this.topicServiceClient && value.data && value.data !== false){
             let socket = io(this.url, {
-                transports: ['websocket']
+                transports: ['websocket'],
+
             });
-            socket.on('clientId', (clientId) => {
-                console.log('toto');
-            })
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             (window as any).cmsClient = this;
         }
@@ -79,7 +88,8 @@ export class NodeCMSClient {
         console.log(this.topicServiceClient);
         if(!this.topicServiceClient){
             let socket = io(this.url, {
-                transports: ['websocket']
+                transports: ['websocket'],
+                rejectUnauthorized: !(this.env === 'dev')
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             (window as any).cmsClient = this;
@@ -147,12 +157,14 @@ export class NodeCMSClient {
 }
 
 const getClientConfig = async () => {
-    return await axios.get(`${window.location.href}/clientConfiguration.json`)
+    const configuration = await axios.get(`${window.location.href}/clientConfiguration.json`);
+    console.log(configuration);
+    return configuration;
 }
 
 let backendClient = null;
 getClientConfig().then((configuration:any) => {
-    backendClient = new NodeCMSClient(configuration.data.backendHost)
+    backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.env);
     backendClient.getMetadata('title').then((value) => {
         document.querySelector('head title').innerHTML = value;
     });

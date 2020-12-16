@@ -1,3 +1,4 @@
 {
-  "backendHost": "http://myhost.domain:3030"
+  "env": "dev",
+  "backendHost": "https://backend.myhost.domain"
 }

@@ -64,6 +64,7 @@ app.use(cors({
         callback(null, true);
         return;
       }
+
     } else if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test' ) {
       logger.warning(`origin "${origin}" seems to be wrong, but we are in ${process.env.NODE_ENV}. Skipping check of domain`);
       callback(null, true);
@@ -87,7 +88,6 @@ app.configure(socketio((io) => {
   io.on('connection', (socket) => {
     const topicClient = new SocketIOTopicServiceClient(topicService, socket);
     setTimeout(() => {
-      socket.emit('clientId','toto')
     }, 5000);
   })
 }));

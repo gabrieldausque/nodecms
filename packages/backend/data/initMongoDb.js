@@ -49,7 +49,7 @@ function initData(){
   teamADb.users.insert({id:  newId('users'), login:"Amanda",password:"f0fe507b8952faed1d75ba5a093d609e:6d409f10366620:e2793c9e785d065f28d70d2de3ab2d71",isActive:true});
 
   teamADb.metadata.insert({id:  newId('metadata'), key:"title",value:"The A Team",isPublic:true,ownerType:'',ownerId:null})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"logo",value:"http://myhost.domain:3030/a-team_logo.png",isPublic:true,ownerType:'',ownerId:null})
+  teamADb.metadata.insert({id:  newId('metadata'), key:"logo",value:"https://backend.myhost.domain/a-team_logo.png",isPublic:true,ownerType:'',ownerId:null})
   teamADb.metadata.insert({id:  newId('metadata'), key:"private-metadata",value:"my private value",isPublic:false,ownerType:'',ownerId:null})
   teamADb.metadata.insert({id:  newId('metadata'), key:"pseudonym",value:"MyPseudo",isPublic:false,ownerType:"user",ownerId:0})
   teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:0})

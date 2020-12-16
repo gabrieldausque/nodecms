@@ -7,7 +7,7 @@
     "max": 50
   },
   "cors": {
-    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://myhost.domain[:0-9]*"]
+    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://.*myhost.domain[:0-9]*"]
   },
   "storage": {
     "users" : {
@@ -38,7 +38,7 @@
   "topicService":{
     "contractName": "Default",
     "configuration": {
-      "host":"http://localhost:3030",
+      "host":"https://backend.myhost.domain",
       "standAlone": true,
       "clusterNodes":[]
     }
