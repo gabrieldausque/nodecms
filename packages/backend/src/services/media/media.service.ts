@@ -4,7 +4,7 @@ import { Application } from '../../declarations';
 import { Media } from './media.class';
 import hooks from './media.hooks';
 import multer from 'multer';
-
+import fs from 'fs';
 
 // Add this service to the service type index
 declare module '../../declarations' {
@@ -28,10 +28,26 @@ export default function (app: Application) {
   const mediaConfiguration = app.get('media');
   options = { ...options, ...mediaConfiguration};
 
-  const multipartMiddleWare = multer();
+  const multipartMiddleWare = multer({
+    dest: 'media/'
+  });
   // Initialize our service with any options it requires
   app.use('/media',
     multipartMiddleWare.single('blob'),
+    async (req, res, next) => {
+      const p = new Promise(((resolve, reject) => {
+        fs.readFile(req.file.path, (err, buffer) => {
+          if(err)
+            reject(err);
+          else {
+            req.body.blob = buffer;
+            resolve();
+          }
+        })
+      }));
+      await p;
+      next();
+    },
     new Media(options, app)
   );
 

@@ -154,6 +154,29 @@ export class NodeCMSClient {
         }
     }
 
+    async uploadMedia(file:any, visibility:string) {
+        try {
+            console.log(file);
+            const b = new Blob([file]);
+            console.log(b);
+            const f = new FormData();
+            f.append('visibility','public');
+            f.append('label','test');
+            f.append('key','test');
+            f.append('blob',b);
+            await axios.request({
+                method: 'post',
+                baseURL: this.url,
+                url: 'media',
+                data:f,
+                headers: {
+                    'Content-Type': 'multipart/form-data; boundary=${data._boundary}',
+                }
+            })
+        } catch(error) {
+            console.log(error);
+        }
+    }
 }
 
 const getClientConfig = async () => {

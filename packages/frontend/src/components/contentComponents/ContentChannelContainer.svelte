@@ -32,19 +32,9 @@
                 })
                 const messageContent = document.getElementById('message');
                 messageContent.addEventListener('paste', async (event) => {
-                    console.log(event);
-                    // TODO : convert the data to the right type, and paste it as wanted to the editor :
-                    // maybe use a factory to create the right items regarding the type : string, url, file
-                    for(const i of event.clipboardData.items){
-                        console.log(i);
-                        const b = i.getAsFile();
-                        console.log(b);
-                    }
-
                     event.preventDefault();
                     event.stopPropagation();
-                    messageContent.querySelector('pre')?.remove();
-                    await customPaste();
+                    await customPaste(event);
                 })
                 editor = new Editor({
                     target: messageContent,
@@ -95,23 +85,15 @@
 
     })
 
-    async function customPaste() {
-        let text;
-        const messageEdit = document.querySelector('.cl-content');
-        try{
-            text = await navigator.clipboard.readText()
-        }catch(error){
-            text = undefined;
-        }
-        console.log(text);
-        console.log(text.indexOf('file://'));
-        if(!text){
-            const ci = await navigator.clipboard.read()
-            console.log(ci);
-        } else if(text.indexOf('file://') >=0) {
-            window.setTimeout(() => {
-                document.querySelector('.cl-content').innerHTML = messageEdit.innerHTML.replace(text.toString(),'');
-            });
+    async function customPaste(event) {
+        console.log(event);
+        for(const i of event.clipboardData.items) {
+            if(i.kind === 'file') {
+                console.log(i);
+                const f = i.getAsFile();
+                console.log(f);
+                await backEndService.uploadMedia(await f.arrayBuffer(), 'public');
+            }
         }
     }
 

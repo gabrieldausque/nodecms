@@ -88,6 +88,10 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"channel-posts",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel-posts",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel-posts",right:"x",role:2})
+
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"media",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"media",right:"x",role:2})
+
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"w",role:0})
