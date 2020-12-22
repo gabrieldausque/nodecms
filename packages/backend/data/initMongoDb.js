@@ -88,10 +88,8 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"channel-posts",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel-posts",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel-posts",right:"x",role:2})
-
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"media",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"media",right:"x",role:2})
-
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"w",role:0})
@@ -100,7 +98,7 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"w",role:0})
 
-  teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'public', contributors:[1,2]});
+  teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', contributors:[1,2]});
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',
     content:`<h1> Bienvenue Sur le Channel news</h1>
 <div>Bienvenu sur le fil public des news du site communataire de l'Agence tous risques !</div>`,

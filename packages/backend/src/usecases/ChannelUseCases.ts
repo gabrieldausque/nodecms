@@ -6,6 +6,7 @@ import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
 import {ChannelRules} from "../entities/ChannelRules";
+import {Entity} from "../entities/Entity";
 
 interface ChannelUseCasesConfiguration extends UseCaseConfiguration {};
 
@@ -29,7 +30,9 @@ export class ChannelUseCases extends UseCases<Channel> {
         throw new Error(`Channel with key ${entity.key} already exists`)
       const usableId = ChannelRules.convertId(executingUser.id);
       entity.administrators?.push(usableId);
-      return await this.storage.create(entity);
+      const createdChannel = await this.storage.create(entity);
+      // TODO : if channel is protected or private, create specific group to store all users of it
+      return createdChannel;
   }
 
   async delete(id: string | number, executingUser: User): Promise<Channel> {
@@ -176,6 +179,19 @@ export class ChannelUseCases extends UseCases<Channel> {
           'User');
         return await userUseCases.isUserAdministrators(user, executingUser);
       }
+    }
+    return false;
+  }
+
+  async isDataAuthorized(data:Channel, right:string='r', user?:any):Promise<boolean> {
+    if(right === 'r'){
+      if(data.visibility === ChannelVisibility.public)
+        return true;
+      else {
+        return await this.isUserMemberOf(data, user as User, user as User);
+      }
+    } else if(right === 'w') {
+       return await this.isUserEditor(data, user, user);
     }
     return false;
   }

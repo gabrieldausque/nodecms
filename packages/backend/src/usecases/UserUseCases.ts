@@ -118,7 +118,7 @@ export class UserUseCases extends UseCases<User> {
     return await this.storage.delete(usableId)
   }
 
-  async getMetadata(user:User, metadataKeyOrId:string | number, executingUser:User):Promise<Metadata> {
+  async getMetadata(user:Partial<User>, metadataKeyOrId:string | number, executingUser:User):Promise<Metadata> {
     const filter:any = {
       ownerType:'user',
       ownerId:user.id
@@ -147,7 +147,7 @@ export class UserUseCases extends UseCases<User> {
     throw new Error(`No metadata with key ${metadataKeyOrId} exists for user with id ${user.id}`);
   }
 
-  async createMetadata(user: User, data: Metadata, executingUser:User) {
+  async createMetadata(user: Partial<User>, data: Metadata, executingUser:User) {
     const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
     UserEntityRules.validateMetadata(user, data);
     return await metadataUseCase.create(data);
@@ -159,7 +159,7 @@ export class UserUseCases extends UseCases<User> {
     return await metadataUseCase.update(data.key, data, executingUser);
   }
 
-  async hasRole(user: User, role: Role, executingUser:User):Promise<boolean> {
+  async hasRole(user: Partial<User>, role: Role, executingUser:User):Promise<boolean> {
     let rolesMetadata:Metadata
     try {
       rolesMetadata = await this.getMetadata(user,'roles', executingUser);
@@ -174,7 +174,7 @@ export class UserUseCases extends UseCases<User> {
       rolesMetadata.value.indexOf(role.id) >= 0
   }
 
-  async getRoles(user: User, executingUser:User) {
+  async getRoles(user: Partial<User>, executingUser:User) {
     let rolesMetadata:Metadata;
     try {
       rolesMetadata = await this.getMetadata(user,'roles',executingUser);
@@ -267,5 +267,21 @@ export class UserUseCases extends UseCases<User> {
 
   async isSpecialUser(user:User, executingUser:User):Promise<boolean> {
     return await this.isMemberOf('specialUsers', user, executingUser);
+  }
+
+  async isValidUser(user: Partial<User>, executingUser: User):Promise<boolean> {
+    if(user.id || user.id === 0){
+      const currentUser = await this.get(user.id);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Roles');
+      const userRole = await roleUseCases.get('users', executingUser);
+      const specialUserRole = await roleUseCases.get('specialUsers', executingUser);
+      const adminRole = await roleUseCases.get('administrators', executingUser);
+      const hasMinimumRoles = await this.hasRole(user, userRole, executingUser) ||
+                              await this.hasRole(user, specialUserRole, executingUser) ||
+                              await this.hasRole(user, adminRole, executingUser);
+      const isActive = (currentUser.isActive)?currentUser.isActive:false;
+      return currentUser && isActive && hasMinimumRoles;
+    }
+    return false;
   }
 }

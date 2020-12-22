@@ -154,15 +154,29 @@ export class NodeCMSClient {
         }
     }
 
-    async uploadMedia(file:any, visibility:string) {
+    async getMedia(key:string) {
+        let response;
+        try{
+            response = await axios.request({
+                method: 'get',
+                baseURL: this.url,
+                url: `media/${key}`
+            })
+        } catch(error) {
+            console.error(error);
+        }
+        console.log(response);
+    }
+
+    async uploadMedia(file:any,key:string, label:string, visibility:string) {
         try {
             console.log(file);
             const b = new Blob([file]);
             console.log(b);
             const f = new FormData();
-            f.append('visibility','public');
-            f.append('label','test');
-            f.append('key','test');
+            f.append('visibility',visibility);
+            f.append('label',label);
+            f.append('key',key);
             f.append('blob',b);
             await axios.request({
                 method: 'post',

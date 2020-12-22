@@ -1,9 +1,11 @@
 import {UseCases} from "./UseCases";
-import {Media} from "../entities/Media";
+import {Media, MediaVisibility} from "../entities/Media";
 import {User} from "../entities/User";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {MediaRules} from "../entities/MediaRules";
 import {MediaStorage} from "../plugins/Storages/Media/MediaStorage";
+import {globalInstancesFactory} from "@hermes/composition";
+import {UserUseCases} from "./UserUseCases";
 
 export interface MediaUseCasesConfiguration extends UseCaseConfiguration {
   storage: {
@@ -60,8 +62,14 @@ export class MediaUseCases extends UseCases<Media> {
   }
 
   async isDataAuthorized(data: Media, right: string = 'r', user?: any): Promise<boolean> {
-    // TODO : implements secure access to media
-    return true;
+    const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+    if(right === 'r') {
+      if (data.visibility === MediaVisibility.public)
+        return true;
+      else if (data.visibility === MediaVisibility.protected)
+        return await userUseCases.isValidUser(user, user);
+    }
+    return user.id === data.ownerId || await super.isDataAuthorized(data, right, user) || await userUseCases.isUserAdministrators(user,user);
   }
 
 }
