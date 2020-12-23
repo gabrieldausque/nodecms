@@ -7,7 +7,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import nodeGlobals from "rollup-plugin-node-globals";
 import builtins from 'rollup-plugin-node-builtins';
-
+import * as fs from 'fs';
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {

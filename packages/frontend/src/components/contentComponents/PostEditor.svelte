@@ -6,14 +6,13 @@
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./AttachmentAtCreation.svelte";
 
-    let backEndService;
     export let channelKey;
     let attachments = [];
 
     async function customPaste(event) {
+        const backEndService = getBackendClient();
         for (const i of event.clipboardData.items) {
             if (i.kind === 'file') {
-                console.log(i);
                 const keyAndLabel = uuid.v4()
                 const channel = await backEndService.getChannel(channelKey);
                 attachments.push({
@@ -26,11 +25,8 @@
         }
     }
 
-    window.addEventListener('backend-ready', () => {
-        backEndService = getBackendClient();
-    })
-
     onMount(async () => {
+        const backEndService = getBackendClient();
         window.setTimeout(async () => {
             const messageContent = document.getElementById('message');
             messageContent.addEventListener('paste', async (event) => {
@@ -62,8 +58,6 @@
                     event.stopPropagation();
                     if (!event.ctrlKey) {
                         messageContent.querySelector('br')?.remove();
-                        if (typeof backEndService === 'undefined')
-                            backEndService = getBackendClient();
                         await backEndService.createPost(channelKey, editor.getHtml(false));
                         editor.setHtml('');
                     } else {
@@ -95,8 +89,16 @@
         top:calc(100% - 105px);
         bottom : 5px;
         margin: 5px;
-        height: 100px;
+        min-height: 100px;
+        height:auto;
         width: calc(100% - 10px);
+    }
+    .attachments {
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+        width:100%;
+        max-height: 60px;
     }
 </style>
 

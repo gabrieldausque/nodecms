@@ -7,21 +7,19 @@
     export let visibility;
     export let file;
 
-    let backendClient;
     let uploaded = false;
-
-    function initBackendClient() {
-        if(!backendClient)
-            backendClient = getBackendClient()
-    }
-
-    $: async () => {
-         initBackendClient();
-         let alreadyExists = await backendClient.getMedia(key)
-    }
 
 </script>
 
-<div>
+<style>
+    .attachment {
+        height:50px;
+        width:50px;
+        background:red;
+        margin:5px;
+    }
+</style>
+
+<div class="attachment">
 
 </div>
