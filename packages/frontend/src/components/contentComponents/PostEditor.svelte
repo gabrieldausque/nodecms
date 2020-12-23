@@ -44,7 +44,6 @@
                             icon: '<i class="fas fa-paste"></i>',
                             title: 'Paste',
                             result: () => {
-
                                 customPaste()
                             }
                         }
@@ -58,8 +57,9 @@
                     event.stopPropagation();
                     if (!event.ctrlKey) {
                         messageContent.querySelector('br')?.remove();
-                        await backEndService.createPost(channelKey, editor.getHtml(false));
+                        await backEndService.createPost(channelKey, editor.getHtml(false), attachments);
                         editor.setHtml('');
+                        attachments = [];
                     } else {
                         window.setTimeout(() => {
                             const carriageReturn = document.createElement('div');
@@ -83,6 +83,7 @@
 </script>
 
 <style>
+
     .postCreation {
         border: solid lightgray 1px;
         position : sticky;
@@ -93,6 +94,7 @@
         height:auto;
         width: calc(100% - 10px);
     }
+
     .attachments {
         overflow-y: auto;
         display: flex;

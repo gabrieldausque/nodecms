@@ -137,14 +137,15 @@ export class NodeCMSClient {
         }
     }
 
-    async createPost(channelKey:string, post:any) {
+    async createPost(channelKey:string, post:any, attachments:any) {
         try {
             await axios.request({
                 method: 'post',
                 baseURL: this.url,
                 url: `channel/${channelKey}/posts`,
                 data: {
-                    content: post
+                    content: post,
+                    attachments: attachments
                 },
                 withCredentials: true,
                 headers:this.createHeaders()
