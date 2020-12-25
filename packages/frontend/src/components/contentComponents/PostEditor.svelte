@@ -4,7 +4,7 @@
     import {onMount} from "svelte";
     import {getBackendClient} from "../../NodeCMSClient";
     import * as uuid from 'uuid';
-    import AttachmentAtCreation from "./AttachmentAtCreation.svelte";
+    import AttachmentAtCreation from "./Attachment.svelte";
 
     export let channelKey;
     let attachments = [];
@@ -28,12 +28,14 @@
     onMount(async () => {
         const backEndService = getBackendClient();
         window.setTimeout(async () => {
+
             const messageContent = document.getElementById('message');
             messageContent.addEventListener('paste', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
                 await customPaste(event);
             })
+
             let editor = new Editor({
                 target: messageContent,
                 props: {
@@ -49,7 +51,8 @@
                         }
                     ]
                 }
-            })
+            });
+
             messageContent.removeAttribute('onpaste');
             messageContent.addEventListener('keyup', async (event) => {
                 if (event.key === 'Enter') {
@@ -102,15 +105,19 @@
         width:100%;
         max-height: 60px;
     }
+
 </style>
 
 <div class="postCreation">
+
     <div id="message">
 
     </div>
+
     <div class="attachments">
         {#each attachments as attachment}
             <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} ></AttachmentAtCreation>
         {/each}
     </div>
+
 </div>

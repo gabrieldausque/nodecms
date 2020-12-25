@@ -169,7 +169,7 @@ export class NodeCMSClient {
         console.log(response);
     }
 
-    async uploadMedia(file:any,key:string, label:string, visibility:string) {
+    async createMedia(file:any, key:string, label:string, visibility:string) {
         try {
             console.log(file);
             const b = new Blob([file]);
