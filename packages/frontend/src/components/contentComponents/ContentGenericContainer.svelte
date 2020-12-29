@@ -1,6 +1,6 @@
 <script>
     import {globalContentContainerFactory} from "../../ContentContainerFactory";
-    import {getBackendClient} from '../../NodeCMSClient';
+    import {getBackendClient} from '../../api/NodeCMSClient';
     import {beforeUpdate, onMount} from 'svelte';
     import ContentTitle from "./ContentTitle.svelte";
 
@@ -145,7 +145,7 @@
                                 order:1,
                                 type:'image',
                                 properties: {
-                                    uri:"https://backend.myhost.domain/a-team_logo.png",
+                                    uri:"https://frontend.myhost.domain/api/a-team_logo.png",
                                     style:`
                         width:50vh;
                         height:50vh;

@@ -1,4 +1,5 @@
 {
   "env": "dev",
-  "backendHost": "https://backend.myhost.domain"
+  "backendHost": "https://frontend.myhost.domain/api",
+  "socketIoHost": "https://frontend.myhost.domain"
 }

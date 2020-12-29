@@ -1,5 +1,5 @@
 import App from './App.svelte';
-import {getBackendClient} from './NodeCMSClient';
+import {getBackendClient} from './api/NodeCMSClient';
 
 const app = new App({
 	target: document.body

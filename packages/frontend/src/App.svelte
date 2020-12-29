@@ -7,7 +7,7 @@
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {createEventDispatcher, onMount} from "svelte";
 	import {UserState} from "./stores/UserState";
-	import {getBackendClient} from "./NodeCMSClient";
+	import {getBackendClient} from "./api/NodeCMSClient";
 
 	let documentKey = 'welcome'
 	let backendClient = null;

@@ -22,6 +22,7 @@ import {error} from "winston";
 import {EncryptionPlugin} from "./plugins/Encryption/EncryptionPlugin";
 import {SocketIOTopicServiceClient, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {ServerOptions} from "mongodb";
+import {NextFunction, Request, Response} from "express";
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/plugins');
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/usecases');
 globalInstancesFactory.loadExportedClassesFromDirectory( path.dirname(require.resolve('@hermes/topicservice')));
@@ -106,5 +107,7 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
+
+
 
 export default app;

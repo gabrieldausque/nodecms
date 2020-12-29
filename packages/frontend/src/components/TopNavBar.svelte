@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {getBackendClient} from '../NodeCMSClient';
+    import {getBackendClient} from '../api/NodeCMSClient';
     import User from "./User.svelte";
 
     let title = '';

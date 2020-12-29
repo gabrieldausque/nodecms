@@ -1,5 +1,5 @@
 <script>
-    import {getBackendClient} from "../../NodeCMSClient";
+    import {getBackendClient} from "../../api/NodeCMSClient";
     import {afterUpdate, beforeUpdate, onMount} from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";

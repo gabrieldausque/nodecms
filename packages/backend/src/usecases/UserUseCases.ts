@@ -272,7 +272,7 @@ export class UserUseCases extends UseCases<User> {
   async isValidUser(user: Partial<User>, executingUser: User):Promise<boolean> {
     if(user.id || user.id === 0){
       const currentUser = await this.get(user.id);
-      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Roles');
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userRole = await roleUseCases.get('users', executingUser);
       const specialUserRole = await roleUseCases.get('specialUsers', executingUser);
       const adminRole = await roleUseCases.get('administrators', executingUser);

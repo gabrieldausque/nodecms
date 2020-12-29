@@ -29,23 +29,34 @@ export default function (app: Application) {
   options = { ...options, ...mediaConfiguration};
 
   const multipartMiddleWare = multer({
-    dest: 'media/'
+    dest: 'uploads/temp/'
   });
   // Initialize our service with any options it requires
   app.use('/media',
     multipartMiddleWare.single('blob'),
     async (req, res, next) => {
-      const p = new Promise(((resolve, reject) => {
-        fs.readFile(req.file.path, (err, buffer) => {
-          if(err)
-            reject(err);
-          else {
-            req.body.blob = buffer;
-            resolve();
-          }
-        })
-      }));
-      await p;
+      if(req.file){
+        const p = new Promise(((resolve, reject) => {
+          fs.readFile(req.file.path, (err, buffer) => {
+            if(err)
+              reject(err);
+            else {
+              req.body.blob = buffer;
+              resolve();
+            }
+          })
+        }));
+        try {
+          await p;
+        }catch(error){
+          console.error(error)
+        } finally {
+          fs.unlink(req.file.path, (err => {
+            if(err)
+              console.error(err);
+          }))
+        }
+      }
       next();
     },
     new Media(options, app)

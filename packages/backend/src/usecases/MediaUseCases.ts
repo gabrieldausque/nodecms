@@ -47,7 +47,7 @@ export class MediaUseCases extends UseCases<Media> {
   }
 
   async find(filter: Partial<Media>, executingUser?: User | undefined): Promise<Media[]> {
-    throw new Error('Not Implemented');
+    return await this.storage.find(filter);
   }
 
   async get(id: string | number, executingUser?: User | undefined): Promise<Media> {

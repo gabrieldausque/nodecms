@@ -2,7 +2,8 @@ import axios, {AxiosInstance} from "axios";
 //@ts-ignore
 import https from 'https';
 import io from 'socket.io-client';
-import {SocketIOTopicServiceClientProxy} from "../includes/SocketIOTopicServiceClientProxy.js";
+import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy.js";
+import {MediaService} from "./MediaService";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -15,9 +16,12 @@ export class NodeCMSClient {
     private topicServiceClient: SocketIOTopicServiceClientProxy;
     private axiosInstance: AxiosInstance;
     private env:string;
+    public mediaService:MediaService;
+    private socketIoUrl: string;
 
-    constructor(cmsUrl:string = "/", env?) {
+    constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
         this.url = cmsUrl;
+        this.socketIoUrl = socketIoHost?socketIoHost:this.url;
         axios.defaults.withCredentials = true;
         this.env = env;
         if(this.env === 'dev') {
@@ -26,11 +30,13 @@ export class NodeCMSClient {
             })
         }
         this.axiosInstance = axios.create();
+        this.mediaService = new MediaService(this.axiosInstance, this.url);
     }
 
     createHeaders() {
         return {
-            crossDomain:true
+            crossDomain:true,
+            withCredentials: true
         };
     }
 
@@ -87,7 +93,7 @@ export class NodeCMSClient {
         })
         console.log(this.topicServiceClient);
         if(!this.topicServiceClient){
-            let socket = io(this.url, {
+            let socket = io(this.socketIoUrl, {
                 transports: ['websocket'],
                 rejectUnauthorized: !(this.env === 'dev')
             });
@@ -155,43 +161,6 @@ export class NodeCMSClient {
         }
     }
 
-    async getMedia(key:string) {
-        let response;
-        try{
-            response = await axios.request({
-                method: 'get',
-                baseURL: this.url,
-                url: `media/${key}`
-            })
-        } catch(error) {
-            console.error(error);
-        }
-        console.log(response);
-    }
-
-    async createMedia(file:any, key:string, label:string, visibility:string) {
-        try {
-            console.log(file);
-            const b = new Blob([file]);
-            console.log(b);
-            const f = new FormData();
-            f.append('visibility',visibility);
-            f.append('label',label);
-            f.append('key',key);
-            f.append('blob',b);
-            await axios.request({
-                method: 'post',
-                baseURL: this.url,
-                url: 'media',
-                data:f,
-                headers: {
-                    'Content-Type': 'multipart/form-data; boundary=${data._boundary}',
-                }
-            })
-        } catch(error) {
-            console.log(error);
-        }
-    }
 }
 
 const getClientConfig = async () => {
@@ -202,13 +171,13 @@ const getClientConfig = async () => {
 
 let backendClient = null;
 getClientConfig().then((configuration:any) => {
-    backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.env);
+    backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.socketIoHost, configuration.data.env);
     backendClient.getMetadata('title').then((value) => {
         document.querySelector('head title').innerHTML = value;
     });
     window.dispatchEvent(new Event('backend-ready'));
 })
 
-export const getBackendClient = () => {
+export const getBackendClient = ():NodeCMSClient => {
     return backendClient;
 };

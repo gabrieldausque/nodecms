@@ -57,58 +57,41 @@ create apache conf file
 ```
 <IfModule mod_ssl.c>
 	<VirtualHost frontend.myhost.domain:443>
-		ServerAdmin webmaster@localhost
-
-		DocumentRoot /var/www/html
-
-
-		ErrorLog ${APACHE_LOG_DIR}/error.log
-		CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-		SSLEngine on
-
-		SSLCertificateFile	/etc/ssl/certs/server.crt
-		SSLCertificateKeyFile /etc/ssl/private/server.key
-		
-		ProxyPass "/" "http://127.0.0.1:5000/"
-		ProxyPassReverse "/" "http://127.0.0.1:5000/"
-	
-
-		<FilesMatch "\.(cgi|shtml|phtml|php)$">
-				SSLOptions +StdEnvVars
-		</FilesMatch>
-		<Directory /usr/lib/cgi-bin>
-				SSLOptions +StdEnvVars
-		</Directory>
-
-	</VirtualHost>
-	        <VirtualHost backend.myhost.domain:443>
-                ServerAdmin webmaster@localhost
-
-                DocumentRoot /var/www/html
-
-
-                ErrorLog ${APACHE_LOG_DIR}/error.log
-                CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-                SSLEngine on
-
-                SSLCertificateFile      /etc/ssl/certs/server.crt
-                SSLCertificateKeyFile /etc/ssl/private/server.key
-
-                ProxyPass "/socket.io" "ws://127.0.0.1:3030/socket.io"
-                ProxyPass "/" "http://127.0.0.1:3030/"
-                ProxyPassReverse "/" "http://127.0.0.1:3030/"
-
-
-                <FilesMatch "\.(cgi|shtml|phtml|php)$">
-                                SSLOptions +StdEnvVars
-                </FilesMatch>
-                <Directory /usr/lib/cgi-bin>
-                                SSLOptions +StdEnvVars
-                </Directory>
-
-        </VirtualHost>
+                    ServerAdmin webmaster@localhost
+    
+                    DocumentRoot /var/www/html
+    
+                    Loglevel alert rewrite:trace6 proxy:trace6
+                    ErrorLog ${APACHE_LOG_DIR}/error.log
+                    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    
+                    SSLEngine on
+    
+                    SSLCertificateFile      /etc/ssl/certs/server.crt
+                    SSLCertificateKeyFile /etc/ssl/private/server.key
+    
+                    ProxyPass "/" "http://127.0.0.1:5000/"
+                    ProxyPassReverse "/" "http://127.0.0.1:5000/"
+                    RewriteEngine On
+    
+                    <Location ~ "/api/.*">
+                            RewriteRule (.+)/api/(.+) $1/$2
+                            ProxyPass "http://127.0.0.1:3030"
+                            ProxyPassReverse "http://127.0.0.1:3030"
+                    </Location>
+    
+                    <Location ~ "/socket.io/*>
+                            ProxyPass "ws://127.0.0.1:3030"
+                    </Location>
+    
+                    <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                    SSLOptions +StdEnvVars
+                    </FilesMatch>
+                    <Directory /usr/lib/cgi-bin>
+                                    SSLOptions +StdEnvVars
+                    </Directory>
+    
+            </VirtualHost>
 </IfModule>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet

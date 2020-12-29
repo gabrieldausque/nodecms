@@ -2,7 +2,7 @@
 
     import Editor from "cl-editor";
     import {onMount} from "svelte";
-    import {getBackendClient} from "../../NodeCMSClient";
+    import {getBackendClient} from "../../api/NodeCMSClient";
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
 
@@ -13,12 +13,14 @@
         const backEndService = getBackendClient();
         for (const i of event.clipboardData.items) {
             if (i.kind === 'file') {
+                const f = i.getAsFile();
                 const keyAndLabel = uuid.v4()
                 const channel = await backEndService.getChannel(channelKey);
                 attachments.push({
                     key: keyAndLabel,
                     label: keyAndLabel,
-                    visibility: channel.visibility
+                    visibility: channel.visibility,
+                    file: f
                 });
                 attachments = attachments;
             }
@@ -116,7 +118,7 @@
 
     <div class="attachments">
         {#each attachments as attachment}
-            <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} ></AttachmentAtCreation>
+            <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} label={attachment.label} file="{attachment.file}" ></AttachmentAtCreation>
         {/each}
     </div>
 

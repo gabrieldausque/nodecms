@@ -126,3 +126,4 @@ lib/
 /packages/backend/test/uploads/
 /packages/backend/media/
 /packages/backend/uploads/
+/packages/backend/uploads/temp/

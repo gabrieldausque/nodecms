@@ -61,17 +61,22 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
 
   async isDataAuthorized(data: any, right: string, user: any): Promise<boolean> {
     if(Array.isArray(data)){
-      for(const m of data){
-
+      const items = [...data]
+      for(const item of items){
+        if(!await this.isDataAuthorized(item, right, user)){
+          data.splice(data.indexOf(item), 1);
+        }
       }
-    }
-    const media = data as MediaEntity;
-    if(media &&
-      right === 'r' &&
-      media.visibility === MediaVisibility.public) {
-      return true
+      return data.length > 0;
     } else {
-      return this.useCase.isDataAuthorized(media, right, user);
+      const media = data as MediaEntity;
+      if(media &&
+        right === 'r' &&
+        media.visibility === MediaVisibility.public) {
+        return true
+      } else {
+        return this.useCase.isDataAuthorized(media, right, user);
+      }
     }
   }
 
