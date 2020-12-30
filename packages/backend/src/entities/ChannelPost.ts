@@ -8,6 +8,6 @@ export interface ChannelPost extends Entity  {
   channelKey?:string,
   parentPost?:number
   content:string,
-  attachments?: Partial<Media>[]
+  attachments?: string[]
   tags?:string[]
 }

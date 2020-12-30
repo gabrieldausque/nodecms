@@ -4,6 +4,7 @@ import https from 'https';
 import io from 'socket.io-client';
 import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy.js";
 import {MediaService} from "./MediaService";
+import {PostService} from "./PostService";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -16,8 +17,10 @@ export class NodeCMSClient {
     private topicServiceClient: SocketIOTopicServiceClientProxy;
     private axiosInstance: AxiosInstance;
     private env:string;
-    public mediaService:MediaService;
     private socketIoUrl: string;
+
+    public mediaService:MediaService;
+    public postService: PostService;
 
     constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
         this.url = cmsUrl;
@@ -31,6 +34,7 @@ export class NodeCMSClient {
         }
         this.axiosInstance = axios.create();
         this.mediaService = new MediaService(this.axiosInstance, this.url);
+        this.postService = new PostService(this.axiosInstance, this.url);
     }
 
     createHeaders() {
@@ -71,7 +75,7 @@ export class NodeCMSClient {
             url:'authentication/0'
         })
         if(!this.topicServiceClient && value.data && value.data !== false){
-            let socket = io(this.url, {
+            let socket = io(this.socketIoUrl, {
                 transports: ['websocket'],
 
             });
@@ -140,24 +144,6 @@ export class NodeCMSClient {
                     console.error(error);
                 }
             })
-        }
-    }
-
-    async createPost(channelKey:string, post:any, attachments:any) {
-        try {
-            await axios.request({
-                method: 'post',
-                baseURL: this.url,
-                url: `channel/${channelKey}/posts`,
-                data: {
-                    content: post,
-                    attachments: attachments
-                },
-                withCredentials: true,
-                headers:this.createHeaders()
-            });
-        }catch(error) {
-            console.log(error);
         }
     }
 

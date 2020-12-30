@@ -8,36 +8,57 @@
 
     export let channelKey;
     let attachments = [];
-
-    async function customPaste(event) {
+    const authorizedMimeTypes = [
+        'image/gif',
+        'image/png',
+        'image/jpeg',
+        'image/bmp',
+        'image/webp',
+        'image/svg+xml',
+        'audio/midi',
+        'audio/mpeg',
+        'audio/webm',
+        'audio/ogg',
+        'audio/aac',
+        'audio/wav',
+        'audio/3gpp',
+        'audio/3gpp2',
+        'video/3gpp2',
+        'video/webm',
+        'video/ogg',
+        'video/mpeg',
+        'video/x-msvideo',
+        'video/3gpp',
+        'application/pdf'
+    ]
+    async function customPaste(file) {
+        console.log(file);
         const backEndService = getBackendClient();
-        for (const i of event.clipboardData.items) {
-            if (i.kind === 'file') {
-                const f = i.getAsFile();
-                const keyAndLabel = uuid.v4()
-                const channel = await backEndService.getChannel(channelKey);
-                attachments.push({
-                    key: keyAndLabel,
-                    label: keyAndLabel,
-                    visibility: channel.visibility,
-                    file: f
-                });
-                attachments = attachments;
-            }
-        }
+        const keyAndLabel = uuid.v4()
+        const channel = await backEndService.getChannel(channelKey);
+        attachments.push({
+            key: keyAndLabel,
+            label: keyAndLabel,
+            visibility: channel.visibility,
+            file: file
+        });
+        attachments = attachments;
     }
 
     onMount(async () => {
         const backEndService = getBackendClient();
         window.setTimeout(async () => {
-
             const messageContent = document.getElementById('message');
             messageContent.addEventListener('paste', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                await customPaste(event);
+                for (const i of event.clipboardData.items) {
+                    if (i.kind === 'file') {
+                        const f = i.getAsFile();
+                        await customPaste(f);
+                    }
+                }
             })
-
             let editor = new Editor({
                 target: messageContent,
                 props: {
@@ -46,9 +67,51 @@
                         {
                             name: 'paste',
                             icon: '<i class="fas fa-paste"></i>',
-                            title: 'Paste',
-                            result: () => {
-                                customPaste()
+                            title: 'Coller',
+                            result: async () => {
+                                const read = await navigator.clipboard.read()
+                                if(read && read.length > 0) {
+                                    const item = read[0];
+                                    if(Array.isArray(item.types) && item.types.length > 0){
+                                        const type = item.types[0];
+                                        console.log(type);
+                                        const blob = await item.getType(type);
+                                        if(type.indexOf('image') >= 0){
+                                            const file = new File([blob], 'image');
+                                            await customPaste(file);
+                                        } else if(type.indexOf('text') >= 0){
+                                            const reader = new FileReader()
+                                            reader.onload = (e) => {
+                                                const content = messageContent.querySelector('.cl-content');
+                                                content.append(reader.result.toString());
+                                                content.focus();
+                                                document.execCommand('selectAll',false, null);
+                                                document.getSelection().collapseToEnd();
+                                                content.scrollTop = content.scrollHeight;
+                                            }
+                                            reader.readAsText(blob);
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            name: 'attach',
+                            icon: '<i class="fas fa-paperclip"></i>',
+                            title: 'Ajouter une pièce jointe',
+                            result: async() => {
+                                const input = document.createElement('input');
+                                input.type = 'file';
+                                input.accept = authorizedMimeTypes.join(',');
+                                input.onchange = (e) => {
+                                    console.log(input.files);
+                                    if(input.files) {
+                                        for (const file of input.files) {
+                                            customPaste(file);
+                                        }
+                                    }
+                                }
+                                input.click();
                             }
                         }
                     ]
@@ -56,13 +119,14 @@
             });
 
             messageContent.removeAttribute('onpaste');
+
             messageContent.addEventListener('keyup', async (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     event.stopPropagation();
                     if (!event.ctrlKey) {
                         messageContent.querySelector('br')?.remove();
-                        await backEndService.createPost(channelKey, editor.getHtml(false), attachments);
+                        await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
                         editor.setHtml('');
                         attachments = [];
                     } else {
@@ -71,17 +135,14 @@
                             carriageReturn.innerHTML = '<br>'
                             const content = messageContent.querySelector('.cl-content');
                             content.append(carriageReturn);
-                            const sel = document.getSelection();
-                            const range = sel.getRangeAt(0);
-                            range.setStart(carriageReturn, 0)
-                            range.collapse(true)
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                            sel.collapseToEnd();
+                            content.focus();
+                            document.execCommand('selectAll',false, null);
+                            document.getSelection().collapseToEnd();
                             content.scrollTop = content.scrollHeight;
                         }, 150)
                     }
                 }
+                console.log(event.key);
             })
         }, 100)
     })

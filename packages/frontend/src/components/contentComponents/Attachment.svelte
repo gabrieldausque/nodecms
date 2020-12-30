@@ -29,22 +29,11 @@
 
     afterUpdate(async() => {
         if(media && media.mediaType.indexOf('image') >= 0) {
-            const canvas = document.getElementById(`${media.key}`);
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
-            img.onloadeddata = () => {
-                console.log('plop1')
-            };
-            img.onload = () => {
-                console.log('plop2')
-                ctx.drawImage(img, 0, 0);
-            };
-            img.onerror = (err) => {
-                console.log(err)
-            }
+            const div = document.getElementById(`${media.key}`);
             const localBuffer = new Uint8Array(media.blob.data);
             const blob = new Blob([localBuffer], { type: media.mediaType});
-            img.src = URL.createObjectURL(blob);
+            div.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
+            console.log('style done');
         }
     })
 
@@ -54,8 +43,18 @@
     .attachment {
         height:50px;
         width:50px;
-        background:red;
         margin:5px;
+        padding:5px;
+        border: solid 1px lightgray;
+        border-radius: 5px;
+    }
+
+    .attachment-image {
+        height:100%;
+        width:100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
     }
 </style>
 
@@ -63,6 +62,6 @@
 
 <div class="attachment">
     {#if media && media.mediaType.indexOf('image') >= 0}
-      <canvas id="{media.key}"></canvas>
+      <div class="attachment-image" id="{media.key}"></div>
     {/if}
 </div>

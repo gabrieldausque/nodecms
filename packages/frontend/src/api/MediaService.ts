@@ -1,14 +1,12 @@
 import type {AxiosInstance} from "axios";
 import axios from "axios";
+import {BaseServiceClient} from "./BaseServiceClient";
 
-export class MediaService {
+export class MediaService extends BaseServiceClient {
 
-    private axiosInstance: AxiosInstance;
-    private url: string;
 
     constructor(axiosInstance: AxiosInstance, url:string) {
-        this.axiosInstance = axiosInstance;
-        this.url = url;
+        super(axiosInstance, url)
     }
 
     async getMedia(key:string) {
