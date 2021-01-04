@@ -28,7 +28,7 @@ export class MediaRules extends EntityRules{
     'video/3gpp2',
     'video/webm',
     'video/ogg',
-    'video/mpeg',
+    'video/mp4',
     'video/x-msvideo',
     'video/3gpp',
     'application/pdf'

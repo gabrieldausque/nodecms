@@ -1,6 +1,7 @@
 import type {AxiosInstance} from "axios";
 import axios from "axios";
 import {BaseServiceClient} from "./BaseServiceClient";
+import {globalFEService} from "../FEServices";
 
 export class MediaService extends BaseServiceClient {
 
@@ -43,7 +44,8 @@ export class MediaService extends BaseServiceClient {
                 }
             })
         } catch(error) {
-            console.log(error);
+            globalFEService.getService('displayError').displayError('Erreur lors de la création d\'un media', error.response.data.message);
+            throw error;
         }
     }
 

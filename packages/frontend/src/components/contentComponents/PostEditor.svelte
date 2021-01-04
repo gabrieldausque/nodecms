@@ -26,19 +26,18 @@
         'video/3gpp2',
         'video/webm',
         'video/ogg',
-        'video/mpeg',
+        'video/mp4',
         'video/x-msvideo',
         'video/3gpp',
         'application/pdf'
     ]
-    async function customPaste(file) {
-        console.log(file);
+    async function customPaste(file, label) {
         const backEndService = getBackendClient();
         const keyAndLabel = uuid.v4()
         const channel = await backEndService.getChannel(channelKey);
         attachments.push({
             key: keyAndLabel,
-            label: keyAndLabel,
+            label: label?label:keyAndLabel,
             visibility: channel.visibility,
             file: file
         });
@@ -107,7 +106,7 @@
                                     console.log(input.files);
                                     if(input.files) {
                                         for (const file of input.files) {
-                                            customPaste(file);
+                                            customPaste(file, file.name);
                                         }
                                     }
                                 }

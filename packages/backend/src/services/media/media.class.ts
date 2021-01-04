@@ -31,11 +31,13 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async find (params?: Params): Promise<MediaDTO[] | Paginated<MediaDTO>> {
-    throw new NotImplemented();
+    const medias = await this.useCase.find(params?.query as MediaDTO);
+    return medias;
   }
 
   async get (id: Id, params?: Params): Promise<MediaDTO> {
-    return await this.useCase.get(id.toString(), params?.user as User);
+    const media = await this.useCase.get(id.toString(), params?.user as User);
+    return media
   }
 
   async create (data: MediaDTO, params?: Params): Promise<MediaDTO> {
