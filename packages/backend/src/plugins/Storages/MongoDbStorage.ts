@@ -121,16 +121,16 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     return found;
   }
 
-  abstract create(data: T, collectionName?:string): Promise<T>;
-
-  abstract delete(keyOrId: string | number | T, collectionName?:string): Promise<T>;
-
   abstract exists(keyOrId: string | number | T, collectionName?:string): Promise<boolean>;
-
-  abstract find(filter?: Partial<T>, collectionName?:string): Promise<T[]>;
 
   abstract get(keyOrId: string | number, collectionName?:string): Promise<T>;
 
-  abstract update(data: T, collectionName?:string): Promise<T>;
+  abstract find(filter?: Partial<T>, collectionName?:string): Promise<T[]>;
+
+  abstract create(data: Partial<T>, collectionName?:string): Promise<T>;
+
+  abstract update(data: Partial<T>, collectionName?:string): Promise<T>;
+
+  abstract delete(keyOrId: string | number | T, collectionName?:string): Promise<T>;
 
 }

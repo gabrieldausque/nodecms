@@ -2,7 +2,6 @@ import {MongoDbStorage} from "../MongoDbStorage";
 import {Channel} from "../../../entities/Channel";
 import {ChannelStorage} from "./ChannelStorage";
 import {isNumber} from "../../../helpers";
-import {Metadata} from "../../../entities/Metadata";
 
 export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements ChannelStorage {
 
@@ -43,21 +42,21 @@ export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements Ch
         return deleted;
       }
     }
-    throw new Error(`No Channel with key or id `)
+    throw new Error(`No Channel with key or id ${keyOrId}`)
   }
 
   async exists(keyOrId: string | number | Channel): Promise<boolean> {
-    let channel:Channel[] = []
+    let channels:Channel[] = []
     if(isNumber(keyOrId)){
-      channel = await this.find({
+      channels = await this.find({
         id:parseInt(keyOrId.toString())
       })
     } else {
-      channel = await this.find( {
+      channels = await this.find( {
         key:keyOrId.toString()
       })
     }
-    return Array.isArray(channel) && channel.length > 0;
+    return Array.isArray(channels) && channels.length > 0;
   }
 
   async find(filter: Partial<Channel> | undefined): Promise<Channel[]> {

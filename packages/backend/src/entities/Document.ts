@@ -7,12 +7,13 @@ export const DocumentVisibility = {
 }
 
 export interface Document extends Entity {
+  key:string,
   content: { [prop:string] : any },
-  documentType?:string,
   visibility:string,
   ownerId:number,
-  editorRoles?:number[]
-  editors?:number[]
-  readerRoles?:number[],
+  documentType?:string,
+  editorRoles:number[]
+  editors:number[]
+  readerRoles:number[],
   readers:number[]
 }

@@ -25,13 +25,18 @@ import {NotAuthenticated} from "@feathersjs/errors";
 //@ts-ignore
 import {Authentication} from '../../src/services/authentication/authentication.class';
 import * as os from "os";
+import {initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 
 describe('Authentication service', () => {
   let server: Server;
 
-  before(function(done) {
+  before(async () => {
+    await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', () => done());
+    var p = new Promise((resolve => {
+      server.once('listening', () => resolve());
+    }))
+    await p;
   });
 
   after(function(done) {
@@ -69,7 +74,7 @@ describe('Authentication service', () => {
       const fn = async () => {
         const { data } = await axios.request({
           method:'get',
-          url: getUrl('document/0'),
+          url: getUrl('document/1'),
           headers: {
             "cookie": `ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=myhost.domain`
           }

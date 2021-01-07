@@ -13,6 +13,7 @@ import axios from "axios";
 import {MongoDbChannelStorage} from "../plugins/Storages/Channel/MongoDbChannelStorage";
 import {MongoDbChannelPostStorage} from "../plugins/Storages/Channel/MongoDbChannelPostStorage";
 import {ChannelVisibility} from "../entities/Channel";
+import {MongoDbDocumentStorage} from "../plugins/Storages/Document/MongoDbDocumentStorage";
 
 export function getUrl(pathname?: string, host?:string, port?:number):string {
   if(!port)
@@ -139,6 +140,30 @@ export async function initMongoDbTestDatabase():Promise<void> {
 <div>Bienvenu sur le fil public des news du site communataire de l'Agence tous risques !</div>`,
     tags:['Welcome']
   }, 'news');
+
+  await documentStorage.create({
+    ownerId:0,
+    readers: [],
+    documentType: 'default',
+    readerRoles: [],
+    editors: [],
+    editorRoles: [],
+    visibility: 'public',
+    content: { prop: 'MyContentProp'},
+    key: 'welcome'
+  })
+
+  await documentStorage.create({
+    ownerId:0,
+    readers: [],
+    documentType: 'default',
+    readerRoles: [],
+    editors: [],
+    editorRoles: [],
+    visibility: 'protected',
+    content: { prop: 'MyContentPropPrivate'},
+    key: 'welcomePrivate'
+  })
 }
 
 export const getAuthenticationParams = async (login:string, password:string, serverPort:number) => {

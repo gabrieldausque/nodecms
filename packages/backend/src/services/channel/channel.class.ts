@@ -12,11 +12,6 @@ import {isNumber} from "../../helpers";
 type ChannelDTO = Partial<ChannelEntity>;
 
 interface ServiceOptions extends BaseServiceConfiguration {
-  paginate?:number
-  storage: {
-    contractName:string;
-    configuration?:any
-  }
   topicService:{
     contractName:string
     configuration?:any

@@ -256,9 +256,12 @@ export class UserUseCases extends UseCases<User> {
   }
 
   async isMemberOf(roleName:string, user:User, executingUser:User):Promise<boolean>{
-    const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
-    const role:Role = await roleUseCases.get(roleName, executingUser);
-    return this.hasRole(user, role, executingUser);
+    if(user) {
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+      const role:Role = await roleUseCases.get(roleName, executingUser);
+      return this.hasRole(user, role, executingUser);
+    }
+    return false;
   }
 
   async isUserAdministrators(user:User, executingUser:User):Promise<boolean> {
@@ -270,7 +273,7 @@ export class UserUseCases extends UseCases<User> {
   }
 
   async isValidUser(user: Partial<User>, executingUser: User):Promise<boolean> {
-    if(user.id || user.id === 0){
+    if(user && (user.id || user.id === 0)){
       const currentUser = await this.get(user.id);
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userRole = await roleUseCases.get('users', executingUser);
