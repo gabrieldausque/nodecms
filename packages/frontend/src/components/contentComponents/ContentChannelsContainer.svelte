@@ -1,6 +1,6 @@
 <script>
     import {onMount} from "svelte";
-    import {getBackendClient} from "../../NodeCMSClient";
+    import {getBackendClient} from "../../api/NodeCMSClient";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
 
     export let properties;

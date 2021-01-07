@@ -77,12 +77,11 @@ describe('User service', () => {
 
   it('Should return a user from its login without password', async () => {
     const service:UserService = app.service('user');
-    const user:User = await service.get('localtest',params);
+    const user:Partial<User> = await service.get('localtest',params);
     expect(user).to.be.eql({
       id: 0,
       isActive: true,
-      login: 'localtest',
-      password: '******'
+      login: 'localtest'
     })
   })
 
@@ -97,8 +96,7 @@ describe('User service', () => {
     expect(response.data).to.be.eql({
       id: 0,
       isActive: true,
-      login: 'localtest',
-      password: '******'
+      login: 'localtest'
     })
   })
 
@@ -111,23 +109,25 @@ describe('User service', () => {
         isActive: true
       }
     , params);
-    let gotten = await service.useCase.get(created.login);
-    expect(created.id).to.be.eql(gotten.id);
-    expect(created.login).to.be.eql(gotten.login);
-    expect(created.isActive).to.be.eql(gotten.isActive);
-    expect(gotten.password).to.be.eql('aNewP@ssw0rd')
-    expect(created.id).to.be.ok;
-    if(created.id){
-      const id:number = created.id
-      gotten = await service.useCase.get(id);
+    if(created.login){
+      let gotten:Partial<User> = await service.useCase.get(created.login.toString());
       expect(created.id).to.be.eql(gotten.id);
       expect(created.login).to.be.eql(gotten.login);
       expect(created.isActive).to.be.eql(gotten.isActive);
       expect(gotten.password).to.be.eql('aNewP@ssw0rd')
-    } else {
-      assert.fail('No id for created user');
+      expect(created.id).to.be.ok;
+      if(created.id){
+        const id:number = created.id
+        gotten = await service.useCase.get(id);
+        return Promise.all([
+          expect(created.id).to.be.eql(gotten.id),
+          expect(created.login).to.be.eql(gotten.login),
+          expect(created.isActive).to.be.eql(gotten.isActive),
+          expect(gotten.password).to.be.eql('aNewP@ssw0rd')
+        ]);
+      }
     }
-
+    assert.fail('No id for created user');
   })
 
   it('Should update a user if asked for', async () => {
@@ -137,28 +137,28 @@ describe('User service', () => {
       password: "aNewP@ssw0rd",
       isActive: true
     }, params);
-    let gotten = await service.useCase.storage.get(created.login);
-    expect({
-      ...created,
-      ...{ password: "aNewP@ssw0rd" }
-    }).to.be.eql(gotten);
-    if(created.id){
-      const updatedUser = await service.update(created.id, {
-        id:created.id,
-        login: "aNewUser",
-        password: "UpdatedPassword"
-      }, params)
-      gotten =  await service.useCase.get(created.login);
-      expect(gotten).to.be.eql({
-        id: created.id,
-        login: created.login,
-        password: "UpdatedPassword",
-        isActive: true
-      })
-    } else {
-      assert.fail("no id for created user")
+    if(created.login) {
+      let gotten:Partial<User> = await service.useCase.storage.get(created.login);
+      expect({
+        ...created,
+        ...{ password: "aNewP@ssw0rd" }
+      }).to.be.eql(gotten);
+      if(created.id){
+        const updatedUser = await service.update(created.id, {
+          id:created.id,
+          login: "aNewUser",
+          password: "UpdatedPassword"
+        }, params)
+        gotten =  await service.useCase.get(created.login);
+        return expect(gotten).to.be.eql({
+          id: created.id,
+          login: created.login,
+          password: "UpdatedPassword",
+          isActive: true
+        })
+      }
     }
-
+    assert.fail("no id for created user")
   })
 
   it('Should update a user if asked for from external client', async () => {
@@ -254,7 +254,7 @@ describe('User service', () => {
 
   it('Should remove a user', async() => {
     const service:UserService = app.service('user');
-    const created:User = await service.create({
+    const created:Partial<User> = await service.create({
       login: "aNewUser",
       password: "aNewP@ssw0rd",
       isActive: true
@@ -608,7 +608,16 @@ describe('User service', () => {
     if(!otherUserParams.route)
       otherUserParams.route = {}
     otherUserParams.route.idOrLogin = 'otheruser';
-    return expect(service.create([1], otherUserParams)).to.be.rejectedWith('Method create for service user-roles is not authorized for user otheruser');
+    let isRejected = false;
+    let error;
+    try {
+      await service.create([1], otherUserParams);
+    }
+    catch(error)
+    {
+        isRejected = true
+    }
+    return expect(isRejected).to.be.true;
   })
 
 });

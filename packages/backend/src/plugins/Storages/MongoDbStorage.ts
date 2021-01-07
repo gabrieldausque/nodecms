@@ -18,6 +18,8 @@ type counterByCollection = {
   lastId:number
 }
 
+
+
 export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected readonly logger?:Logger;

@@ -22,6 +22,7 @@ import {error} from "winston";
 import {EncryptionPlugin} from "./plugins/Encryption/EncryptionPlugin";
 import {SocketIOTopicServiceClient, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {ServerOptions} from "mongodb";
+import {NextFunction, Request, Response} from "express";
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/plugins');
 globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/usecases');
 globalInstancesFactory.loadExportedClassesFromDirectory( path.dirname(require.resolve('@hermes/topicservice')));
@@ -64,6 +65,7 @@ app.use(cors({
         callback(null, true);
         return;
       }
+
     } else if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test' ) {
       logger.warning(`origin "${origin}" seems to be wrong, but we are in ${process.env.NODE_ENV}. Skipping check of domain`);
       callback(null, true);
@@ -75,7 +77,9 @@ app.use(cors({
   }
 }));
 app.use(compress());
-app.use(express.json());
+app.use(express.json({
+  limit:'100 mb'
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
@@ -87,7 +91,6 @@ app.configure(socketio((io) => {
   io.on('connection', (socket) => {
     const topicClient = new SocketIOTopicServiceClient(topicService, socket);
     setTimeout(() => {
-      socket.emit('clientId','toto')
     }, 5000);
   })
 }));
@@ -104,5 +107,7 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
+
+
 
 export default app;

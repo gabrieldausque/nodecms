@@ -14,8 +14,10 @@ export class UserEntityRules extends EntityRules {
     return typeof login !== 'undefined' && login.trim() !== '' && login !== null && regexp.test(login);
   }
 
-  static validateMetadata(user: User, data: Metadata) {
+  static validateMetadata(user: Partial<User>, data: Metadata) {
     data.ownerType = 'user';
+    if(!user.id && !(user.id === 0))
+      throw new Error('User has no id for metadata creation');
     data.ownerId = user.id;
     data.isPublic = false;
   }

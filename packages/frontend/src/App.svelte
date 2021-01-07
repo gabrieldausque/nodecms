@@ -7,7 +7,8 @@
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {createEventDispatcher, onMount} from "svelte";
 	import {UserState} from "./stores/UserState";
-	import {getBackendClient} from "./NodeCMSClient";
+	import {getBackendClient} from "./api/NodeCMSClient";
+	import ErrorModal from "./components/ErrorModal.svelte";
 
 	let documentKey = 'welcome'
 	let backendClient = null;
@@ -22,12 +23,12 @@
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer);
 	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
 
-	const unsubscribe = UserState.subscribe( value => {
+	const unsubscribe = UserState.subscribe(value => {
 		console.log(`new login : ${value.isLogin} & ${value.login}`)
-		if(value && value.isLogin)
+		if (value && value.isLogin)
 			documentKey = "welcomePrivate";
 		else
-			documentKey= "welcome"
+			documentKey = "welcome"
 	})
 
 </script>
@@ -64,3 +65,4 @@
 <main>
 	<ContentGenericContainer documentKey="{documentKey}"></ContentGenericContainer>
 </main>
+<ErrorModal></ErrorModal>

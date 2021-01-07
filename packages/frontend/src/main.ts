@@ -1,5 +1,6 @@
 import App from './App.svelte';
-import {getBackendClient} from './NodeCMSClient';
+import {getBackendClient} from './api/NodeCMSClient';
+import {FEServices} from "./FEServices";
 
 const app = new App({
 	target: document.body

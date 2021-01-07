@@ -5,7 +5,9 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
-
+import nodeGlobals from "rollup-plugin-node-globals";
+import builtins from 'rollup-plugin-node-builtins';
+import * as fs from 'fs';
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -60,6 +62,8 @@ export default {
 		}),
 		commonjs(),
 		typescript({ sourceMap: !production }),
+		nodeGlobals(),
+		builtins(),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
@@ -67,7 +71,10 @@ export default {
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
-		!production && livereload('public'),
+		!production && livereload({
+			originalPath: 'public',
+			port: 10530
+		}),
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify

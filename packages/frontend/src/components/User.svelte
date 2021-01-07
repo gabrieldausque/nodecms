@@ -1,5 +1,5 @@
 <script>
-    import {getBackendClient} from '../NodeCMSClient';
+    import {getBackendClient} from '../api/NodeCMSClient';
     import { onMount } from 'svelte';
     import {UserState} from "../stores/UserState";
 

@@ -1,6 +1,10 @@
-import axios from "axios";
+import axios, {AxiosInstance} from "axios";
+//@ts-ignore
+import https from 'https';
 import io from 'socket.io-client';
-import {SocketIOTopicServiceClientProxy} from "../includes/SocketIOTopicServiceClientProxy.js";
+import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy.js";
+import {MediaService} from "./MediaService";
+import {PostService} from "./PostService";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -11,15 +15,32 @@ export class NodeCMSClient {
     private realm:string;
     private id: number;
     private topicServiceClient: SocketIOTopicServiceClientProxy;
+    private axiosInstance: AxiosInstance;
+    private env:string;
+    private socketIoUrl: string;
 
-    constructor(cmsUrl:string = "/") {
+    public mediaService:MediaService;
+    public postService: PostService;
+
+    constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
         this.url = cmsUrl;
+        this.socketIoUrl = socketIoHost?socketIoHost:this.url;
         axios.defaults.withCredentials = true;
+        this.env = env;
+        if(this.env === 'dev') {
+            axios.defaults.httpsAgent = new https.Agent({
+                rejectUnauthorized: false
+            })
+        }
+        this.axiosInstance = axios.create();
+        this.mediaService = new MediaService(this.axiosInstance, this.url);
+        this.postService = new PostService(this.axiosInstance, this.url);
     }
 
     createHeaders() {
         return {
-            crossDomain:true
+            crossDomain:true,
+            withCredentials: true
         };
     }
 
@@ -54,12 +75,10 @@ export class NodeCMSClient {
             url:'authentication/0'
         })
         if(!this.topicServiceClient && value.data && value.data !== false){
-            let socket = io(this.url, {
-                transports: ['websocket']
+            let socket = io(this.socketIoUrl, {
+                transports: ['websocket'],
+
             });
-            socket.on('clientId', (clientId) => {
-                console.log('toto');
-            })
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             (window as any).cmsClient = this;
         }
@@ -78,8 +97,9 @@ export class NodeCMSClient {
         })
         console.log(this.topicServiceClient);
         if(!this.topicServiceClient){
-            let socket = io(this.url, {
-                transports: ['websocket']
+            let socket = io(this.socketIoUrl, {
+                transports: ['websocket'],
+                rejectUnauthorized: !(this.env === 'dev')
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             (window as any).cmsClient = this;
@@ -127,38 +147,23 @@ export class NodeCMSClient {
         }
     }
 
-    async createPost(channelKey:string, post:any) {
-        try {
-            await axios.request({
-                method: 'post',
-                baseURL: this.url,
-                url: `channel/${channelKey}/posts`,
-                data: {
-                    content: post
-                },
-                withCredentials: true,
-                headers:this.createHeaders()
-            });
-        }catch(error) {
-            console.log(error);
-        }
-    }
-
 }
 
 const getClientConfig = async () => {
-    return await axios.get(`${window.location.href}/clientConfiguration.json`)
+    const configuration = await axios.get(`${window.location.href}/clientConfiguration.json`);
+    console.log(configuration);
+    return configuration;
 }
 
 let backendClient = null;
 getClientConfig().then((configuration:any) => {
-    backendClient = new NodeCMSClient(configuration.data.backendHost)
+    backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.socketIoHost, configuration.data.env);
     backendClient.getMetadata('title').then((value) => {
         document.querySelector('head title').innerHTML = value;
     });
     window.dispatchEvent(new Event('backend-ready'));
 })
 
-export const getBackendClient = () => {
+export const getBackendClient = ():NodeCMSClient => {
     return backendClient;
 };
