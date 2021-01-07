@@ -15,20 +15,16 @@
         'image/bmp',
         'image/webp',
         'image/svg+xml',
-        'audio/midi',
+        'audio/mp3',
         'audio/mpeg',
         'audio/webm',
         'audio/ogg',
         'audio/aac',
         'audio/wav',
-        'audio/3gpp',
-        'audio/3gpp2',
-        'video/3gpp2',
         'video/webm',
         'video/ogg',
         'video/mp4',
         'video/x-msvideo',
-        'video/3gpp',
         'application/pdf'
     ]
     async function customPaste(file, label) {
@@ -152,12 +148,11 @@
     .postCreation {
         border: solid lightgray 1px;
         position : sticky;
-        top:calc(100% - 105px);
         bottom : 5px;
         margin: 5px;
-        min-height: 100px;
         height:auto;
         width: calc(100% - 10px);
+        top: calc(100vh - 100px);
     }
 
     .attachments {

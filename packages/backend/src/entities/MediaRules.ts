@@ -17,20 +17,16 @@ export class MediaRules extends EntityRules{
     'image/bmp',
     'image/webp',
     'image/svg+xml',
-    'audio/midi',
     'audio/mpeg',
+    'audio/mp3',
     'audio/webm',
     'audio/ogg',
     'audio/aac',
     'audio/wav',
-    'audio/3gpp',
-    'audio/3gpp2',
-    'video/3gpp2',
     'video/webm',
     'video/ogg',
     'video/mp4',
     'video/x-msvideo',
-    'video/3gpp',
     'application/pdf'
   ]
 }

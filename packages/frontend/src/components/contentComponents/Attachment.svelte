@@ -15,13 +15,17 @@
     console.log(displayError);
     let icons = {
         default: 'fa-file',
-        'application.pdf': 'fa-file-pdf',
-        'video/3gpp2': 'fa-file-video',
+        'application/pdf': 'fa-file-pdf',
+        'audio/mp3': 'fa-file-audio',
+        'audio/mpeg': 'fa-file-audio',
+        'audio/webm': 'fa-file-audio',
+        'audio/ogg': 'fa-file-audio',
+        'audio/aac': 'fa-file-audio',
+        'audio/wav': 'fa-file-audio',
         'video/webm': 'fa-file-video',
         'video/ogg': 'fa-file-video',
         'video/mp4': 'fa-file-video',
-        'video/x-msvideo': 'fa-file-video',
-        'video/3gpp': 'fa-file-video'
+        'video/x-msvideo': 'fa-file-video'
     }
 
     onMount(async () => {
@@ -96,7 +100,7 @@
         overflow-x:hidden;
     }
 
-    .attachment-download > label {
+    .label {
         margin-bottom: 0;
         margin-left: 5px;
     }
@@ -110,7 +114,7 @@
             {#if media.mediaType.indexOf('image') >= 0}
                 <div class="attachment-image" id="{media.key}" title="{media.label}"></div>
             {:else }
-                <div class="attachment-download" id="{media.key}" title="{media.label}"><label>{media.label}</label></div>
+                <div class="attachment-download" id="{media.key}" title="{media.label}"><span class="label">{media.label}</span></div>
             {/if}
         {:else}
             <div id="loading-{key}" class="spinner-border text-danger" role="status" title="Chargement ...">
