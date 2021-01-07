@@ -45,5 +45,6 @@ describe('Document service', () => {
     assert.ok(service, 'Registered the service');
   });
 
+  it('should get the ser')
 
 });

@@ -1,7 +1,14 @@
 import {Entity} from "./Entity";
 
+export const DocumentVisibility = {
+  public:"public",
+  protected:"protected",
+  private:"private"
+}
+
 export interface Document extends Entity {
-  content:string,
+  content: { [prop:string] : any },
+  documentType?:string,
   visibility:string,
   ownerId:number,
   editorRoles?:number[]

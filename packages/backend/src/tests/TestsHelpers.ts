@@ -34,6 +34,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
   const roleStorage:MongoDbRoleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage', 'MongoDb');
   const channelStorage:MongoDbChannelStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelStorage', 'MongoDb');
   const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb');
+  const documentStorage:MongoDbDocumentStorage = globalInstancesFactory.getInstanceFromCatalogs('DocumentStorage', 'MongoDb');
 
   const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017", {
     useUnifiedTopology:true
@@ -77,6 +78,11 @@ export async function initMongoDbTestDatabase():Promise<void> {
   }
   try {
     await mongoDbClient.db('teama_test').collection('media').drop();
+  }catch(err) {
+    //ignoring
+  }
+  try {
+    await mongoDbClient.db('teama_test').collection('documents').drop();
   }catch(err) {
     //ignoring
   }

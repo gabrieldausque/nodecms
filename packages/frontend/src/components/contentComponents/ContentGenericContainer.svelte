@@ -188,9 +188,9 @@
     })
 
     function getDocument() {
+        //let rawDocument =  await backEndService.getDocument(documentKey);
         if(documentKey && availableDocuments.hasOwnProperty(documentKey)){
             properties = null;
-            //let rawDocument =  await backEndService.getDocument(documentKey);
             let rawDocument = availableDocuments[documentKey];
             let sortFunction = (a,b) =>{
                 if(a.order < b.order)
