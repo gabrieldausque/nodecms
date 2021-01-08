@@ -8,18 +8,6 @@
     let login;
     let password;
 
-    window.addEventListener('backend-ready', async () => {
-        backendService = getBackendClient();
-        let loginOrFalse = await backendService.checkAuthentication();
-        console.log(loginOrFalse);
-        if(loginOrFalse && typeof loginOrFalse === "string"){
-            isLogin = true;
-            login = loginOrFalse;
-            console.log(`${loginOrFalse} is logged in`)
-            onLoggedIn();
-        }
-    });
-
     let showOrHideAuthenticate = () => {
         //toggle the login modal to show
         window.jQuery('#errorOnLoginContent').html('')
@@ -80,6 +68,13 @@
             login = '';
             password = '';
         })
+        backendService = await getBackendClient();
+        let loginOrFalse = await backendService.checkAuthentication();
+        if(loginOrFalse && typeof loginOrFalse === "string"){
+            isLogin = true;
+            login = loginOrFalse;
+            onLoggedIn();
+        }
     })
 
 </script>

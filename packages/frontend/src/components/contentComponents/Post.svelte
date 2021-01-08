@@ -22,6 +22,7 @@
     }
 
     onMount(async () => {
+        const backendClient = await getBackendClient();
         if (Array.isArray(post.attachments)) {
             for (const mediaKey of post.attachments) {
                 const loadingMedia = {
@@ -31,7 +32,7 @@
                 }
                 attachments.push(loadingMedia);
                 attachments = attachments;
-                const media = await getBackendClient().mediaService.getMedia(mediaKey);
+                const media = await backendClient.mediaService.getMedia(mediaKey);
                 attachments.push(media);
                 if(attachments.indexOf(loadingMedia) >= 0)
                     attachments.splice(attachments.indexOf(loadingMedia),1);

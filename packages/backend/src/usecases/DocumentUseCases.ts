@@ -86,7 +86,7 @@ export class DocumentUseCases extends UseCases<Document> {
     if(!isExplicitReader){
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      for(const readerRoleId of data.readers){
+      for(const readerRoleId of data.readerRoles){
           const role:Role = await roleUseCases.get(readerRoleId, user);
           if(await userUseCases.isMemberOf(role.key,user,user)){
             isExplicitReader = true;
@@ -111,7 +111,7 @@ export class DocumentUseCases extends UseCases<Document> {
       }
     }
     if(!isExplicitEditor){
-      for(const editorsRoleId of data.editors){
+      for(const editorsRoleId of data.editorRoles){
         const role:Role = await roleUseCases.get(editorsRoleId, user);
         if(await userUseCases.isMemberOf(role.key,user,user)){
           isExplicitEditor = true;

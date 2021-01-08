@@ -5,6 +5,8 @@ import io from 'socket.io-client';
 import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy.js";
 import {MediaService} from "./MediaService";
 import {PostService} from "./PostService";
+import {globalFEService} from "../FEServices";
+import {DocumentService} from "./DocumentService";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -21,6 +23,7 @@ export class NodeCMSClient {
 
     public mediaService:MediaService;
     public postService: PostService;
+    public documentService: DocumentService;
 
     constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
         this.url = cmsUrl;
@@ -35,6 +38,7 @@ export class NodeCMSClient {
         this.axiosInstance = axios.create();
         this.mediaService = new MediaService(this.axiosInstance, this.url);
         this.postService = new PostService(this.axiosInstance, this.url);
+        this.documentService = new DocumentService(this.axiosInstance, this.url);
     }
 
     createHeaders() {
@@ -42,18 +46,6 @@ export class NodeCMSClient {
             crossDomain:true,
             withCredentials: true
         };
-    }
-
-    async getDocument(key:string) {
-        const response = await axios.request({
-            method:'get',
-            baseURL:this.url,
-            url:`document/${key}`,
-            headers: this.createHeaders()
-        })
-        //TODO : manage notauthenticate error
-        //TODO : manage renewal of method on notacceptable
-        return response.data.value;
     }
 
     async getMetadata(key:string) {
@@ -95,7 +87,6 @@ export class NodeCMSClient {
                 password
             }
         })
-        console.log(this.topicServiceClient);
         if(!this.topicServiceClient){
             let socket = io(this.socketIoUrl, {
                 transports: ['websocket'],
@@ -107,12 +98,17 @@ export class NodeCMSClient {
     }
 
     async logOut() {
-        await axios.request({
-            method:'delete',
-            baseURL:this.url,
-            url:'authentication',
-            headers:this.createHeaders()
-        })
+        try{
+            const response = await axios.request({
+                method:'delete',
+                baseURL:this.url,
+                url:'authentication',
+                headers:this.createHeaders()
+            });
+            console.log(response);
+        }catch(error){
+            console.error(error);
+        }
     }
 
     async getChannel(channelName) {
@@ -151,19 +147,15 @@ export class NodeCMSClient {
 
 const getClientConfig = async () => {
     const configuration = await axios.get(`${window.location.href}/clientConfiguration.json`);
-    console.log(configuration);
     return configuration;
 }
 
 let backendClient = null;
-getClientConfig().then((configuration:any) => {
-    backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.socketIoHost, configuration.data.env);
-    backendClient.getMetadata('title').then((value) => {
-        document.querySelector('head title').innerHTML = value;
-    });
-    window.dispatchEvent(new Event('backend-ready'));
-})
 
-export const getBackendClient = ():NodeCMSClient => {
+export const getBackendClient = async ():Promise<NodeCMSClient> => {
+    if(!backendClient){
+        const configuration = await getClientConfig();
+        backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.socketIoHost, configuration.data.env);
+    }
     return backendClient;
 };

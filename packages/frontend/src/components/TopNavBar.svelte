@@ -1,20 +1,22 @@
 <script lang="ts">
     import {getBackendClient} from '../api/NodeCMSClient';
     import User from "./User.svelte";
+    import {onMount} from "svelte";
 
     let title = '';
     let imgSrc = 'favicon.png';
 
-    //TODO replace by the setContext
-    window.addEventListener('backend-ready', async () => {
-        title = await getBackendClient().getMetadata('title');
-        const newLogoSrc = await getBackendClient().getMetadata('logo').catch(() => {
+    onMount(async() => {
+        const backendClient = await getBackendClient();
+        title = await backendClient.getMetadata('title');
+        const newLogoSrc = await backendClient.getMetadata('logo').catch(() => {
             return null
         });
         if (newLogoSrc) {
             imgSrc = newLogoSrc;
         }
     })
+
 </script>
 
 <nav class="navbar navbar-dark bg-dark shadow-sm">

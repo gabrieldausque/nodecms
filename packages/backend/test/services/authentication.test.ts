@@ -87,7 +87,7 @@ describe('Authentication service', () => {
     const service = app.service('authentication');
     const p = axios.request({
         method:'get',
-        url: getUrl('document/0'),
+        url: getUrl('document/1'),
         headers: {
           "cookie": `ncms-token=${await service.create({ login: 'localtest', password: 'apassword'})} ; ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=other.domain`
         }

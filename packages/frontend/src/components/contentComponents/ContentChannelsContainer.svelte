@@ -9,13 +9,8 @@
 
     let backEndService = null;
 
-    window.addEventListener('backend-ready', () => {
-        backEndService = getBackendClient();
-    })
-
     onMount(async () => {
-        if(!backEndService)
-            backEndService = getBackendClient();
+        const backEndService = await getBackendClient();
         if(properties)
         {
             channelKey = properties.channelKey;

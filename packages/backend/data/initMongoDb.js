@@ -59,6 +59,7 @@ function initData(){
   teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:4})
   teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:5})
 
+  //rights for administrators
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"*",right:"x",role:2})
@@ -67,7 +68,8 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"remove",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"*",right:"x",role:0})
-  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"remove",for:"user",right:"x",role:2})
+
+  //rights for channel service
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"channel",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"channel",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"remove",for:"channel",right:"x",role:1})
@@ -78,6 +80,8 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"channel",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel",right:"x",role:2})
+
+  //rights for channel post
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"channel-posts",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"channel-posts",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"remove",for:"channel-posts",right:"x",role:1})
@@ -88,6 +92,8 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"channel-posts",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel-posts",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"channel-posts",right:"x",role:2})
+
+  //rights for media
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"media",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"media",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"media",right:"x",role:1})
@@ -96,11 +102,26 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"media",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
+
+  //rights for document
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
+
+  //rights for role data access (as operations are all authorized by default)
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"w",role:0})
+
+  //rights for metadata access (as operations are all authorized by default)
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"metadata",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"metadata",for:"*",right:"w",role:0})
+
+  //rights for user data access
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"w",role:0})
 
@@ -273,7 +294,7 @@ function initData(){
   });
   teamADb.documents.insert({
     id: newId('documents'),
-    key: 'welcome',
+    key: 'welcomePrivate',
     content: {
       bodies:[
         {

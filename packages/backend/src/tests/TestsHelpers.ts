@@ -96,6 +96,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await userStorage.create({ login:"otheruser",password:"anotherpassword",isActive:true});
   await userStorage.create({ login:"standarduser", password:"standard", isActive:true})
   await userStorage.create({ login:"inactiveuser",password:"anything",isActive:false});
+  await userStorage.create({ login:"otherAdmin",password:"otherAdmin",isActive:false});
 
   await metadataStorage.create({ key:"title",value:"The A Team",isPublic:true,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"logo",value:"http://localhost:3030/a-team_logo.png",isPublic:true,ownerType:undefined,ownerId:undefined});
@@ -104,6 +105,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await metadataStorage.create({ key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:0});
   await metadataStorage.create({ key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:2});
   await metadataStorage.create({ key:"roles",value:[1,2],isPublic:false,ownerType:"user",ownerId:1});
+  await metadataStorage.create({ key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:4});
 
   await authorizationStorage.create({on:"operation",onType:"create",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"update",for:"*",right:"x",role:0});
@@ -124,6 +126,15 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"get",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:2});
+  //Rights for Document service
+  await authorizationStorage.create({on:"operation",onType:"get",for:"document",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"document",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"document",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"document",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"document",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"document",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"document",right:"x",role:2});
+
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:1});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"w",role:0});
@@ -159,8 +170,20 @@ export async function initMongoDbTestDatabase():Promise<void> {
     documentType: 'default',
     readerRoles: [],
     editors: [],
-    editorRoles: [],
+    editorRoles: [2],
     visibility: 'protected',
+    content: { prop: 'MyContentPropProtected'},
+    key: 'welcomeProtected'
+  })
+
+  await documentStorage.create({
+    ownerId:0,
+    readers: [],
+    documentType: 'default',
+    readerRoles: [2],
+    editors: [],
+    editorRoles: [0],
+    visibility: 'private',
     content: { prop: 'MyContentPropPrivate'},
     key: 'welcomePrivate'
   })

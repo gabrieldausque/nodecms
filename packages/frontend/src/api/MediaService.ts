@@ -5,7 +5,6 @@ import {globalFEService} from "../FEServices";
 
 export class MediaService extends BaseServiceClient {
 
-
     constructor(axiosInstance: AxiosInstance, url:string) {
         super(axiosInstance, url)
     }

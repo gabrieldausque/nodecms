@@ -5,30 +5,33 @@
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
 	import ContentChannelsContainer from './components/contentComponents/ContentChannelsContainer.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
-	import {createEventDispatcher, onMount} from "svelte";
+	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
 	import {UserState} from "./stores/UserState";
 	import {getBackendClient} from "./api/NodeCMSClient";
 	import ErrorModal from "./components/ErrorModal.svelte";
 
-	let documentKey = 'welcome'
-	let backendClient = null;
-
-	function onLogin(event) {
-		console.log('toto')
-		documentKey = 'welcomePrivate'
-	}
+	export let documentKey;
 
 	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer);
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer);
 	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
 
-	const unsubscribe = UserState.subscribe(value => {
-		console.log(`new login : ${value.isLogin} & ${value.login}`)
-		if (value && value.isLogin)
-			documentKey = "welcomePrivate";
-		else
-			documentKey = "welcome"
+	const unsubscribe = UserState.subscribe(async (value) => {
+		window.setTimeout(async() => {
+			console.log(`new login : ${value.isLogin} & ${value.login}`)
+			if (value && value.isLogin)
+				documentKey = "welcomePrivate";
+			else
+				documentKey = "welcome"
+			console.log(`has change document key ${documentKey}`);
+		})
+	})
+
+	onMount(async() => {
+		const backendClient = await getBackendClient();
+		const title = await backendClient.getMetadata('title');
+		document.querySelector('head title').innerHTML = title;
 	})
 
 </script>
@@ -63,6 +66,6 @@
 	<TopNavBar></TopNavBar>
 </header>
 <main>
-	<ContentGenericContainer documentKey="{documentKey}"></ContentGenericContainer>
+	<ContentGenericContainer documentKey={documentKey}></ContentGenericContainer>
 </main>
 <ErrorModal></ErrorModal>

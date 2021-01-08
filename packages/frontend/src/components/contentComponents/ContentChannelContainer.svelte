@@ -11,13 +11,9 @@
     let editor = null;
     let attachments = []
 
-    window.addEventListener('backend-ready', () => {
-        backEndService = getBackendClient();
-    })
-
     onMount(async () => {
-        if (!backEndService)
-            backEndService = getBackendClient();
+        backEndService = await getBackendClient();
+        await backEndService.checkAuthentication();
         window.setTimeout(async () => {
             if (channel && channel.key) {
                 channelPosts = await backEndService.getChannelPosts(channel.key);

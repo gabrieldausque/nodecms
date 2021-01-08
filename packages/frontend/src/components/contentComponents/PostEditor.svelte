@@ -28,20 +28,21 @@
         'application/pdf'
     ]
     async function customPaste(file, label) {
-        const backEndService = getBackendClient();
+        const backEndService = await getBackendClient();
         const keyAndLabel = uuid.v4()
         const channel = await backEndService.getChannel(channelKey);
         attachments.push({
             key: keyAndLabel,
             label: label?label:keyAndLabel,
             visibility: channel.visibility,
-            file: file
+            file: file,
+            uploaded: false
         });
         attachments = attachments;
     }
 
     onMount(async () => {
-        const backEndService = getBackendClient();
+        const backEndService = await getBackendClient();
         window.setTimeout(async () => {
             const messageContent = document.getElementById('message');
             messageContent.addEventListener('paste', async (event) => {
@@ -116,14 +117,16 @@
             messageContent.removeAttribute('onpaste');
 
             messageContent.addEventListener('keyup', async (event) => {
-                if (event.key === 'Enter') {
+                if (event.key === 'Enter' ) {
                     event.preventDefault();
                     event.stopPropagation();
                     if (!event.ctrlKey) {
-                        messageContent.querySelector('br')?.remove();
-                        await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
-                        editor.setHtml('');
-                        attachments = [];
+                        if(!document.querySelectorAll('.attachment-upload').length){
+                            messageContent.querySelector('br')?.remove();
+                            await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
+                            editor.setHtml('');
+                            attachments = [];
+                        }
                     } else {
                         window.setTimeout(() => {
                             const carriageReturn = document.createElement('div');

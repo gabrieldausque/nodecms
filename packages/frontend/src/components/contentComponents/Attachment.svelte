@@ -32,7 +32,7 @@
         window.setTimeout(async () => {
             if(!media && file && !error){
                 try {
-                    const backEndService = getBackendClient();
+                    const backEndService = await getBackendClient();
                     if(!await backEndService.mediaService.mediaExists(key)){
                         media = await backEndService.mediaService.createMedia(file, key, label, visibility);
                     }
@@ -117,7 +117,7 @@
                 <div class="attachment-download" id="{media.key}" title="{media.label}"><span class="label">{media.label}</span></div>
             {/if}
         {:else}
-            <div id="loading-{key}" class="spinner-border text-danger" role="status" title="Chargement ...">
+            <div id="loading-{key}" class="attachment-upload spinner-border text-danger" role="status" title="Chargement ...">
             </div>
         {/if}
     </div>
