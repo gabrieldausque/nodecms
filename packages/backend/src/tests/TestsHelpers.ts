@@ -94,9 +94,9 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await userStorage.create({ login:"inactiveuser",password:"anything",isActive:false});
   await userStorage.create({ login:"otherAdmin",password:"otherAdmin",isActive:false});
 
-  await roleStorage.create({ key:"administrators", description:"Administrators group", members:[0]});
-  await roleStorage.create({ key:"specialUsers", description:"special Users group", members:[1]});
-  await roleStorage.create({ key:"users", description:"Users group", members:[2,3,4]});
+  await roleStorage.create({ key:"administrators", description:"Administrators group", members:[0], ownerId:0, creationDate: new Date()});
+  await roleStorage.create({ key:"specialUsers", description:"special Users group", members:[1], ownerId:0, creationDate: new Date()});
+  await roleStorage.create({ key:"users", description:"Users group", members:[2,3,4], ownerId:0, creationDate: new Date()});
 
   await metadataStorage.create({ key:"title",value:"The A Team",isPublic:true,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"logo",value:"http://localhost:3030/a-team_logo.png",isPublic:true,ownerType:undefined,ownerId:undefined});
@@ -112,8 +112,13 @@ export async function initMongoDbTestDatabase():Promise<void> {
 
   await authorizationStorage.create({on:"operation",onType:"create",for:"role",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"create",for:"role",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"role",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"role",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"role",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"role",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"update",for:"role",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"update",for:"role",right:"x",role:2});
+
   await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"channel-posts",right:"x",role:1});

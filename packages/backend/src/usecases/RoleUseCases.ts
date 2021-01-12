@@ -4,9 +4,9 @@ import {RoleEntityRules} from "../entities/RoleEntityRules";
 import {Role} from "../entities/Role";
 import {User} from "../entities/User";
 import {AlreadyExistsError} from "../entities/Errors/AlreadyExistsError";
+import {InvalidKeyError} from "../entities/Errors/InvalidKeyError";
 
-interface RoleUseCasesConfiguration extends UseCaseConfiguration {
-}
+interface RoleUseCasesConfiguration extends UseCaseConfiguration {};
 
 export class RoleUseCases extends UseCases<Role> {
 
@@ -23,8 +23,10 @@ export class RoleUseCases extends UseCases<Role> {
     super('role','RoleStorage', configuration);
   }
 
-  async create(entity: Role, executingUser:User): Promise<Role> {
-    RoleEntityRules.validate(entity);
+  async create(entity: Partial<Role>, executingUser:User): Promise<Role> {
+    if(!entity.key)
+      throw new InvalidKeyError(`Key can't be empty and must be unique`)
+    RoleEntityRules.validate(entity, executingUser);
     if(await this.storage.exists(entity.key))
       throw new AlreadyExistsError(`Role with key ${entity.key} already exists. Please change.`)
     return await this.storage.create(entity);
@@ -39,7 +41,8 @@ export class RoleUseCases extends UseCases<Role> {
 
   async find(filter: Partial<Role>, executingUser:User): Promise<Role[]> {
     //TODO : change this to get all role with member in members array ...
-    return await this.storage.find(filter);
+    const found = await this.storage.find(filter);
+    return found
   }
 
   async get(id: string | number, executingUser:User): Promise<Role> {
@@ -50,16 +53,26 @@ export class RoleUseCases extends UseCases<Role> {
     return await this.storage.get(id);
   }
 
-  async update(id: string | number, entityToUpdate: Role, executingUser:User): Promise<Role> {
+  async update(id: string | number, entityToUpdate: Partial<Role>, executingUser:User): Promise<Role> {
     const usableId = RoleEntityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.');
     const existingRole = await this.get(usableId, executingUser);
-    if(existingRole.id !== entityToUpdate.id || existingRole.key !== entityToUpdate.key) {
-      throw new Error('Only description can be updated');
+    if(entityToUpdate.key && entityToUpdate.key !== existingRole.key){
+      RoleEntityRules.validateKey(entityToUpdate.key);
+      if(await this.storage.exists(entityToUpdate.key))
+        throw new AlreadyExistsError(`The new key ${entityToUpdate.key} is already used. Please change`)
     }
-    RoleEntityRules.validateKey(entityToUpdate.key);
-    return await this.storage.update(entityToUpdate);
+    const updated = {
+      ...entityToUpdate,
+      ...{
+        id:existingRole.id
+      }
+    }
+    if(!updated.key){
+      updated.key = existingRole.key;
+    }
+    return await this.storage.update(updated);
   }
 
   async addMember(role: Role, user: User, executingUser: User) {
@@ -69,4 +82,26 @@ export class RoleUseCases extends UseCases<Role> {
     }
   }
 
+  async isDataAuthorized(data:Role, right:string='r', user?:any):Promise<boolean> {
+    if(right === 'w' && user && typeof user.id === 'number'){
+      if(data.ownerId === user.id){
+        return true;
+      } else if(Array.isArray(data.ownerRoles)) {
+        for(const roleId of data.ownerRoles){
+          const role = await this.get(roleId, user);
+          if(await this.roleHasMember(role, user)){
+            return true;
+          }
+        }
+      }
+    }
+    return super.isDataAuthorized(data, right, user);
+  }
+
+  public async roleHasMember(role: Role, user: User):Promise<boolean> {
+    if(Array.isArray(role.members) && typeof user.id === 'number'){
+      return role.members.indexOf(user.id) >= 0;
+    }
+    return false;
+  }
 }

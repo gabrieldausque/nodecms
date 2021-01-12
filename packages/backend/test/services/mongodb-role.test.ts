@@ -133,14 +133,14 @@ describe('Role service', () => {
 
   it('should create a role when asked for', async () => {
     const service:Role = app.service('role');
-    const created:RoleEntity = await service.create(
+    const created = await service.create(
       {
         key:"newRole",
         description:"A new role"
       },
       params
     )
-    const gotten:RoleEntity = await service.get('newRole', params);
+    const gotten = await service.get('newRole', params);
     expect(gotten).to.be.eql({
       id:created.id,
       key:"newRole",
@@ -249,12 +249,120 @@ describe('Role service', () => {
       description:'A new role'
     }, otherUserParams);
     const gotten = await service.get('newRole',params);
-    expect(gotten).to.be.eql({
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+
+    }).to.be.eql({
       id:created.id,
       key:"newRole",
       description:"A new role",
       members:[1]
     });
+  })
+
+  it('should create a role with standard user', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    const gotten = await service.get('newRole',params);
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+
+    }).to.be.eql({
+      id:created.id,
+      key:"newRole",
+      description:"A new role",
+      members:[2]
+    });
+  })
+
+  it('should add member for owner', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    if(typeof created.id === 'number' && Array.isArray(created.members)){
+      await service.update(created.id, {
+        description:'My New Descriptions',
+        members: [...created.members,2,3]
+      }, otherUserParams)
+      const gotten = await service.get('newRole',params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+
+      }).to.be.eql({
+        id:created.id,
+        key:"newRole",
+        description:"My New Descriptions",
+        members:[1,2,3]
+      });
+    } else {
+      assert.fail('No id for new role');
+    }
+  })
+
+  it('should throw exception if special user trying to add member in not owned group', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const updatePromise = service.update(0, {
+      description:'My New Descriptions',
+      members: [2]
+    }, otherUserParams)
+    return expect(updatePromise).to.be.rejectedWith('Data to update is not authorized for your account');
+  })
+
+  it('should add member for owner for standard', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    if(typeof created.id === 'number' && Array.isArray(created.members)){
+      await service.update(created.id, {
+        description:'My New Descriptions',
+        members: [...created.members,4,3]
+      }, otherUserParams)
+      const gotten = await service.get('newRole',params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+
+      }).to.be.eql({
+        id:created.id,
+        key:"newRole",
+        description:"My New Descriptions",
+        members:[2,4,3]
+      });
+    } else {
+      assert.fail('No id for new role');
+    }
+  })
+
+  it('should throw exception if standard user trying to add member in not owned group', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const updatePromise = service.update(0, {
+      description:'My New Descriptions',
+      members: [2]
+    }, otherUserParams)
+    return expect(updatePromise).to.be.rejectedWith('Data to update is not authorized for your account');
   })
 
 });
