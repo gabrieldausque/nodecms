@@ -7,6 +7,7 @@ import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
 import {ChannelRules} from "../entities/ChannelRules";
 import {Entity} from "../entities/Entity";
+import {RoleUseCases} from "./RoleUseCases";
 
 interface ChannelUseCasesConfiguration extends UseCaseConfiguration {};
 
@@ -30,8 +31,26 @@ export class ChannelUseCases extends UseCases<Channel> {
         throw new Error(`Channel with key ${entity.key} already exists`)
       const usableId = ChannelRules.convertId(executingUser.id);
       entity.administrators?.push(usableId);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+      const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
+      await roleUseCases.create({
+        key:`channel#${entity.key}#readers`,
+        description: `Readers for channel ${entity.key}`
+      }, executingUser);
+      await roleUseCases.create({
+        key:`channel#${entity.key}#contributors`,
+        description: `Contributors for channel ${entity.key}`
+      }, executingUser)
+      await roleUseCases.create({
+        key:`channel#${entity.key}#editors`,
+        description: `Editors for channel ${entity.key}`
+      }, executingUser)
+      const adminRoles = await roleUseCases.create({
+        key:`channel#${entity.key}#Administrators`,
+        description: `Administrators for channel ${entity.key}`
+      }, executingUser)
+      await userUseCases.addRole(executingUser,adminRoles,executingUser)
       const createdChannel = await this.storage.create(entity);
-      // TODO : if channel is protected or private, create specific group to store all users of it
       return createdChannel;
   }
 
@@ -145,42 +164,75 @@ export class ChannelUseCases extends UseCases<Channel> {
   }
 
   async isUserReader(channel:Channel, user:User, executingUser:User):Promise<boolean>{
-    if(channel.readers && typeof user.id === 'number'){
-      return channel.visibility === ChannelVisibility.public ||
-        channel.readers.indexOf(user.id) >= 0 ||
-        await this.isUserContributor(channel, user, user)
+    let isUserReader = channel.visibility === ChannelVisibility.public;
+    if(channel.readers && typeof user.id === 'number' && !isUserReader){
+        const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+        const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+        for(const readerRoleId of channel.readers){
+          const role = await roleUseCases.get(readerRoleId, user);
+          isUserReader = await userUseCases.isMemberOf(role.key, user, executingUser);
+          if(isUserReader)
+            break;
+        }
+        if(!isUserReader){
+          isUserReader = await this.isUserContributor(channel, user, user)
+        }
     }
-    return false;
+    return isUserReader;
   }
 
   async isUserContributor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
+    let isUserContributor = false;
     if(channel.contributors && typeof user.id === 'number'){
-      return channel.contributors.indexOf(user.id) >= 0 ||
-        await this.isUserEditor(channel, user, user)
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+      const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+      for(const contributorRoleId of channel.contributors){
+        const role = await roleUseCases.get(contributorRoleId, user);
+        isUserContributor = await userUseCases.isMemberOf(role.key, user, executingUser);
+        if(isUserContributor)
+          break;
+      }
+      if(!isUserContributor){
+        isUserContributor = await this.isUserEditor(channel, user, user)
+      }
     }
-    return false;
+    return isUserContributor;
   }
 
   async isUserEditor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
+    let isUserEditor = false;
     if(channel.editors && typeof user.id === 'number'){
-      return channel.editors.indexOf(user.id) >= 0 ||
-        await this.isUserAdministrator(channel, user, user)
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+      const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+      for(const contributorRoleId of channel.editors){
+        const role = await roleUseCases.get(contributorRoleId, user);
+        isUserEditor = await userUseCases.isMemberOf(role.key, user, executingUser);
+        if(isUserEditor)
+          break;
+      }
+      if(!isUserEditor){
+        isUserEditor = await this.isUserAdministrator(channel, user, user)
+      }
     }
-    return false;
+    return isUserEditor;
   }
 
   async isUserAdministrator(channel:Channel, user:User, executingUser:User):Promise<boolean>{
+    let isUserAdministrators = false;
     if(channel.administrators && typeof user.id === 'number'){
-      if(channel.administrators.indexOf(user.id) >= 0)
-        return true;
-      else
-      {
-        const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases',
-          'User');
-        return await userUseCases.isUserAdministrators(user, executingUser);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+      const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+      for(const contributorRoleId of channel.administrators){
+        const role = await roleUseCases.get(contributorRoleId, user);
+        isUserAdministrators = await userUseCases.isMemberOf(role.key, user, executingUser);
+        if(isUserAdministrators)
+          break;
+      }
+      if(!isUserAdministrators){
+        isUserAdministrators = await userUseCases.isUserAdministrators(user,executingUser);
       }
     }
-    return false;
+    return isUserAdministrators;
   }
 
   async isDataAuthorized(data:Channel, right:string='r', user?:any):Promise<boolean> {

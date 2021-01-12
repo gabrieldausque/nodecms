@@ -9,6 +9,7 @@ import app from '../../src/app';
 import {globalInstancesFactory} from "@hermes/composition";
 import {Role} from "../../src/services/role/role.class";
 import {Role as RoleEntity} from '../../src/entities/Role';
+import {getAuthenticationParams} from "../../lib/tests/TestsHelpers";
 const port = app.get('port') || 3030;
 
 describe('Role service', () => {
@@ -187,8 +188,8 @@ describe('Role service', () => {
       key:'newRole',
       description:'A new role'
     }, params);
-    const getted = await service.get('newRole',params);
-    expect(getted).to.be.eql({
+    const gotten = await service.get('newRole',params);
+    expect(gotten).to.be.eql({
       id:created.id,
       key:"newRole",
       description:"A new role"
@@ -240,5 +241,20 @@ describe('Role service', () => {
     return expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
+  it('should create a role with special user', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    const gotten = await service.get('newRole',params);
+    expect(gotten).to.be.eql({
+      id:created.id,
+      key:"newRole",
+      description:"A new role",
+      members:[1]
+    });
+  })
 
 });

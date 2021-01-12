@@ -31,10 +31,6 @@ function newId(collectionName){
 };
 
 function initData(){
-  teamADb.roles.insert({id:  newId('roles'), key:"administrators", description:"Administrators group"});
-  teamADb.roles.insert({id:  newId('roles'), key:"users", description:"Users group"});
-  teamADb.roles.insert({id:  newId('roles'), key:"specialUsers", description:"special Users group"});
-
   // lnvgQFD#[3FQHfdFDGfd
   teamADb.users.insert({id:  newId('users'), login:"admin",password:"2e3603b7d8388c72017683d5302f1817:04a8fb0d44c1b8d0288710936549794ae0800b68:152862e37239b0bfd5557f889856336f",isActive:true});
   // Cigare
@@ -48,26 +44,31 @@ function initData(){
   //TripleA
   teamADb.users.insert({id:  newId('users'), login:"Amanda",password:"f0fe507b8952faed1d75ba5a093d609e:6d409f10366620:e2793c9e785d065f28d70d2de3ab2d71",isActive:true});
 
+  teamADb.roles.insert({id:  newId('roles'), key:"administrators", description:"Administrators group"});
+  teamADb.roles.insert({id:  newId('roles'), key:"specialUsers", description:"special Users group"});
+  teamADb.roles.insert({id:  newId('roles'), key:"users", description:"Users group"});
+
+
   teamADb.metadata.insert({id:  newId('metadata'), key:"title",value:"The A Team",isPublic:true,ownerType:'',ownerId:null})
   teamADb.metadata.insert({id:  newId('metadata'), key:"logo",value:"https://frontend.myhost.domain/api/a-team_logo.png",isPublic:true,ownerType:'',ownerId:null})
   teamADb.metadata.insert({id:  newId('metadata'), key:"private-metadata",value:"my private value",isPublic:false,ownerType:'',ownerId:null})
   teamADb.metadata.insert({id:  newId('metadata'), key:"pseudonym",value:"MyPseudo",isPublic:false,ownerType:"user",ownerId:0})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:0})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:1})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:2})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:3})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:4})
-  teamADb.metadata.insert({id:  newId('metadata'), key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:5})
 
   //rights for administrators
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"*",right:"x",role:0})
-  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"*",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"patch",for:"*",right:"x",role:0})
-  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"patch",for:"*",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"remove",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"*",right:"x",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"*",right:"x",role:0})
+
+  //rights for roles
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"role",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"role",right:"x",role:2})
+
+  //rights for authorizations
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"authorizations",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"authorizations",right:"x",role:2})
 
   //rights for channel service
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"channel",right:"x",role:1})
@@ -104,18 +105,21 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
 
   //rights for document
-  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:2})
-  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:2})
-  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:1})
 
   //rights for role data access (as operations are all authorized by default)
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:0})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"w",role:0})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"w",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"w",role:2})
 
   //rights for metadata access (as operations are all authorized by default)
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"metadata",for:"*",right:"r",role:0})

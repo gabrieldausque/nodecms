@@ -30,7 +30,7 @@
     async function customPaste(file, label) {
         const backEndService = await getBackendClient();
         const keyAndLabel = uuid.v4()
-        const channel = await backEndService.getChannel(channelKey);
+        const channel = await backEndService.channelsService.getChannel(channelKey);
         attachments.push({
             key: keyAndLabel,
             label: label?label:keyAndLabel,
@@ -140,7 +140,6 @@
                         }, 150)
                     }
                 }
-                console.log(event.key);
             })
         }, 100)
     })

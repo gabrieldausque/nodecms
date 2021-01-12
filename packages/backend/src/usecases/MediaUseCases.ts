@@ -69,7 +69,9 @@ export class MediaUseCases extends UseCases<Media> {
       else if (data.visibility === MediaVisibility.protected)
         return await userUseCases.isValidUser(user, user);
     }
-    return user.id === data.ownerId || await super.isDataAuthorized(data, right, user) || await userUseCases.isUserAdministrators(user,user);
+    return user.id.toString() === data.ownerId.toString() ||
+      await super.isDataAuthorized(data, right, user) ||
+      await userUseCases.isUserAdministrators(user,user);
   }
 
 }

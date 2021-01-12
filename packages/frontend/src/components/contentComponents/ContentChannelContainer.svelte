@@ -7,18 +7,25 @@
     let backEndService = null;
 
     export let channel;
-    export let channelPosts;
+    let channelPosts;
     let editor = null;
     let attachments = []
 
     onMount(async () => {
         backEndService = await getBackendClient();
-        await backEndService.checkAuthentication();
+        await backEndService.userService.checkAuthentication();
         window.setTimeout(async () => {
+            console.log(channel);
             if (channel && channel.key) {
-                channelPosts = await backEndService.getChannelPosts(channel.key);
+                try{
+                    channelPosts = await backEndService.channelsService.getChannelPosts(channel.key);
+                }catch(error){
+                    console.error(error);
+                }
+                console.log(channelPosts);
                 const channelContent = document.querySelector('.channelContent')
-                await backEndService.subscribeToChannel(channel.key, async (m) => {
+                const currentChannelKey = channel.key;
+                await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
                     channelPosts.push(m);
                     channelPosts = channelPosts;
                     window.setTimeout(() => {
@@ -27,8 +34,30 @@
                 })
             }
         }, 100)
-
     })
+
+    $:{
+        getBackendClient().then(async (service) => {
+            if(channel && channel.key)
+                channelPosts = await service.channelsService.getChannelPosts(channel.key);
+        })
+    }
+
+    $:{
+        if(channel && channel.key) {
+            const channelContent = document.querySelector('.channelContent');
+            window.setTimeout(async() => {
+                await backEndService.channelsService.subscribeToChannel(channel.key, async (m) => {
+                    console.log('a message !!!');
+                    channelPosts.push(m);
+                    channelPosts = channelPosts;
+                    window.setTimeout(() => {
+                        channelContent.scrollTop = channelContent.scrollHeight;
+                    })
+                })
+            }, 100)
+        }
+    }
 
 </script>
 

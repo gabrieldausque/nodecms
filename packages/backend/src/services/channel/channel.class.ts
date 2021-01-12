@@ -8,6 +8,8 @@ import {globalInstancesFactory} from "@hermes/composition";
 import {TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {User as UserEntity, User} from "../../entities/User";
 import {isNumber} from "../../helpers";
+import {NotFoundError} from "../../entities/Errors/NotFoundError";
+import {AlreadyExistsError} from "../../entities/Errors/AlreadyExistsError";
 
 type ChannelDTO = Partial<ChannelEntity>;
 
@@ -44,16 +46,33 @@ export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<ChannelDTO> {
-    if(params && params.user){
-      return await this.useCase.get(id, params.user as User);
+    try{
+      if(params && params.user){
+        return await this.useCase.get(id, params.user as User);
+      }
+    }catch(err){
+      if(err as NotFoundError){
+        console.log(err.message);
+        throw new NotFound(err.message);
+      } else {
+        throw err
+      }
     }
     throw new NotFound(`No Channel with id ${id}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: ChannelDTO, params?: Params): Promise<ChannelDTO> {
-    if(params && params.user && params.user as User)
-      return await this.useCase.create(data, params.user as User)
+    if(params && params.user && params.user as User) {
+      try{
+        return await this.useCase.create(data, params.user as User)
+      } catch(err) {
+        if(err as AlreadyExistsError){
+          console.log(err.message)
+          throw new NotAcceptable(err.message);
+        }
+      }
+    }
     throw new NotAuthenticated('User is not authenticated.');
   }
 
