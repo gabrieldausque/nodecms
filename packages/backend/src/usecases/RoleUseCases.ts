@@ -40,7 +40,6 @@ export class RoleUseCases extends UseCases<Role> {
   }
 
   async find(filter: Partial<Role>, executingUser:User): Promise<Role[]> {
-    //TODO : change this to get all role with member in members array ...
     const found = await this.storage.find(filter);
     return found
   }
@@ -55,7 +54,7 @@ export class RoleUseCases extends UseCases<Role> {
 
   async update(id: string | number, entityToUpdate: Partial<Role>, executingUser:User): Promise<Role> {
     const usableId = RoleEntityRules.convertId(id);
-    if(!usableId || typeof usableId !== 'number')
+    if(!usableId && typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.');
     const existingRole = await this.get(usableId, executingUser);
     if(entityToUpdate.key && entityToUpdate.key !== existingRole.key){

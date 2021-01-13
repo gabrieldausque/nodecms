@@ -75,10 +75,18 @@ describe('Role service', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql({
+    expect({
+      id:response.data.id,
+      key:response.data.key,
+      description: response.data.description,
+      members: response.data.members,
+      ownerId: response.data.ownerId
+    }).to.be.eql({
       id:0,
       key:"administrators",
-      description:"Administrators group"
+      description:"Administrators group",
+      members:[0],
+      ownerId:0
     })
     response = await axios.request({
       url: getUrl('role/0'),
@@ -87,10 +95,16 @@ describe('Role service', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql({
+    expect({      id:response.data.id,
+      key:response.data.key,
+      description: response.data.description,
+      members: response.data.members,
+      ownerId: response.data.ownerId}).to.be.eql({
       id:0,
       key:"administrators",
-      description:"Administrators group"
+      description:"Administrators group",
+      members:[0],
+      ownerId: 0
     })
   })
 
@@ -124,10 +138,16 @@ describe('Role service', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql({
+    expect({      id:response.data.id,
+      key:response.data.key,
+      description: response.data.description,
+      members: response.data.members,
+      ownerId: response.data.ownerId}).to.be.eql({
       id:create.data.id,
       key:"newRole",
-      description:"A new role"
+      description:"A new role",
+      members:[0],
+      ownerId:0
     })
   })
 
@@ -136,15 +156,23 @@ describe('Role service', () => {
     const created = await service.create(
       {
         key:"newRole",
-        description:"A new role"
+        description:"A new role",
       },
       params
     )
     const gotten = await service.get('newRole', params);
-    expect(gotten).to.be.eql({
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+      ownerId:gotten.ownerId
+    }).to.be.eql({
       id:created.id,
       key:"newRole",
-      description:"A new role"
+      description:"A new role",
+      members:[0],
+      ownerId:0
     })
   })
 
@@ -155,28 +183,55 @@ describe('Role service', () => {
       description:"A new role"
     }, params);
     if(created.id){
-      expect(await service.get(created.id, params)).to.be.eql({
+      let gotten = await service.get(created.id, params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+        ownerId:gotten.ownerId
+      }).to.be.eql({
         id:created.id,
         key:"newRole",
-        description:"A new role"
+        description:"A new role",
+        members:[0],
+        ownerId:0
       })
-      expect(await service.update(created.id, {
+      gotten = await service.update(created.id, {
         id:created.id,
         key:"newRole",
         description:"A new role updated"
-      }, params)).to.be.eql({
+      }, params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+        ownerId:gotten.ownerId
+      }).to.be.eql({
         id:created.id,
         key:"newRole",
-        description:"A new role updated"
+        description:"A new role updated",
+        members:[0],
+        ownerId:0
       })
-      return expect(await service.patch(created.id, {
+      gotten = await service.patch(created.id, {
         id:created.id,
         key:"newRole",
         description:"A new role patch"
-      }, params)).to.be.eql({
+      }, params);
+      return expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+        ownerId:gotten.ownerId
+      }).to.be.eql({
         id:created.id,
         key:"newRole",
-        description:"A new role patch"
+        description:"A new role patch",
+        members:[0],
+        ownerId:0
       })
     }
     assert.fail('No id for created')
@@ -189,56 +244,23 @@ describe('Role service', () => {
       description:'A new role'
     }, params);
     const gotten = await service.get('newRole',params);
-    expect(gotten).to.be.eql({
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+      ownerId:gotten.ownerId
+    }).to.be.eql({
       id:created.id,
       key:"newRole",
-      description:"A new role"
+      description:"A new role",
+      members: [0],
+      ownerId: 0
     });
     if(created.id || created.id === 0)
       await service.remove(created.id, params);
     const p = service.get('newRole',params);
     return expect(p).to.be.rejectedWith('No role with id or key newRole');
-  })
-
-  it('should delete a role when asked for from external client', async () => {
-    const create = await axios.request({
-      url: getUrl('role'),
-      method: "POST",
-      data: {
-        key:"newRole",
-        description:"A new role"
-      },
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    const response = await axios.request({
-      url: getUrl('role/newRole'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    expect(response.data).to.be.eql({
-      id:create.data.id,
-      key:"newRole",
-      description:"A new role"
-    })
-    await axios.request({
-      url: getUrl(`role/${create.data.id}`),
-      method: "DELETE",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    const p = axios.request({
-      url: getUrl('role/newRole'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    return expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
   it('should create a role with special user', async() => {

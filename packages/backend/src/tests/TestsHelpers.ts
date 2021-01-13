@@ -110,6 +110,15 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"find",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"get",for:"*",right:"x",role:0});
 
+  //user service
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user",right:"x",role:2});
+
+  // role service
   await authorizationStorage.create({on:"operation",onType:"create",for:"role",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"create",for:"role",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"get",for:"role",right:"x",role:1});
