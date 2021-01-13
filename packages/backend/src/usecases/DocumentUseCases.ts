@@ -43,7 +43,8 @@ export class DocumentUseCases extends UseCases<Document> {
     const entity = await this.storage.get(id);
     if(await this.isDataAuthorized(entity,'r', executingUser))
       return entity;
-    else throw new Error(`User ${executingUser?.login} is not authorized to access document with id ${entity.id}`);
+    else
+      throw new Error(`User ${executingUser?.login} is not authorized to access document with id ${entity.id}`);
   }
 
   async update(id: string | number, entityToUpdate: Partial<Document>, executingUser: User): Promise<Document> {
@@ -73,28 +74,31 @@ export class DocumentUseCases extends UseCases<Document> {
   }
 
   private async isUserReader(data: Document, user: User):Promise<boolean> {
-    let isExplicitReader:boolean = data.ownerId === user.id;
-    if(!isExplicitReader){
-      for(const readerId of data.readers){
-        if(readerId === user.id)
-        {
-          isExplicitReader = true;
-          break;
+    if(user && typeof user.id === 'number'){
+      let isExplicitReader:boolean = data.ownerId === user.id;
+      if(!isExplicitReader){
+        for(const readerId of data.readers){
+          if(readerId === user.id)
+          {
+            isExplicitReader = true;
+            break;
+          }
         }
       }
-    }
-    if(!isExplicitReader){
-      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
-      const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      for(const readerRoleId of data.readerRoles){
+      if(!isExplicitReader){
+        const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+        const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
+        for(const readerRoleId of data.readerRoles){
           const role:Role = await roleUseCases.get(readerRoleId, user);
           if(await userUseCases.isMemberOf(role.key,user,user)){
             isExplicitReader = true;
             break;
           }
+        }
       }
+      return isExplicitReader || (await this.isUserEditor(data, user))
     }
-    return isExplicitReader || (await this.isUserEditor(data, user))
+    return false;
   }
 
   private async isUserEditor(data: Document, user: any):Promise<boolean> {

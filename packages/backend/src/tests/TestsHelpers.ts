@@ -174,7 +174,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
     documentType: 'default',
     readerRoles: [],
     editors: [],
-    editorRoles: [2],
+    editorRoles: [1],
     visibility: 'protected',
     content: { prop: 'MyContentPropProtected'},
     key: 'welcomeProtected'
@@ -184,7 +184,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
     ownerId:0,
     readers: [],
     documentType: 'default',
-    readerRoles: [2],
+    readerRoles: [1],
     editors: [],
     editorRoles: [0],
     visibility: 'private',

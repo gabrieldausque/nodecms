@@ -37,7 +37,8 @@ export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
 
   async get (id: Id, params?: Params): Promise<DocumentDTO> {
     if(params){
-      return await this.useCase.get(id, params.user as User);
+      const found = await this.useCase.get(id, params.user as User);
+      return found;
     }
     throw new NotFound(`No Document with id ${id}`);
   }
