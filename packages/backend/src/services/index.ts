@@ -8,6 +8,9 @@ import role from './role/role.service';
 import userRoles from './user-roles/user-roles.service';
 import userMetadata from './user-metadata/user-metadata.service';
 import authorization from './authorization/authorization.service';
+import channel from './channel/channel.service';
+import channelPost from './channel-post/channel-post.service';
+import media from './media/media.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -20,6 +23,9 @@ export default function (app: Application) {
   app.configure(authentication);
   app.configure(authorization);
   app.configure(document);
+  app.configure(channel);
+  app.configure(channelPost);
+  app.configure(media);
 }
 
 function configureSwagger(app: Application): void {
@@ -44,7 +50,8 @@ function configureSwagger(app: Application): void {
         '^role',
         '^user',
         '^metadata',
-        '^document'
+        '^document',
+        '^channel'
       ]
     }
   }));

@@ -1,33 +1,22 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {BaseService} from '../BaseService';
+import {BaseService, BaseServiceConfiguration} from '../BaseService';
 import {globalInstancesFactory} from '@hermes/composition';
 import {UserStorage} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
 import {User as UserEntity} from "../../entities/User";
 
-interface UserDTO {
-  id?:number
-  login:string
-  password:string
-  isActive:boolean
+export type UserDTO = Partial<UserEntity>
+
+interface ServiceOptions extends BaseServiceConfiguration {
 }
 
-interface ServiceOptions {
-  paginate?:number
-  storage:{
-    contractName:string;
-    configuration?:any
-  }
-}
-
-export class User extends BaseService<UserDTO>  {
+export class User extends BaseService<UserDTO, UserUseCases>  {
 
   options: ServiceOptions;
-  useCase: UserUseCases
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true;
   }
 
@@ -36,37 +25,41 @@ export class User extends BaseService<UserDTO>  {
       contractName:'Default'
     }
   }, app: Application) {
-    super(app, 'role');
+    super(app, 'user','User', options);
     this.options = options;
-    this.useCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User', options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
-      return this.useCase.find(params.filter);
+      const executingUser:UserEntity = params?.user as UserEntity;
+      return await this.useCase.find(params.filter, executingUser);
     }
     return [];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
-    const user = this.useCase.get(id);
-    user.password = '******';
-    return user;
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user = await this.useCase.get(id, executingUser);
+    return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: UserDTO, params?: Params): Promise<UserDTO> {
-    return await this.useCase.create(data);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user = await this.useCase.create(data, executingUser);
+    return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: UserDTO, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for update');
-    const user = this.useCase.validate(data);
-    return await this.useCase.update(id, user)
+    const executingUser:UserEntity = params?.user as UserEntity;
+    let user = this.useCase.validate(data);
+    user = await this.useCase.update(id, user, executingUser);
+    return this.useCase.secureUserForExternal(user);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,7 +71,9 @@ export class User extends BaseService<UserDTO>  {
   async remove (id: NullableId, params?: Params): Promise<UserDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for delete');
-    return await this.useCase.delete(id);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    const user = await this.useCase.delete(id, executingUser);
+    return this.useCase.secureUserForExternal(user);
   }
 
   async isDataAuthorized(data: any,right:string='r',user?:UserEntity):Promise< boolean> {

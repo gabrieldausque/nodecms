@@ -533,48 +533,22 @@ describe('User service', () => {
   })
 
   it('should had a role for a user', async() => {
-    let response = await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "POST",
-      data: [1],
-      headers: {
-        cookie: finalCookie
-      }
+    if(!params.route)
+      params.route = {}
+    params.route.idOrLogin = 'otheruser';
+    const service = app.service('user/:idOrLogin/roles');
+    const created = await service.create([1],params);
+    let roles = await service.get(1,params);
+    expect(roles).to.be.eql({
+      description: "Users group",
+      id: 1,
+      key: "users"
     });
-    let list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
+    roles = await service.find(params);
+    expect(roles).to.be.eql([{
       description: "Users group",
       id: 1,
       key: "users"
-    }]);
-    response = await axios.request({
-      url: getUrl('user/otheruser/roles/2'),
-      method: "PUT",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },{
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers"
     }]);
   })
 

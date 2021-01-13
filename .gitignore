@@ -123,3 +123,7 @@ lib/
 /packages/backend/data/authorizations-copy.csv
 /packages/backend/data/authorizations-copy-bck.csv
 /packages/backend/data/authorizations-bck.csv
+/packages/backend/test/uploads/
+/packages/backend/media/
+/packages/backend/uploads/
+/packages/backend/uploads/temp/

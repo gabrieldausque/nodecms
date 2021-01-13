@@ -4,15 +4,30 @@ import {NotAcceptable, NotAuthenticated, NotImplemented} from "@feathersjs/error
 import app from "../app";
 import {UserUseCases} from "../usecases/UserUseCases";
 import { globalInstancesFactory } from '@hermes/composition';
+import {UseCases} from "../usecases/UseCases";
 
-export abstract class BaseService<T> implements ServiceMethods<T> {
+export interface BaseServiceConfiguration {
+  paginate?:number
+  storage: {
+    contractName:string;
+    configuration?:any
+  }
+}
+
+export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMethods<T> {
 
   app: Application;
   serviceLabel: string;
+  useCase: U
 
-  protected constructor(app:Application, serviceLabel:string) {
+  protected constructor(app:Application, serviceLabel:string,useCaseContractName:string, options:BaseServiceConfiguration) {
     this.app = app;
     this.serviceLabel = serviceLabel;
+    const f = globalInstancesFactory;
+    this.useCase = f.getInstanceFromCatalogs(
+      'UseCases',
+      useCaseContractName,
+      options) as U;
   }
 
     abstract async find(params?: Params | undefined): Promise<T | T[] | Paginated<T>>
@@ -27,24 +42,24 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
 
     abstract remove(id: NullableId, params?: Params | undefined): Promise<T | T[]>
 
-  abstract needAuthentication(context:any):boolean;
+  abstract needAuthentication(context:any):Promise<boolean>;
 
   async isAuthorized(context: any): Promise<boolean> {
     if(context.params.user){
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      return userUseCase.isUserAuthorized(context.params.user, {
-        on:'operation',
+      return await userUseCase.isUserAuthorized(context.params.user, {
+        on: 'operation',
         onType: context.method,
         for: this.serviceLabel,
         right:'x'
-      })
+      }, context.params.user)
     }
     return false;
   }
 
   abstract isDataAuthorized(data:any, right:string, user?:any):Promise<boolean>;
 
-  async validAuthentication(params:any) {
+  async validAuthentication(params:any, extractUser:boolean = false) {
     if(!params.clientId){
       throw new NotAuthenticated('You are missing your unique clientId. Please correct and retry.');
     }
@@ -63,7 +78,7 @@ export abstract class BaseService<T> implements ServiceMethods<T> {
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
       const login = authenticationService.encryptor.decryptClientId(params.clientId);
       const userIsAuthenticated = await authenticationService.get(login, params);
-      if(!userIsAuthenticated) {
+      if(!userIsAuthenticated && !extractUser) {
         throw new NotAuthenticated('Please authenticate before using this application');
       } else {
         params.user = await userUseCase.get(login);

@@ -43,7 +43,7 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
   }
 
   async create(data: Role): Promise<Role> {
-    if(!this.exists(data.key)){
+    if(!await this.exists(data.key)){
       const newRole = {
         id:this.getNewId(),
         key:data.key,
@@ -56,28 +56,40 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
     return this.get(data.key);
   }
 
-  async delete(keyOrId: string | number): Promise<Role> {
-    let role = this.get(keyOrId);
+  async delete(keyOrIdOrRole: string | number | Role): Promise<Role> {
+    let keyOrId : string | number = '';
+    if(isNumber(keyOrIdOrRole)){
+      keyOrId = parseInt(keyOrIdOrRole.toString());
+    } else if (typeof keyOrIdOrRole === 'string') {
+      keyOrId = keyOrIdOrRole.toString()
+    } else {
+      const role:Role = keyOrIdOrRole as Role;
+      if(role && role.id)
+        keyOrId = role.id.toString()
+    }
+    let role = await this.get(keyOrId);
     this.database.splice(this.database.indexOf(role),1);
     await this.saveDatabase();
     return role;
   }
 
-  exists(keyOrId: string | number): boolean {
+  async exists(keyOrId: string | number | Role): Promise<boolean> {
     let existing:any;
     if(isNumber(keyOrId))
     {
       const usableId = parseInt(keyOrId.toString());
       existing = this.database.find((r) => r.id === usableId);
-    } else {
+    } else if (typeof keyOrId === 'string') {
       existing = this.find({
         key: keyOrId.toString()
       })
+    } else if((keyOrId as Role) && (keyOrId as Role).key) {
+      existing = await this.find(keyOrId as Role)
     }
     return (Array.isArray(existing) && existing.length > 0)
   }
 
-  find(filter?: Role): Role[] {
+  async find(filter?: Partial<Role>): Promise<Role[]> {
     if(filter) {
       let found;
       if(filter.id) {
@@ -99,14 +111,14 @@ export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{
     return [];
   }
 
-  get(keyOrId: string | number): Role {
+  async get(keyOrId: string | number): Promise<Role> {
     let existing;
     if(isNumber(keyOrId))
     {
       const usableId = parseInt(keyOrId.toString());
       existing = this.database.find((r) => r.id === usableId);
     } else {
-      existing = this.find({
+      existing = await this.find({
         key: keyOrId.toString()
       })
     }

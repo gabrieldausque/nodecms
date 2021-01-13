@@ -8,12 +8,13 @@ const fsPromises = fs.promises;
 
 const dataLoader = require('csv-load-sync');
 
-export abstract class CSVStorage<T extends Entity> implements Storage<T> {
+export abstract class CSVStorage<T extends Entity> extends Storage<T> {
 
   protected filePath:string
   protected database: T[]
 
   protected constructor(filePath:string) {
+    super()
     this.filePath = filePath;
     this.database = [];
     this.reloadDatabase();
@@ -21,18 +22,18 @@ export abstract class CSVStorage<T extends Entity> implements Storage<T> {
 
   abstract create(data: T): Promise<T>;
 
-  async delete(keyOrId: string | number): Promise<T> {
-    let entity = this.get(keyOrId);
+  async delete(keyOrId: string | number| T): Promise<T> {
+    let entity = await this.get(this.getIdFromParam(keyOrId));
     this.database.splice(this.database.indexOf(entity),1);
     await this.saveDatabase();
     return entity
   }
 
-  abstract exists(keyOrId: string | number): boolean
+  abstract exists(keyOrId: string | number | T): Promise<boolean>
 
-  abstract find(filter?: T): T[]
+  abstract find(filter?: Partial<T>): Promise<T[]>
 
-  abstract get(keyOrId: string | number): T
+  abstract get(keyOrId: string | number): Promise<T>
 
   async update(data: T): Promise<T> {
     this.database.splice(this.database.findIndex((m:Entity) =>

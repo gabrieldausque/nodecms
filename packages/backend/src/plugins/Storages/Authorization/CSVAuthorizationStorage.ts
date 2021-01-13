@@ -79,7 +79,7 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
 
   async create(data: Authorization): Promise<Authorization> {
     let newAuthorization:Authorization;
-    if(!this.exists(data)) {
+    if(!await this.exists(data)) {
       newAuthorization = {
         id: this.getNewId(),
         on: data.on,
@@ -94,21 +94,21 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
     } else {
       await this.update(data);
     }
-    return this.find(data)[0];
+    return (await this.find(data))[0];
   }
 
   async update(data:Authorization) {
-    if(!this.exists(data)) {
+    if(!await this.exists(data)) {
       await this.create(data);
     }
     //No update is done, right exists or not
-    return this.find(data)[0];
+    return (await this.find(data))[0];
   }
 
-  find(filter?: Authorization): Authorization[] {
+  async find(filter?: Authorization): Promise<Authorization[]> {
     if(filter) {
       if(isNumber(filter.id) && (filter.id === 0 || filter.id)) {
-        return [this.get(filter.id)];
+        return [await this.get(filter.id)];
       }
 
       if(filter.on && filter.onType && filter.right) {
@@ -142,7 +142,7 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
     return [];
   }
 
-  get(keyOrId: string | number): Authorization {
+  async get(keyOrId: string | number): Promise<Authorization> {
     if(isNumber(keyOrId)) {
       const usableId = (typeof keyOrId === 'string')?parseInt(keyOrId.toString()):keyOrId;
       const found = this.database.find((a) => a.id === usableId);
@@ -152,10 +152,10 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
     throw new Error(`No authorization with id ${keyOrId}`);
   }
 
-  exists(keyOrIdOrData: string | number | Authorization): boolean {
+  async exists(keyOrIdOrData: string | number | Authorization): Promise<boolean> {
     let found:Authorization[] | null = null;
     if(isNumber(keyOrIdOrData)) {
-      found = this.find({
+      found = await this.find({
         id:parseInt(keyOrIdOrData.toString()),
         on:'',
         onType:'',
@@ -164,7 +164,7 @@ export class CSVAuthorizationStorage extends CSVStorage<Authorization> implement
         role:0
       })
     } else {
-      found = this.find(keyOrIdOrData as Authorization)
+      found = await this.find(keyOrIdOrData as Authorization)
     }
     return Array.isArray(found) && found.length > 0;
   }

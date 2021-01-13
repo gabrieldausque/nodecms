@@ -7,7 +7,7 @@
     "max": 50
   },
   "cors": {
-    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://myhost.domain[:0-9]*"]
+    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://.*myhost.domain[:0-9]*"]
   },
   "storage": {
     "users" : {
@@ -15,21 +15,32 @@
       "configuration" : "data/users.csv"
     }
   },
+  "logger" : {
+    "contractName": "Default",
+    "configuration": {}
+  },
+  "encryption" : {
+    "contractName": "Default",
+    "configuration": {
+      "password":"MySecret",
+      "cipherAlgorithm":"aes-128-gcm",
+      "keyLength":16,
+      "salt":"MySalt"
+    }
+  },
   "authentication": {
     "authentication" : {
       "contractName": "Default",
-      "configuration": {
-      }
-    },
-    "encryption" : {
-      "contractName": "Default",
-      "configuration": {
-        "password":"MySecret",
-        "cipherAlgorithm":"aes-128-gcm",
-        "keyLength":16,
-        "salt":"MySalt"
-      }
+      "configuration": {}
     },
     "realm": "myhost.domain"
+  },
+  "topicService":{
+    "contractName": "Default",
+    "configuration": {
+      "host":"https://backend.myhost.domain",
+      "standAlone": true,
+      "clusterNodes":[]
+    }
   }
 }

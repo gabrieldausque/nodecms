@@ -2,17 +2,20 @@ import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/fea
 import {Application} from '../../declarations';
 import {globalInstancesFactory} from "@hermes/composition";
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/Authentication/AuthenticationPlugin";
-import {NotAcceptable} from "@feathersjs/errors";
+import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
 import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
-import {BaseService} from "../BaseService";
-import {User as UserEntity} from "../../entities/User";
+import {BaseService, BaseServiceConfiguration} from "../BaseService";
+import {User, User as UserEntity} from "../../entities/User";
+import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
+import {UserUseCases} from "../../usecases/UserUseCases";
+import {isNumber} from "../../helpers";
 
 interface Data {
   login?:string,
   password?:string
 }
 
-interface ServiceOptions {
+interface ServiceOptions extends BaseServiceConfiguration {
   authentication: {
     contractName:string
     configuration?:any
@@ -27,7 +30,7 @@ interface HoneyPot {
   token: CustomAuthenticatedUserToken;
 }
 
-export class Authentication extends BaseService<Data> {
+export class Authentication extends BaseService<Data, AuthenticationUseCases> {
 
   options: ServiceOptions;
   authenticator: AuthenticationPlugin
@@ -42,9 +45,12 @@ export class Authentication extends BaseService<Data> {
 
   constructor (options: ServiceOptions = {
     authentication: {contractName:'Default'},
-    encryption: {contractName:'Default'}
+    encryption: {contractName:'Default'},
+    storage:{
+      contractName:'Default'
+    }
     }, app: Application) {
-    super(app, 'authentication');
+    super(app, 'authentication','Authentication',options);
     this.options = options;
     this.authenticator = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationPlugin',
       options.authentication.contractName,
@@ -63,11 +69,15 @@ export class Authentication extends BaseService<Data> {
     if(!params || !params.authenticationToken)
       return false;
     const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(params.authenticationToken);
-    return this.authenticator.isAuthenticated(id.toString(), decryptedToken);
+    if(this.authenticator.isAuthenticated(decryptedToken.login, decryptedToken))
+      return decryptedToken.login;
+    else
+      return false;
   }
 
   async create (data: Data, params?: Params): Promise<any> {
     let tokenEncrypted:string;
+
     try {
       const login = (data.login)?data.login:'anonymous';
       const password = (data.password)?data.password:'nopass';
@@ -87,10 +97,11 @@ export class Authentication extends BaseService<Data> {
       const tokenDecrypted = await this.authenticator.authenticate(login, password);
       tokenEncrypted = await this.encryptor.encryptCustomToken(tokenDecrypted);
 
-    } catch(ex) {
+    } catch(error) {
       // TODO : return the honey pot token, that give access to : you didn't say the magic word !!!!
-      tokenEncrypted = await this.encryptor.encryptCustomToken(this.honeyPot.token);
+      // tokenEncrypted = await this.encryptor.encryptCustomToken(this.honeyPot.token);
       // TODO : Make a specific exception for wrong password and nologin authorized in the time
+      throw new NotAuthenticated(error);
     }
 
     return tokenEncrypted;
@@ -119,8 +130,16 @@ export class Authentication extends BaseService<Data> {
     return domain
   }
 
-  needAuthentication(): boolean {
-    return false;
+  async needAuthentication(context:any): Promise<boolean> {
+    if(context.method === 'remove')
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+
   }
 
   async isAuthorized(context: any): Promise<boolean> {

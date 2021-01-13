@@ -1,0 +1,96 @@
+{
+  "cors": {
+    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://.+\\.myhost.domain[:0-9]*"]
+  },
+  "authentication": {
+    "authentication" : {
+      "contractName": "Default",
+      "configuration": {}
+    },
+    "realm": "myhost.domain"
+  },
+  "storage": {
+    "authorization" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "authorizations"
+      }
+    },
+    "users" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "users",
+        "encryptionPluginContractName": "Default"
+      }
+    },
+    "metadata" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "metadata"
+      }
+    },
+    "roles" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "roles"
+      }
+    },
+    "channels" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "channels"
+      }
+    },
+    "channelPosts" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": ""
+      }
+    },
+    "media" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "media",
+        "fsStore": "uploads"
+      }
+    },
+    "documents" : {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "documents"
+      }
+    }
+  }
+}

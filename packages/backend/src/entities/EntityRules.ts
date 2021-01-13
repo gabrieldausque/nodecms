@@ -1,17 +1,10 @@
+import {isNumber} from "../helpers";
+
 export abstract class EntityRules {
 
   public static convertId(id? : string| number):number {
-    if(typeof id === 'number')
-      return id;
-    if(typeof id === 'string') {
-      try {
-        let idToParse = parseInt(id);
-        if(idToParse || idToParse === 0)
-          return idToParse;
-      }catch(err) {
-        //DO nothing, just a test to parse id to number
-      }
-    }
+    if((id && isNumber(id)) || id === 0)
+      return parseInt(id.toString());
     throw new Error('id must be a number');
   }
 

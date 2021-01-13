@@ -7,7 +7,10 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
-    "dev":  "lerna run dev",
-    "build": "lerna run build"
+    "dev": "npm run init-dev-db && lerna run --stream dev",
+    "dev-backend": "lerna run --stream dev-backend",
+    "dev-front": "lerna run --stream dev-front",
+    "build": "lerna run build",
+    "init-dev-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
   }
 }

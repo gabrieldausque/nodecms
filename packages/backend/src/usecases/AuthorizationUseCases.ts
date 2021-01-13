@@ -2,6 +2,7 @@ import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {AuthorizationEntityRules} from "../entities/AuthorizationEntityRules";
 import {Authorization} from "../entities/Authorization";
+import {User} from "../entities/User";
 
 interface AuthorizationUseCasesConfiguration extends UseCaseConfiguration {
 }
@@ -24,28 +25,29 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
     super('authorization','AuthorizationStorage',configuration);
   }
 
-  async create(entity: Authorization): Promise<Authorization> {
+  async create(entity: Authorization, executingUser:User): Promise<Authorization> {
     AuthorizationEntityRules.convert(entity);
     return this.storage.create(entity);
   }
 
-  async delete(id: string | number): Promise<Authorization> {
-    const authorization = this.get(id)
+  async delete(id: string | number, executingUser:User): Promise<Authorization> {
+    //TODO : check in use case some condition
+    const authorization = this.get(id, executingUser)
     await this.storage.delete(id);
     return authorization;
   }
 
-  find(filter: Authorization): Authorization[] {
+  async find(filter: Authorization, executingUser:User): Promise<Authorization[]> {
     AuthorizationEntityRules.convert(filter);
-    return this.storage.find(filter);
+    return await this.storage.find(filter);
   }
 
-  get(id: string | number): Authorization {
+  async get(id: string | number, executingUser:User): Promise<Authorization> {
     const usableId = AuthorizationEntityRules.convertId(id);
-    return this.storage.get(usableId);
+    return await this.storage.get(usableId);
   }
 
-  async update(id: string | number, entityToUpdate: Authorization): Promise<Authorization> {
+  async update(id: string | number, entityToUpdate: Authorization, executingUser:User): Promise<Authorization> {
     throw new Error('Not allowed');
   }
 

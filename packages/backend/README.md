@@ -43,3 +43,7 @@ $ feathers help                           # Show all commands
 ## Help
 
 For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+
+## Init db :
+
+mongo "mongodb://localhost:27017/admin" -u "root" -p "Mbhj#ksf1445Mbfgqg" ./packages/backend/data/initMongoDb.js

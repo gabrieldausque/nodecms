@@ -25,13 +25,18 @@ import {NotAuthenticated} from "@feathersjs/errors";
 //@ts-ignore
 import {Authentication} from '../../src/services/authentication/authentication.class';
 import * as os from "os";
+import {initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 
 describe('Authentication service', () => {
   let server: Server;
 
-  before(function(done) {
+  before(async () => {
+    await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', () => done());
+    var p = new Promise((resolve => {
+      server.once('listening', () => resolve());
+    }))
+    await p;
   });
 
   after(function(done) {
@@ -48,12 +53,28 @@ describe('Authentication service', () => {
     expect(service.authenticator).to.be.an.instanceof(LocalAuthentication);
   })
 
+  it('should throw error if wrong authentication', async () => {
+    const service = app.service('authentication');
+    return Promise.all([expect(service.create({
+      login:'toto',
+      password: 'wrongpassword'
+    })).to.be.rejectedWith('No user with login or id toto exists')])
+  })
+
+  it('should throw error if wrong password for existing user', async () => {
+    const service:Authentication = app.service('authentication');
+    return Promise.all([expect(service.create({
+      login:'localtest',
+      password: 'wrongpassword'
+    })).to.be.rejectedWith('User localtest doesn\'t exist or wrong password or user is deactivated')])
+  })
+
   it('should throw error if any service are called without authentication', async () => {
       const service = app.service('authentication');
       const fn = async () => {
         const { data } = await axios.request({
           method:'get',
-          url: getUrl('document/0'),
+          url: getUrl('document/1'),
           headers: {
             "cookie": `ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=myhost.domain`
           }
@@ -64,16 +85,14 @@ describe('Authentication service', () => {
 
   it('should throw error if any service are called with authentication from other realm', async () => {
     const service = app.service('authentication');
-    const fn = async () => {
-      const { data } = await axios.request({
+    const p = axios.request({
         method:'get',
-        url: getUrl('document/0'),
+        url: getUrl('document/1'),
         headers: {
-          "cookie": `ncms-token=${service.create({ login: 'localtest', password: 'apassword'})} ; ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=other.domain`
+          "cookie": `ncms-token=${await service.create({ login: 'localtest', password: 'apassword'})} ; ncms-uniqueid=${service.encryptor.encryptClientId('toto')} ; realm=other.domain`
         }
       });
-    };
-    await expect(fn()).to.be.rejectedWith('Request failed with status code 501');
+    await expect(p.catch((err) => { console.error(err); throw err; } )).to.be.rejectedWith('Request failed with status code 501');
   })
 
   it('should throw error if authentication find or patch method is called', async () => {
@@ -100,7 +119,6 @@ describe('Authentication service', () => {
   })
 
   it('should create authentication token, set it in the response header, and be able to use it in further request', async() => {
-
     const response = await axios.request({
       url: getUrl('authentication'),
       method: "POST",

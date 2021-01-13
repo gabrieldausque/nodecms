@@ -4,6 +4,7 @@ import {BaseService} from "../BaseService";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {User as UserEntity} from "../../entities/User";
+import {globalInstancesFactory} from "@hermes/composition";
 
 interface RoleDTO {
   id?:number;
@@ -19,25 +20,24 @@ interface ServiceOptions {
   }
 }
 
-export class Role extends BaseService<RoleDTO> {
+export class Role extends BaseService<RoleDTO, RoleUseCases> {
 
   options: ServiceOptions;
-  private useCase: RoleUseCases;
 
   constructor (options: ServiceOptions = {
     storage:{
       contractName:'Default'
     }
   }, app: Application) {
-    super(app,'role');
+    super(app,'role', 'Role', options);
     this.options = options;
-    this.useCase = new RoleUseCases(options);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<RoleDTO[] | Paginated<RoleDTO>> {
+    const executingUser:UserEntity = params?.user as UserEntity;
     if(params) {
-      return this.useCase.find(params.filter)
+      return await this.useCase.find(params.filter, executingUser)
     }
     return [];
   }
@@ -45,25 +45,29 @@ export class Role extends BaseService<RoleDTO> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<RoleDTO> {
     try {
-      return this.useCase.get(id);
+      const executingUser:UserEntity = params?.user as UserEntity;
+      return await this.useCase.get(id, executingUser);
     }catch(error) {
       throw new NotFound(error.message);
     }
+    throw new NotFound(`No role with id ${id}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create (data: RoleDTO, params?: Params): Promise<RoleDTO> {
-    return await this.useCase.create(data);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    return await this.useCase.create(data, executingUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update (id: NullableId, data: RoleDTO, params?: Params): Promise<RoleDTO> {
     if(!id)
       throw new NotAcceptable('Please provide a correct id for update');
+    const executingUser:UserEntity = params?.user as UserEntity;
     const existing = await this.get(id,params);
     if(!existing.id)
       throw new NotAcceptable('Please provide a correct id for update');
-    return await this.useCase.update(existing.id, data);
+    return await this.useCase.update(existing.id, data, executingUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,17 +79,19 @@ export class Role extends BaseService<RoleDTO> {
     data.key = existing.key;
     if(!existing.id)
       throw new NotAcceptable('Please provide a correct id for update');
-    return await this.useCase.update(existing.id, data);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    return await this.useCase.update(existing.id, data, executingUser);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async remove (id: NullableId, params?: Params): Promise<RoleDTO> {
     if(!id && id !== 0)
       throw new NotAcceptable('Please provide a correct id for delete');
-    return await this.useCase.delete(id);
+    const executingUser:UserEntity = params?.user as UserEntity;
+    return await this.useCase.delete(id, executingUser);
   }
 
-  needAuthentication(context: any): boolean {
+  async needAuthentication(context: any): Promise<boolean> {
     return true;
   }
 

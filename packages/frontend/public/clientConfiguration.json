@@ -1,3 +1,5 @@
 {
-  "backendHost": "http://backend.myhost.domain:3030"
+  "env": "dev",
+  "backendHost": "https://frontend.myhost.domain/api",
+  "socketIoHost": "https://frontend.myhost.domain"
 }

@@ -61,22 +61,21 @@ export default class LocalAuthentication implements AuthenticationPlugin{
     }
   }
 
-  getUserDatabase():User[] {
-    return this.userStorage.find();
+  async getUserDatabase():Promise<User[]> {
+    return await this.userStorage.find();
   }
 
   async authenticate(login: string, password: string): Promise<CustomAuthenticatedUserToken> {
-    for(const allowedUsers of this.getUserDatabase()){
-      if(allowedUsers.login === login && allowedUsers.password === password) {
-        const token:CustomAuthenticatedUserToken = {
-          authenticationDate: new Date(),
-          authorityKey: this.authorityKey,
-          login: allowedUsers.login.toString()
-        };
-        return Promise.resolve(token);
-      }
+    const user = await this.userStorage.get(login);
+    if(user && user.isActive && user.password === password){
+      const token:CustomAuthenticatedUserToken = {
+        authenticationDate: new Date(),
+        authorityKey: this.authorityKey,
+        login: user.login.toString()
+      };
+      return token;
     }
-    return Promise.reject(`User ${login} doesn't exist or wrong password`);
+    throw new Error(`User ${login} doesn't exist or wrong password or user is deactivated`);
   }
 
   isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken): boolean {
@@ -87,14 +86,14 @@ export default class LocalAuthentication implements AuthenticationPlugin{
       this.tokenNotExpired(decryptedToken);
   }
 
-  userExists(login: string) {
-    return this.userStorage.exists(login);
+  async userExists(login: string):Promise<boolean> {
+    return await this.userStorage.exists(login);
   }
 
-  userIsActive(login: string) {
-    if(this.userExists(login)) {
-      const user = this.userStorage.get(login);
-      return (user)?user.isActive:false;
+  async userIsActive(login: string):Promise<boolean> {
+    if(await this.userExists(login)) {
+      const user = await this.userStorage.get(login);
+      return (user && user.isActive)?user.isActive:false;
     }
     return  false;
   }

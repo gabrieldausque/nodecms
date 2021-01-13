@@ -33,7 +33,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
           return line.split(',')
         }
         //case for serialized array
-        const regexpArray = /("\[.+\]")/g;
+        const regexpArray = /("*\[.+\]"*)/g;
         const m = regexpArray.exec(line);
         if(m){
           for(const arrayToReplace of m){
@@ -59,7 +59,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
     }
   }
 
-  get(keyOrId:string | number, ownerType:string |null = '', ownerId:number | null = null):Metadata {
+  async get(keyOrId:string | number, ownerType:string |null = '', ownerId:number | null = null):Promise<Metadata> {
     let metadata;
     if(typeof keyOrId === 'number') {
       metadata = this.database.find(m  => m.id === keyOrId)
@@ -78,7 +78,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
     throw new Error(`Metadata with key or id ${keyOrId} doesn't exists`)
   }
 
-  exists(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): boolean {
+  async exists(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<boolean> {
     let metadata;
     if(typeof keyOrId === 'number') {
       metadata = this.database.find(m  => m.id === keyOrId)
@@ -96,7 +96,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
 
   }
 
-  find(filter?: Metadata): Metadata[] {
+  async find(filter?: Metadata): Promise<Metadata[]> {
     if(filter) {
       const found = this.database.find((m:Metadata) => {
         if(filter.key) {
@@ -122,7 +122,7 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
   }
 
   async create(data: Metadata): Promise<Metadata> {
-    if(!this.exists(data.key, data.ownerType,data.ownerId)) {
+    if(!await this.exists(data.key, data.ownerType,data.ownerId)) {
       const newMetadata:Metadata = {
         id: this.getNewId(),
         key: data.key,
@@ -135,11 +135,11 @@ export class CSVMetadataStorage extends CSVStorage<Metadata> implements Metadata
       await this.saveDatabase();
       return newMetadata;
     }
-    return this.get(data.key, data.ownerType, data.ownerId);
+    return await this.get(data.key, data.ownerType, data.ownerId);
   }
 
   async delete(keyOrId: string | number, ownerType?: string | null, ownerId?: number | null): Promise<Metadata> {
-    let metadata = this.get(keyOrId, ownerType, ownerId);
+    let metadata = await this.get(keyOrId, ownerType, ownerId);
     this.database.splice(this.database.indexOf(metadata),1);
     await this.saveDatabase();
     return metadata

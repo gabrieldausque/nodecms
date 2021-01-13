@@ -2,11 +2,11 @@ import {Storage} from "../Storage";
 import {Authorization} from "../../../entities/Authorization";
 
 export interface AuthorizationStorage extends Storage<Authorization> {
-  exists(keyOrId:string | number):boolean;
+  exists(keyOrId:string | number | Authorization):Promise<boolean>;
 
-  get(keyOrId:string | number):Authorization;
+  get(keyOrId:string | number):Promise<Authorization>;
 
-  find(filter? : Authorization): Authorization[]
+  find(filter? : Authorization): Promise<Authorization[]>
 
   create(data: Authorization): Promise<Authorization>;
 

@@ -52,104 +52,137 @@ export class UserUseCases extends UseCases<User> {
     return data;
   }
 
-  async create(user:User): Promise<User> {
+  async create(user:Partial<User>, executingUser:User): Promise<User> {
     UserEntityRules.validatePassword(user.password);
     UserEntityRules.validateLogin(user.login);
-    if(this.storage.exists(user.login))
+    if(user.login && await this.storage.exists(user.login))
       throw new Error(`Login ${user.login} already exists. Please change.`)
-    return await this.storage.create(user);
+    const created = await this.storage.create(user);
+    const roleUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+    await this.addRole(created, await roleUseCase.get('users'), executingUser);
+    return created;
   }
 
-  get(idOrLogin: string | number) : User {
+  async get(idOrLogin: string | number, executingUser?:User) : Promise<User> {
     if(UserEntityRules.validateId(idOrLogin)) {
       const id = UserEntityRules.convertId(idOrLogin);
-      return this.storage.get(id);
+      return await this.storage.get(id);
     }
-    return this.storage.get(idOrLogin);
+    return await this.storage.get(idOrLogin);
   }
 
-  find(filter: User) {
-    return this.storage.find(filter);
+  async find(filter: User, executingUser:User):Promise<User[]> {
+    return await this.storage.find(filter);
   }
 
-  async update(id: number | string, usertoUpdate: User) : Promise<User> {
+  //TODO : create a usecase where only admin users can update the active state
+  async update(id: number | string, usertoUpdate: User, executingUser:User) : Promise<User> {
     const usableId = UserEntityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.')
-    const existingUser = this.get(usableId);
 
-    if(existingUser.id !== usertoUpdate.id ||
-    existingUser.login !== usertoUpdate.login) {
-      throw new Error('Only active state or password can be updated on a user.')
+    const existingUser = await this.get(usableId, executingUser);
+    const isExecutorAdmin = await this.isUserAdministrators(executingUser, executingUser);
+
+    if(!isExecutorAdmin && (existingUser.id !== executingUser.id)) {
+      throw new Error(`User ${executingUser.login} can't update ${usertoUpdate.login}. Not same user and has not role administrators`);
     }
-    UserEntityRules.validatePassword(usertoUpdate.password);
+
+    if(!usertoUpdate.isActive && usertoUpdate.isActive !== false)
+      usertoUpdate.isActive = existingUser.isActive;
+
+    if(isExecutorAdmin){
+      if(existingUser.id !== usertoUpdate.id ||
+        existingUser.login !== usertoUpdate.login){
+        throw new Error('Only active state or password can be updated for user by administrators.')
+      }
+      if(executingUser.id === usertoUpdate.id && !usertoUpdate.isActive){
+        throw new Error('Administrator can\'t deactivate himself.')
+      }
+    } else {
+      if(existingUser.id !== usertoUpdate.id ||
+        existingUser.login !== usertoUpdate.login ||
+        existingUser.isActive !== usertoUpdate.isActive
+      ) {
+        throw new Error('Only password can be updated for active user.')
+      }
+      UserEntityRules.validatePassword(usertoUpdate.password);
+    }
     return await this.storage.update(usertoUpdate);
   }
 
-  async delete(id: number | string): Promise<User> {
+  async delete(id: number | string, executingUser:User): Promise<User> {
     const usableId = UserEntityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for delete.')
     return await this.storage.delete(usableId)
   }
 
-  async getMetadata(user:User, metadataKeyOrId:string | number):Promise<Metadata> {
+  async getMetadata(user:Partial<User>, metadataKeyOrId:string | number, executingUser:User):Promise<Metadata> {
     const filter:any = {
       ownerType:'user',
       ownerId:user.id
     }
-    const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+    const metadataUseCase:MetadataUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
     if(isNumber(metadataKeyOrId)){
-      const metadata = metadataUseCase.get(metadataKeyOrId);
+      const metadata:Metadata = await metadataUseCase.get(metadataKeyOrId, executingUser);
       if(metadata.ownerType === 'user' && metadata.ownerId === filter.ownerId) {
         return metadata;
       }
     } else {
-      filter.key = metadataKeyOrId;
-      const found = metadataUseCase.find(filter);
+      filter.key = metadataKeyOrId.toString();
+      const found:Metadata[] = await metadataUseCase.find(filter, executingUser);
       if(Array.isArray(found) && found.length > 0){
         return found[0];
+      } else {
+        return await this.createMetadata(user, {
+          key: metadataKeyOrId.toString(),
+          ownerId: user.id,
+          ownerType: 'user',
+          isPublic: false,
+          value:''
+        }, executingUser);
       }
     }
     throw new Error(`No metadata with key ${metadataKeyOrId} exists for user with id ${user.id}`);
   }
 
-  async createMetadata(user: User, data: Metadata) {
+  async createMetadata(user: Partial<User>, data: Metadata, executingUser:User) {
     const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
     UserEntityRules.validateMetadata(user, data);
     return await metadataUseCase.create(data);
   }
 
-  async updateMetadata(user: User, data: Metadata) {
-    const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
+  async updateMetadata(user: User, data: Metadata, executingUser:User) {
+    const metadataUseCase:MetadataUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
     UserEntityRules.validateMetadata(user, data);
-    return await metadataUseCase.update(data.id, data);
+    return await metadataUseCase.update(data.key, data, executingUser);
   }
 
-  async hasRole(user: User, role: Role):Promise<boolean> {
+  async hasRole(user: Partial<User>, role: Role, executingUser:User):Promise<boolean> {
     let rolesMetadata:Metadata
     try {
-      rolesMetadata = await this.getMetadata(user,'roles');
+      rolesMetadata = await this.getMetadata(user,'roles', executingUser);
     }catch(err) {
       rolesMetadata = await this.createMetadata(user, {
         key:'roles',
         value:[]
-      });
+      }, executingUser);
     }
     return Array.isArray(rolesMetadata.value) &&
       rolesMetadata.value.length >= 1 &&
       rolesMetadata.value.indexOf(role.id) >= 0
   }
 
-  async getRoles(user: User) {
+  async getRoles(user: Partial<User>, executingUser:User) {
     let rolesMetadata:Metadata;
     try {
-      rolesMetadata = await this.getMetadata(user,'roles');
+      rolesMetadata = await this.getMetadata(user,'roles',executingUser);
     }catch(err) {
       rolesMetadata = await this.createMetadata(user, {
         key:'roles',
         value:[]
-      })
+      },executingUser)
     }
     if(!Array.isArray(rolesMetadata.value) ||
       rolesMetadata.value.length <= 0
@@ -158,45 +191,50 @@ export class UserUseCases extends UseCases<User> {
     const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
     const roles:Role[] = [];
     for(const roleId of rolesMetadata.value) {
-      roles.push(roleUseCases.get(roleId))
+      roles.push(await roleUseCases.get(roleId, executingUser))
     }
     return roles;
   }
 
-  async hadRole(user: User, role: Role) {
-    const hasRole = await this.hasRole(user,role)
+  async addRole(user: User, role: Role, executingUser:User) {
+    const hasRole = await this.hasRole(user,role, executingUser)
     if(!hasRole){
-      const rolesMetadata:Metadata = await this.getMetadata(user,'roles');
+      const rolesMetadata:Metadata = await this.getMetadata(user,'roles', executingUser);
+      if(!Array.isArray(rolesMetadata.value)){
+        rolesMetadata.value = [];
+      }
       rolesMetadata.value.push(role.id);
-      await this.updateMetadata(user,rolesMetadata);
+      await this.updateMetadata(user,rolesMetadata, executingUser);
     }
   }
 
-  async removeRole(user: User, role: Role) {
-    const hasRole = await this.hasRole(user,role)
+  async removeRole(user: User, role: Role, executingUser:User) {
+    const hasRole = await this.hasRole(user,role,executingUser)
     if(hasRole){
-      const rolesMetadata:Metadata = await this.getMetadata(user,'roles');
+      const rolesMetadata:Metadata = await this.getMetadata(user,'roles', executingUser);
       rolesMetadata.value.splice(rolesMetadata.value.indexOf(role.id),1);
-      await this.updateMetadata(user,rolesMetadata);
+      await this.updateMetadata(user,rolesMetadata, executingUser);
     }
   }
 
-  async isUserAuthorized(user: User, filter: Authorization) : Promise<boolean> {
-    for(const role of await this.getRoles(user)){
+  async isUserAuthorized(user: User, filter: Authorization, executingUser:User) : Promise<boolean> {
+    const userRoles = await this.getRoles(user,executingUser)
+    for(const role of userRoles){
        const authorizationUseCase:AuthorizationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authorization');
        try{
-         const authorizations = authorizationUseCase.find({
+         const authorizations = await authorizationUseCase.find({
            ...filter,
            ...{ role:role.id}
-         })
+         }, executingUser)
          if(authorizations.length > 0){
            return true;
          }
        }catch(err) {
-         console.error(err);const authorizations = authorizationUseCase.find({
+         console.error(err);
+         const authorizations = await authorizationUseCase.find({
          ...filter,
          ...{ role:role.id}
-       })
+       }, executingUser)
        if(authorizations.length > 0){
          return true;
        }
@@ -207,6 +245,46 @@ export class UserUseCases extends UseCases<User> {
   }
 
   async isDataAuthorized(data:Entity, right:string='r', user?:any):Promise<boolean> {
+    if(await this.isUserAdministrators(user, user) || await this.isSpecialUser(user, user))
+      return true;
     return super.isDataAuthorized(data,right,user);
+  }
+
+  secureUserForExternal(user:User):Partial<User> {
+    delete user.password
+    return user;
+  }
+
+  async isMemberOf(roleName:string, user:User, executingUser:User):Promise<boolean>{
+    if(user) {
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+      const role:Role = await roleUseCases.get(roleName, executingUser);
+      return this.hasRole(user, role, executingUser);
+    }
+    return false;
+  }
+
+  async isUserAdministrators(user:User, executingUser:User):Promise<boolean> {
+    return await this.isMemberOf('administrators', user, executingUser);
+  }
+
+  async isSpecialUser(user:User, executingUser:User):Promise<boolean> {
+    return await this.isMemberOf('specialUsers', user, executingUser);
+  }
+
+  async isValidUser(user: Partial<User>, executingUser: User):Promise<boolean> {
+    if(user && (user.id || user.id === 0)){
+      const currentUser = await this.get(user.id);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+      const userRole = await roleUseCases.get('users', executingUser);
+      const specialUserRole = await roleUseCases.get('specialUsers', executingUser);
+      const adminRole = await roleUseCases.get('administrators', executingUser);
+      const hasMinimumRoles = await this.hasRole(user, userRole, executingUser) ||
+                              await this.hasRole(user, specialUserRole, executingUser) ||
+                              await this.hasRole(user, adminRole, executingUser);
+      const isActive = (currentUser.isActive)?currentUser.isActive:false;
+      return currentUser && isActive && hasMinimumRoles;
+    }
+    return false;
   }
 }

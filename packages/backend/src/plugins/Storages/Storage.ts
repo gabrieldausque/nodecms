@@ -1,15 +1,27 @@
 import {Entity} from "../../entities/Entity";
 
-export interface Storage<T extends Entity> {
-  exists(keyOrId:string | number):boolean;
+export abstract class Storage<T extends Entity> {
+  abstract exists(keyOrId:string | number | T):Promise<boolean>;
 
-  get(keyOrId:string | number):T;
+  abstract get(keyOrId:string | number):Promise<T>;
 
-  find(filter? : T): T[]
+  abstract find(filter? : Partial<T>): Promise<T[]>
 
-  create(data: T): Promise<T>;
+  abstract create(data: Partial<T>): Promise<T>;
 
-  update(data: T): Promise<T>;
+  abstract update(data: Partial<T>): Promise<T>;
 
-  delete(keyOrId:string | number):Promise<T>;
+  abstract delete(keyOrId:string | number | T):Promise<T>;
+
+  protected getIdFromParam(keyOrIdOrEntity: string | number | T) {
+    let id:string;
+    if(typeof keyOrIdOrEntity !== 'string' &&
+      typeof keyOrIdOrEntity !== 'number' &&
+      keyOrIdOrEntity.id){
+      id = keyOrIdOrEntity.id.toString();
+    } else {
+      id = keyOrIdOrEntity.toString();
+    }
+    return id;
+  }
 }
