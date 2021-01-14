@@ -1,7 +1,5 @@
 <script>
-
-
-    import {onMount} from "svelte";
+    import {afterUpdate, beforeUpdate, onMount, setContext} from "svelte";
     import {getBackendClient, NodeCMSClient} from "../../api/NodeCMSClient";
     import {v4} from 'uuid';
 
@@ -13,16 +11,14 @@
 
     export let post
 
-    let attachments = [];
-
     function createHtmlContent(content) {
         const element = document.createElement('div');
         element.innerHTML = content;
         return element.outerHTML;
     }
 
-    onMount(async () => {
-        const backendClient = await getBackendClient();
+    async function loadAttachment() {
+        /** const backendClient = await getBackendClient();
         if (Array.isArray(post.attachments)) {
             for (const mediaKey of post.attachments) {
                 const loadingMedia = {
@@ -33,16 +29,23 @@
                 attachments.push(loadingMedia);
                 attachments = attachments;
                 const media = await backendClient.mediaService.getMedia(mediaKey);
+                console.log('media from post');
+                console.log(media)
                 attachments.push(media);
                 if(attachments.indexOf(loadingMedia) >= 0)
                     attachments.splice(attachments.indexOf(loadingMedia),1);
             }
             // for reseting display
             attachments = attachments;
-        }
-    })
+            console.log(attachments);
+        }*/
+        console.log(post.attachments);
+    }
 
-    function getAttachmentComponent(attachment) {
+    async function getAttachmentComponent(attachmentKey) {
+        console.log(attachmentKey);
+        const backendClient = await getBackendClient();
+        const attachment = await backendClient.mediaService.getMedia(attachmentKey)
         if(attachment.loading) {
             return LoadingAttachment
         } else if(attachment.mediaType.indexOf('image') >= 0){
@@ -105,11 +108,11 @@
         </style>
         <div>{(new Date(post.creationDate)).toLocaleDateString()} {(new Date(post.creationDate)).toLocaleTimeString()}</div>
         {@html createHtmlContent(post.content)}
-        {#if Array.isArray(attachments) && attachments.length > 0}
-            {#each attachments as attachment}
-                {#if attachment && attachment.mediaType}
-                    <svelte:component this={getAttachmentComponent(attachment)} attachment={attachment}/>
-                {/if}
+        {#if Array.isArray(post.attachments) && post.attachments.length > 0}
+            {#each post.attachments as attachmentKey}
+                {#await getAttachmentComponent(attachmentKey) then attachment}
+                    <svelte:component this={attachment} attachment={attachmentKey} loaded={false}/>
+                {/await}
             {/each}
         {/if}
     </div>

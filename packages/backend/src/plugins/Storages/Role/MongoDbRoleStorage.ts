@@ -69,7 +69,8 @@ export class MongoDbRoleStorage extends MongoDbStorage<Role> {
           $all: filter.members
         }
       }
-      return await this.internalFind(internalFilter);
+      const found = await this.internalFind(internalFilter)
+      return found;
     }
 
     return [];

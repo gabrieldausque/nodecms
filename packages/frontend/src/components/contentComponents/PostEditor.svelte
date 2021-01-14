@@ -184,7 +184,7 @@
 
     <div class="attachments">
         {#each attachments as attachment}
-            <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} label={attachment.label} file="{attachment.file}" ></AttachmentAtCreation>
+            <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} label={attachment.label} file="{attachment.file}" associatedChannel={channelKey} ></AttachmentAtCreation>
         {/each}
     </div>
 

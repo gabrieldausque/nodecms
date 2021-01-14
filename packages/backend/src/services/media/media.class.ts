@@ -41,8 +41,10 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async create (data: MediaDTO, params?: Params): Promise<MediaDTO> {
-    if(params && params.user && params.user as User)
+    if(params && params.user && params.user as User) {
       return await this.useCase.create(data,params.user as User)
+    }
+
     throw new NotAuthenticated('User is not authenticated.');
   }
 

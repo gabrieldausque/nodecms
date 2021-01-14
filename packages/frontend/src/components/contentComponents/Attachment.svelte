@@ -8,6 +8,8 @@
     export let label;
     export let visibility;
     export let file;
+    export let associatedChannel;
+
     let src = 'defaultImageUrl';
     export let media;
     let error;
@@ -34,7 +36,17 @@
                 try {
                     const backEndService = await getBackendClient();
                     if(!await backEndService.mediaService.mediaExists(key)){
-                        media = await backEndService.mediaService.createMedia(file, key, label, visibility);
+                        const channel = await backEndService.channelsService.getChannel(associatedChannel);
+                        const mediaReaders = [];
+                        if(Array.isArray(channel.administrators))
+                            mediaReaders.push(...channel.administrators)
+                        if(Array.isArray(channel.editors))
+                            mediaReaders.push(...channel.editors)
+                        if(Array.isArray(channel.contributors))
+                            mediaReaders.push(...channel.contributors)
+                        if(Array.isArray(channel.readers))
+                            mediaReaders.push(...channel.readers)
+                        media = await backEndService.mediaService.createMedia(file, key, label, visibility, mediaReaders);
                     }
                     media = await backEndService.mediaService.getMedia(key);
                 } catch(error) {
@@ -49,6 +61,7 @@
     afterUpdate(async() => {
         if(media) {
             const div = document.getElementById(`${media.key}`);
+            console.log('after update attachment')
             console.log(media);
             if(media.mediaType.indexOf('image') >= 0) {
                 const localBuffer = new Uint8Array(media.blob.data);

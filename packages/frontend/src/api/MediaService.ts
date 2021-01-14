@@ -23,16 +23,17 @@ export class MediaService extends BaseServiceClient {
         }
     }
 
-    async createMedia(file:any, key:string, label:string, visibility:string) {
+    async createMedia(file:any, key:string, label:string, visibility:string, readers:[]) {
         try {
-            console.log(file);
             const b = new Blob([file]);
-            console.log(b);
             const f = new FormData();
             f.append('visibility',visibility);
             f.append('label',label);
             f.append('key',key);
             f.append('blob',b);
+            for(const readerRoleId of readers){
+                f.append(`readers[${readers.indexOf(readerRoleId)}]`,readerRoleId);
+            }
             await axios.request({
                 method: 'post',
                 baseURL: this.url,

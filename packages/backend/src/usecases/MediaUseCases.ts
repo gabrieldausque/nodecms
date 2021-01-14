@@ -6,6 +6,10 @@ import {MediaRules} from "../entities/MediaRules";
 import {MediaStorage} from "../plugins/Storages/Media/MediaStorage";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
+import {AlreadyExistsError} from "../entities/Errors/AlreadyExistsError";
+import {NotFoundError} from "../entities/Errors/NotFoundError";
+import {NotAuthorizedError} from "../entities/Errors/NotAuthorizedError";
+import {RoleUseCases} from "./RoleUseCases";
 
 export interface MediaUseCasesConfiguration extends UseCaseConfiguration {
   storage: {
@@ -38,16 +42,30 @@ export class MediaUseCases extends UseCases<Media> {
   }
 
   async create(entity: Partial<Media>, executingUser: User): Promise<Media> {
-    await MediaRules.validate(entity, executingUser);
-    return await this.storage.create(entity);
+    if(!await this.exists(entity.key)){
+      await MediaRules.validate(entity, executingUser);
+      return await this.storage.create(entity);
+    }
+    throw new AlreadyExistsError(`The media with key ${entity.key} already exists`);
   }
 
   async delete(id: string | number, executingUser: User): Promise<Media> {
-    return await this.storage.delete(id);
+    const media = await this.get(id);
+    if(media && await this.isDataAuthorized(media, 'w', executingUser)){
+      return await this.storage.delete(id);
+    }
+    throw new NotFoundError(`Media with id ${id} not found`);
   }
 
   async find(filter: Partial<Media>, executingUser?: User | undefined): Promise<Media[]> {
-    return await this.storage.find(filter);
+    const found = await this.storage.find(filter);
+    const iter = [...found];
+    for(const m of iter){
+      if(!(await this.isDataAuthorized(m,'r', executingUser))){
+        found.splice(found.indexOf(m), 1);
+      }
+    }
+    return found;
   }
 
   async get(id: string | number, executingUser?: User | undefined): Promise<Media> {
@@ -58,7 +76,7 @@ export class MediaUseCases extends UseCases<Media> {
   }
 
   async update(id: string | number, entityToUpdate: Media, executingUser: User): Promise<Media> {
-    throw new Error('Not Implemented');
+    throw new NotAuthorizedError(`Update not authorized for Media Service`);
   }
 
   async isDataAuthorized(data: Media, right: string = 'r', user?: any): Promise<boolean> {
@@ -67,11 +85,31 @@ export class MediaUseCases extends UseCases<Media> {
       if (data.visibility === MediaVisibility.public)
         return true;
       else if (data.visibility === MediaVisibility.protected)
-        return await userUseCases.isValidUser(user, user);
+        return await userUseCases.isValidUser(user, user)
+      else if (data.visibility === MediaVisibility.private){
+        return await userUseCases.isValidUser(user,user) &&
+          await this.isReader(data, user);
+      }
     }
     return user.id.toString() === data.ownerId.toString() ||
       await super.isDataAuthorized(data, right, user) ||
       await userUseCases.isUserAdministrators(user,user);
+  }
+
+  public async exists(key: string | undefined) {
+    return (await this.find({key: key})).length > 0
+  }
+
+  public async isReader(media:Media, user:User):Promise<boolean>{
+    const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+    const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+    for(const roleId of media.readers){
+      const role = await roleUseCases.get(roleId, user);
+      if(await userUseCases.isMemberOf(role.key, user, user)){
+        return true;
+      }
+    }
+    return false;
   }
 
 }

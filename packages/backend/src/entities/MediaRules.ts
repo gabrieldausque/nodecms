@@ -47,6 +47,9 @@ export class MediaRules extends EntityRules{
     if(!entity.label)
       entity.label = entity.key
 
+    if(!entity.readers)
+      entity.readers = [];
+
     let p = new Promise<string>((resolve, reject) => {
       if(entity.blob)
         magic.detect(entity.blob, (err, result) => {
@@ -66,6 +69,8 @@ export class MediaRules extends EntityRules{
     let ft = await p;
     MediaRules.validateMimeType(ft);
     entity.mediaType = ft;
+
+
   }
 
   static validateMimeType(mimeTypeToTest: string) {

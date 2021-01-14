@@ -30,24 +30,24 @@ export class ChannelUseCases extends UseCases<Channel> {
       if(entity.key && await this.storage.exists(entity.key))
         throw new Error(`Channel with key ${entity.key} already exists`)
       const usableId = ChannelRules.convertId(executingUser.id);
-      entity.administrators?.push(usableId);
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
       const readers = await roleUseCases.create({
-        key:`channel#${entity.key}#readers`,
+        key:`channel-${entity.key}-readers`,
         description: `Readers for channel ${entity.key}`
       }, executingUser);
       const contributors = await roleUseCases.create({
-        key:`channel#${entity.key}#contributors`,
+        key:`channel-${entity.key}-contributors`,
         description: `Contributors for channel ${entity.key}`
       }, executingUser)
       const editors = await roleUseCases.create({
-        key:`channel#${entity.key}#editors`,
+        key:`channel-${entity.key}-editors`,
         description: `Editors for channel ${entity.key}`
       }, executingUser)
       const adminRoles = await roleUseCases.create({
-        key:`channel#${entity.key}#Administrators`,
-        description: `Administrators for channel ${entity.key}`
+        key:`channel-${entity.key}-administrators`,
+        description: `Administrators for channel ${entity.key}`,
+        members:[usableId]
       }, executingUser)
       await userUseCases.addRole(executingUser,adminRoles,executingUser)
       if(Array.isArray(entity.administrators) && typeof adminRoles.id === 'number')

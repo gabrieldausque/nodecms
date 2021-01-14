@@ -53,8 +53,8 @@ describe('Document service', () => {
     await initMongoDbTestDatabase();
   })
 
-  after((done) => {
-    server.close(done);
+  after(async()=> {
+    server.close();
   })
 
   it('registered the service', () => {

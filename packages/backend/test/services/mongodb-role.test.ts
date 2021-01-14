@@ -108,6 +108,15 @@ describe('Role service', () => {
     })
   })
 
+  it('should find a role when asked for', async() => {
+    const service:Role = app.service('role');
+    params.filter = {
+      key:'specialUsers'
+    }
+    const found:any = await service.find(params);
+    expect(found.length).to.be.eql(1)
+  })
+
   it('should return 404 when search for unknown role', async() => {
     const p = axios.request({
       url: getUrl('role/unknownGroups'),

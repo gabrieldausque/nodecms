@@ -1,7 +1,7 @@
 <script>
     import {getBackendClient} from '../api/NodeCMSClient';
     import { onMount } from 'svelte';
-    import {UserState} from "../stores/UserState";
+    import {UserStore} from "../stores/UserStore";
 
     export let isLogin = false;
     let backendService = null;
@@ -16,7 +16,7 @@
     }
 
     function onLoggedIn() {
-        UserState.set({
+        UserStore.set({
             isLogin: isLogin,
             login
         })
@@ -57,7 +57,7 @@
     let logout = async () => {
         isLogin = false;
         await backendService.userService.logOut();
-        UserState.set({
+        UserStore.set({
             isLogin:false,
             login:undefined
         })

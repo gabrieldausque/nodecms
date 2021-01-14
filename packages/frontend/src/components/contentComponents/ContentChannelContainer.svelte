@@ -1,63 +1,69 @@
 <script>
     import {getBackendClient} from "../../api/NodeCMSClient";
-    import {afterUpdate, beforeUpdate, onMount} from "svelte";
+    import {afterUpdate, beforeUpdate, onDestroy, onMount} from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";
+    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
 
     let backEndService = null;
-
     export let channel;
-    let channelPosts;
+
     let editor = null;
-    let attachments = []
+    let channelPosts;
+
+    const unsubscribe = ChannelStore.subscribe((value) => {
+        channelPosts = value.posts;
+    })
 
     onMount(async () => {
         backEndService = await getBackendClient();
         await backEndService.userService.checkAuthentication();
-        window.setTimeout(async () => {
-            console.log(channel);
-            if (channel && channel.key) {
-                try{
-                    channelPosts = await backEndService.channelsService.getChannelPosts(channel.key);
-                }catch(error){
-                    console.error(error);
-                }
-                console.log(channelPosts);
-                const channelContent = document.querySelector('.channelContent')
-                const currentChannelKey = channel.key;
-                await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
-                    channelPosts.push(m);
-                    channelPosts = channelPosts;
-                    window.setTimeout(() => {
-                        channelContent.scrollTop = channelContent.scrollHeight;
-                    })
-                })
+        if (channel && channel.key) {
+            try{
+              const channelContent = new ChannelContent();
+              channelContent.key = channel.key;
+              channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
+              ChannelStore.set(channelContent);
+            }catch(error){
+                console.error(error);
             }
-        }, 100)
+            const channelContent = document.querySelector('.channelContent')
+            const currentChannelKey = channel.key;
+            await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
+                ChannelStore.update(value => {
+                    value.posts.push(m);
+                })
+                window.setTimeout(() => {
+                    channelContent.scrollTop = channelContent.scrollHeight;
+                })
+            })
+        }
     })
 
     $:{
         getBackendClient().then(async (service) => {
-            if(channel && channel.key)
-                channelPosts = await service.channelsService.getChannelPosts(channel.key);
-        })
-    }
-
-    $:{
-        if(channel && channel.key) {
-            const channelContent = document.querySelector('.channelContent');
-            window.setTimeout(async() => {
+            if(channel && channel.key){
+                const channelContent = new ChannelContent();
+                channelContent.key = channel.key;
+                channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
                 await backEndService.channelsService.subscribeToChannel(channel.key, async (m) => {
-                    console.log('a message !!!');
-                    channelPosts.push(m);
-                    channelPosts = channelPosts;
+                    ChannelStore.update(value => {
+                        if(value.key === m.channelKey){
+                            console.log(m);
+                            value.posts.push(m);
+                        }
+                        return value;
+                    })
                     window.setTimeout(() => {
                         channelContent.scrollTop = channelContent.scrollHeight;
                     })
                 })
-            }, 100)
-        }
+                ChannelStore.set(channelContent);
+            }
+        })
     }
+
+    onDestroy(unsubscribe)
 
 </script>
 
@@ -114,8 +120,10 @@
     <div class="channelContent">
         {#if channelPosts}
             {#each channelPosts as post}
-                <Post post={post} ></Post>
+                <Post post={post}></Post>
             {/each}
+        {:else}
+            <div>No Posts</div>
         {/if}
     </div>
     {#if channel}
