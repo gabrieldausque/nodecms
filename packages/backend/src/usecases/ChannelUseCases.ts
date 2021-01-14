@@ -33,15 +33,15 @@ export class ChannelUseCases extends UseCases<Channel> {
       entity.administrators?.push(usableId);
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      await roleUseCases.create({
+      const readers = await roleUseCases.create({
         key:`channel#${entity.key}#readers`,
         description: `Readers for channel ${entity.key}`
       }, executingUser);
-      await roleUseCases.create({
+      const contributors = await roleUseCases.create({
         key:`channel#${entity.key}#contributors`,
         description: `Contributors for channel ${entity.key}`
       }, executingUser)
-      await roleUseCases.create({
+      const editors = await roleUseCases.create({
         key:`channel#${entity.key}#editors`,
         description: `Editors for channel ${entity.key}`
       }, executingUser)
@@ -50,6 +50,14 @@ export class ChannelUseCases extends UseCases<Channel> {
         description: `Administrators for channel ${entity.key}`
       }, executingUser)
       await userUseCases.addRole(executingUser,adminRoles,executingUser)
+      if(Array.isArray(entity.administrators) && typeof adminRoles.id === 'number')
+        entity.administrators.push(adminRoles.id)
+      if(Array.isArray(entity.editors) && typeof editors.id === 'number')
+        entity.editors.push(editors.id)
+      if(Array.isArray(entity.contributors) && typeof contributors.id === 'number')
+        entity.contributors.push(contributors.id)
+      if(Array.isArray(entity.readers) && typeof readers.id === 'number')
+        entity.readers.push(readers.id)
       const createdChannel = await this.storage.create(entity);
       return createdChannel;
   }

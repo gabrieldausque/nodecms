@@ -6,6 +6,10 @@ import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServi
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
+export const channelsEventNames = {
+    channelsActions:'channels.actions'
+}
+
 export class ChannelsService extends BaseServiceClient {
     private topicServiceClient: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
@@ -35,6 +39,13 @@ export class ChannelsService extends BaseServiceClient {
                 rejectUnauthorized: !(this.env === 'dev')
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
+            console.log(this.topicServiceClient.ready);
+            this.topicServiceClient.readyHandler = () => {
+                this.topicServiceClient.subscribe(channelsEventNames.channelsActions, async (t,m) => {
+                    const channelAction = m.content
+                    document.dispatchEvent(new Event(channelsEventNames.channelsActions));
+                })
+            };
             (window as any).cmsClient = this;
             console.log('connected');
         }

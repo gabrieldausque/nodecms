@@ -98,11 +98,6 @@
                 font-size: 25px;
             }
 
-            .cl-content,
-            .cl-actionbar {
-                text-align: start;
-            }
-
             div {
                 text-align: start;
             }

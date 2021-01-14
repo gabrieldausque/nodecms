@@ -2,6 +2,7 @@
     import {onMount} from "svelte";
     import {getBackendClient} from "../../api/NodeCMSClient";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
+    import {channelsEventNames} from "../../api/ChannelsService";
 
     export let properties;
     export let channelKey;
@@ -18,11 +19,18 @@
         }
     });
 
+    document.addEventListener(channelsEventNames.channelsActions, async() => {
+        const backEndService = await getBackendClient();
+        availableChannels = await backEndService.channelsService.getAvailableChannels();
+    })
+
     async function showCreateChannel(event) {
         jQuery('#CreateChannelModal').modal('show');
     }
 
     async function createChannel(event) {
+        const errorAlertContent = document.getElementById('errorOnCreatingChannelContent');
+        const errorAlert = document.getElementById('errorOnCreatingChannel');
         if(await validateNewChannel()) {
             try {
                 console.log('is valid');
@@ -32,14 +40,19 @@
                     label: document.querySelector('#channelLabel').value,
                     visibility: document.querySelector('#channelVisibility').value
                 }
-                const c = await backendService.channelsService.createChannel(data);
-                console.log(c);
+                await backendService.channelsService.createChannel(data);
+                jQuery('#CreateChannelModal').modal('hide');
+                document.querySelector('#channelKey').value = null;
+                document.querySelector('#channelLabel').value = null;
+                document.querySelector('#channelVisibility').value = 'private';
             }catch(error){
                 console.log(error);
-                document.getElementById('errorOnCreatingChannelContent').innerText = error.message;
+                errorAlertContent.innerText = error.message;
+                errorAlert.classList.add('show');
             }
         } else {
-            document.getElementById('errorOnCreatingChannelContent').innerText = error.message;
+            errorAlertContent.innerText = 'Impossible de créer le Canal. Vérifier ses paramètres';
+            errorAlert.classList.add('show');
         }
     }
 
@@ -169,6 +182,19 @@
         display: block;
     }
 
+    .modal-footer-createChannel {
+
+    }
+
+    .modal-footer > button {
+        margin-right: 0;
+        margin-left: auto;
+    }
+
+    #errorOnCreatingChannel {
+        max-width: 325px;
+    }
+
 </style>
 
 <main class="channelPanel">
@@ -218,7 +244,7 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer modal-footer-createChannel">
                 <div id="errorOnCreatingChannel" class="alert alert-danger fade">
                     <div id="errorOnCreatingChannelContent"></div>
                 </div>

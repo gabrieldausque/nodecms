@@ -165,6 +165,15 @@
         max-height: 60px;
     }
 
+    .cl-content,
+    .cl-actionbar {
+        text-align: start;
+    }
+
+    div {
+        text-align: start;
+    }
+
 </style>
 
 <div class="postCreation">

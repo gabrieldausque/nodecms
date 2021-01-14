@@ -128,6 +128,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"update",for:"role",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"update",for:"role",right:"x",role:2});
 
+  //channel and channel posts service
   await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"channel-posts",right:"x",role:1});
@@ -138,6 +139,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"get",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:2});
+
   //Rights for Document service
   await authorizationStorage.create({on:"operation",onType:"get",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"get",for:"document",right:"x",role:2});

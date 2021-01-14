@@ -75,8 +75,23 @@ export class RoleUseCases extends UseCases<Role> {
   }
 
   async addMember(role: Role, user: User, executingUser: User) {
-    if(Array.isArray(role.members) && typeof role.id === 'number' && user.id && !(role.members.indexOf(user.id) >= 0)) {
+    if(Array.isArray(role.members) &&
+      typeof role.id === 'number' &&
+      user.id &&
+      !(role.members.indexOf(user.id) >= 0) &&
+      await this.isDataAuthorized(role, 'w', executingUser)) {
       role.members.push(user.id);
+      await this.update(role.id, role, executingUser);
+    }
+  }
+
+  async removeMember(role: Role, user: User, executingUser: User) {
+    if(Array.isArray(role.members) &&
+      typeof role.id === 'number' &&
+      user.id &&
+      (role.members.indexOf(user.id) >= 0) &&
+      await this.isDataAuthorized(role, 'w', executingUser)) {
+      role.members.splice(role.members.indexOf(user.id),1);
       await this.update(role.id, role, executingUser);
     }
   }

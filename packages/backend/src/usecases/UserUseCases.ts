@@ -186,9 +186,8 @@ export class UserUseCases extends UseCases<User> {
   async removeRole(user: User, role: Role, executingUser:User) {
     const hasRole = await this.hasRole(user,role,executingUser)
     if(hasRole){
-      const rolesMetadata:Metadata = await this.getMetadata(user,'roles', executingUser);
-      rolesMetadata.value.splice(rolesMetadata.value.indexOf(role.id),1);
-      await this.updateMetadata(user,rolesMetadata, executingUser);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+      await roleUseCases.removeMember(role, user, executingUser);
     }
   }
 

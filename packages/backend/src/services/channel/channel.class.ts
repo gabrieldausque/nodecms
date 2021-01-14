@@ -65,7 +65,16 @@ export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
   async create (data: ChannelDTO, params?: Params): Promise<ChannelDTO> {
     if(params && params.user && params.user as User) {
       try{
-        return await this.useCase.create(data, params.user as User)
+        const newChannel = await this.useCase.create(data, params.user as User);
+        try{
+          await this.topicService.publish('channels.actions', {
+            action:'creation',
+            channel:newChannel.id
+          })
+        } catch(error) {
+          console.warn(error.message);
+        }
+        return newChannel;
       } catch(err) {
         if(err as AlreadyExistsError){
           console.log(err.message)

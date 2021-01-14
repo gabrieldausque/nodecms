@@ -475,15 +475,7 @@ describe('User service', () => {
         members:list[1].members,
         ownerId:list[1].ownerId
       }
-    ]).to.be.eql([{
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers",
-      members:[
-        1
-      ],
-      ownerId:0
-    },
+    ]).to.be.eql([
       {
         description: "Administrators group",
         id: 0,
@@ -492,63 +484,42 @@ describe('User service', () => {
           0,1
         ],
         ownerId:0
-      }]);
+      },
+      {
+        description: "special Users group",
+        id: 1,
+        key: "specialUsers",
+        members:[
+          1
+        ],
+        ownerId:0
+      }
+    ]);
   })
 
   it('should remove a role for a user', async() => {
-    let response = await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "POST",
-      data: [0],
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    let list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },
-      {
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers"
-    },{
-      description: "Administrators group",
-      id: 0,
-      key: "administrators"
-    }]);
-    response = await axios.request({
-      url: getUrl('user/otheruser/roles/0'),
-      method: "DELETE",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },
+    const service:UserRoles = app.service('/user/:idOrLogin/roles');
+    params.route = {
+      idOrLogin: 'otheruser'
+    };
+    let roles:any = await service.find(params);
+    await service.create([0],params);
+    roles = await service.find(params);
+    expect(roles.length).to.be.eql(2);
+    await service.remove(0, params);
+    roles = await service.find(params);
+    delete roles[0].creationDate;
+    expect(roles).to.be.eql([
       {
         description: "special Users group",
-        id: 2,
-        key: "specialUsers"
-      }]);
+        id: 1,
+        key: "specialUsers",
+        members:[
+          1
+        ],
+        ownerId:0
+      }
+    ]);
   })
 
   it('non administrators should not be able to add role for itself or another user', async() => {
