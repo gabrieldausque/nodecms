@@ -12,7 +12,13 @@
     let channelPosts;
 
     const unsubscribe = ChannelStore.subscribe((value) => {
-        channelPosts = value.posts;
+        if((channel && channel.key !== value.key) || !channelPosts)
+            channelPosts = value.posts;
+        else
+        {
+            channelPosts.push(...value.posts);
+            channelPosts = channelPosts;
+        }
     })
 
     onMount(async () => {
