@@ -5,31 +5,35 @@
     import Post from "./Post.svelte";
     import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
 
-    let backEndService = null;
     export let channel;
 
     let editor = null;
-    let channelPosts;
+    let channelPosts = [];
 
     const unsubscribe = ChannelStore.subscribe((value) => {
-        if((channel && channel.key !== value.key) || !channelPosts)
-            channelPosts = value.posts;
-        else
-        {
-            channelPosts.push(...value.posts);
-            channelPosts = channelPosts;
+        if(value && Array.isArray(value.posts)){
+            channelPosts.splice(0,channelPosts.length);
+            for(const p of value.posts){
+                if(channelPosts.findIndex((i) => {
+                    return p.id === i.id;
+                }) < 0){
+                    channelPosts.push(p);
+                }
+            }
         }
+        channelPosts = channelPosts;
     })
 
-    onMount(async () => {
-        backEndService = await getBackendClient();
-        await backEndService.userService.checkAuthentication();
-        if (channel && channel.key) {
+    async function loadPosts() {
+        if (channel && channel.key &&
+            channel.key !== $ChannelStore.key) {
+            console.log('update store');
+            const backEndService = await getBackendClient();
             try{
-              const channelContent = new ChannelContent();
-              channelContent.key = channel.key;
-              channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
-              ChannelStore.set(channelContent);
+                const channelContent = new ChannelContent();
+                channelContent.key = channel.key;
+                channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
+                ChannelStore.set(channelContent);
             }catch(error){
                 console.error(error);
             }
@@ -38,36 +42,22 @@
             await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
                 ChannelStore.update(value => {
                     value.posts.push(m);
+                    return value;
                 })
                 window.setTimeout(() => {
                     channelContent.scrollTop = channelContent.scrollHeight;
                 })
             })
         }
+    }
+
+    onMount(async () => {
+        await loadPosts();
     })
 
-    $:{
-        getBackendClient().then(async (service) => {
-            if(channel && channel.key){
-                const channelContent = new ChannelContent();
-                channelContent.key = channel.key;
-                channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
-                await backEndService.channelsService.subscribeToChannel(channel.key, async (m) => {
-                    ChannelStore.update(value => {
-                        if(value.key === m.channelKey){
-                            console.log(m);
-                            value.posts.push(m);
-                        }
-                        return value;
-                    })
-                    window.setTimeout(() => {
-                        channelContent.scrollTop = channelContent.scrollHeight;
-                    })
-                })
-                ChannelStore.set(channelContent);
-            }
-        })
-    }
+    beforeUpdate(async() => {
+        await loadPosts();
+    })
 
     onDestroy(unsubscribe)
 

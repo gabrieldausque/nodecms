@@ -7,7 +7,7 @@
 
     export let attachment
     let media;
-    const mediaStore = writable({})
+    const mediaStore = writable({});
     mediaStore.subscribe((value) => {
         if(!media || media.id !== value.id)
             media = value;
@@ -22,10 +22,13 @@
     }
 
     onMount(async() => {
+        console.log('onMount');
+        console.log($mediaStore);
         await loadMedia();
     })
 
     beforeUpdate(async() => {
+        console.log('onUpdate');
         await loadMedia();
     })
 

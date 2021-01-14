@@ -17,33 +17,7 @@
         return element.outerHTML;
     }
 
-    async function loadAttachment() {
-        /** const backendClient = await getBackendClient();
-        if (Array.isArray(post.attachments)) {
-            for (const mediaKey of post.attachments) {
-                const loadingMedia = {
-                    id: v4(),
-                    mediaType: 'loading',
-                    loading: true
-                }
-                attachments.push(loadingMedia);
-                attachments = attachments;
-                const media = await backendClient.mediaService.getMedia(mediaKey);
-                console.log('media from post');
-                console.log(media)
-                attachments.push(media);
-                if(attachments.indexOf(loadingMedia) >= 0)
-                    attachments.splice(attachments.indexOf(loadingMedia),1);
-            }
-            // for reseting display
-            attachments = attachments;
-            console.log(attachments);
-        }*/
-        console.log(post.attachments);
-    }
-
     async function getAttachmentComponent(attachmentKey) {
-        console.log(attachmentKey);
         const backendClient = await getBackendClient();
         const attachment = await backendClient.mediaService.getMedia(attachmentKey)
         if(attachment.loading) {
@@ -111,7 +85,7 @@
         {#if Array.isArray(post.attachments) && post.attachments.length > 0}
             {#each post.attachments as attachmentKey}
                 {#await getAttachmentComponent(attachmentKey) then attachment}
-                    <svelte:component this={attachment} attachment={attachmentKey} loaded={false}/>
+                    <svelte:component this={attachment} attachment={attachmentKey}/>
                 {/await}
             {/each}
         {/if}
