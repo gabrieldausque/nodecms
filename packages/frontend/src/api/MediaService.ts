@@ -23,6 +23,25 @@ export class MediaService extends BaseServiceClient {
         }
     }
 
+    async getMediaMetadata(keyOrId:string) {
+        let response;
+        try{
+            response = await axios.request({
+                method:'get',
+                baseURL: this.url,
+                url: 'media',
+                params: {
+                    key:keyOrId
+                }
+            })
+            console.log('metadata');
+            console.log(response.data);
+            return response.data[0];
+        }catch(error) {
+            console.error(error);
+        }
+    }
+
     async createMedia(file:any, key:string, label:string, visibility:string, readers:[]) {
         try {
             const b = new Blob([file]);
@@ -51,7 +70,7 @@ export class MediaService extends BaseServiceClient {
 
     async mediaExists(key: string) {
         try {
-            const media = await this.getMedia(key);
+            const media = await this.getMediaMetadata(key);
             return typeof media !== 'undefined' && media !== null
         }catch(ex){
             console.error(ex);

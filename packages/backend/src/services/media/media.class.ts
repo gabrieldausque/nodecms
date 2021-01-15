@@ -4,7 +4,7 @@ import {Media as MediaEntity, MediaVisibility} from "../../entities/Media";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MediaUseCases} from "../../usecases/MediaUseCases";
 import {NotAuthenticated, NotImplemented} from "@feathersjs/errors";
-import {User as UserEntity, User} from "../../entities/User";
+import {User as UserEntity} from "../../entities/User";
 import {isNumber} from "../../helpers";
 
 type MediaDTO = Partial<MediaEntity>
@@ -31,18 +31,18 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async find (params?: Params): Promise<MediaDTO[] | Paginated<MediaDTO>> {
-    const medias = await this.useCase.find(params?.query as MediaDTO);
+    const medias = await this.useCase.find(params?.query as MediaDTO, params?.user as UserEntity);
     return medias;
   }
 
   async get (id: Id, params?: Params): Promise<MediaDTO> {
-    const media = await this.useCase.get(id.toString(), params?.user as User);
+    const media = await this.useCase.get(id.toString(), params?.user as UserEntity);
     return media
   }
 
   async create (data: MediaDTO, params?: Params): Promise<MediaDTO> {
-    if(params && params.user && params.user as User) {
-      return await this.useCase.create(data,params.user as User)
+    if(params && params.user && params.user as UserEntity) {
+      return await this.useCase.create(data,params.user as UserEntity)
     }
 
     throw new NotAuthenticated('User is not authenticated.');
@@ -57,8 +57,8 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async remove (id: NullableId, params?: Params): Promise<MediaDTO> {
-    if(params && params.user && params.user as User && id){
-      return this.useCase.delete(id, params.user as User);
+    if(params && params.user && params.user as UserEntity && id){
+      return this.useCase.delete(id, params.user as UserEntity);
     }
     throw new NotAuthenticated('User is not authenticated.');
   }

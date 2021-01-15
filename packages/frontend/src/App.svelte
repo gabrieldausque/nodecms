@@ -19,12 +19,10 @@
 
 	const unsubscribe = UserStore.subscribe(async (value) => {
 		window.setTimeout(async() => {
-			console.log(`new login : ${value.isLogin} & ${value.login}`)
 			if (value && value.isLogin)
 				documentKey = "welcomePrivate";
 			else
 				documentKey = "welcome"
-			console.log(`has change document key ${documentKey}`);
 		})
 	})
 

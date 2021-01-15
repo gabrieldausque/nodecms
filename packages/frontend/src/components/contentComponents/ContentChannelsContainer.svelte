@@ -33,7 +33,6 @@
         const errorAlert = document.getElementById('errorOnCreatingChannel');
         if(await validateNewChannel()) {
             try {
-                console.log('is valid');
                 const backendService = await getBackendClient();
                 const data = {
                     key: document.querySelector('#channelKey').value,

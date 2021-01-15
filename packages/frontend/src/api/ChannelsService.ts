@@ -27,7 +27,6 @@ export class ChannelsService extends BaseServiceClient {
         console.log('disconnected');
         if(this.topicServiceClient){
             this.topicServiceClient.socket.close();
-            console.log(this.topicServiceClient);
             this.topicServiceClient = null;
         }
     }
@@ -39,7 +38,6 @@ export class ChannelsService extends BaseServiceClient {
                 rejectUnauthorized: !(this.env === 'dev')
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
-            console.log(this.topicServiceClient.ready);
             this.topicServiceClient.readyHandler = () => {
                 this.topicServiceClient.subscribe(channelsEventNames.channelsActions, async (t,m) => {
                     const channelAction = m.content

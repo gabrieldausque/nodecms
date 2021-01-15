@@ -17,16 +17,12 @@
         return element.outerHTML;
     }
 
-    async function getAttachmentComponent(attachmentKey) {
-        const backendClient = await getBackendClient();
-        const attachment = await backendClient.mediaService.getMedia(attachmentKey)
-        if(attachment.loading) {
-            return LoadingAttachment
-        } else if(attachment.mediaType.indexOf('image') >= 0){
+    function getAttachmentComponent(attachmentMediaType) {
+        if(attachmentMediaType.indexOf('image') >= 0){
             return ImageAttachment;
-        } else if (attachment.mediaType.indexOf('video') >= 0) {
+        } else if (attachmentMediaType.indexOf('video') >= 0) {
             return VideoAttachment;
-        } else if (attachment.mediaType.indexOf('audio') >= 0) {
+        } else if (attachmentMediaType.indexOf('audio') >= 0) {
             return AudioAttachment;
         } else {
             return DownloadAttachment;
@@ -84,9 +80,7 @@
         {@html createHtmlContent(post.content)}
         {#if Array.isArray(post.attachments) && post.attachments.length > 0}
             {#each post.attachments as attachmentKey}
-                {#await getAttachmentComponent(attachmentKey) then attachment}
-                    <svelte:component this={attachment} attachment={attachmentKey}/>
-                {/await}
+                <svelte:component this={getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
             {/each}
         {/if}
     </div>

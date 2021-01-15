@@ -22,13 +22,10 @@
     }
 
     onMount(async() => {
-        console.log('onMount');
-        console.log($mediaStore);
         await loadMedia();
     })
 
     beforeUpdate(async() => {
-        console.log('onUpdate');
         await loadMedia();
     })
 

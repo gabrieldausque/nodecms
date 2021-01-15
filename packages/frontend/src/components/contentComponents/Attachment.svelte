@@ -48,7 +48,7 @@
                             mediaReaders.push(...channel.readers)
                         media = await backEndService.mediaService.createMedia(file, key, label, visibility, mediaReaders);
                     }
-                    media = await backEndService.mediaService.getMedia(key);
+                    media = await backEndService.mediaService.getMediaMetadata(key);
                 } catch(error) {
                     const loading = document.getElementById(`loading-${key}`)
                     if(loading)
@@ -61,10 +61,10 @@
     afterUpdate(async() => {
         if(media) {
             const div = document.getElementById(`${media.key}`);
-            console.log('after update attachment')
-            console.log(media);
             if(media.mediaType.indexOf('image') >= 0) {
-                const localBuffer = new Uint8Array(media.blob.data);
+                const backEndService = await getBackendClient();
+                const localMedia = await backEndService.mediaService.getMedia(key);
+                const localBuffer = new Uint8Array(localMedia.blob.data);
                 const blob = new Blob([localBuffer], { type: media.mediaType});
                 div.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
             } else {

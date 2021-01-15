@@ -8,31 +8,26 @@
     export let channel;
 
     let editor = null;
-    let channelPosts = [];
-
-    const unsubscribe = ChannelStore.subscribe((value) => {
-        if(value && Array.isArray(value.posts)){
-            channelPosts.splice(0,channelPosts.length);
-            for(const p of value.posts){
-                if(channelPosts.findIndex((i) => {
-                    return p.id === i.id;
-                }) < 0){
-                    channelPosts.push(p);
-                }
-            }
-        }
-        channelPosts = channelPosts;
-    })
+    $ChannelStore;
 
     async function loadPosts() {
         if (channel && channel.key &&
             channel.key !== $ChannelStore.key) {
-            console.log('update store');
             const backEndService = await getBackendClient();
             try{
                 const channelContent = new ChannelContent();
                 channelContent.key = channel.key;
                 channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
+                for(const p of channelContent.posts) {
+                    if(Array.isArray(p.attachments) && p.attachments.length > 0){
+                        const attachmentsMetadata = [];
+                        for(const a of p.attachments){
+                            const m = await backEndService.mediaService.getMediaMetadata(a);
+                            attachmentsMetadata.push(m);
+                        }
+                        p.attachments = attachmentsMetadata;
+                    }
+                }
                 ChannelStore.set(channelContent);
             }catch(error){
                 console.error(error);
@@ -40,14 +35,25 @@
             const channelContent = document.querySelector('.channelContent')
             const currentChannelKey = channel.key;
             await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
+                if(Array.isArray(m.attachments) && m.attachments.length > 0){
+                    const attachmentsMetadata = [];
+                    for(const a of m.attachments){
+                        const media = await backEndService.mediaService.getMediaMetadata(a);
+                        attachmentsMetadata.push(media);
+                    }
+                    m.attachments = attachmentsMetadata;
+                }
                 ChannelStore.update(value => {
                     value.posts.push(m);
                     return value;
                 })
                 window.setTimeout(() => {
                     channelContent.scrollTop = channelContent.scrollHeight;
-                })
+                }, 300)
             })
+            window.setTimeout(() => {
+                channelContent.scrollTop = channelContent.scrollHeight;
+            }, 300)
         }
     }
 
@@ -58,8 +64,6 @@
     beforeUpdate(async() => {
         await loadPosts();
     })
-
-    onDestroy(unsubscribe)
 
 </script>
 
@@ -114,8 +118,8 @@
         </div>
     </div>
     <div class="channelContent">
-        {#if channelPosts}
-            {#each channelPosts as post}
+        {#if $ChannelStore}
+            {#each $ChannelStore.posts as post}
                 <Post post={post}></Post>
             {/each}
         {:else}

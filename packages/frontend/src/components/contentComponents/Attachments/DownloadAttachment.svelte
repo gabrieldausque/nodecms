@@ -1,11 +1,37 @@
 <script>
     import {AttachmentHelpers} from "./AttachmentHelpers";
+    import {writable} from "svelte/store";
+    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {beforeUpdate, onMount} from "svelte";
+    import LoadingAttachment from "./LoadingAttachment.svelte";
 
     export let attachment;
+    let media;
+    const mediaStore = writable({});
+    mediaStore.subscribe((value) => {
+        if (!media || media.id !== value.id)
+            media = value;
+    })
+
+    async function loadMedia() {
+        if (!media || media.key !== attachment) {
+            const backendClient = await getBackendClient();
+            const m = await backendClient.mediaService.getMedia(attachment);
+            mediaStore.set(m);
+        }
+    }
 
     let icons = {
         'application/pdf': 'fa-file-pdf'
     }
+
+    onMount(async () => {
+        await loadMedia();
+    })
+
+    beforeUpdate(async () => {
+        await loadMedia();
+    })
 
 </script>
 
@@ -26,9 +52,13 @@
     }
 </style>
 
-<a id="download-{attachment.id}" class="attachment-download" href="{AttachmentHelpers.getDownloadUrl(attachment)}" target="_blank">
-    <div class="attachment-download">
-        <i class="fas fa-2x {icons[attachment.mediaType]}"></i>
-        <label>{attachment.label}</label>
-    </div>
-</a>
+{#if !media || typeof media.id === 'undefined'}
+    <LoadingAttachment attachment={attachment}></LoadingAttachment>
+{:else if typeof media.id === 'number'}
+    <a id="download-{media.id}" class="attachment-download" href="{AttachmentHelpers.getDownloadUrl(media)}" target="_blank">
+        <div class="attachment-download">
+            <i class="fas fa-2x {icons[media.mediaType]}"></i>
+            <label>{media.label}</label>
+        </div>
+    </a>
+{/if}

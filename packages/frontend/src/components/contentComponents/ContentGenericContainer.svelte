@@ -35,7 +35,6 @@
     }
 
     onMount(async () => {
-        console.log(`documentKey = ${documentKey}`);
         if(documentKey)
             properties = await getDocument();
     })
