@@ -5,6 +5,7 @@
     import {getBackendClient} from "../../api/NodeCMSClient";
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
+    import _ from 'underscore';
 
     export let channelKey;
     let attachments = [];
@@ -40,6 +41,21 @@
         });
         attachments = attachments;
     }
+
+    const scanText = _.debounce(() => {
+        console.log('scanning text ...')
+        const messageContent = document.querySelector('.cl-content')
+        const urlRegexp = /(https*?:\/\/[^\s<>]+)/g
+        const urlGroups = messageContent.innerHTML.match(urlRegexp);
+        console.log(urlGroups);
+        if(Array.isArray(urlGroups)){
+            for(const u of urlGroups){
+                console.log('replacing u');
+                const index = messageContent.innerHTML.indexOf(u);
+                messageContent.innerHTML.replace(u, `<a>${u}</a>`)
+            }
+        }
+    }, 1000, false);
 
     onMount(async () => {
         const backEndService = await getBackendClient();
@@ -115,7 +131,6 @@
             });
 
             messageContent.removeAttribute('onpaste');
-
             messageContent.addEventListener('keyup', async (event) => {
                 if (event.key === 'Enter' ) {
                     event.preventDefault();
@@ -140,6 +155,10 @@
                         }, 150)
                     }
                 }
+                scanText();
+            })
+            document.querySelector('.cl-textarea').addEventListener('change', async(event) => {
+
             })
         }, 100)
     })
