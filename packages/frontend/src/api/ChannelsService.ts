@@ -129,6 +129,7 @@ export class ChannelsService extends BaseServiceClient {
             return result.data;
         }catch(error){
             console.error(error);
+            console.log(error.response);
             if(error.response){
                 throw new Error(error.response.message);
             } else {

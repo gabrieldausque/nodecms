@@ -92,7 +92,9 @@ export default {
   },
 
   error: {
-    all: [],
+    all: [async (context:any) => {
+      console.log('error');
+    }],
     find: [],
     get: [],
     create: [],

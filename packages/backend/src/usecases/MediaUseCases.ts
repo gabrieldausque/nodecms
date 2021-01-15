@@ -72,7 +72,7 @@ export class MediaUseCases extends UseCases<Media> {
     const entity = await this.storage.get(id);
     if(await this.isDataAuthorized(entity, 'r', executingUser))
       return entity;
-    else throw new Error(`User ${executingUser?.login} is not authorized to access media with id ${entity.id}`)
+    else throw new NotAuthorizedError(`User ${executingUser?.login} is not authorized to access media with id ${entity.id}`)
   }
 
   async update(id: string | number, entityToUpdate: Media, executingUser: User): Promise<Media> {

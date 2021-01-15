@@ -79,7 +79,8 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
         media.visibility === MediaVisibility.public) {
         return true
       } else {
-        return this.useCase.isDataAuthorized(media, right, user);
+        const isAuthorized = await this.useCase.isDataAuthorized(media, right, user);
+        return isAuthorized;
       }
     }
   }

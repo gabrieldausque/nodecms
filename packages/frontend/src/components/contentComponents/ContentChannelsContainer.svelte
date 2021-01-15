@@ -124,8 +124,10 @@
 
     async function changeCurrentChannel(event) {
         let selectedChannel = event.target;
-        let selectedChannelKey = selectedChannel.attributes['data-channelKey'].value;
-        if(!selectedChannelKey){
+        let selectedChannelKey;
+        if(selectedChannel.attributes['data-channelKey']){
+            selectedChannelKey = selectedChannel.attributes['data-channelKey'].value;
+        }else {
             selectedChannel = event.target.parentNode;
             selectedChannelKey = selectedChannel.attributes['data-channelKey'].value;
         }
@@ -133,13 +135,14 @@
     }
 
     $:{
+        console.log('after channel update');
         getBackendClient().then(async (backEndService) => {
             if(channelKey) {
                 const c = await backEndService.channelsService.getChannel(channelKey);
                 if(channel && channel.id !== c.id)  {
+                    console.log(channel);
                     channel = c;
                 }
-
             }
         })
     }
@@ -194,12 +197,16 @@
         max-width: 325px;
     }
 
+    #show-create-channel {
+        text-align: start !important;
+    }
+
 </style>
 
 <main class="channelPanel">
     <div class="channelsMenu">
         <ul class="list-group">
-            <li on:click={showCreateChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><i class="fas fa-2x fa-plus-circle"></i><span class="channels-item-label">Ajouter un canal</span></li>
+            <li id="show-create-channel" on:click={showCreateChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><i class="fas fa-2x fa-plus-circle"></i><span class="channels-item-label">Ajouter un canal</span></li>
             {#each availableChannels as availableChannel}
                 <li data-channelKey="{availableChannel.key}" on:click={changeCurrentChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><span class="channels-item-label">{availableChannel.label}</span></li>
             {/each}

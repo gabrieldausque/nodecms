@@ -12,6 +12,7 @@ import {Channel, ChannelVisibility} from "../../entities/Channel";
 import {User} from "../../entities/User";
 import {TopicMessage, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {Logger} from "../../plugins/Logging/Logger";
+import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
 
 type Data = ChannelPostEntity
 
@@ -149,7 +150,7 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
           }
         }
         if(!isAuthorized){
-          throw new Error(`User ${user.login} is not a member or has not sufficient rights to execute ${context.Method} on channel ${channel.key}`)
+          throw new NotAuthorizedError(`User ${user.login} is not a member or has not sufficient rights to execute ${context.method} on channel ${channel.key}`)
         }
       }
     }
