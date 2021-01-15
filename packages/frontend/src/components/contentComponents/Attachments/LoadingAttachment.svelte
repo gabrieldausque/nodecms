@@ -12,6 +12,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        align-self: center;
     }
 
     .spinner-loading {
@@ -27,7 +28,7 @@
     }
 </style>
 
-<div class="loading-container" id="{attachment.id}" title="Chargement ...">
+<div class="loading-container" id="{attachment}" title="Chargement ...">
     <div class="spinner-border spinner-loading text-danger" ></div>
     <div class="medias-loading">
         <i class="fas fa-3x fa-video"></i>

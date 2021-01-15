@@ -30,7 +30,7 @@
     async function customPaste(file, label) {
         const backEndService = await getBackendClient();
         const keyAndLabel = uuid.v4()
-        const channel = await backEndService.getChannel(channelKey);
+        const channel = await backEndService.channelsService.getChannel(channelKey);
         attachments.push({
             key: keyAndLabel,
             label: label?label:keyAndLabel,
@@ -140,7 +140,6 @@
                         }, 150)
                     }
                 }
-                console.log(event.key);
             })
         }, 100)
     })
@@ -166,6 +165,15 @@
         max-height: 60px;
     }
 
+    .cl-content,
+    .cl-actionbar {
+        text-align: start;
+    }
+
+    div {
+        text-align: start;
+    }
+
 </style>
 
 <div class="postCreation">
@@ -176,7 +184,7 @@
 
     <div class="attachments">
         {#each attachments as attachment}
-            <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} label={attachment.label} file="{attachment.file}" ></AttachmentAtCreation>
+            <AttachmentAtCreation visibility={attachment.visibility} key={attachment.key} label={attachment.label} file="{attachment.file}" associatedChannel={channelKey} ></AttachmentAtCreation>
         {/each}
     </div>
 

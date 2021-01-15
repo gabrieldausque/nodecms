@@ -45,21 +45,23 @@ export default {
     create: [],
     update: [async (context:any) => {
       const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
-      if(!await service.isDataAuthorized(context.data, 'w',context.params.user)) {
-        throw new Forbidden('RoleDTO asked is not authorized for your account');
+      const entity = await service.get(context.id,context.params);
+      if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
+        throw new Forbidden('Data to update is not authorized for your account');
       }
     }],
     patch: [async (context:any) => {
       const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
-      if(!await service.isDataAuthorized(context.data, 'w',context.params.user)) {
-        throw new Forbidden('RoleDTO asked is not authorized for your account');
+      const entity = await service.get(context.id,context.params);
+      if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
+        throw new Forbidden('Data to patch is not authorized for your account');
       }
     }],
     remove: [async (context:any) => {
       const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
       const entity = await service.get(context.id,context.params);
       if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
-        throw new Forbidden('RoleDTO asked is not authorized for your account');
+        throw new Forbidden('Data to remove is not authorized for your account');
       }
     }]
   },
@@ -90,7 +92,9 @@ export default {
   },
 
   error: {
-    all: [],
+    all: [async (context:any) => {
+      console.log('error');
+    }],
     find: [],
     get: [],
     create: [],

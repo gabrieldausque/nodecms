@@ -1,7 +1,7 @@
 <script>
     import {getBackendClient} from '../api/NodeCMSClient';
     import { onMount } from 'svelte';
-    import {UserState} from "../stores/UserState";
+    import {UserStore} from "../stores/UserStore";
 
     export let isLogin = false;
     let backendService = null;
@@ -16,7 +16,7 @@
     }
 
     function onLoggedIn() {
-        UserState.set({
+        UserStore.set({
             isLogin: isLogin,
             login
         })
@@ -28,7 +28,7 @@
             const alertBox = window.jQuery('#errorOnLogin')
             alertBox.removeClass('show');
             try{
-                await backendService.authenticate(login, password);
+                await backendService.userService.authenticate(login, password);
                 isLogin = true;
             }catch (e) {
                 let message;
@@ -56,11 +56,12 @@
 
     let logout = async () => {
         isLogin = false;
-        await backendService.logOut();
-        UserState.set({
+        await backendService.userService.logOut();
+        UserStore.set({
             isLogin:false,
             login:undefined
         })
+
     }
 
     onMount(async () => {
@@ -69,7 +70,7 @@
             password = '';
         })
         backendService = await getBackendClient();
-        let loginOrFalse = await backendService.checkAuthentication();
+        let loginOrFalse = await backendService.userService.checkAuthentication();
         if(loginOrFalse && typeof loginOrFalse === "string"){
             isLogin = true;
             login = loginOrFalse;

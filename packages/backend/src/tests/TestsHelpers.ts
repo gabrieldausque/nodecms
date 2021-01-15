@@ -88,34 +88,47 @@ export async function initMongoDbTestDatabase():Promise<void> {
     //ignoring
   }
 
-  await roleStorage.create({ key:"administrators", description:"Administrators group"});
-  await roleStorage.create({ key:"users", description:"Users group"});
-  await roleStorage.create({ key:"specialUsers", description:"special Users group"});
-
   await userStorage.create({ login:"localtest",password:"apassword",isActive:true});
   await userStorage.create({ login:"otheruser",password:"anotherpassword",isActive:true});
   await userStorage.create({ login:"standarduser", password:"standard", isActive:true})
   await userStorage.create({ login:"inactiveuser",password:"anything",isActive:false});
   await userStorage.create({ login:"otherAdmin",password:"otherAdmin",isActive:false});
 
+  await roleStorage.create({ key:"administrators", description:"Administrators group", members:[0], ownerId:0, creationDate: new Date()});
+  await roleStorage.create({ key:"specialUsers", description:"special Users group", members:[1], ownerId:0, creationDate: new Date()});
+  await roleStorage.create({ key:"users", description:"Users group", members:[2,3,4], ownerId:0, creationDate: new Date()});
+
   await metadataStorage.create({ key:"title",value:"The A Team",isPublic:true,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"logo",value:"http://localhost:3030/a-team_logo.png",isPublic:true,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"private-metadata",value:"my private value",isPublic:false,ownerType:undefined,ownerId:undefined});
   await metadataStorage.create({ key:"pseudonym",value:"MyPseudo",isPublic:false,ownerType:"user",ownerId:0});
-  await metadataStorage.create({ key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:0});
-  await metadataStorage.create({ key:"roles",value:[1],isPublic:false,ownerType:"user",ownerId:2});
-  await metadataStorage.create({ key:"roles",value:[1,2],isPublic:false,ownerType:"user",ownerId:1});
-  await metadataStorage.create({ key:"roles",value:[0,1],isPublic:false,ownerType:"user",ownerId:4});
 
   await authorizationStorage.create({on:"operation",onType:"create",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"update",for:"*",right:"x",role:0});
-  await authorizationStorage.create({on:"operation",onType:"update",for:"*",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"patch",for:"*",right:"x",role:0});
-  await authorizationStorage.create({on:"operation",onType:"patch",for:"*",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"find",for:"*",right:"x",role:0});
   await authorizationStorage.create({on:"operation",onType:"get",for:"*",right:"x",role:0});
-  await authorizationStorage.create({on:"operation",onType:"remove",for:"user",right:"x",role:1});
+
+  //user service
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user",right:"x",role:2});
+
+  // role service
+  await authorizationStorage.create({on:"operation",onType:"create",for:"role",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"role",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"role",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"role",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"role",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"role",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"role",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"role",right:"x",role:2});
+
+  //channel and channel posts service
   await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"create",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"channel-posts",right:"x",role:1});
@@ -126,17 +139,19 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"get",for:"channel-posts",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"find",for:"channel-posts",right:"x",role:2});
+
   //Rights for Document service
   await authorizationStorage.create({on:"operation",onType:"get",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"get",for:"document",right:"x",role:2});
   await authorizationStorage.create({on:"operation",onType:"find",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"find",for:"document",right:"x",role:2});
-  await authorizationStorage.create({on:"operation",onType:"create",for:"document",right:"x",role:2});
-  await authorizationStorage.create({on:"operation",onType:"remove",for:"document",right:"x",role:2});
-  await authorizationStorage.create({on:"operation",onType:"update",for:"document",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"document",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"document",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"document",right:"x",role:1});
 
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:1});
+  await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:2});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"w",role:0});
   await authorizationStorage.create({on:"data",onType:"metadata",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"metadata",for:"*",right:"w",role:0});
@@ -170,7 +185,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
     documentType: 'default',
     readerRoles: [],
     editors: [],
-    editorRoles: [2],
+    editorRoles: [1],
     visibility: 'protected',
     content: { prop: 'MyContentPropProtected'},
     key: 'welcomeProtected'
@@ -180,7 +195,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
     ownerId:0,
     readers: [],
     documentType: 'default',
-    readerRoles: [2],
+    readerRoles: [1],
     editors: [],
     editorRoles: [0],
     visibility: 'private',

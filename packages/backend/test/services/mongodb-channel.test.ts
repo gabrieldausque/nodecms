@@ -11,6 +11,7 @@ import {promisify} from "util";
 import {Channel as ChannelEntity, ChannelVisibility} from "../../src/entities/Channel";
 import {Channel} from "../../src/services/channel/channel.class";
 import {ChannelPost} from "../../src/services/channel-post/channel-post.class";
+import {Role} from "../../src/services/role/role.class";
 
 const port = app.get('port') || 8998;
 const getUrl = (pathname?: string) => url.format({
@@ -80,20 +81,30 @@ describe('Channel service With Mongodb', () => {
 
   it('should create a public channel and get its informations,', async() => {
     const service:Channel = app.service('channel');
+    const roleService:Role = app.service('role');
+
     const created:Partial<ChannelEntity> = await service.create({
       visibility: ChannelVisibility.public,
       key: 'MyPublicChannel',
       label: 'A public channel',
     }, params);
+    params.filter = {key:'channel-MyPublicChannel-readers'};
+    const readersRole:any = await roleService.find(params);
+    params.filter = {key:'channel-MyPublicChannel-contributors'};
+    const contributorsRole:any = await roleService.find( params);
+    params.filter = {key:'channel-MyPublicChannel-editors'};
+    const editorsRole:any = await roleService.find( params);
+    params.filter = {key:'channel-MyPublicChannel-administrators'};
+    const administratorsRole:any = await roleService.find(params);
     expect(created).to.be.eql({
       id:1,
       key:'MyPublicChannel',
       visibility:ChannelVisibility.public,
       label: 'A public channel',
-      readers:[],
-      contributors:[],
-      editors:[],
-      administrators:[0]
+      readers:[readersRole[0].id],
+      contributors:[contributorsRole[0].id],
+      editors:[editorsRole[0].id],
+      administrators:[administratorsRole[0].id]
     })
     expect(await service.get(created.id as number, params)).to.be.eql(created);
   })
@@ -105,16 +116,26 @@ describe('Channel service With Mongodb', () => {
       key: 'MyPublicChannel',
       label: 'A public channel',
     }, params);
+    const roleService:Role = app.service('role');
+    params.filter = {key:'channel-MyPublicChannel-readers'};
+    const readersRole:any = await roleService.find(params);
+    params.filter = {key:'channel-MyPublicChannel-contributors'};
+    const contributorsRole:any = await roleService.find( params);
+    params.filter = {key:'channel-MyPublicChannel-editors'};
+    const editorsRole:any = await roleService.find( params);
+    params.filter = {key:'channel-MyPublicChannel-administrators'};
+    const administratorsRole:any = await roleService.find(params);
     expect(created).to.be.eql({
       id:1,
       key:'MyPublicChannel',
       visibility:ChannelVisibility.public,
       label: 'A public channel',
-      readers:[],
-      contributors:[],
-      editors:[],
-      administrators:[0]
+      readers:[readersRole[0].id],
+      contributors:[contributorsRole[0].id],
+      editors:[editorsRole[0].id],
+      administrators:[administratorsRole[0].id]
     })
+    delete params.filter
     expect(await service.find(params)).to.be.eql([{
       administrators: [],
       contributors: [],
@@ -125,25 +146,25 @@ describe('Channel service With Mongodb', () => {
       readers: [],
       visibility: "public"
     },{
-        administrators: [0],
-        contributors: [],
-        editors: [],
+        readers:[readersRole[0].id],
+        contributors:[contributorsRole[0].id],
+        editors:[editorsRole[0].id],
+        administrators:[administratorsRole[0].id],
         id: 1,
         key: "MyPublicChannel",
         label: "A public channel",
-        readers: [],
         visibility: "public"
       }]);
     if(typeof created.id === 'number'){
       await service.remove(created.id, params);
       expect(await service.find(params)).to.be.eql([{
-        administrators: [],
-        contributors: [],
-        editors: [],
+        readers:[],
+        contributors:[],
+        editors:[],
+        administrators:[],
         id: 0,
         key: "news",
         label: "Actualités",
-        readers: [],
         visibility: "public"
       }]);
     } else {
@@ -218,10 +239,10 @@ describe('Channel service With Mongodb', () => {
           key: 'MyPublicChannel',
           visibility: ChannelVisibility.protected,
           label: "My new label",
-          readers:[1],
-          editors: [1],
-          contributors:[1],
-          administrators:[0,1]
+          readers:[3,1],
+          editors: [5,1],
+          contributors:[4,1],
+          administrators:[6,0,1]
         }
       );
       await service.patch(created.id, {
@@ -238,10 +259,10 @@ describe('Channel service With Mongodb', () => {
           key: 'MyPublicChannel',
           visibility: ChannelVisibility.public,
           label: "My patch label",
-          readers:[1,2],
-          editors: [1,2],
-          contributors:[1,2],
-          administrators:[0,1,2]
+          readers:[3,1,2],
+          editors: [5,1,2],
+          contributors:[4,1,2],
+          administrators:[6,0,1,2]
         }
       )
     }

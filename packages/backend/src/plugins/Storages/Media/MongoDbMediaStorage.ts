@@ -63,7 +63,8 @@ export class MongoDbMediaStorage extends MongoDbStorage<Media> implements MediaS
         label: data.label,
         mediaType: data.mediaType,
         ownerId: data.ownerId,
-        storagePath: path
+        storagePath: path,
+        readers: data.readers
       }
       await this.internalCreate(newMedia);
     } else {

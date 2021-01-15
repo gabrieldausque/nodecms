@@ -1,7 +1,5 @@
 <script>
-
-
-    import {onMount} from "svelte";
+    import {afterUpdate, beforeUpdate, onMount, setContext} from "svelte";
     import {getBackendClient, NodeCMSClient} from "../../api/NodeCMSClient";
     import {v4} from 'uuid';
 
@@ -13,43 +11,18 @@
 
     export let post
 
-    let attachments = [];
-
     function createHtmlContent(content) {
         const element = document.createElement('div');
         element.innerHTML = content;
         return element.outerHTML;
     }
 
-    onMount(async () => {
-        const backendClient = await getBackendClient();
-        if (Array.isArray(post.attachments)) {
-            for (const mediaKey of post.attachments) {
-                const loadingMedia = {
-                    id: v4(),
-                    mediaType: 'loading',
-                    loading: true
-                }
-                attachments.push(loadingMedia);
-                attachments = attachments;
-                const media = await backendClient.mediaService.getMedia(mediaKey);
-                attachments.push(media);
-                if(attachments.indexOf(loadingMedia) >= 0)
-                    attachments.splice(attachments.indexOf(loadingMedia),1);
-            }
-            // for reseting display
-            attachments = attachments;
-        }
-    })
-
-    function getAttachmentComponent(attachment) {
-        if(attachment.loading) {
-            return LoadingAttachment
-        } else if(attachment.mediaType.indexOf('image') >= 0){
+    function getAttachmentComponent(attachmentMediaType) {
+        if(attachmentMediaType.indexOf('image') >= 0){
             return ImageAttachment;
-        } else if (attachment.mediaType.indexOf('video') >= 0) {
+        } else if (attachmentMediaType.indexOf('video') >= 0) {
             return VideoAttachment;
-        } else if (attachment.mediaType.indexOf('audio') >= 0) {
+        } else if (attachmentMediaType.indexOf('audio') >= 0) {
             return AudioAttachment;
         } else {
             return DownloadAttachment;
@@ -98,11 +71,6 @@
                 font-size: 25px;
             }
 
-            .cl-content,
-            .cl-actionbar {
-                text-align: start;
-            }
-
             div {
                 text-align: start;
             }
@@ -110,11 +78,9 @@
         </style>
         <div>{(new Date(post.creationDate)).toLocaleDateString()} {(new Date(post.creationDate)).toLocaleTimeString()}</div>
         {@html createHtmlContent(post.content)}
-        {#if Array.isArray(attachments) && attachments.length > 0}
-            {#each attachments as attachment}
-                {#if attachment && attachment.mediaType}
-                    <svelte:component this={getAttachmentComponent(attachment)} attachment={attachment}/>
-                {/if}
+        {#if Array.isArray(post.attachments) && post.attachments.length > 0}
+            {#each post.attachments as attachmentKey}
+                <svelte:component this={getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
             {/each}
         {/if}
     </div>
