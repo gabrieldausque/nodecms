@@ -45,14 +45,14 @@
     const scanText = _.debounce(() => {
         console.log('scanning text ...')
         const messageContent = document.querySelector('.cl-content')
-        const urlRegexp = /(https*?:\/\/[^\s<>]+)/g
+        const urlRegexp = /(?!<a>)(https*?:\/\/[^\s<>]+)(?!<\/a>)/g
         const urlGroups = messageContent.innerHTML.match(urlRegexp);
         console.log(urlGroups);
         if(Array.isArray(urlGroups)){
             for(const u of urlGroups){
                 console.log('replacing u');
                 const index = messageContent.innerHTML.indexOf(u);
-                messageContent.innerHTML.replace(u, `<a>${u}</a>`)
+                messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a href="${u}" target="_blank">${u}</a>`)
             }
         }
     }, 1000, false);
