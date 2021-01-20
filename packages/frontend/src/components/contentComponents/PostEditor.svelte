@@ -75,10 +75,12 @@
                         d.innerHTML = `<a data-link="true" href="${u.trim()}" target="_blank">${u.trim()}</a>`
                         selection.deleteFromDocument();
                         selection.getRangeAt(0).insertNode(d.firstChild);
+                        selection.collapseToEnd();
                     }
                 } else {
                     selection.deleteFromDocument();
                     selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+                    selection.collapseToEnd();
                 }
             }
         }
