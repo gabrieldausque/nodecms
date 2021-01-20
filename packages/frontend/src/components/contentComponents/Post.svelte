@@ -32,24 +32,28 @@
         }
     }
 
-    afterUpdate(async () => {
-        if(post && typeof post.id === 'number'){
-            const postView = document.getElementById(`post-${post.id}`);
-            const tempCache = globalFEService.getService('TempCache');
-            if(postView){
-                const webThumbnails = postView.querySelectorAll('a[data-iswebthumbnail=true]')
-                for(const link of webThumbnails){
-                    const newInnerHTML = tempCache.get(link.getAttribute('href'));
-                    if(newInnerHTML){
-                        console.log(newInnerHTML);
-                        link.innerHTML = newInnerHTML.innerHTML;
-                    } else {
-                        console.log('Cache is empty ...')
+    afterUpdate(() => {
+        window.setTimeout(() => {
+            if(post && typeof post.id === 'number'){
+                const postView = document.getElementById(`post-${post.id}`);
+                const tempCache = globalFEService.getService('TempCache');
+                if(postView){
+                    const webThumbnails = postView.querySelectorAll('a[data-link=true]')
+                    for(const link of webThumbnails){
+                        const setInnerLink = () => {
+                            const newInnerHTML = tempCache.get(link.getAttribute('href'));
+                            if(newInnerHTML)
+                            {
+                                link.innerHTML = newInnerHTML;
+                            }
+                        }
+                        window.setTimeout(setInnerLink, 500);
                     }
                 }
-            }
 
-        }
+            }
+        },100);
+
     })
 
 </script>

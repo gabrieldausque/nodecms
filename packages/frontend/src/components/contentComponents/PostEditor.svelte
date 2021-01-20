@@ -42,38 +42,54 @@
         attachments = attachments;
     }
 
-    const scanText = _.debounce(async () => {
+    const scanText = _.debounce(() => {
         console.log('scanning text ...')
-        const backEndService = await getBackendClient();
         const messageContent = document.querySelector('.cl-content')
-        const urlRegexp = /(?!<a.*>)(https*?:\/\/[^\s<>]+)(?!<\/a>)/g
+        const urlRegexp = /(https*?:\/\/[^\s<>"]+)/g
         const urlGroups = messageContent.innerHTML.match(urlRegexp);
-        console.log(urlGroups);
         if(Array.isArray(urlGroups)){
             for(const u of urlGroups){
-                let webThumbnail = await backEndService.utilsService.getWebsiteThumbnail(u)
-                if(!webThumbnail)
-                    messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a href="${u}" target="_blank">${u}</a>`)
-                else
-                    messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a data-isWebThumbnail="true" data-mediaId="${webThumbnail.mediaId}" data-title="${webThumbnail.title}" data-description="${webThumbnail.description}" href="${u}" target="_blank">${u}</a>`)
+                messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a data-link="true" href="${u.trim()}" target="_blank">${u.trim()}</a>`)
             }
         }
     }, 1000, false);
 
-    onMount(async () => {
-        const backEndService = await getBackendClient();
-        window.setTimeout(async () => {
-            const messageContent = document.getElementById('message');
-            messageContent.addEventListener('paste', async (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                for (const i of event.clipboardData.items) {
-                    if (i.kind === 'file') {
-                        const f = i.getAsFile();
-                        await customPaste(f);
+    async function pasteEventHandler(event) {
+        console.log('pasted')
+        event.preventDefault();
+        event.stopPropagation();
+        for (const i of event.clipboardData.items) {
+            console.log(i.kind);
+            if (i.kind === 'file') {
+                const f = i.getAsFile();
+                await customPaste(f);
+            } else if (i.kind === 'string') {
+                let paste = (event.clipboardData || window.clipboardData).getData('text');
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return false;
+                const urlRegexp = /^(https*?:\/\/[^\s]+$)/g
+                const urlGroups = paste.match(urlRegexp);
+                if (Array.isArray(urlGroups)) {
+                    for (const u of urlGroups) {
+                        const d = document.createElement("div");
+                        d.innerHTML = `<a data-link="true" href="${u.trim()}" target="_blank">${u.trim()}</a>`
+                        selection.deleteFromDocument();
+                        selection.getRangeAt(0).insertNode(d.firstChild);
                     }
+                } else {
+                    selection.deleteFromDocument();
+                    selection.getRangeAt(0).insertNode(document.createTextNode(paste));
                 }
-            })
+            }
+        }
+        console.log('###');
+    }
+
+    onMount(() => {
+
+        window.setTimeout(() => {
+            const messageContent = document.getElementById('message');
+            messageContent.addEventListener('paste', pasteEventHandler, true);
             let editor = new Editor({
                 target: messageContent,
                 props: {
@@ -85,22 +101,22 @@
                             title: 'Coller',
                             result: async () => {
                                 const read = await navigator.clipboard.read()
-                                if(read && read.length > 0) {
+                                if (read && read.length > 0) {
                                     const item = read[0];
-                                    if(Array.isArray(item.types) && item.types.length > 0){
+                                    if (Array.isArray(item.types) && item.types.length > 0) {
                                         const type = item.types[0];
                                         console.log(type);
                                         const blob = await item.getType(type);
-                                        if(type.indexOf('image') >= 0){
+                                        if (type.indexOf('image') >= 0) {
                                             const file = new File([blob], 'image');
                                             await customPaste(file);
-                                        } else if(type.indexOf('text') >= 0){
+                                        } else if (type.indexOf('text') >= 0) {
                                             const reader = new FileReader()
                                             reader.onload = (e) => {
                                                 const content = messageContent.querySelector('.cl-content');
                                                 content.append(reader.result.toString());
                                                 content.focus();
-                                                document.execCommand('selectAll',false, null);
+                                                document.execCommand('selectAll', false, null);
                                                 document.getSelection().collapseToEnd();
                                                 content.scrollTop = content.scrollHeight;
                                             }
@@ -114,13 +130,13 @@
                             name: 'attach',
                             icon: '<i class="fas fa-paperclip"></i>',
                             title: 'Ajouter une pièce jointe',
-                            result: async() => {
+                            result: async () => {
                                 const input = document.createElement('input');
                                 input.type = 'file';
                                 input.accept = authorizedMimeTypes.join(',');
                                 input.onchange = (e) => {
                                     console.log(input.files);
-                                    if(input.files) {
+                                    if (input.files) {
                                         for (const file of input.files) {
                                             customPaste(file, file.name);
                                         }
@@ -132,14 +148,13 @@
                     ]
                 }
             });
-
-            messageContent.removeAttribute('onpaste');
             messageContent.addEventListener('keyup', async (event) => {
-                if (event.key === 'Enter' ) {
+                const backEndService = await getBackendClient();
+                if (event.key === 'Enter') {
                     event.preventDefault();
                     event.stopPropagation();
                     if (!event.ctrlKey) {
-                        if(!document.querySelectorAll('.attachment-upload').length){
+                        if (!document.querySelectorAll('.attachment-upload').length) {
                             messageContent.querySelector('br')?.remove();
                             await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
                             editor.setHtml('');
@@ -152,16 +167,12 @@
                             const content = messageContent.querySelector('.cl-content');
                             content.append(carriageReturn);
                             content.focus();
-                            document.execCommand('selectAll',false, null);
+                            document.execCommand('selectAll', false, null);
                             document.getSelection().collapseToEnd();
                             content.scrollTop = content.scrollHeight;
                         }, 150)
                     }
                 }
-                scanText();
-            })
-            document.querySelector('.cl-textarea').addEventListener('change', async(event) => {
-
             })
         }, 100)
     })

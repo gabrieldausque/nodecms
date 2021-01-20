@@ -12,6 +12,31 @@
     let editor = null;
     $ChannelStore;
 
+    async function preloadContentPreview(content){
+        const contentElement = document.createElement('div');
+        contentElement.innerHTML = content;
+        const backendService = await getBackendClient();
+        const webThumbnails = contentElement.querySelectorAll('a[data-link=true]')
+        const tempCache = globalFEService.getService('TempCache');
+        for(const link of webThumbnails){
+            const URL = link.getAttribute('href');
+            console.log('getting tw for ' + URL);
+            if(!tempCache.get(URL)) {
+                const linkPreview = await backendService.utilsService.getWebsiteThumbnail(URL.trim())
+                if(linkPreview) {
+                    const media = await backendService.mediaService.getMedia(linkPreview.mediaId);
+                    const mediaUrl = AttachmentHelpers.getDownloadUrl(media);
+                    link.innerHTML = `
+                                        <div class="link-preview">
+                                            <img src="${mediaUrl}"><div><h6>${linkPreview.title}</h6><br><p>${linkPreview.description}</p></div>
+                                        </div>
+                                    `
+                    tempCache.put(link.getAttribute('href'),link.innerHTML)
+                }
+            }
+        }
+    }
+
     async function loadPosts() {
         if (channel && channel.key &&
             channel.key !== $ChannelStore.key
@@ -25,23 +50,7 @@
                     channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
                     for(const p of channelContent.posts) {
                         if(p.content){
-                            const contentElement = document.createElement('div');
-                            contentElement.innerHTML = p.content;
-                            const backendService = await getBackendClient();
-                            const webThumbnails = contentElement.querySelectorAll('a[data-iswebthumbnail=true]')
-                            const tempCache = globalFEService.getService('TempCache');
-                            for(const link of webThumbnails){
-                                if(!tempCache.get(link.getAttribute('href'))) {
-                                    const media = await backendService.mediaService.getMedia(link.getAttribute('data-mediaid'));
-                                    const mediaUrl = AttachmentHelpers.getDownloadUrl(media);
-                                    link.innerHTML = `
-                                        <div class="link-preview">
-                                            <img src="${mediaUrl}"><div><h6>${link.getAttribute('data-title')}</h6><br><p>${link.getAttribute('data-description')}</p></div>
-                                        </div>
-                                    `
-                                    tempCache.put(link.getAttribute('href'),link.innerHTML)
-                                }
-                            }
+                            await preloadContentPreview(p.content)
                         }
                         if(Array.isArray(p.attachments) && p.attachments.length > 0){
                             const attachmentsMetadata = [];
@@ -76,17 +85,20 @@
                         }
                         m.attachments = attachmentsMetadata;
                     }
+                    if(m.content){
+                        await preloadContentPreview(m.content);
+                    }
                     ChannelStore.update(value => {
                         value.posts.push(m);
                         return value;
                     })
                     window.setTimeout(() => {
                         channelContent.scrollTop = channelContent.scrollHeight;
-                    }, 300)
+                    }, 100)
                 })
                 window.setTimeout(() => {
                     channelContent.scrollTop = channelContent.scrollHeight;
-                }, 300)
+                }, 100)
             }
         }
     }

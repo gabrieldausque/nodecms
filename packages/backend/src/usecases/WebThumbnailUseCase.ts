@@ -19,17 +19,28 @@ export class WebThumbnailUseCase {
     }
   ]
 
-  static readonly regexpUrl:RegExp = /^(https*?:\/\/[^\s<>]+)$/g
+  static readonly regexpUrl:RegExp = /^(https*?:\/\/[^\s]+)$/g
 
   private sanitizeHtml(htmlString:string){
     return htmlString.replace(/(<([^>]+)>)/g, '');
   }
 
   async get(URL:string, executingUser:User):Promise<Partial<WebThumbnail>>{
-      if(!WebThumbnailUseCase.regexpUrl.exec(URL)){
+      const result = URL.match(WebThumbnailUseCase.regexpUrl);
+      if(!result){
         throw new  Error(`${URL} is not a correct url`);
       }
-      const dom = new JSDOM((await axios.get(URL)).data);
+      let htmlFromUrl = null;
+      try{
+        htmlFromUrl = (await axios.get(URL, {
+          headers: { 'User-Agent': 'Mozilla/5.0' }
+        })).data
+      }catch(error){
+        console.error(error);
+        throw new Error(error.response.message)
+      }
+
+      const dom = new JSDOM(htmlFromUrl);
       const doc = dom.window.document;
       const title = doc.querySelector('h1');
 

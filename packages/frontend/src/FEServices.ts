@@ -16,3 +16,4 @@ export class FEServices {
 }
 
 export const globalFEService = new FEServices();
+(window as any).globalFEService = globalFEService;

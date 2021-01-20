@@ -68,7 +68,7 @@ describe('Webthumbnail service', () => {
     assert.ok(service, 'Registered the service');
   });
 
-  it('Should return a thumbnail data for a specific url', async() => {
+  it('Should return a thumbnail data for a specific url figaro', async() => {
     const service = app.service('webthumbnail');
     const webThumbnail = await service.get(
       'https://www.lefigaro.fr/actualite-france/2018/12/13/01016-20181213ARTFIG00163-raid-gign-sentinelle-qui-fait-quoi-et-comment-ils-se-coordonnent.php',
@@ -82,4 +82,21 @@ describe('Webthumbnail service', () => {
       url: "https://www.lefigaro.fr/actualite-france/2018/12/13/01016-20181213ARTFIG00163-raid-gign-sentinelle-qui-fait-quoi-et-comment-ils-se-coordonnent.php"
     })
   })
+
+
+    it('Should return a thumbnail data for a specific url le monde', async() => {
+      const service = app.service('webthumbnail');
+      const webThumbnail = await service.get(
+        'https://www.lemonde.fr/les-decodeurs/article/2015/11/18/raid-gign-bri-qui-fait-quoi_4812824_4355770.html',
+        params
+      );
+      expect(webThumbnail).is.ok;
+      expect(webThumbnail).to.be.eql({
+        "description": "Hyper Cacher en janvier 2015, église à Saint-Etienne du Rouvray en juillet 2016 et tant d’autres situations de crise : plusieurs unités d’élite peuvent être mobilisées pour intervenir régulièrement.",
+        "mediaId": 0,
+        "title": "RAID, GIGN, BRI&nbsp;: qui fait quoi&nbsp;?",
+        "url": "https://www.lemonde.fr/les-decodeurs/article/2015/11/18/raid-gign-bri-qui-fait-quoi_4812824_4355770.html"
+      })
+    })
+
 });
