@@ -8,6 +8,9 @@
     import DownloadAttachment from "./Attachments/DownloadAttachment.svelte";
     import VideoAttachment from "./Attachments/VideoAttachment.svelte";
     import AudioAttachment from "./Attachments/AudioAttachment.svelte";
+    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
+    import {writable} from "svelte/store";
+    import {globalFEService} from "../../FEServices";
 
     export let post
 
@@ -28,6 +31,26 @@
             return DownloadAttachment;
         }
     }
+
+    afterUpdate(async () => {
+        if(post && typeof post.id === 'number'){
+            const postView = document.getElementById(`post-${post.id}`);
+            const tempCache = globalFEService.getService('TempCache');
+            if(postView){
+                const webThumbnails = postView.querySelectorAll('a[data-iswebthumbnail=true]')
+                for(const link of webThumbnails){
+                    const newInnerHTML = tempCache.get(link.getAttribute('href'));
+                    if(newInnerHTML){
+                        console.log(newInnerHTML);
+                        link.innerHTML = newInnerHTML.innerHTML;
+                    } else {
+                        console.log('Cache is empty ...')
+                    }
+                }
+            }
+
+        }
+    })
 
 </script>
 
@@ -59,7 +82,7 @@
 
 </style>
 
-<div class="post">
+<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post">
     <div class="author">
         <i class="fas fa-user-circle fa-3x"></i>
         <span>{post.author.login}</span>

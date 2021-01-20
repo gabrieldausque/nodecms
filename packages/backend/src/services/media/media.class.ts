@@ -89,7 +89,12 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
     if(context.method.toLowerCase() === 'get' || context.method.toLowerCase() === 'find') {
       if(context.id || context.id === 0){
         if(isNumber(context.id)) {
-          const data = await this.useCase.get(context.id)
+          let data:MediaEntity | null = null;
+          try{
+            data = await this.useCase.get(context.id)
+          }catch(err){
+            //DO nothing
+          }
           if(data)
             return data.visibility !== MediaVisibility.public;
         } else {

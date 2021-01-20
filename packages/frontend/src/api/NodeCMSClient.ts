@@ -1,15 +1,12 @@
 import axios, {AxiosInstance} from "axios";
 //@ts-ignore
 import https from 'https';
-import io from 'socket.io-client';
-import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy.js";
 import {MediaService} from "./MediaService";
 import {PostService} from "./PostService";
-import {globalFEService} from "../FEServices";
 import {DocumentService} from "./DocumentService";
 import {ChannelsService} from "./ChannelsService";
 import {UserService} from "./UserService";
-
+import {UtilsService} from "./UtilsService";
 
 
 export class NodeCMSClient {
@@ -23,6 +20,7 @@ export class NodeCMSClient {
     public documentService: DocumentService;
     public channelsService: ChannelsService;
     public userService: UserService;
+    public utilsService: UtilsService;
 
     constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
         this.url = cmsUrl;
@@ -39,6 +37,7 @@ export class NodeCMSClient {
         this.documentService = new DocumentService(this.axiosInstance, this.url);
         this.channelsService = new ChannelsService(this.axiosInstance, this.url, socketIoHost, this.env);
         this.userService = new UserService(this.axiosInstance, this.url);
+        this.utilsService = new UtilsService(this.axiosInstance, this.url);
     }
 
     createHeaders() {

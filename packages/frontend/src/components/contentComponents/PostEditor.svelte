@@ -1,7 +1,7 @@
 <script>
 
     import Editor from "cl-editor";
-    import {onMount} from "svelte";
+    import {afterUpdate, onMount} from "svelte";
     import {getBackendClient} from "../../api/NodeCMSClient";
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
@@ -42,17 +42,20 @@
         attachments = attachments;
     }
 
-    const scanText = _.debounce(() => {
+    const scanText = _.debounce(async () => {
         console.log('scanning text ...')
+        const backEndService = await getBackendClient();
         const messageContent = document.querySelector('.cl-content')
-        const urlRegexp = /(?!<a>)(https*?:\/\/[^\s<>]+)(?!<\/a>)/g
+        const urlRegexp = /(?!<a.*>)(https*?:\/\/[^\s<>]+)(?!<\/a>)/g
         const urlGroups = messageContent.innerHTML.match(urlRegexp);
         console.log(urlGroups);
         if(Array.isArray(urlGroups)){
             for(const u of urlGroups){
-                console.log('replacing u');
-                const index = messageContent.innerHTML.indexOf(u);
-                messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a href="${u}" target="_blank">${u}</a>`)
+                let webThumbnail = await backEndService.utilsService.getWebsiteThumbnail(u)
+                if(!webThumbnail)
+                    messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a href="${u}" target="_blank">${u}</a>`)
+                else
+                    messageContent.innerHTML = messageContent.innerHTML.replace(u, `<a data-isWebThumbnail="true" data-mediaId="${webThumbnail.mediaId}" data-title="${webThumbnail.title}" data-description="${webThumbnail.description}" href="${u}" target="_blank">${u}</a>`)
             }
         }
     }, 1000, false);
@@ -162,6 +165,7 @@
             })
         }, 100)
     })
+
 </script>
 
 <style>

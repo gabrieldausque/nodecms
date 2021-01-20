@@ -1,5 +1,5 @@
 <script>
-    import {AttachmentHelpers} from "./AttachmentHelpers";
+    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
     export let attachment;
 </script>
 

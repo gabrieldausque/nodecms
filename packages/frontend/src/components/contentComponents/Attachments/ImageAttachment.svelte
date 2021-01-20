@@ -1,5 +1,5 @@
 <script>
-    import {AttachmentHelpers} from "./AttachmentHelpers";
+    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
     import {beforeUpdate, onMount} from "svelte";
     import {writable} from 'svelte/store';
     import LoadingAttachment from "./LoadingAttachment.svelte";

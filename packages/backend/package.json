@@ -61,7 +61,8 @@
     "serve-favicon": "^2.5.0",
     "winston": "^3.3.3",
     "chalk": "^4.1.0",
-    "mongodb": "^3.6.3"
+    "mongodb": "^3.6.3",
+    "jsdom": "^16.4.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
@@ -78,6 +79,7 @@
     "@types/mmmagic": "^0.4.30",
     "@types/uuid": "^8.3.0",
     "@types/multer": "^1.4.5",
+    "@types/jsdom": "^16.2.6",
     "axios": "^0.19.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

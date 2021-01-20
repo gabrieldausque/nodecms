@@ -1,5 +1,5 @@
 <script>
-    import {AttachmentHelpers} from "./AttachmentHelpers";
+    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
     import {writable} from "svelte/store";
     import {getBackendClient} from "../../../api/NodeCMSClient";
     import {beforeUpdate, onMount} from "svelte";
