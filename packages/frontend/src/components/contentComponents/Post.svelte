@@ -106,6 +106,24 @@
                 text-align: start;
             }
 
+            .link-preview {
+                display: flex;
+            }
+
+            .link-preview > div {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+            }
+
+            .link-preview img {
+                max-width: 25%;
+                margin-right: 15px;
+                width: auto;
+                height: auto;
+            }
+
         </style>
         <div>{(new Date(post.creationDate)).toLocaleDateString()} {(new Date(post.creationDate)).toLocaleTimeString()}</div>
         {@html createHtmlContent(post.content)}

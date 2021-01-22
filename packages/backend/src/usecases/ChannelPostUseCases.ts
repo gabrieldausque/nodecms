@@ -89,7 +89,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
         if(right === 'w'){
           const channelUseCases:ChannelUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Channel');
           const channel:Channel = await channelUseCases.get(data.channelKey, user);
-          if(await channelUseCases.isUserEditor(channel, user, user)){
+          if(await channelUseCases.isUserContributor(channel, user, user)){
             return true;
           }
         }else if(right === 'r'){

@@ -167,6 +167,7 @@
 
     .channels-item-label {
         margin-left: 15px;
+        text-align: start;
     }
 
     .btn.action {
@@ -216,6 +217,11 @@
 </main>
 
 <div id="CreateChannelModal" class="modal fade" data-keyboard="false">
+    <style>
+        label {
+            text-align: start;
+        }
+    </style>
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

@@ -63,6 +63,7 @@
                     }
                     ChannelStore.set(channelContent);
                 }catch (e) {
+                    console.log(e);
                     const cc = new ChannelContent();
                     cc.key = channel.key;
                     cc.posts = [];

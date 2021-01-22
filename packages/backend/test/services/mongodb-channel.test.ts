@@ -105,8 +105,10 @@ describe('Channel service With Mongodb', () => {
       contributors:[contributorsRole[0].id],
       editors:[editorsRole[0].id],
       administrators:[administratorsRole[0].id]
+
     })
-    expect(await service.get(created.id as number, params)).to.be.eql(created);
+    let read = await service.get(created.id as number, params);
+    expect(read).to.be.eql({ ...created, ...{"isContributor": true}});
   })
 
   it('should remove a public channel just created', async() => {
@@ -144,7 +146,8 @@ describe('Channel service With Mongodb', () => {
       key: "news",
       label: "Actualités",
       readers: [],
-      visibility: "public"
+      visibility: "public",
+      isContributor: true
     },{
         readers:[readersRole[0].id],
         contributors:[contributorsRole[0].id],
@@ -153,7 +156,8 @@ describe('Channel service With Mongodb', () => {
         id: 1,
         key: "MyPublicChannel",
         label: "A public channel",
-        visibility: "public"
+        visibility: "public",
+        isContributor: true
       }]);
     if(typeof created.id === 'number'){
       await service.remove(created.id, params);
@@ -165,7 +169,7 @@ describe('Channel service With Mongodb', () => {
         id: 0,
         key: "news",
         label: "Actualités",
-        visibility: "public"
+        visibility: "public",isContributor: true
       }]);
     } else {
       assert.fail('No id for created channel')
@@ -205,18 +209,6 @@ describe('Channel service With Mongodb', () => {
       assert.fail('No creation id');
   })
 
-  it('should reject post from a non contributors user on public channel', async() => {
-    const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
-    const anotherUserParams:any = await getAuthenticationParams('otheruser', 'anotherpassword', port);
-    anotherUserParams.route = {
-      channelNameOrId : 'news'
-    }
-    const creationPromise = service.create({
-      content: "test de nouveau post"
-    }, anotherUserParams);
-    return expect(creationPromise).to.be.rejectedWith('User otheruser is not a member or has not sufficient rights to execute undefined on channel news');
-  })
-
   it('should be able to update the channel', async() => {
     const service:Channel = app.service('channel');
     const created:Partial<ChannelEntity> = await service.create({
@@ -242,7 +234,8 @@ describe('Channel service With Mongodb', () => {
           readers:[3,1],
           editors: [5,1],
           contributors:[4,1],
-          administrators:[6,0,1]
+          administrators:[6,0,1],
+          isContributor: true
         }
       );
       await service.patch(created.id, {
@@ -262,7 +255,8 @@ describe('Channel service With Mongodb', () => {
           readers:[3,1,2],
           editors: [5,1,2],
           contributors:[4,1,2],
-          administrators:[6,0,1,2]
+          administrators:[6,0,1,2],
+          isContributor: true
         }
       )
     }

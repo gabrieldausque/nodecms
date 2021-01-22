@@ -1,5 +1,5 @@
 import {UseCases} from "./UseCases";
-import {Channel, ChannelVisibility} from "../entities/Channel";
+import {Channel as ChannelEntity, Channel, ChannelVisibility} from "../entities/Channel";
 import {User} from "../entities/User";
 import {isNumber} from "../helpers";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
@@ -173,7 +173,7 @@ export class ChannelUseCases extends UseCases<Channel> {
 
   async isUserReader(channel:Channel, user:User, executingUser:User):Promise<boolean>{
     let isUserReader = channel.visibility === ChannelVisibility.public;
-    if(channel.readers && typeof user.id === 'number' && !isUserReader){
+    if(!isUserReader && channel.readers && typeof user.id === 'number' && !isUserReader){
         const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
         const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
         for(const readerRoleId of channel.readers){
@@ -190,8 +190,8 @@ export class ChannelUseCases extends UseCases<Channel> {
   }
 
   async isUserContributor(channel:Channel, user:User, executingUser:User):Promise<boolean>{
-    let isUserContributor = false;
-    if(channel.contributors && typeof user.id === 'number'){
+    let isUserContributor = channel.visibility === ChannelVisibility.public;
+    if(!isUserContributor && channel.contributors && typeof user.id === 'number'){
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
       for(const contributorRoleId of channel.contributors){
@@ -244,16 +244,22 @@ export class ChannelUseCases extends UseCases<Channel> {
   }
 
   async isDataAuthorized(data:Channel, right:string='r', user?:any):Promise<boolean> {
+    let isAuthorized = false;
+    const u:User = user as User;
+    const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
     if(right === 'r'){
-      if(data.visibility === ChannelVisibility.public)
-        return true;
-      else {
-        return await this.isUserMemberOf(data, user as User, user as User);
+      if(data.visibility === ChannelVisibility.public || data.visibility === ChannelVisibility.protected)
+      {
+        isAuthorized = await userUseCase.isValidUser(u,u);
+      } else {
+        isAuthorized = await this.isUserMemberOf(data,u, u);
       }
-    } else if(right === 'w') {
-       return await this.isUserEditor(data, user, user);
+    } else if (right === 'w'){
+      isAuthorized = await this.isUserContributor(data as ChannelEntity, u, u);
     }
-    return false;
+    //TODO : add service channel-roles !!!
+    data.isContributor = await this.isUserContributor(data as ChannelEntity, u, u);
+    return isAuthorized;
   }
 
 }
