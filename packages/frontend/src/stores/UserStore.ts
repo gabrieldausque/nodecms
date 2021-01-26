@@ -5,4 +5,4 @@ export class Authentication  {
     login?:string;
 }
 
-export const UserState = writable(new Authentication())
+export const UserStore = writable(new Authentication())

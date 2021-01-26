@@ -11,6 +11,7 @@ import authorization from './authorization/authorization.service';
 import channel from './channel/channel.service';
 import channelPost from './channel-post/channel-post.service';
 import media from './media/media.service';
+import webthumbnail from './webthumbnail/webthumbnail.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -26,6 +27,7 @@ export default function (app: Application) {
   app.configure(channel);
   app.configure(channelPost);
   app.configure(media);
+  app.configure(webthumbnail);
 }
 
 function configureSwagger(app: Application): void {

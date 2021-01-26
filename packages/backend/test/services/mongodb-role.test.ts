@@ -9,6 +9,7 @@ import app from '../../src/app';
 import {globalInstancesFactory} from "@hermes/composition";
 import {Role} from "../../src/services/role/role.class";
 import {Role as RoleEntity} from '../../src/entities/Role';
+import {getAuthenticationParams} from "../../lib/tests/TestsHelpers";
 const port = app.get('port') || 3030;
 
 describe('Role service', () => {
@@ -74,10 +75,18 @@ describe('Role service', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql({
+    expect({
+      id:response.data.id,
+      key:response.data.key,
+      description: response.data.description,
+      members: response.data.members,
+      ownerId: response.data.ownerId
+    }).to.be.eql({
       id:0,
       key:"administrators",
-      description:"Administrators group"
+      description:"Administrators group",
+      members:[0],
+      ownerId:0
     })
     response = await axios.request({
       url: getUrl('role/0'),
@@ -86,11 +95,26 @@ describe('Role service', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql({
+    expect({      id:response.data.id,
+      key:response.data.key,
+      description: response.data.description,
+      members: response.data.members,
+      ownerId: response.data.ownerId}).to.be.eql({
       id:0,
       key:"administrators",
-      description:"Administrators group"
+      description:"Administrators group",
+      members:[0],
+      ownerId: 0
     })
+  })
+
+  it('should find a role when asked for', async() => {
+    const service:Role = app.service('role');
+    params.filter = {
+      key:'specialUsers'
+    }
+    const found:any = await service.find(params);
+    expect(found.length).to.be.eql(1)
   })
 
   it('should return 404 when search for unknown role', async() => {
@@ -123,27 +147,41 @@ describe('Role service', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql({
+    expect({      id:response.data.id,
+      key:response.data.key,
+      description: response.data.description,
+      members: response.data.members,
+      ownerId: response.data.ownerId}).to.be.eql({
       id:create.data.id,
       key:"newRole",
-      description:"A new role"
+      description:"A new role",
+      members:[0],
+      ownerId:0
     })
   })
 
   it('should create a role when asked for', async () => {
     const service:Role = app.service('role');
-    const created:RoleEntity = await service.create(
+    const created = await service.create(
       {
         key:"newRole",
-        description:"A new role"
+        description:"A new role",
       },
       params
     )
-    const gotten:RoleEntity = await service.get('newRole', params);
-    expect(gotten).to.be.eql({
+    const gotten = await service.get('newRole', params);
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+      ownerId:gotten.ownerId
+    }).to.be.eql({
       id:created.id,
       key:"newRole",
-      description:"A new role"
+      description:"A new role",
+      members:[0],
+      ownerId:0
     })
   })
 
@@ -154,28 +192,55 @@ describe('Role service', () => {
       description:"A new role"
     }, params);
     if(created.id){
-      expect(await service.get(created.id, params)).to.be.eql({
+      let gotten = await service.get(created.id, params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+        ownerId:gotten.ownerId
+      }).to.be.eql({
         id:created.id,
         key:"newRole",
-        description:"A new role"
+        description:"A new role",
+        members:[0],
+        ownerId:0
       })
-      expect(await service.update(created.id, {
+      gotten = await service.update(created.id, {
         id:created.id,
         key:"newRole",
         description:"A new role updated"
-      }, params)).to.be.eql({
+      }, params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+        ownerId:gotten.ownerId
+      }).to.be.eql({
         id:created.id,
         key:"newRole",
-        description:"A new role updated"
+        description:"A new role updated",
+        members:[0],
+        ownerId:0
       })
-      return expect(await service.patch(created.id, {
+      gotten = await service.patch(created.id, {
         id:created.id,
         key:"newRole",
         description:"A new role patch"
-      }, params)).to.be.eql({
+      }, params);
+      return expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+        ownerId:gotten.ownerId
+      }).to.be.eql({
         id:created.id,
         key:"newRole",
-        description:"A new role patch"
+        description:"A new role patch",
+        members:[0],
+        ownerId:0
       })
     }
     assert.fail('No id for created')
@@ -187,11 +252,19 @@ describe('Role service', () => {
       key:'newRole',
       description:'A new role'
     }, params);
-    const getted = await service.get('newRole',params);
-    expect(getted).to.be.eql({
+    const gotten = await service.get('newRole',params);
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+      ownerId:gotten.ownerId
+    }).to.be.eql({
       id:created.id,
       key:"newRole",
-      description:"A new role"
+      description:"A new role",
+      members: [0],
+      ownerId: 0
     });
     if(created.id || created.id === 0)
       await service.remove(created.id, params);
@@ -199,46 +272,128 @@ describe('Role service', () => {
     return expect(p).to.be.rejectedWith('No role with id or key newRole');
   })
 
-  it('should delete a role when asked for from external client', async () => {
-    const create = await axios.request({
-      url: getUrl('role'),
-      method: "POST",
-      data: {
-        key:"newRole",
-        description:"A new role"
-      },
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    const response = await axios.request({
-      url: getUrl('role/newRole'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    expect(response.data).to.be.eql({
-      id:create.data.id,
+  it('should create a role with special user', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    const gotten = await service.get('newRole',params);
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+
+    }).to.be.eql({
+      id:created.id,
       key:"newRole",
-      description:"A new role"
-    })
-    await axios.request({
-      url: getUrl(`role/${create.data.id}`),
-      method: "DELETE",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    const p = axios.request({
-      url: getUrl('role/newRole'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
+      description:"A new role",
+      members:[1]
     });
-    return expect(p).to.be.rejectedWith('Request failed with status code 404');
   })
 
+  it('should create a role with standard user', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    const gotten = await service.get('newRole',params);
+    expect({
+      id:gotten.id,
+      key:gotten.key,
+      description:gotten.description,
+      members:gotten.members,
+
+    }).to.be.eql({
+      id:created.id,
+      key:"newRole",
+      description:"A new role",
+      members:[2]
+    });
+  })
+
+  it('should add member for owner', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    if(typeof created.id === 'number' && Array.isArray(created.members)){
+      await service.update(created.id, {
+        description:'My New Descriptions',
+        members: [...created.members,2,3]
+      }, otherUserParams)
+      const gotten = await service.get('newRole',params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+
+      }).to.be.eql({
+        id:created.id,
+        key:"newRole",
+        description:"My New Descriptions",
+        members:[1,2,3]
+      });
+    } else {
+      assert.fail('No id for new role');
+    }
+  })
+
+  it('should throw exception if special user trying to add member in not owned group', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const updatePromise = service.update(0, {
+      description:'My New Descriptions',
+      members: [2]
+    }, otherUserParams)
+    return expect(updatePromise).to.be.rejectedWith('Data to update is not authorized for your account');
+  })
+
+  it('should add member for owner for standard', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const created = await service.create({
+      key:'newRole',
+      description:'A new role'
+    }, otherUserParams);
+    if(typeof created.id === 'number' && Array.isArray(created.members)){
+      await service.update(created.id, {
+        description:'My New Descriptions',
+        members: [...created.members,4,3]
+      }, otherUserParams)
+      const gotten = await service.get('newRole',params);
+      expect({
+        id:gotten.id,
+        key:gotten.key,
+        description:gotten.description,
+        members:gotten.members,
+
+      }).to.be.eql({
+        id:created.id,
+        key:"newRole",
+        description:"My New Descriptions",
+        members:[2,4,3]
+      });
+    } else {
+      assert.fail('No id for new role');
+    }
+  })
+
+  it('should throw exception if standard user trying to add member in not owned group', async() => {
+    const service:Role = app.service('role');
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const updatePromise = service.update(0, {
+      description:'My New Descriptions',
+      members: [2]
+    }, otherUserParams)
+    return expect(updatePromise).to.be.rejectedWith('Data to update is not authorized for your account');
+  })
 
 });

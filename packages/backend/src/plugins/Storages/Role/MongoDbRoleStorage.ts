@@ -20,10 +20,11 @@ export class MongoDbRoleStorage extends MongoDbStorage<Role> {
   async create(data: Role): Promise<Role> {
     if(!await this.exists(data.key)){
       const newRole = {
-        id:await this.getNewId(),
-        key:data.key,
-        description:data.description
+        ...data,
+        ...{
+        id:await this.getNewId()
       }
+    }
       await this.internalCreate(newRole)
     }
     return this.get(data.key);
@@ -61,8 +62,17 @@ export class MongoDbRoleStorage extends MongoDbStorage<Role> {
   }
 
   async find(filter: Role | undefined): Promise<Role[]> {
-    if(filter)
-      return await this.internalFind(filter);
+    if(filter){
+      const internalFilter:any = filter;
+      if(Array.isArray(internalFilter.members)){
+        internalFilter.members = {
+          $all: filter.members
+        }
+      }
+      const found = await this.internalFind(internalFilter)
+      return found;
+    }
+
     return [];
   }
 

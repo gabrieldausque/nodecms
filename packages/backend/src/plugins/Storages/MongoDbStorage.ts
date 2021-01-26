@@ -97,7 +97,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     )
   }
 
-  protected async internalFind(filter?:Partial<T> | null | undefined, collectionName?:string):Promise<T[]> {
+  protected async internalFind(filter?:Partial<T> | null | undefined | any, collectionName?:string):Promise<T[]> {
     const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     let found:T[] = [];
     if(filter){

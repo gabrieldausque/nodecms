@@ -123,7 +123,7 @@ describe('Media service', () => {
         expect(deletedFile).to.be.ok;
         expect(deletedFile.blob).to.be.undefined;
         expect(fs.existsSync(`${deletedFile.storagePath}`)).to.be.false;
-        return expect(service.get(created.id)).to.be.rejectedWith(`No media with key or id ${created.id}.`);
+        return expect(service.get(created.id, params)).to.be.rejectedWith(`No media with key or id ${created.id}.`);
       }
     }
     assert.fail('No id for created');

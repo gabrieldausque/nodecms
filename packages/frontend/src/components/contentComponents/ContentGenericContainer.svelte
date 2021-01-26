@@ -31,12 +31,10 @@
             }
 
         }
-        console.log(rawDocument);
         return rawDocument
     }
 
     onMount(async () => {
-        console.log(`documentKey = ${documentKey}`);
         if(documentKey)
             properties = await getDocument();
     })

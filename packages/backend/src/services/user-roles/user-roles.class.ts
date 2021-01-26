@@ -85,7 +85,7 @@ export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
   async update (id: NullableId, data: RoleDTO, params?: Params): Promise<RoleDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
-    if(!id)
+    if(!id && ! (typeof id === 'number'))
       throw new NotAcceptable(`No Role id to had`);
     try {
       const executingUser:UserEntity = params?.user as UserEntity;
@@ -112,7 +112,7 @@ export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
   async remove (id: NullableId, params?: Params): Promise<RoleDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
-    if(!id)
+    if(!id && !(typeof id === 'number'))
       throw new NotAcceptable(`No Role id to had`);
     try {
       const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);

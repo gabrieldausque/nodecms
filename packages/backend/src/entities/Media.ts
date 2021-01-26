@@ -14,5 +14,6 @@ export interface Media extends Entity {
   mediaType: string,
   storagePath: string,
   ownerId: string,
+  readers:number[],
   blob?: Buffer
 }

@@ -15,6 +15,7 @@ import {User} from "../../src/entities/User";
 import {User as UserService} from '../../src/services/user/user.class';
 import {UserMetadata} from "../../src/services/user-metadata/user-metadata.class";
 import {UserRoles} from "../../src/services/user-roles/user-roles.class";
+import {Role as RoleEntity} from '../../src/entities/Role';
 import {MongoClient} from "mongodb";
 import {MongoDbUserStorage} from "../../src/plugins/Storages/User/MongoDbUserStorage";
 
@@ -159,56 +160,6 @@ describe('User service', () => {
       }
     }
     assert.fail("no id for created user")
-  })
-
-  it('Should update a user if asked for from external client', async () => {
-    let creationResponse:any;
-    const service:UserService = app.service('user');
-    try{
-      creationResponse = await axios.request({
-        url: getUrl('user'),
-        method: "POST",
-        data: {
-          login: "aNewUser",
-          password: "aNewP@ssw0rd",
-          isActive: true
-        },
-        headers: {
-          cookie: finalCookie
-        }
-      })
-    }catch(err){
-      throw err;
-    }
-
-    let gotten:any = await axios.request({
-      url: getUrl('user/aNewUser'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    expect(gotten.data).to.be.eql(creationResponse.data);
-    const updatedResponse = await axios.request({
-      url: getUrl(`user/${creationResponse.data.id}`),
-      method: "PUT",
-      data: {
-        id:creationResponse.data.id,
-        login: "aNewUser",
-        password: "UpdatedPassword",
-        isActive: true
-      },
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    gotten = await service.useCase.storage.get(creationResponse.data.login);
-    expect(gotten).to.be.eql({
-      id:creationResponse.data.id,
-      login:creationResponse.data.login,
-      password:"UpdatedPassword",
-      isActive:creationResponse.data.isActive
-    });
   })
 
   it('Should reject update if id is not related to the login in the data', async () => {
@@ -481,48 +432,28 @@ describe('User service', () => {
     if(!params.route)
       params.route = {}
     params.route.idOrLogin = 'localtest';
-    const roles = await service.find(params);
-    expect(roles).to.be.eql([{
+    const roles:any = await service.find(params);
+    expect([{
+      id:roles[0].id,
+      key:roles[0].key,
+      description:roles[0].description,
+      members: roles[0].members,
+      ownerId: roles[0].ownerId
+    }]).to.be.eql([{
       description: "Administrators group",
       id: 0,
-      key: "administrators"
-      },
-      {
-        description: "Users group",
-        id: 1,
-        key: "users"
-      }]);
-  })
-
-  it('should get all role for a user from external client', async() => {
-    let response = await axios.request({
-      url: getUrl('user/localtest/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    expect(response.data).to.be.eql([{
-      description: "Administrators group",
-      id: 0,
-      key: "administrators"
-      },
-      {
-        description: "Users group",
-        id: 1,
-        key: "users"
+      key: "administrators",
+      members: [0],
+      ownerId: 0
       }]);
   })
 
   it('should add a role for a user', async() => {
-    let response = await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "POST",
-      data: [0],
-      headers: {
-        cookie: finalCookie
-      }
-    });
+    const service:UserRoles = app.service('/user/:idOrLogin/roles');
+    params.route = {
+      idOrLogin: 'otheruser'
+    };
+    await service.create([0],params);
     let list = (await axios.request({
       url: getUrl('user/otheruser/roles'),
       method: "GET",
@@ -530,76 +461,65 @@ describe('User service', () => {
         cookie: finalCookie
       }
     })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },{
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers"
-    },
+    expect([
+      {
+        id:list[0].id,
+        key:list[0].key,
+        description:list[0].description,
+        members:list[0].members,
+        ownerId:list[0].ownerId
+      },{
+        id:list[1].id,
+        key:list[1].key,
+        description:list[1].description,
+        members:list[1].members,
+        ownerId:list[1].ownerId
+      }
+    ]).to.be.eql([
       {
         description: "Administrators group",
         id: 0,
-        key: "administrators"
-      }]);
+        key: "administrators",
+        members:[
+          0,1
+        ],
+        ownerId:0
+      },
+      {
+        description: "special Users group",
+        id: 1,
+        key: "specialUsers",
+        members:[
+          1
+        ],
+        ownerId:0
+      }
+    ]);
   })
 
   it('should remove a role for a user', async() => {
-    let response = await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "POST",
-      data: [0],
-      headers: {
-        cookie: finalCookie
-      }
-    });
-    let list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },
-      {
-      description: "special Users group",
-      id: 2,
-      key: "specialUsers"
-    },{
-      description: "Administrators group",
-      id: 0,
-      key: "administrators"
-    }]);
-    response = await axios.request({
-      url: getUrl('user/otheruser/roles/0'),
-      method: "DELETE",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    list = (await axios.request({
-      url: getUrl('user/otheruser/roles'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })).data;
-    expect(list).to.be.eql([{
-      description: "Users group",
-      id: 1,
-      key: "users"
-    },
+    const service:UserRoles = app.service('/user/:idOrLogin/roles');
+    params.route = {
+      idOrLogin: 'otheruser'
+    };
+    let roles:any = await service.find(params);
+    await service.create([0],params);
+    roles = await service.find(params);
+    expect(roles.length).to.be.eql(2);
+    await service.remove(0, params);
+    roles = await service.find(params);
+    delete roles[0].creationDate;
+    expect(roles).to.be.eql([
       {
         description: "special Users group",
-        id: 2,
-        key: "specialUsers"
-      }]);
+        id: 1,
+        key: "specialUsers",
+        members:[
+          1
+        ],
+        ownerId:0
+      }
+    ]);
   })
 
   it('non administrators should not be able to add role for itself or another user', async() => {

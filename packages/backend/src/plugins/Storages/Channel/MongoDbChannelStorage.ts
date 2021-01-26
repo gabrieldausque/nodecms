@@ -2,6 +2,7 @@ import {MongoDbStorage} from "../MongoDbStorage";
 import {Channel} from "../../../entities/Channel";
 import {ChannelStorage} from "./ChannelStorage";
 import {isNumber} from "../../../helpers";
+import {NotFoundError} from "../../../entities/Errors/NotFoundError";
 
 export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements ChannelStorage {
 
@@ -80,7 +81,7 @@ export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements Ch
     }
     if(channel)
       return channel;
-    throw new Error(`Channel with key or id ${keyOrId} doesn't exists`);
+    throw new NotFoundError(`Channel with key or id ${keyOrId} doesn't exists`);
   }
 
   async update(data: Channel): Promise<Channel> {

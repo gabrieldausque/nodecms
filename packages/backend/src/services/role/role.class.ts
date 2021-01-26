@@ -4,13 +4,9 @@ import {BaseService} from "../BaseService";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {User as UserEntity} from "../../entities/User";
-import {globalInstancesFactory} from "@hermes/composition";
+import {Role as RoleEntity} from '../../entities/Role';
 
-interface RoleDTO {
-  id?:number;
-  key:string;
-  description?:string;
-}
+type RoleDTO = Partial<RoleEntity>
 
 interface ServiceOptions {
   paginate?:number

@@ -160,60 +160,34 @@ export class UserUseCases extends UseCases<User> {
   }
 
   async hasRole(user: Partial<User>, role: Role, executingUser:User):Promise<boolean> {
-    let rolesMetadata:Metadata
-    try {
-      rolesMetadata = await this.getMetadata(user,'roles', executingUser);
-    }catch(err) {
-      rolesMetadata = await this.createMetadata(user, {
-        key:'roles',
-        value:[]
-      }, executingUser);
-    }
-    return Array.isArray(rolesMetadata.value) &&
-      rolesMetadata.value.length >= 1 &&
-      rolesMetadata.value.indexOf(role.id) >= 0
+    return Array.isArray(role.members) &&
+      typeof user.id === 'number' &&
+      role.members.indexOf(user.id) >= 0;
   }
 
   async getRoles(user: Partial<User>, executingUser:User) {
-    let rolesMetadata:Metadata;
-    try {
-      rolesMetadata = await this.getMetadata(user,'roles',executingUser);
-    }catch(err) {
-      rolesMetadata = await this.createMetadata(user, {
-        key:'roles',
-        value:[]
-      },executingUser)
-    }
-    if(!Array.isArray(rolesMetadata.value) ||
-      rolesMetadata.value.length <= 0
-    )
-      return [];
     const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
-    const roles:Role[] = [];
-    for(const roleId of rolesMetadata.value) {
-      roles.push(await roleUseCases.get(roleId, executingUser))
+    if(typeof user.id === 'number'){
+      return await roleUseCases.find({
+        members:[user.id]
+      }, executingUser);
     }
-    return roles;
+    return [];
   }
 
   async addRole(user: User, role: Role, executingUser:User) {
     const hasRole = await this.hasRole(user,role, executingUser)
     if(!hasRole){
-      const rolesMetadata:Metadata = await this.getMetadata(user,'roles', executingUser);
-      if(!Array.isArray(rolesMetadata.value)){
-        rolesMetadata.value = [];
-      }
-      rolesMetadata.value.push(role.id);
-      await this.updateMetadata(user,rolesMetadata, executingUser);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+      await roleUseCases.addMember(role, user, executingUser);
     }
   }
 
   async removeRole(user: User, role: Role, executingUser:User) {
     const hasRole = await this.hasRole(user,role,executingUser)
     if(hasRole){
-      const rolesMetadata:Metadata = await this.getMetadata(user,'roles', executingUser);
-      rolesMetadata.value.splice(rolesMetadata.value.indexOf(role.id),1);
-      await this.updateMetadata(user,rolesMetadata, executingUser);
+      const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role');
+      await roleUseCases.removeMember(role, user, executingUser);
     }
   }
 

@@ -6,7 +6,7 @@
 	import ContentChannelsContainer from './components/contentComponents/ContentChannelsContainer.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
-	import {UserState} from "./stores/UserState";
+	import {UserStore} from "./stores/UserStore";
 	import {getBackendClient} from "./api/NodeCMSClient";
 	import ErrorModal from "./components/ErrorModal.svelte";
 
@@ -17,14 +17,12 @@
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer);
 	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
 
-	const unsubscribe = UserState.subscribe(async (value) => {
+	const unsubscribe = UserStore.subscribe(async (value) => {
 		window.setTimeout(async() => {
-			console.log(`new login : ${value.isLogin} & ${value.login}`)
 			if (value && value.isLogin)
 				documentKey = "welcomePrivate";
 			else
 				documentKey = "welcome"
-			console.log(`has change document key ${documentKey}`);
 		})
 	})
 
