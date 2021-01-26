@@ -35,7 +35,11 @@ steps:
   inputs: 
     command: custom
     customCommand: install lerna -g
-
+- task: Npm@1
+  displayName: Bootstrap project
+  inputs:
+    command: custom
+    customCommand: run bootstrap
 - task: Npm@1
   displayName: Launch build
   inputs:
