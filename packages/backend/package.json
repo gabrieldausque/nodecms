@@ -3,8 +3,8 @@
   "description": "A node cms and more ...",
   "version": "0.0.0",
   "homepage": "",
-  "private": true,
-  "main": "src",
+  "private": false,
+  "main": "dist/index.js",
   "keywords": [
     "feathers"
   ],
@@ -26,9 +26,9 @@
   "scripts": {
     "test": "npm run compile && NODE_ENV=test npm run mocha",
     "dev": "NODE_ENV=dev ts-node-dev --no-notify src/",
-    "start": "npm run compile && node lib/",
+    "start": "npm run compile && node dist/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
-    "build": "shx rm -rf lib/ && tsc",
+    "build": "node_modules/.bin/shx rm -rf dist/ && tsc",
     "dev-backend": "npm run dev",
     "init-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
   },

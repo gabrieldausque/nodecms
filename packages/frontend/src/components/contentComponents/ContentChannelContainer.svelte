@@ -6,6 +6,7 @@
     import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
     import {globalFEService} from "../../FEServices";
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
+    import {channelsEventNames} from "../../api/ChannelsService";
 
     export let channel;
 
@@ -41,6 +42,8 @@
         if (channel && channel.key &&
             channel.key !== $ChannelStore.key
         ) {
+            console.log('Channel :')
+            console.log(channel);
             let channelAuthorized = true;
             const backEndService = await getBackendClient();
             try{
@@ -78,6 +81,8 @@
                 const channelContent = document.querySelector('.channelContent')
                 const currentChannelKey = channel.key;
                 await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
+                    console.log(`Message received on ${channel.key}`)
+                    console.log(m)
                     if(Array.isArray(m.attachments) && m.attachments.length > 0){
                         const attachmentsMetadata = [];
                         for(const a of m.attachments){

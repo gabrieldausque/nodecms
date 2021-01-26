@@ -127,3 +127,4 @@ lib/
 /packages/backend/media/
 /packages/backend/uploads/
 /packages/backend/uploads/temp/
+/packages/frontend/public/js/node-cms/
