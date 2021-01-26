@@ -3,18 +3,41 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-variables 
-trigger:
-- main
+variables:
+# this is a group variables to manage versioning number for all pipelines in the same repo
+  - group: version_variables
+  - name: semanticVersion
+    value: $[counter(variables['semverPrefix'], 0)]
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: PowerShell@2
+  displayName: Set Build Number
+  inputs:
+    targetType: inline
+    script: |
+      echo 'Starting Setting build Number'
+      Write-host " - Current Build Number : $($env:BUILD_BUILDNUMBER)"
+      Write-host " - Semantic Build Number : $($env:SEMVERPREFIX).$($env:SEMANTICVERSION).0"
+      Write-host "##vso[build.updatebuildnumber]$($env:SEMVERPREFIX).$($env:SEMANTICVERSION).0"
+
+- task: NodeTool@0
+  displayName: Installing nodejs latest version
+  inputs:
+   versionSpec: '>=12.x'
+   checkLatest: true
+
+- task: Npm@1
+  displayName: Install lerna
+  inputs: 
+    command: custom
+    customCommand: install lerna -g
+
+- task: Npm@1
+  displayName: Launch build
+  inputs:
+    command: custom
+    customCommand: run build
