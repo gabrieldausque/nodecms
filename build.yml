@@ -53,6 +53,13 @@ steps:
     command: custom
     customCommand: run build
 
+- task: Npm@1
+  displayName: Backend npm publication
+  inputs:
+    command: publish
+    publishRegistry: useFeed
+    publishFeed: Team A - Professional Network Tool/nodecms
+    workingDir: $(Build.Repository.LocalPath)/packages/backend
 - task: UniversalPackages@0
   displayName: Publish backend assets to azure artifacts server
   condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
