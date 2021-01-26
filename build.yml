@@ -40,12 +40,7 @@ steps:
   displayName: Install all Root dependencies
   inputs:
    command: install
-- task: Npm@1
-  displayName: Install all other dependencies
-  inputs:
-   command: custom
-   customCommand: install packages/*
-      
+
 - task: Npm@1
   displayName: Bootstrap project
   inputs:
