@@ -52,3 +52,26 @@ steps:
   inputs:
     command: custom
     customCommand: run build
+
+- task: UniversalPackages@0
+  displayName: Publish backend assets to azure artifacts server
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishDirectory: $(Build.Repository.LocalPath)/packages/backend/dist
+    vstsFeedPublish: Team A - Professional Network Tool/nodecms
+    vstsFeedPackagePublish: nodecms-backend
+    versionOption: custom
+    versionPublish: $(semverPrefix).$(semanticVersion)
+    packagePublishDescription:  Node CMS backend v0.X
+- task: UniversalPackages@0
+  displayName: Publish frontend assets to azure artifacts server
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishDirectory: $(Build.Repository.LocalPath)/packages/frontend/public
+    vstsFeedPublish: Team A - Professional Network Tool/nodecms
+    vstsFeedPackagePublish: nodecms-frontend
+    versionOption: custom
+    versionPublish: $(semverPrefix).$(semanticVersion)
+    packagePublishDescription:  Node CMS backend v0.X
