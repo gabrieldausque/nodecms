@@ -19,6 +19,14 @@
     "test": "test/",
     "config": "config/"
   },
+  "files": [
+    "dist/**/*",
+    "config/*",
+    "public/**/*",
+    "data/initMongoDb.js",
+    "README.md",
+    "InstallationNote.md"
+  ],
   "engines": {
     "node": "^10.0.0",
     "npm": ">= 3.0.0"
@@ -28,7 +36,7 @@
     "dev": "NODE_ENV=dev ts-node-dev --no-notify src/",
     "start": "npm run compile && node dist/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
-    "build": "node_modules/.bin/shx rm -rf dist/ && tsc",
+    "build": "node_modules/.bin/shx rm -rf dist/ && tsc ",
     "dev-backend": "npm run dev",
     "init-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
   },
