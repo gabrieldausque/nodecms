@@ -128,3 +128,4 @@ lib/
 /packages/backend/uploads/
 /packages/backend/uploads/temp/
 /packages/frontend/public/js/node-cms/
+/packages/backend/dist/
