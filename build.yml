@@ -27,7 +27,7 @@ steps:
 - task: NodeTool@0
   displayName: Installing nodejs latest version
   inputs:
-   versionSpec: '>=12.x'
+   versionSpec: '>=10.x'
    checkLatest: true
 
 - task: Npm@1
@@ -46,6 +46,7 @@ steps:
   inputs:
     command: custom
     customCommand: run bootstrap
+
 - task: Npm@1
   displayName: Launch build
   inputs:
