@@ -5,7 +5,7 @@
     "lerna": "^3.22.1"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist --loglevel verbose",
+    "bootstrap": "lerna bootstrap",
     "test": "lerna run test",
     "dev": "npm run init-dev-db && lerna run --stream dev",
     "dev-backend": "lerna run --stream dev-backend",

@@ -1,7 +1,10 @@
+
 <script>
+
     import {globalContentContainerFactory} from "../../ContentContainerFactory";
     import {getBackendClient} from '../../api/NodeCMSClient';
     import {beforeUpdate, onMount} from 'svelte';
+    import {Helpers} from "../../helpers/Helpers";
 
     export let properties;
     export let documentKey;
@@ -59,9 +62,10 @@
         align-items: center;
     }
 </style>
+
 {#if properties}
     {#if typeof properties.globalStyle === "string"}
-        {@html "<style>" + properties.globalStyle + "</style>"}
+        {@html Helpers.styleOpeningLabel + properties.globalStyle + Helpers.styleClosingLabel}
     {/if}
     {#if Array.isArray(properties.headers) && properties.headers.length > 0}
         <header>
