@@ -59,7 +59,7 @@ steps:
   inputs:
     command: publish
     publishDirectory: $(Build.Repository.LocalPath)/packages/backend/dist
-    vstsFeedPublish: Team A - Professional Network Tool/nodecms
+    vstsFeedPublish: test
     vstsFeedPackagePublish: nodecms-backend
     versionOption: custom
     versionPublish: $(semverPrefix).$(semanticVersion)
@@ -70,7 +70,7 @@ steps:
   inputs:
     command: publish
     publishDirectory: $(Build.Repository.LocalPath)/packages/frontend/public
-    vstsFeedPublish: Team A - Professional Network Tool/nodecms
+    vstsFeedPublish: test
     vstsFeedPackagePublish: nodecms-frontend
     versionOption: custom
     versionPublish: $(semverPrefix).$(semanticVersion)
