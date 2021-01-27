@@ -1,6 +1,6 @@
 {
-  "name": "svelte-app",
-  "version": "1.0.0",
+  "name": "@nodecms/frontend",
+  "version": "0.0.0",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -8,6 +8,9 @@
     "start": "sirv public",
     "validate": "svelte-check"
   },
+  "files": [
+    "public/**/*"
+  ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
