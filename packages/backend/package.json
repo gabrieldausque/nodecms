@@ -1,6 +1,6 @@
 {
-  "name": "nodecms",
-  "description": "A node cms and more ...",
+  "name": "@nodecms/backend",
+  "description": "Node CMS Backend Services",
   "version": "0.0.0",
   "homepage": "",
   "private": false,
