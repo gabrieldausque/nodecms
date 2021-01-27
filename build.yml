@@ -54,6 +54,12 @@ steps:
     customCommand: run build
 
 - task: Npm@1
+  displayName: Change backend npm version
+  inputs:
+    command: custom
+    customCommand: version  $(semverPrefix).$(semanticVersion)
+    workingDir: $(Build.Repository.LocalPath)/packages/backend
+- task: Npm@1
   displayName: Backend npm publication
   inputs:
     command: publish
