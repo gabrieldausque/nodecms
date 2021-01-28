@@ -53,6 +53,40 @@ steps:
     command: custom
     customCommand: run build
 
+- task: Npm@1
+  displayName: Change backend npm version
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: custom
+    customCommand: version  $(semverPrefix).$(semanticVersion)
+    workingDir: $(Build.Repository.LocalPath)/packages/backend
+
+- task: Npm@1
+  displayName: Change backend npm version
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: custom
+    customCommand: version  $(semverPrefix).$(semanticVersion)
+    workingDir: $(Build.Repository.LocalPath)/packages/frontend
+
+- task: Npm@1
+  displayName: Backend npm publication
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishRegistry: useFeed
+    publishFeed: Team A - Professional Network Tool/nodecms
+    workingDir: $(Build.Repository.LocalPath)/packages/backend
+
+- task: Npm@1
+  displayName: Frontend npm publication
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishRegistry: useFeed
+    publishFeed: Team A - Professional Network Tool/nodecms
+    workingDir: $(Build.Repository.LocalPath)/packages/frontend
+
 - task: UniversalPackages@0
   displayName: Publish backend assets to azure artifacts server
   condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
@@ -64,6 +98,7 @@ steps:
     versionOption: custom
     versionPublish: $(semverPrefix).$(semanticVersion)
     packagePublishDescription:  Node CMS backend v0.X
+
 - task: UniversalPackages@0
   displayName: Publish frontend assets to azure artifacts server
   condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
