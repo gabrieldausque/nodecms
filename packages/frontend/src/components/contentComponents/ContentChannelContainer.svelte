@@ -7,6 +7,7 @@
     import {globalFEService} from "../../FEServices";
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
     import {channelsEventNames} from "../../api/ChannelsService";
+    import ContentTitle from "./ContentTitle.svelte"
 
     export let channel;
 
@@ -111,11 +112,27 @@
 
     onMount(async () => {
         await loadPosts();
+        const t = new ContentTitle({
+            target: document.getElementById('test'),
+            props: {
+                title: 'prout'
+            }
+        })
     })
 
     beforeUpdate(async() => {
         await loadPosts();
+        document.getElementById('test').innerHTML = '';
     })
+
+    function addTitle(){
+        const t = new ContentTitle({
+            target: document.getElementById('test'),
+            props: {
+                title: 'prout'
+            }
+        })
+    }
 
 </script>
 
@@ -167,12 +184,13 @@
 
 <div class="channel">
     <div class="channelInfo">
-        <div class="channelHeader">
+        <div class="channelHeader" on:click={addTitle}>
             {#if channel && channel.label}
                 <strong><h6>{channel.label}</h6></strong>
                 <span>#{channel.key}</span>
             {/if}
         </div>
+        <div id="test"></div>
     </div>
     <div class="channelContent">
         {#if $ChannelStore && !$ChannelStore.notAuthorized}
