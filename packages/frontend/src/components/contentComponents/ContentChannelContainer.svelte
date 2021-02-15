@@ -6,7 +6,9 @@
     import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
     import {globalFEService} from "../../FEServices";
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
-    import {channelsEventNames} from "../../api/ChannelsService";
+
+    console.log('The channel content')
+    console.log(this)
 
     export let channel;
 
@@ -39,6 +41,7 @@
     }
 
     async function loadPosts() {
+        console.log('loading posts ...');
         if (channel && channel.key &&
             channel.key !== $ChannelStore.key
         ) {
@@ -80,29 +83,30 @@
             if(channelAuthorized){
                 const channelContent = document.querySelector('.channelContent')
                 const currentChannelKey = channel.key;
-                await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (m) => {
-                    console.log(`Message received on ${channel.key}`)
-                    console.log(m)
-                    if(Array.isArray(m.attachments) && m.attachments.length > 0){
+                await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (newPost) => {
+                    if(Array.isArray(newPost.attachments) && newPost.attachments.length > 0){
                         const attachmentsMetadata = [];
-                        for(const a of m.attachments){
+                        for(const a of newPost.attachments){
                             const media = await backEndService.mediaService.getMediaMetadata(a);
                             attachmentsMetadata.push(media);
                         }
-                        m.attachments = attachmentsMetadata;
+                        newPost.attachments = attachmentsMetadata;
                     }
-                    if(m.content){
-                        await preloadContentPreview(m.content);
+                    if(newPost.content){
+                        await preloadContentPreview(newPost.content);
                     }
                     ChannelStore.update(value => {
-                        value.posts.push(m);
+                        value.posts.push(newPost);
                         return value;
                     })
+
                     window.setTimeout(() => {
                         channelContent.scrollTop = channelContent.scrollHeight;
                     }, 100)
                 })
                 window.setTimeout(() => {
+                    console.log(channelContent.scrollTop);
+                    console.log(channelContent.scrollHeight);
                     channelContent.scrollTop = channelContent.scrollHeight;
                 }, 100)
             }
@@ -110,10 +114,11 @@
     }
 
     onMount(async () => {
-        await loadPosts();
+        // await loadPosts();
     })
 
     beforeUpdate(async() => {
+        // document.getElementById('current-posts').innerHTML = '';
         await loadPosts();
     })
 
@@ -159,9 +164,8 @@
         position: relative;
         display: flex;
         flex-direction: column;
+        padding-top: 5px;
     }
-
-
 
  </style>
 
@@ -173,8 +177,9 @@
                 <span>#{channel.key}</span>
             {/if}
         </div>
+        <div id="test"></div>
     </div>
-    <div class="channelContent">
+    <div class="channelContent" id="current-posts">
         {#if $ChannelStore && !$ChannelStore.notAuthorized}
             {#each $ChannelStore.posts as post}
                 <Post post={post}></Post>
@@ -187,8 +192,6 @@
                     veuillez en demander l'accès à son administrateur
                 </div>
             </div>
-        {:else}
-            <div>No Posts</div>
         {/if}
     </div>
     {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
