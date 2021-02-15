@@ -44,7 +44,7 @@ export class RoleUseCases extends UseCases<Role> {
     return found
   }
 
-  async get(id: string | number, executingUser:User): Promise<Role> {
+  async get(id: string | number, executingUser?:User): Promise<Role> {
     if(RoleEntityRules.validateId(id)) {
       const usableId = RoleEntityRules.convertId(id);
       return await this.storage.get(usableId)
@@ -52,7 +52,7 @@ export class RoleUseCases extends UseCases<Role> {
     return await this.storage.get(id);
   }
 
-  async update(id: string | number, entityToUpdate: Partial<Role>, executingUser:User): Promise<Role> {
+  async update(id: string | number, entityToUpdate: Partial<Role>, executingUser?:User): Promise<Role> {
     const usableId = RoleEntityRules.convertId(id);
     if(!usableId && typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.');

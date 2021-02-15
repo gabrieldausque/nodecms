@@ -159,7 +159,7 @@ export class UserUseCases extends UseCases<User> {
     return await metadataUseCase.update(data.key, data, executingUser);
   }
 
-  async hasRole(user: Partial<User>, role: Role, executingUser:User):Promise<boolean> {
+  async hasRole(user: Partial<User>, role: Role, executingUser?:User):Promise<boolean> {
     return Array.isArray(role.members) &&
       typeof user.id === 'number' &&
       role.members.indexOf(user.id) >= 0;
@@ -246,7 +246,7 @@ export class UserUseCases extends UseCases<User> {
     return await this.isMemberOf('specialUsers', user, executingUser);
   }
 
-  async isValidUser(user: Partial<User>, executingUser: User):Promise<boolean> {
+  async isValidUser(user: Partial<User>, executingUser?: User):Promise<boolean> {
     if(user && (user.id || user.id === 0)){
       const currentUser = await this.get(user.id);
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');

@@ -13,7 +13,7 @@ export class UserService extends BaseServiceClient {
         const value = await axios.request({
             method:'get',
             baseURL:this.url,
-            url:'authentication/0'
+            url:'authentication'
         })
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
         document.dispatchEvent(authenticateEvent);

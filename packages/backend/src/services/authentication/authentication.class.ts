@@ -10,56 +10,26 @@ import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {isNumber} from "../../helpers";
 import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
+import {Authentication as AuthenticationEntity} from '../../entities/Authentication';
+import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
 
-interface Data {
-  login?:string,
-  password?:string
-}
+type Data = Partial<AuthenticationEntity>;
 
 interface ServiceOptions extends BaseServiceConfiguration {
-  authentication: {
-    contractName:string
-    configuration?:any
-  },
-  encryption: {
-    contractName:string,
-    configuration?:any
-  }
-}
 
-interface HoneyPot {
-  token: CustomAuthenticatedUserToken;
 }
 
 export class Authentication extends BaseService<Data, AuthenticationUseCases> {
 
   options: ServiceOptions;
-  authenticator: AuthenticationPlugin
-  encryptor: EncryptionPlugin;
-  honeyPot: HoneyPot = {
-    token: {
-      authenticationDate: new Date(),
-      authorityKey: "honeyPot",
-      login: "winnie",
-    }
-  };
 
   constructor (options: ServiceOptions = {
-    authentication: {contractName:'Default'},
-    encryption: {contractName:'Default'},
     storage:{
       contractName:'Default'
     }
     }, app: Application) {
     super(app, 'authentication','Authentication',options);
     this.options = options;
-    this.authenticator = globalInstancesFactory.getInstanceFromCatalogs('AuthenticationPlugin',
-      options.authentication.contractName,
-      options.authentication.configuration)
-    this.encryptor = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin',
-      options.encryption.contractName,
-      options.encryption.configuration
-    )
   }
 
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
@@ -68,51 +38,25 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
 
   // get login from token, return false if user is not authenticated
   async get (id: Id, params?: Params): Promise<any> {
-    if(!params || !params.authenticationToken)
-      return false;
-    const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(params.authenticationToken);
-    if(this.authenticator.isAuthenticated(decryptedToken.login, decryptedToken))
-      return decryptedToken.login;
-    else
-      return false;
+    if(!params || !params.authenticationToken || !params.user)
+      return new NotAuthenticated();
+    return await this.useCase.get(id,params.user as User,params.authenticationToken,params.uniqueClientId);
   }
 
   // Create identity token
   async create (data: Data, params?: Params): Promise<any> {
-    let tokenEncrypted:string;
-
     try {
-      const login = (data.login)?data.login:'anonymous';
-      const password = (data.password)?data.password:'nopass';
-
-      // TODO : check the client : no repeat tentative, etc ...
-      if(!this.authenticator.canAuthenticate(login, {
-        clientUniqueId: params?.clientUniqueId
-      })){
-        throw new NotAcceptable(`User ${login} can't authenticate for now, please retry later`);
-      }
-
-      if(login === 'anonymous' || password === 'nopass') {
-        throw new NotAcceptable('Login or password wrong. Please retry')
-      // TODO : log client ip or identifier tentative for login in an unauthorize way for further counter measure
-      }
-
-      const tokenDecrypted = await this.authenticator.authenticate(login, password);
-      tokenEncrypted = await this.encryptor.encryptCustomToken(tokenDecrypted);
-
+      return await this.useCase.create(data, params?.user as User)
     } catch(error) {
-      // TODO : return the honey pot token, that give access to : you didn't say the magic word !!!!
-      // tokenEncrypted = await this.encryptor.encryptCustomToken(this.honeyPot.token);
-      // TODO : Make a specific exception for wrong password and nologin authorized in the time
       throw new NotAuthenticated(error);
     }
-
-    return tokenEncrypted;
   }
 
   // renew existing token if existing token still ok and period of
   async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
-    return data;
+    if(!id)
+      throw new NotAcceptable()
+    return await this.useCase.update(id,data, params?.user as User);
   }
 
   async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {

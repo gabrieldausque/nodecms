@@ -14,19 +14,44 @@ const testConfiguration = config.get('authentication');
 describe('Authentication use case', () => {
 
   let encryptor:EncryptionPlugin;
+  let configuration: any;
 
-  before(async() => {
-    globalInstancesFactory.loadExportedClassesFromDirectory('../../../src/plugins');
-    globalInstancesFactory.loadExportedClassesFromDirectory('../../../src/usecases');
-
+  before(async function(){
+    this.timeout(10000);
+    globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/../../src/plugins');
+    globalInstancesFactory.loadExportedClassesFromDirectory(__dirname + '/../../src/usecases');
+    await initMongoDbTestDatabase();
+    globalInstancesFactory.getInstanceFromCatalogs('UseCases','Role', {
+      storage:{...config.get('storage.roles')}
+    })
+    globalInstancesFactory.getInstanceFromCatalogs('UseCases','User', {
+      storage:{...config.get('storage.users')}
+    })
     encryptor = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', 'Default');
-  })
+    configuration = {...config.get('authentication')};
+    configuration.storage = config.get('storage.authentications')
+    console.log('init ok');
+  });
 
   it('Should authenticate a user and return authentication token when giving authorized login and password', async () => {
-    const useCase:AuthenticationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Authentication', config.get('Authentication'));
+    const useCase:AuthenticationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Authentication', configuration);
+    const clientUniqueId:string = (new Buffer('127.0.0.1')).toString('base64');
     const token = await useCase.create({
-      login:
+      login: 'localtest',
+      password: 'apassword',
+      clientUniqueId: clientUniqueId
     })
+    expect(token.encryptedToken).to.be.ok;
+    if(token.encryptedToken && token.login)
+    {
+      return expect(useCase.get(token.login, undefined, token.encryptedToken, clientUniqueId)).to.eventually.eql({
+        login:'localtest',
+        encryptedToken: token.encryptedToken,
+        clientUniqueId: clientUniqueId
+      })
+    } else {
+      assert.fail('No correct authentication')
+    }
   })
 
 })
