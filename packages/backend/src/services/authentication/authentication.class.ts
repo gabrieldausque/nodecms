@@ -9,6 +9,7 @@ import {User, User as UserEntity} from "../../entities/User";
 import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {isNumber} from "../../helpers";
+import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
 
 interface Data {
   login?:string,
@@ -65,6 +66,7 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     return [];
   }
 
+  // get login from token, return false if user is not authenticated
   async get (id: Id, params?: Params): Promise<any> {
     if(!params || !params.authenticationToken)
       return false;
@@ -75,6 +77,7 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
       return false;
   }
 
+  // Create identity token
   async create (data: Data, params?: Params): Promise<any> {
     let tokenEncrypted:string;
 
@@ -107,19 +110,19 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     return tokenEncrypted;
   }
 
+  // renew existing token if existing token still ok and period of
   async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
     return data;
   }
 
   async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
-    return data;
+    throw new NotAuthorizedError('Patch of authentication token not authorized')
   }
 
   async remove (id: NullableId, params?: Params): Promise<any> {
+    // TODO : trace logout activity
     return 'logged out';
   }
-
-  [key: string]: any;
 
   getDomain() {
     const realm = this.app.get('authentication').realm;

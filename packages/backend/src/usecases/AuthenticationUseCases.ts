@@ -12,7 +12,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     }
   ]
 
-  async create(entity: Authentication, executingUser: User): Promise<Authentication> {
+  async create(entity: Authentication, executingUser?: User): Promise<Authentication> {
     throw new Error('Not Implemented')
   }
 
