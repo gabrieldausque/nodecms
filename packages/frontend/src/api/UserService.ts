@@ -2,6 +2,7 @@ import {BaseServiceClient} from "./BaseServiceClient";
 import type {AxiosInstance} from "axios";
 import axios from "axios";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
+import {v4 as uuid} from 'uuid';
 
 export class UserService extends BaseServiceClient {
 
@@ -9,11 +10,22 @@ export class UserService extends BaseServiceClient {
         super(axiosInstance, url);
     }
 
+    getClientUniqueId() {
+        let clientId = localStorage.getItem('clientUniqueId');
+        if(!clientId){
+            console.log(`adding client unique Id`);
+            clientId = uuid();
+            localStorage.setItem('clientUniqueId',clientId)
+        }
+        console.log(`client unique Id is ${clientId}`)
+        return clientId
+    }
+
     async checkAuthentication() {
         const value = await axios.request({
             method:'get',
             baseURL:this.url,
-            url:'authentication/0'
+            url:'authentication'
         })
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
         document.dispatchEvent(authenticateEvent);
@@ -27,7 +39,8 @@ export class UserService extends BaseServiceClient {
             url:'authentication',
             data: {
                 login,
-                password
+                password,
+                clientUniqueId: this.getClientUniqueId()
             }
         })
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);

@@ -3,8 +3,8 @@ import {CustomAuthenticatedUserToken} from "../Authentication/AuthenticationPlug
 export interface EncryptionPlugin {
   encryptCustomToken(tokenDecrypted: CustomAuthenticatedUserToken): Promise<string>;
   decryptCustomToken(tokenEncrypted: string): Promise<CustomAuthenticatedUserToken>;
-  encryptClientId(login:string): string;
-  decryptClientId(login:string): string;
+  encryptClientId(uniqueClientId:string): string;
+  decryptClientId(encryptedUniqueClientId:string): string;
   encrypt(stringToEncrypt:string):string;
   decrypt(stringToDecrypt:string):string;
 }

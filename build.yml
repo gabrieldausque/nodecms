@@ -9,8 +9,21 @@ variables:
   - name: semanticVersion
     value: $[counter(variables['semverPrefix'], 0)]
 
+resources:
+  containers:
+    - container: mongo_teama
+      image: mongo
+      ports:
+        - 27017:27017
+      env:
+        MONGO_INITDB_ROOT_USERNAME: admin_teama
+        MONGO_INITDB_ROOT_PASSWORD: admin
+
 pool:
   vmImage: 'ubuntu-latest'
+
+services:
+  mongo_teama: mongo_teama
 
 steps:
 
@@ -31,16 +44,15 @@ steps:
    checkLatest: true
 
 - task: Npm@1
-  displayName: Install lerna globally
-  inputs: 
-    command: custom
-    customCommand: install lerna -g
-
-- task: Npm@1
   displayName: Install all Root dependencies
   inputs:
    command: install
-
+- task: Npm@1
+  displayName: Change version of all packages
+  inputs:
+   command: custom
+   customCommand: run ver -- $(semverPrefix).$(semanticVersion)
+   
 - task: Npm@1
   displayName: Bootstrap project
   inputs:
@@ -54,20 +66,33 @@ steps:
     customCommand: run build
 
 - task: Npm@1
-  displayName: Change backend npm version
-  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  displayName: Run tests
   inputs:
     command: custom
-    customCommand: version  $(semverPrefix).$(semanticVersion)
-    workingDir: $(Build.Repository.LocalPath)/packages/backend
+    customCommand: run test
 
-- task: Npm@1
-  displayName: Change backend npm version
-  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
   inputs:
-    command: custom
-    customCommand: version  $(semverPrefix).$(semanticVersion)
-    workingDir: $(Build.Repository.LocalPath)/packages/frontend
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/junit.xml'
+    mergeTestResults: true
+    testRunTitle: 'UI Jest tests'
+  displayName: Publish tests results
+
+- task: reportgenerator@4
+  displayName: Merging cobertura files
+  inputs: 
+    reports: $(Build.SourcesDirectory)/**/coverage/cobertura-coverage.xml
+    targetdir: $(Build.SourcesDirectory)/CoverageResults
+    verbosity: Verbose
+
+- task: PublishCodeCoverageResults@1
+  condition: succeededOrFailed()
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
+  displayName: Publish code coverage
 
 - task: Npm@1
   displayName: Backend npm publication

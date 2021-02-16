@@ -5,6 +5,7 @@ import app from "../app";
 import {UserUseCases} from "../usecases/UserUseCases";
 import { globalInstancesFactory } from '@hermes/composition';
 import {UseCases} from "../usecases/UseCases";
+import {AuthenticationUseCases} from "../usecases/AuthenticationUseCases";
 
 export interface BaseServiceConfiguration {
   paginate?:number
@@ -60,6 +61,9 @@ export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMe
   abstract isDataAuthorized(data:any, right:string, user?:any):Promise<boolean>;
 
   async validAuthentication(params:any, extractUser:boolean = false) {
+
+    const authenticationUseCases:AuthenticationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authentication');
+
     if(!params.clientId){
       throw new NotAuthenticated('You are missing your unique clientId. Please correct and retry.');
     }
@@ -74,11 +78,9 @@ export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMe
       throw new NotImplemented('Federation of authentication not implemented. Will be done in further release');
     } else {
       //TODO : replace this by a useCase (Currently not implemented)
-      const authenticationService = this.app.service('authentication');
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      const login = authenticationService.encryptor.decryptClientId(params.clientId);
-      const userIsAuthenticated = await authenticationService.get(login, params);
-      if(!userIsAuthenticated && !extractUser) {
+      const login = (await authenticationUseCases.getLoginFromEncryptedToken(params.authenticationToken));
+      if(!login && !extractUser) {
         throw new NotAuthenticated('Please authenticate before using this application');
       } else {
         params.user = await userUseCase.get(login);

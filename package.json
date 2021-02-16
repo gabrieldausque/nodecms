@@ -6,11 +6,12 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
-    "test": "lerna run test",
+    "test": "lerna run test --stream",
     "dev": "npm run init-dev-db && lerna run --stream dev",
     "dev-backend": "lerna run --stream dev-backend",
     "dev-front": "lerna run --stream dev-front",
     "build": "lerna run build",
-    "init-dev-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
+    "init-dev-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js",
+    "ver": "lerna version --no-commit-hooks --no-git-tag-version --no-push --yes"
   }
 }

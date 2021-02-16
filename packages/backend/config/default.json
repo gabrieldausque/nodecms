@@ -19,19 +19,21 @@
     "contractName": "Default",
     "configuration": {}
   },
-  "encryption" : {
-    "contractName": "Default",
-    "configuration": {
-      "password":"MySecret",
-      "cipherAlgorithm":"aes-128-gcm",
-      "keyLength":16,
-      "salt":"MySalt"
-    }
-  },
   "authentication": {
+    "encryption" : {
+      "contractName": "Default",
+      "configuration": {
+        "password":"MySecret",
+        "cipherAlgorithm":"aes-128-gcm",
+        "keyLength":16,
+        "salt":"MySalt"
+      }
+    },
     "authentication" : {
       "contractName": "Default",
-      "configuration": {}
+      "configuration": {
+
+      }
     },
     "realm": "myhost.domain"
   },

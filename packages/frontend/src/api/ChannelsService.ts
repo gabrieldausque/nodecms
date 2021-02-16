@@ -45,7 +45,6 @@ export class ChannelsService extends BaseServiceClient {
                 })
             };
             (window as any).cmsClient = this;
-            console.log('connected');
         }
     }
 

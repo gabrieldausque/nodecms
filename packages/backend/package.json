@@ -32,10 +32,11 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run compile && NODE_ENV=test npm run mocha",
+    "test": "NODE_ENV=testmongodb npm run mocha && NODE_ENV=testmongodb npm run coverage",
     "dev": "NODE_ENV=dev ts-node-dev --no-notify src/",
-    "start": "npm run compile && node dist/",
-    "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
+    "start": "npm run build && node dist/",
+    "mocha": "ts-mocha \"test/**/*.ts\" --recursive --reporter mocha-multi-reporters --reporter-options configFile=mocha-config.json --exit",
+    "coverage": "nyc --reporter=cobertura ts-mocha \"test/**/*.ts\" --recursive --exit",
     "build": "node_modules/.bin/shx rm -rf dist/ && tsc ",
     "dev-backend": "npm run dev",
     "init-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
@@ -92,12 +93,16 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^7.2.0",
+    "mocha-junit-reporter": "^2.0.0",
+    "mocha-cobertura-reporter": "^1.0.4",
+    "mocha-multi-reporters": "^1.5.1",
     "nodemon": "^2.0.6",
     "shx": "^0.3.3",
     "ts-mocha": "^7.0.0",
     "ts-node-dev": "^1.0.0",
     "tslint": "^6.1.2",
     "typescript": "^3.9.6",
-    "config": "^3.3.2"
+    "config": "^3.3.2",
+    "nyc": "^15.1.0"
   }
 }

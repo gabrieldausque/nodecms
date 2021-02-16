@@ -34,8 +34,6 @@ export class MediaService extends BaseServiceClient {
                     key:keyOrId
                 }
             })
-            console.log('metadata');
-            console.log(response.data);
             return response.data[0];
         }catch(error) {
             console.error(error);

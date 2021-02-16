@@ -1,6 +1,4 @@
-// @ts-ignore
-import chai from 'chai';
-// @ts-ignore
+import * as chai from 'chai';
 import {expect} from 'chai';
 import {Server} from "http";
 import {globalInstancesFactory} from "@hermes/composition";
@@ -8,13 +6,10 @@ import app from "../../src/app";
 import axios from "axios";
 import {getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 const config = require('config');
-// @ts-ignore
-import fs from "fs";
-import {CSVAuthorizationStorage} from "../../src/plugins/Storages/Authorization/CSVAuthorizationStorage";
-// @ts-ignore
-import assert from "assert";
+import * as assert from "assert";
 import {Authorization} from "../../src/services/authorization/authorization.class";
 import {Authorization as AuthorizationEntity} from "../../src/entities/Authorization";
+import {v4 as uuid} from "uuid";
 chai.use(require('chai-as-promised'));
 
 const port = app.get('port') || 3030;
@@ -24,6 +19,7 @@ describe('Authorization service With Mongodb', () => {
   let server: Server;
   let finalCookie = '';
   let params:any = {};
+  let clientUniqueId = uuid();
   let nodeConfigFile = config.get('storage.authorization.configuration')
   let authorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'MongoDb', {
 
@@ -32,35 +28,40 @@ describe('Authorization service With Mongodb', () => {
   before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', async () => {
-      const authResponse = await axios.request({
-        url: getUrl('authentication', 'localhost', port),
-        method: "POST",
-        data: {
-          login: "localtest",
-          password: "apassword",
+    const p = new Promise((resolve => {
+      server.once('listening', async () => {
+        const authResponse = await axios.request({
+          url: getUrl('authentication'),
+          method: "POST",
+          data: {
+            login: "localtest",
+            password: "apassword",
+            clientUniqueId:clientUniqueId
+          }
+        })
+        for(const cookie of authResponse.headers['set-cookie']) {
+          const cookieString = cookie.split(';')[0];
+          const cookieName = cookieString.split('=')[0];
+          const cookieValue = cookieString.split('=')[1];
+          switch(cookieName) {
+            case 'ncms-uniqueid': {
+              params.clientId = cookieValue
+              break;
+            }
+            case 'ncms-token': {
+              params.authenticationToken = cookieValue;
+              break;
+            }
+            default: {
+              params[cookieName] = cookieValue;
+            }
+          }
+          finalCookie += `${cookieString}; `
         }
-      })
-      for(const cookie of authResponse.headers['set-cookie']) {
-        const cookieString = cookie.split(';')[0];
-        const cookieName = cookieString.split('=')[0];
-        const cookieValue = cookieString.split('=')[1];
-        switch(cookieName) {
-          case 'ncms-uniqueid': {
-            params.clientId = cookieValue
-            break;
-          }
-          case 'ncms-token': {
-            params.authenticationToken = cookieValue;
-            break;
-          }
-          default: {
-            params[cookieName] = cookieValue;
-          }
-        }
-        finalCookie += `${cookieString}; `
-      }
-    });
+        resolve(undefined);
+      });
+    }))
+    await p;
   })
 
   beforeEach(async () => {

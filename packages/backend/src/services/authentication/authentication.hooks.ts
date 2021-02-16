@@ -3,10 +3,7 @@ import {disallowMethod} from '../helpers';
 export default {
   before: {
     all: [],
-    find: [
-      disallowMethod,
-      (ctx:any) => {}
-    ],
+    find: [],
     get: [],
     create: [],
     update: [],

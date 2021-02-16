@@ -7,9 +7,6 @@
     import {globalFEService} from "../../FEServices";
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
 
-    console.log('The channel content')
-    console.log(this)
-
     export let channel;
 
     let editor = null;
@@ -41,12 +38,9 @@
     }
 
     async function loadPosts() {
-        console.log('loading posts ...');
         if (channel && channel.key &&
             channel.key !== $ChannelStore.key
         ) {
-            console.log('Channel :')
-            console.log(channel);
             let channelAuthorized = true;
             const backEndService = await getBackendClient();
             try{
@@ -105,8 +99,6 @@
                     }, 100)
                 })
                 window.setTimeout(() => {
-                    console.log(channelContent.scrollTop);
-                    console.log(channelContent.scrollHeight);
                     channelContent.scrollTop = channelContent.scrollHeight;
                 }, 100)
             }

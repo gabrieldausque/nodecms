@@ -28,14 +28,14 @@ export function getUrl(pathname?: string, host?:string, port?:number):string {
 export const sleep = promisify(setTimeout);
 
 export async function initMongoDbTestDatabase():Promise<void> {
-  const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin','Default', config.get("encryption").configuration)
-  const userStorage:MongoDbUserStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'MongoDb');
-  const authorizationStorage:MongoDbAuthorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'MongoDb');
-  const metadataStorage:MongoDbMetadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage', 'MongoDb');
-  const roleStorage:MongoDbRoleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage', 'MongoDb');
-  const channelStorage:MongoDbChannelStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelStorage', 'MongoDb');
-  const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb');
-  const documentStorage:MongoDbDocumentStorage = globalInstancesFactory.getInstanceFromCatalogs('DocumentStorage', 'MongoDb');
+  const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin','Default', config.get('authentication.encryption').configuration)
+  const userStorage:MongoDbUserStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'MongoDb', config.get('storage.users').configuration);
+  const authorizationStorage:MongoDbAuthorizationStorage = globalInstancesFactory.getInstanceFromCatalogs('AuthorizationStorage', 'MongoDb', config.get('storage.authorization').configuration);
+  const metadataStorage:MongoDbMetadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage', 'MongoDb', config.get('storage.metadata').configuration);
+  const roleStorage:MongoDbRoleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage', 'MongoDb',config.get('storage.roles').configuration);
+  const channelStorage:MongoDbChannelStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelStorage', 'MongoDb', config.get('storage.channels').configuration);
+  const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb', config.get('storage.channelPosts').configuration);
+  const documentStorage:MongoDbDocumentStorage = globalInstancesFactory.getInstanceFromCatalogs('DocumentStorage', 'MongoDb', config.get('storage.documents').configuration);
 
   const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017", {
     useUnifiedTopology:true
@@ -204,13 +204,14 @@ export async function initMongoDbTestDatabase():Promise<void> {
   })
 }
 
-export const getAuthenticationParams = async (login:string, password:string, serverPort:number) => {
+export const getAuthenticationParams = async (login:string, password:string, serverPort:number, clientUniqueId:string) => {
   const authResponse = await axios.request({
     url: getUrl('authentication', 'localhost', serverPort),
     method: "POST",
     data: {
       login: login,
       password: password,
+      clientUniqueId: clientUniqueId
     }
   })
   const authParams:any = {};

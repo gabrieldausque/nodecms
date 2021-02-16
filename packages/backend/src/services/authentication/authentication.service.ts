@@ -31,8 +31,8 @@ export default function (app: Application) {
       },
     encryption:
       {
-        contractName: app.get('encryption').contractName,
-        configuration: app.get('encryption').configuration
+        contractName: app.get('authentication').encryption.contractName,
+        configuration: app.get('authentication').encryption.configuration
       },
     storage:{
       contractName:'Default'
@@ -53,16 +53,18 @@ export default function (app: Application) {
   app.use('/authentication',
     authenticationService, (req, res, next) => {
     if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
-      const encryptedToken = res.data;
+      const token = res.data;
       const realm = app.get('authentication').realm;
       const domain = authenticationService.getDomain();
       const cookie = [
-        `ncms-uniqueid=${authenticationService.encryptor.encryptClientId(req.body['login'])} ; domain=${domain}; HttpOnly; SameSite=Lax`,
-        `ncms-token=${encryptedToken} ; domain=${domain}; HttpOnly; SameSite=Lax`,
+        `ncms-uniqueid=${authenticationService.useCase.encryptClientId(req.body['clientUniqueId'])} ; domain=${domain}; HttpOnly; SameSite=Lax`,
+        `ncms-token=${token} ; domain=${domain}; HttpOnly; SameSite=Lax`,
         `realm=${realm} ; domain=${domain}; HttpOnly; SameSite=Lax`
       ];
       res.setHeader('Set-Cookie', cookie);
+      res.data = '';
       res.status(200).json('OK');
+      console.log('response send');
     } else if (req.method.toLowerCase() === 'delete'){
       const domain = authenticationService.getDomain();
       res.clearCookie('ncms-uniqueid', {domain:domain});
@@ -70,10 +72,9 @@ export default function (app: Application) {
       res.clearCookie('realm', {domain:domain});
       res.status(205).json('Logged Out');
     }
-    else {
-      res.status(200).json(res.data);
+    else if(req.method.toLowerCase() === 'get' || req.method.toLowerCase() === 'find') {
+      res.status(200).json('OK');
     }
-
   });
 
   // Get our initialized service so that we can register hooks

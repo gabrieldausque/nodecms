@@ -129,3 +129,6 @@ lib/
 /packages/backend/uploads/temp/
 /packages/frontend/public/js/node-cms/
 /packages/backend/dist/
+/.~lock.authenticationprocess.odt#
+/packages/backend/.nyc_output/
+/packages/backend/junit.xml

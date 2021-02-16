@@ -47,7 +47,7 @@ export class WebThumbnailUseCase {
       if(!title)
         throw new Error('No title on url');
 
-      const description = doc.querySelector('article p')
+      const description = doc.querySelector('h1 + p')
 
       if(!description)
         throw new Error('No description on url');
