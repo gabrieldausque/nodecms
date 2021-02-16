@@ -9,6 +9,19 @@ variables:
   - name: semanticVersion
     value: $[counter(variables['semverPrefix'], 0)]
 
+trigger:
+  batch: true
+  branches:
+    include:
+      - features/*
+      - bugs/*
+
+pr:
+  branches:
+    include:
+      - master
+      - integration
+
 resources:
   containers:
     - container: mongo_teama
