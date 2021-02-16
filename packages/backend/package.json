@@ -32,9 +32,9 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "npm run compile && NODE_ENV=test npm run mocha",
+    "test": "npm run build && NODE_ENV=testmongodb npm run mocha",
     "dev": "NODE_ENV=dev ts-node-dev --no-notify src/",
-    "start": "npm run compile && node dist/",
+    "start": "npm run build && node dist/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
     "build": "node_modules/.bin/shx rm -rf dist/ && tsc ",
     "dev-backend": "npm run dev",
