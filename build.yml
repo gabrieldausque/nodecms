@@ -47,7 +47,12 @@ steps:
   displayName: Install all Root dependencies
   inputs:
    command: install
-
+- task: Npm@1
+  displayName: Change version of all packages
+  inputs:
+   command: custom
+   customCommand: run ver -- $(majorMinorVersion).$(semanticVersion)
+   
 - task: Npm@1
   displayName: Bootstrap project
   inputs:
@@ -65,22 +70,6 @@ steps:
   inputs:
     command: custom
     customCommand: run test
-
-- task: Npm@1
-  displayName: Change backend npm version
-  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
-  inputs:
-    command: custom
-    customCommand: version  $(semverPrefix).$(semanticVersion)
-    workingDir: $(Build.Repository.LocalPath)/packages/backend
-
-- task: Npm@1
-  displayName: Change backend npm version
-  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
-  inputs:
-    command: custom
-    customCommand: version  $(semverPrefix).$(semanticVersion)
-    workingDir: $(Build.Repository.LocalPath)/packages/frontend
 
 - task: Npm@1
   displayName: Backend npm publication
