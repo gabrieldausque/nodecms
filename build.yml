@@ -51,7 +51,7 @@ steps:
   displayName: Change version of all packages
   inputs:
    command: custom
-   customCommand: run ver -- $(majorMinorVersion).$(semanticVersion)
+   customCommand: run ver -- $(semverPrefix).$(semanticVersion)
    
 - task: Npm@1
   displayName: Bootstrap project
