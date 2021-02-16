@@ -71,6 +71,29 @@ steps:
     command: custom
     customCommand: run test
 
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/junit.xml'
+    mergeTestResults: true
+    testRunTitle: 'UI Jest tests'
+  displayName: Publish tests results
+
+- task: reportgenerator@4
+  displayName: Merging cobertura files
+  inputs: 
+    reports: $(Build.SourcesDirectory)/**/coverage/cobertura-coverage.xml
+    targetdir: $(Build.SourcesDirectory)/CoverageResults
+    verbosity: Verbose
+
+- task: PublishCodeCoverageResults@1
+  condition: succeededOrFailed()
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
+  displayName: Publish code coverage
+
 - task: Npm@1
   displayName: Backend npm publication
   condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
