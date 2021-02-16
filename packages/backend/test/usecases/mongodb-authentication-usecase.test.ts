@@ -1,15 +1,14 @@
 import * as chai from 'chai';
 import {expect} from 'chai';
-import {Server} from "http";
 import {globalInstancesFactory} from "@hermes/composition";
-import {getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
+import {initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 const config = require('config');
-import  * as fs from "fs";
 import * as assert from "assert";
 import {EncryptionPlugin} from "../../src/plugins/Encryption/EncryptionPlugin";
 import {AuthenticationUseCases} from "../../src/usecases/AuthenticationUseCases";
+import {v4 as uuid} from 'uuid';
 chai.use(require('chai-as-promised'));
-const testConfiguration = config.get('authentication');
+
 
 describe('Authentication use case', () => {
 
@@ -35,20 +34,16 @@ describe('Authentication use case', () => {
 
   it('Should authenticate a user and return authentication token when giving authorized login and password', async () => {
     const useCase:AuthenticationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Authentication', configuration);
-    const clientUniqueId:string = (new Buffer('127.0.0.1')).toString('base64');
+    const clientUniqueId:string = uuid();
     const token = await useCase.create({
       login: 'localtest',
       password: 'apassword',
       clientUniqueId: clientUniqueId
     })
-    expect(token.encryptedToken).to.be.ok;
-    if(token.encryptedToken && token.login)
+    expect(token).to.be.ok;
+    if(token)
     {
-      return expect(useCase.get(token.login, undefined, token.encryptedToken, clientUniqueId)).to.eventually.eql({
-        login:'localtest',
-        encryptedToken: token.encryptedToken,
-        clientUniqueId: clientUniqueId
-      })
+      return expect(useCase.get('localtest', undefined, token, await useCase.encryptClientId(clientUniqueId))).to.eventually.eql(token)
     } else {
       assert.fail('No correct authentication')
     }

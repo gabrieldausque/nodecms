@@ -18,6 +18,7 @@ import {UserRoles} from "../../src/services/user-roles/user-roles.class";
 import {Role as RoleEntity} from '../../src/entities/Role';
 import {MongoClient} from "mongodb";
 import {MongoDbUserStorage} from "../../src/plugins/Storages/User/MongoDbUserStorage";
+import {v4 as uuid} from "uuid";
 
 const port = app.get('port') || 3030;
 
@@ -25,6 +26,7 @@ describe('User service', () => {
 
   let server: Server;
   let finalCookie = '';
+  let clientUniqueId = uuid();
   let params:any = {
     route:{}
   };
@@ -32,35 +34,40 @@ describe('User service', () => {
   before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', async () => {
-      const authResponse = await axios.request({
-        url: getUrl('authentication', 'localhost', port),
-        method: "POST",
-        data: {
-          login: "localtest",
-          password: "apassword",
+    const p = new Promise((resolve => {
+      server.once('listening', async () => {
+        const authResponse = await axios.request({
+          url: getUrl('authentication'),
+          method: "POST",
+          data: {
+            login: "localtest",
+            password: "apassword",
+            clientUniqueId:clientUniqueId
+          }
+        })
+        for(const cookie of authResponse.headers['set-cookie']) {
+          const cookieString = cookie.split(';')[0];
+          const cookieName = cookieString.split('=')[0];
+          const cookieValue = cookieString.split('=')[1];
+          switch(cookieName) {
+            case 'ncms-uniqueid': {
+              params.clientId = cookieValue
+              break;
+            }
+            case 'ncms-token': {
+              params.authenticationToken = cookieValue;
+              break;
+            }
+            default: {
+              params[cookieName] = cookieValue;
+            }
+          }
+          finalCookie += `${cookieString}; `
         }
-      })
-      for(const cookie of authResponse.headers['set-cookie']) {
-        const cookieString = cookie.split(';')[0];
-        const cookieName = cookieString.split('=')[0];
-        const cookieValue = cookieString.split('=')[1];
-        switch(cookieName) {
-          case 'ncms-uniqueid': {
-            params.clientId = cookieValue
-            break;
-          }
-          case 'ncms-token': {
-            params.authenticationToken = cookieValue;
-            break;
-          }
-          default: {
-            params[cookieName] = cookieValue;
-          }
-        }
-        finalCookie += `${cookieString}; `
-      }
-    });
+        resolve(undefined);
+      });
+    }))
+    await p;
   })
 
   beforeEach(async () => {
@@ -189,7 +196,7 @@ describe('User service', () => {
       password: "aNewP@ssw0rd",
       isActive: true
     }, params);
-    const otherUserParam:any = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const otherUserParam:any = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     if(created.id){
       const wrongUpdatePromise = service.update(created.id, {
         id:created.id,
@@ -524,7 +531,7 @@ describe('User service', () => {
 
   it('non administrators should not be able to add role for itself or another user', async() => {
     const service = app.service('user/:idOrLogin/roles');
-    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     if(!otherUserParams.route)
       otherUserParams.route = {}
     otherUserParams.route.idOrLogin = 'otheruser';

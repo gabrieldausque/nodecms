@@ -204,13 +204,14 @@ export async function initMongoDbTestDatabase():Promise<void> {
   })
 }
 
-export const getAuthenticationParams = async (login:string, password:string, serverPort:number) => {
+export const getAuthenticationParams = async (login:string, password:string, serverPort:number, clientUniqueId:string) => {
   const authResponse = await axios.request({
     url: getUrl('authentication', 'localhost', serverPort),
     method: "POST",
     data: {
       login: login,
       password: password,
+      clientUniqueId: clientUniqueId
     }
   })
   const authParams:any = {};

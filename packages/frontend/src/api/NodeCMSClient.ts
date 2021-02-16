@@ -71,7 +71,6 @@ let backendClient = null;
 export const getBackendClient = async ():Promise<NodeCMSClient> => {
     const configuration = await getClientConfig();
     if(!backendClient){
-        console.log(backendClient);
         backendClient = new NodeCMSClient(configuration.data.backendHost, configuration.data.socketIoHost, configuration.data.env);
     }
     return backendClient;

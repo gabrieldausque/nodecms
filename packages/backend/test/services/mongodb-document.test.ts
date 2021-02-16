@@ -6,6 +6,7 @@ import axios from "axios";
 import {globalInstancesFactory} from "@hermes/composition";
 import {Document} from "../../src/services/document/document.class"
 import {Document as DocumentEntity} from "../../src/entities/Document"
+import {v4 as uuid} from "uuid";
 const port = app.get('port') || 3030;
 
 describe('Document service', () => {
@@ -13,40 +14,45 @@ describe('Document service', () => {
   let server: Server;
   let finalCookie = '';
   let params:any = {};
+  let clientUniqueId = uuid();
 
   before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
-
-    server.once('listening', async () => {
-      const authResponse = await axios.request({
-        url: getUrl('authentication', 'localhost', port),
-        method: "POST",
-        data: {
-          login: "localtest",
-          password: "apassword",
+    const p = new Promise((resolve => {
+      server.once('listening', async () => {
+        const authResponse = await axios.request({
+          url: getUrl('authentication'),
+          method: "POST",
+          data: {
+            login: "localtest",
+            password: "apassword",
+            clientUniqueId:clientUniqueId
+          }
+        })
+        for(const cookie of authResponse.headers['set-cookie']) {
+          const cookieString = cookie.split(';')[0];
+          const cookieName = cookieString.split('=')[0];
+          const cookieValue = cookieString.split('=')[1];
+          switch(cookieName) {
+            case 'ncms-uniqueid': {
+              params.clientId = cookieValue
+              break;
+            }
+            case 'ncms-token': {
+              params.authenticationToken = cookieValue;
+              break;
+            }
+            default: {
+              params[cookieName] = cookieValue;
+            }
+          }
+          finalCookie += `${cookieString}; `
         }
-      })
-      for(const cookie of authResponse.headers['set-cookie']) {
-        const cookieString = cookie.split(';')[0];
-        const cookieName = cookieString.split('=')[0];
-        const cookieValue = cookieString.split('=')[1];
-        switch(cookieName) {
-          case 'ncms-uniqueid': {
-            params.clientId = cookieValue
-            break;
-          }
-          case 'ncms-token': {
-            params.authenticationToken = cookieValue;
-            break;
-          }
-          default: {
-            params[cookieName] = cookieValue;
-          }
-        }
-        finalCookie += `${cookieString}; `
-      }
-    });
+        resolve(undefined);
+      });
+    }))
+    await p;
   })
 
   beforeEach(async () => {
@@ -126,7 +132,7 @@ describe('Document service', () => {
 
   it('should get protected document with non admin authentication', async() => {
     const service:Document = app.service('document');
-    const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port);
+    const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     const protectedDoc = await service.get(1, standardUserParam);
     return expect(protectedDoc).to.be.eql({
       id:1,
@@ -150,14 +156,14 @@ describe('Document service', () => {
 
   it('should throw error if trying to get private document with not authorized authentication', async() => {
     const service:Document = app.service('document');
-    const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port);
+    const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     const protectedDocPromise = service.get(2, standardUserParam);
     return expect(protectedDocPromise).to.be.rejectedWith('User standarduser is not authorized to access document with id 2');
   })
 
   it('should get private document with authorized non admin authentication', async() => {
     const service:Document = app.service('document');
-    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     const protectedDoc = await service.get(2, otherUserParams);
     return expect(protectedDoc).to.be.eql({
       id:2,
@@ -217,7 +223,7 @@ describe('Document service', () => {
 
   it('should find all authorized documents with limited authentication', async() => {
     const service:Document = app.service('document');
-    const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port);
+    const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     standardUserParam.query = {
       ownerId:0
     };
@@ -252,7 +258,7 @@ describe('Document service', () => {
 
   it('should find all authorized documents with extended authentication', async() => {
     const service:Document = app.service('document');
-    const specialUserParam = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const specialUserParam = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     specialUserParam.query = {
       ownerId:0
     };
@@ -314,7 +320,7 @@ describe('Document service', () => {
 
   it('should throw error when trying to create a document with limited authentication', async() => {
     const service:Document = app.service('document');
-    const standardUserParams = await getAuthenticationParams('standarduser','standard',port);
+    const standardUserParams = await getAuthenticationParams('standarduser','standard',port, clientUniqueId);
     return expect(service.create({
       visibility:'private',
       content: {aProp: 'A property'},
@@ -324,7 +330,7 @@ describe('Document service', () => {
 
   it('should create a document with extended authentication (non admin)', async() => {
     const service:Document = app.service('document');
-    const elevatedParams = await getAuthenticationParams('otheruser','anotherpassword',port);
+    const elevatedParams = await getAuthenticationParams('otheruser','anotherpassword',port, clientUniqueId);
     return expect(await service.create({
       content: {
         aProp: "A property"

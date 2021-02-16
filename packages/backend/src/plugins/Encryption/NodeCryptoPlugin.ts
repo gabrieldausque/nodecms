@@ -36,10 +36,10 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     this.key = crypto.scryptSync(this.password, this.salt, this.keyLength);
   }
 
-  encryptClientId(login: string): string {
+  encryptClientId(uniqueClientId: string): string {
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(this.cipherAlgorithm, this.key, iv)
-    const part1 = cipher.update(`${login}`, 'utf8','hex');
+    const part1 = cipher.update(`${uniqueClientId}`, 'utf8','hex');
     const part2 = cipher.final('hex');
     let encrypted = `${iv.toString('hex')}:${part1}${part2}`
     try {
@@ -51,8 +51,8 @@ export class NodeCryptoPlugin implements EncryptionPlugin {
     return encrypted;
   }
 
-  decryptClientId(encryptedUniqueId: string): string {
-    const encryptedAsArray = encryptedUniqueId.split(':');
+  decryptClientId(encryptedUniqueClientId: string): string {
+    const encryptedAsArray = encryptedUniqueClientId.split(':');
     const decipher = crypto.createDecipheriv(this.cipherAlgorithm, this.key, Buffer.from(encryptedAsArray[0], 'hex'));
     let decrypted:string = '';
     if(encryptedAsArray.length > 2) {

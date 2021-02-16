@@ -12,6 +12,7 @@ import {Media as MediaService} from "../../src/services/media/media.class";
 import {Media, MediaVisibility} from '../../src/entities/Media';
 import axios from "axios";
 import * as fs from 'fs';
+import {v4 as uuid} from "uuid";
 
 const readFile = promisify(fs.readFile);
 
@@ -30,40 +31,46 @@ describe('Media service', () => {
   let server: Server;
   let params:any = {};
   let finalCookie = '';
+  let clientUniqueId = uuid();
   let mediaStorage = globalInstancesFactory.getInstanceFromCatalogs('MediaStorage','Default');
 
   before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', async () => {
-      const authResponse = await axios.request({
-        url: getUrl('authentication'),
-        method: "POST",
-        data: {
-          login: "localtest",
-          password: "apassword",
+    const p = new Promise((resolve => {
+      server.once('listening', async () => {
+        const authResponse = await axios.request({
+          url: getUrl('authentication'),
+          method: "POST",
+          data: {
+            login: "localtest",
+            password: "apassword",
+            clientUniqueId:clientUniqueId
+          }
+        })
+        for(const cookie of authResponse.headers['set-cookie']) {
+          const cookieString = cookie.split(';')[0];
+          const cookieName = cookieString.split('=')[0];
+          const cookieValue = cookieString.split('=')[1];
+          switch(cookieName) {
+            case 'ncms-uniqueid': {
+              params.clientId = cookieValue
+              break;
+            }
+            case 'ncms-token': {
+              params.authenticationToken = cookieValue;
+              break;
+            }
+            default: {
+              params[cookieName] = cookieValue;
+            }
+          }
+          finalCookie += `${cookieString}; `
         }
-      })
-      for(const cookie of authResponse.headers['set-cookie']) {
-        const cookieString = cookie.split(';')[0];
-        const cookieName = cookieString.split('=')[0];
-        const cookieValue = cookieString.split('=')[1];
-        switch(cookieName) {
-          case 'ncms-uniqueid': {
-            params.clientId = cookieValue
-            break;
-          }
-          case 'ncms-token': {
-            params.authenticationToken = cookieValue;
-            break;
-          }
-          default: {
-            params[cookieName] = cookieValue;
-          }
-        }
-        finalCookie += `${cookieString}; `
-      }
-    });
+        resolve(undefined);
+      });
+    }))
+    await p;
   })
 
   beforeEach(async () => {

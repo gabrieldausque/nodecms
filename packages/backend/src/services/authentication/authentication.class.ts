@@ -33,14 +33,19 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   }
 
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-    return [];
+    if(!params || !params.authenticationToken || !params.user)
+      throw new NotAuthenticated();
+    return await this.get(params.user.login, params);
   }
 
   // get login from token, return false if user is not authenticated
   async get (id: Id, params?: Params): Promise<any> {
     if(!params || !params.authenticationToken || !params.user)
-      return new NotAuthenticated();
-    return await this.useCase.get(id,params.user as User,params.authenticationToken,params.uniqueClientId);
+      throw new NotAuthenticated();
+    if(!id && params.user as User && (params.user as User).login) {
+      id = (params.user as User).login;
+    }
+    return await this.useCase.get(id,params.user as User,params.authenticationToken,params.clientId);
   }
 
   // Create identity token
@@ -78,15 +83,11 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   }
 
   async needAuthentication(context:any): Promise<boolean> {
-    if(context.method === 'remove')
-    {
-      return true;
-    }
-    else
+    if(context.method === 'create')
     {
       return false;
     }
-
+    return true;
   }
 
   async isAuthorized(context: any): Promise<boolean> {

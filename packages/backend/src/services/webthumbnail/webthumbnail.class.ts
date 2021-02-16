@@ -6,6 +6,7 @@ import {UserUseCases} from "../../usecases/UserUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
 import {User, User as UserEntity} from '../../entities/User';
 import {WebThumbnailUseCase} from "../../usecases/WebThumbnailUseCase";
+import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
 
 type WebThumbnailDTO = Partial<WebThumbnailEntity>;
 
@@ -84,7 +85,8 @@ export class WebThumbnail implements ServiceMethods<WebThumbnailDTO> {
   }
 
   async validAuthentication(params:any, extractUser:boolean = false) {
-   //TODO : replace using the authentication use case !
+
+    const authenticationUseCases:AuthenticationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Authentication');
 
     if(!params.clientId){
       throw new NotAuthenticated('You are missing your unique clientId. Please correct and retry.');
@@ -102,7 +104,7 @@ export class WebThumbnail implements ServiceMethods<WebThumbnailDTO> {
       //TODO : replace this by a useCase (Currently not implemented)
       const authenticationService = this.app.service('authentication');
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-      const login = authenticationService.encryptor.decryptClientId(params.clientId);
+      const login = (await authenticationUseCases.getLoginFromEncryptedToken(params.authenticationToken));
       const userIsAuthenticated = await authenticationService.get(login, params);
       if(!userIsAuthenticated && !extractUser) {
         throw new NotAuthenticated('Please authenticate before using this application');

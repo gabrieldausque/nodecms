@@ -64,7 +64,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     }
   }
 
-  async create(entity: Authentication, executingUser?: User): Promise<Authentication> {
+  async create(entity: Authentication, executingUser?: User): Promise<any> {
     AuthenticationEntityRules.validateForAuthentication(entity)
 
     if(entity.login && entity.password && entity.clientUniqueId) {
@@ -81,7 +81,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
       entity.encryptedToken = await this.encryptor.encryptCustomToken(tokenDecrypted);
     }
 
-    return entity;
+    return entity.encryptedToken;
   }
 
   async delete(id: string | number, executingUser?: User): Promise<Authentication> {
@@ -92,7 +92,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     throw new Error('Not Implemented')
   }
 
-  async get(id: string | number, executingUser?: User, encryptedToken?:string, clientUniqueId?:string): Promise<Authentication> {
+  async get(id: string | number, executingUser?: User, encryptedToken?:string, clientUniqueId?:string): Promise<any> {
 
     AuthenticationEntityRules.validate({
       login: id.toString(),
@@ -102,12 +102,9 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
 
     if(encryptedToken && clientUniqueId){
       const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(encryptedToken);
-      await this.validateToken(decryptedToken,id.toString(),clientUniqueId, executingUser);
-      return {
-        login: id.toString(),
-        encryptedToken: encryptedToken,
-        clientUniqueId: clientUniqueId
-      }
+      const decryptedClientId:string = await this.encryptor.decryptClientId(clientUniqueId);
+      await this.validateToken(decryptedToken,id.toString(),decryptedClientId, executingUser);
+      return encryptedToken
     }
 
     throw new InvalidAuthenticationError()
@@ -156,6 +153,19 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     return ((Date.now() - decryptedToken.authenticationDate.getTime())/1000) <= this.tokenTTL;
   }
 
+  encryptClientId(toEncrypt:string):string {
+    return this.encryptor.encryptClientId(toEncrypt);
+  }
+
+  decryptClientId(toDecrypt:string):string {
+    return this.encryptor.decryptClientId(toDecrypt);
+  }
+
+  async getLoginFromEncryptedToken(encryptedToken:string):Promise<string> {
+    const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(encryptedToken);
+    return decryptedToken.login;
+  }
+
   /**
    isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken): boolean {
     return login === decryptedToken.login &&
@@ -184,5 +194,4 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     return true;
   }
    */
-
 }
