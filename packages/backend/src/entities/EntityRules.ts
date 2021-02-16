@@ -22,4 +22,6 @@ export abstract class EntityRules {
     }
     return false;
   }
+
+
 }

@@ -10,6 +10,7 @@ import app from '../../src/app';
 import {Server} from "http";
 import {getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import axios from "axios";
+import {v4 as uuid} from "uuid";
 
 const port = app.get('port') || 3030;
 
@@ -17,6 +18,7 @@ describe('Webthumbnail service', () => {
 
   let server: Server;
   let finalCookie = '';
+  let clientUniqueId = uuid();
   let params:any = {
     route:{}
   };
@@ -24,35 +26,40 @@ describe('Webthumbnail service', () => {
   before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', async () => {
-      const authResponse = await axios.request({
-        url: getUrl('authentication', 'localhost', port),
-        method: "POST",
-        data: {
-          login: "localtest",
-          password: "apassword",
+    const p = new Promise((resolve => {
+      server.once('listening', async () => {
+        const authResponse = await axios.request({
+          url: getUrl('authentication'),
+          method: "POST",
+          data: {
+            login: "localtest",
+            password: "apassword",
+            clientUniqueId:clientUniqueId
+          }
+        })
+        for(const cookie of authResponse.headers['set-cookie']) {
+          const cookieString = cookie.split(';')[0];
+          const cookieName = cookieString.split('=')[0];
+          const cookieValue = cookieString.split('=')[1];
+          switch(cookieName) {
+            case 'ncms-uniqueid': {
+              params.clientId = cookieValue
+              break;
+            }
+            case 'ncms-token': {
+              params.authenticationToken = cookieValue;
+              break;
+            }
+            default: {
+              params[cookieName] = cookieValue;
+            }
+          }
+          finalCookie += `${cookieString}; `
         }
-      })
-      for(const cookie of authResponse.headers['set-cookie']) {
-        const cookieString = cookie.split(';')[0];
-        const cookieName = cookieString.split('=')[0];
-        const cookieValue = cookieString.split('=')[1];
-        switch(cookieName) {
-          case 'ncms-uniqueid': {
-            params.clientId = cookieValue
-            break;
-          }
-          case 'ncms-token': {
-            params.authenticationToken = cookieValue;
-            break;
-          }
-          default: {
-            params[cookieName] = cookieValue;
-          }
-        }
-        finalCookie += `${cookieString}; `
-      }
-    });
+        resolve(undefined);
+      });
+    }))
+    await p;
   })
 
   beforeEach(async () => {
@@ -92,7 +99,7 @@ describe('Webthumbnail service', () => {
       );
       expect(webThumbnail).is.ok;
       expect(webThumbnail).to.be.eql({
-        "description": "Hyper Cacher en janvier 2015, église à Saint-Etienne du Rouvray en juillet 2016 et tant d’autres situations de crise : plusieurs unités d’élite peuvent être mobilisées pour intervenir régulièrement.",
+        "description": "    Le point sur le fonctionnement et les missions de ces unités d’élite, appelées à intervenir lors des attentats terroristes. ",
         "mediaId": 0,
         "title": "RAID, GIGN, BRI&nbsp;: qui fait quoi&nbsp;?",
         "url": "https://www.lemonde.fr/les-decodeurs/article/2015/11/18/raid-gign-bri-qui-fait-quoi_4812824_4355770.html"

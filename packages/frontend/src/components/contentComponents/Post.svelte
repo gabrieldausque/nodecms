@@ -49,7 +49,6 @@
                             window.setTimeout(()=> {
                                 const channelContent = document.querySelector('.channelContent')
                                 channelContent.scrollTop = channelContent.scrollHeight
-                                console.log(channelContent.scrollTop)
                             })
                         }
                         window.setTimeout(setInnerLink, 500);

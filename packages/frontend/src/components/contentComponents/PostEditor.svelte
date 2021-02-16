@@ -84,7 +84,6 @@
                 }
             }
         }
-        console.log('###');
     }
 
     onMount(() => {

@@ -1,5 +1,5 @@
-//@ts-ignore
-import assert from 'assert';
+
+import * as assert from 'assert';
 import {Server} from "http";
 import axios from "axios";
 import * as fs from "fs";
@@ -9,49 +9,56 @@ import app from '../../src/app';
 import {globalInstancesFactory} from "@hermes/composition";
 import {Role} from "../../src/services/role/role.class";
 import {Role as RoleEntity} from '../../src/entities/Role';
-import {getAuthenticationParams} from "../../lib/tests/TestsHelpers";
+import {getAuthenticationParams} from "../../src/tests/TestsHelpers";
+import {v4 as uuid} from "uuid";
 const port = app.get('port') || 3030;
 
 describe('Role service', () => {
 
   let server: Server;
   let finalCookie = '';
-  let params:any = {}
+  let params:any = {};
+  let clientUniqueId = uuid();
   let roleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage','Default');
 
 
   before(async () => {
     await initMongoDbTestDatabase();
     server = app.listen(port);
-    server.once('listening', async () => {
-      const authResponse = await axios.request({
-        url: getUrl('authentication', 'localhost', port),
-        method: "POST",
-        data: {
-          login: "localtest",
-          password: "apassword",
+    const p = new Promise((resolve => {
+      server.once('listening', async () => {
+        const authResponse = await axios.request({
+          url: getUrl('authentication'),
+          method: "POST",
+          data: {
+            login: "localtest",
+            password: "apassword",
+            clientUniqueId:clientUniqueId
+          }
+        })
+        for(const cookie of authResponse.headers['set-cookie']) {
+          const cookieString = cookie.split(';')[0];
+          const cookieName = cookieString.split('=')[0];
+          const cookieValue = cookieString.split('=')[1];
+          switch(cookieName) {
+            case 'ncms-uniqueid': {
+              params.clientId = cookieValue
+              break;
+            }
+            case 'ncms-token': {
+              params.authenticationToken = cookieValue;
+              break;
+            }
+            default: {
+              params[cookieName] = cookieValue;
+            }
+          }
+          finalCookie += `${cookieString}; `
         }
-      })
-      for(const cookie of authResponse.headers['set-cookie']) {
-        const cookieString = cookie.split(';')[0];
-        const cookieName = cookieString.split('=')[0];
-        const cookieValue = cookieString.split('=')[1];
-        switch(cookieName) {
-          case 'ncms-uniqueid': {
-            params.clientId = cookieValue
-            break;
-          }
-          case 'ncms-token': {
-            params.authenticationToken = cookieValue;
-            break;
-          }
-          default: {
-            params[cookieName] = cookieValue;
-          }
-        }
-        finalCookie += `${cookieString}; `
-      }
-    });
+        resolve(undefined);
+      });
+    }))
+    await p;
   })
 
   beforeEach(async () => {
@@ -274,7 +281,7 @@ describe('Role service', () => {
 
   it('should create a role with special user', async() => {
     const service:Role = app.service('role');
-    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     const created = await service.create({
       key:'newRole',
       description:'A new role'
@@ -296,7 +303,7 @@ describe('Role service', () => {
 
   it('should create a role with standard user', async() => {
     const service:Role = app.service('role');
-    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     const created = await service.create({
       key:'newRole',
       description:'A new role'
@@ -318,7 +325,7 @@ describe('Role service', () => {
 
   it('should add member for owner', async() => {
     const service:Role = app.service('role');
-    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     const created = await service.create({
       key:'newRole',
       description:'A new role'
@@ -348,7 +355,7 @@ describe('Role service', () => {
 
   it('should throw exception if special user trying to add member in not owned group', async() => {
     const service:Role = app.service('role');
-    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port);
+    const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     const updatePromise = service.update(0, {
       description:'My New Descriptions',
       members: [2]
@@ -358,7 +365,7 @@ describe('Role service', () => {
 
   it('should add member for owner for standard', async() => {
     const service:Role = app.service('role');
-    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     const created = await service.create({
       key:'newRole',
       description:'A new role'
@@ -388,7 +395,7 @@ describe('Role service', () => {
 
   it('should throw exception if standard user trying to add member in not owned group', async() => {
     const service:Role = app.service('role');
-    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port);
+    const otherUserParams = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     const updatePromise = service.update(0, {
       description:'My New Descriptions',
       members: [2]

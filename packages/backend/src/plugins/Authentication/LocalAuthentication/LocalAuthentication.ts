@@ -26,8 +26,6 @@ export default class LocalAuthentication implements AuthenticationPlugin{
   ]
 
   public userStorage: UserStorage;
-  private authorityKey: string;
-  private tokenTTL: number;
 
   constructor(configuration?:LocalAuthenticationConfiguration) {
     if(configuration) {
@@ -37,27 +35,10 @@ export default class LocalAuthentication implements AuthenticationPlugin{
         console.warn('Default storage used.')
         this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'Default');
       }
-
-      if (configuration.authorityKey) {
-        this.authorityKey = configuration.authorityKey
-      } else {
-        console.warn(`Beware : no authority key provided, default will be used, and it is not secure.` )
-        this.authorityKey = os.hostname()
-      }
-
-      if(configuration.tokenTTLInSecond) {
-        this.tokenTTL = configuration.tokenTTLInSecond;
-      } else {
-        console.warn('Default token TTL used.')
-        this.tokenTTL = 86400;
-      }
     } else {
-      console.warn(`Beware : no authority key provided, default will be used, and it is not secure.` )
-      this.authorityKey = os.hostname();
       console.warn('Default storage used.')
       this.userStorage = globalInstancesFactory.getInstanceFromCatalogs('UserStorage', 'Default');
       console.warn('Default token TTL used.')
-      this.tokenTTL = 86400;
     }
   }
 
@@ -70,7 +51,6 @@ export default class LocalAuthentication implements AuthenticationPlugin{
     if(user && user.isActive && user.password === password){
       const token:CustomAuthenticatedUserToken = {
         authenticationDate: new Date(),
-        authorityKey: this.authorityKey,
         login: user.login.toString()
       };
       return token;
@@ -78,37 +58,4 @@ export default class LocalAuthentication implements AuthenticationPlugin{
     throw new Error(`User ${login} doesn't exist or wrong password or user is deactivated`);
   }
 
-  isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken): boolean {
-    return login === decryptedToken.login &&
-      this.validAuthorityKey(decryptedToken.authorityKey) &&
-      this.userExists(decryptedToken.login) &&
-      this.userIsActive(decryptedToken.login) &&
-      this.tokenNotExpired(decryptedToken);
-  }
-
-  async userExists(login: string):Promise<boolean> {
-    return await this.userStorage.exists(login);
-  }
-
-  async userIsActive(login: string):Promise<boolean> {
-    if(await this.userExists(login)) {
-      const user = await this.userStorage.get(login);
-      return (user && user.isActive)?user.isActive:false;
-    }
-    return  false;
-  }
-
-  tokenNotExpired(decryptedToken:CustomAuthenticatedUserToken) {
-    return ((Date.now() - decryptedToken.authenticationDate.getTime())/1000) <= this.tokenTTL;
-  }
-
-  validAuthorityKey(authorityKey: string) {
-    return authorityKey === this.authorityKey;
-  }
-
-  canAuthenticate(login: string, context: { clientUniqueId:string }): boolean {
-    // TODO : test if login tries < 3
-    // TODO : if login tries > 3, calculate login period and that you are in login period (increasing for each newest login tries
-    return true;
-  }
 }

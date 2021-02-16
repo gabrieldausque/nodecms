@@ -70,7 +70,6 @@
             label: document.querySelector('#channelLabel').value,
             visibility: document.querySelector('#channelVisibility').value
         }
-        console.log(data);
         return data.key && data.label && data.visibility && !(await backendService.channelsService.exists(data.key));
     }
 
@@ -135,12 +134,10 @@
     }
 
     $:{
-        console.log('after channel update');
         getBackendClient().then(async (backEndService) => {
             if(channelKey) {
                 const c = await backEndService.channelsService.getChannel(channelKey);
                 if(channel && channel.id !== c.id)  {
-                    console.log(channel);
                     channel = c;
                 }
             }

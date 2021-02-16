@@ -35,8 +35,9 @@ app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
 const topicServiceConfiguration:any = app.get("topicService");
 const topicService:TopicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService',topicServiceConfiguration.contractName, TopicServiceConfiguration.load(topicServiceConfiguration.configuration))
-
-const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', app.get('encryption').contractName, app.get('encryption').configuration);
+const encryption:EncryptionPlugin = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin',
+  app.get('authentication').encryption.contractName,
+  app.get('authentication').encryption.configuration);
 const logger:Logger = globalInstancesFactory.getInstanceFromCatalogs('Logger',app.get('logger').contractName, app.get('logger').configuration);
 
 logger.info('Application starting');
