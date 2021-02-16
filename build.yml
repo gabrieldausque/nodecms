@@ -44,12 +44,6 @@ steps:
    checkLatest: true
 
 - task: Npm@1
-  displayName: Install lerna globally
-  inputs: 
-    command: custom
-    customCommand: install lerna -g
-
-- task: Npm@1
   displayName: Install all Root dependencies
   inputs:
    command: install
@@ -65,6 +59,12 @@ steps:
   inputs:
     command: custom
     customCommand: run build
+
+- task: Npm@1
+  displayName: Run tests
+  inputs:
+    command: custom
+    customCommand: run test
 
 - task: Npm@1
   displayName: Change backend npm version
