@@ -151,6 +151,9 @@ function initData(){
             .main-logo {
                 height: initial !important;
                 width: initial !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             `,

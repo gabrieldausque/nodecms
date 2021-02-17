@@ -1,16 +1,11 @@
 <script>
-    import {afterUpdate, beforeUpdate, onMount, setContext} from "svelte";
-    import {getBackendClient, NodeCMSClient} from "../../api/NodeCMSClient";
-    import {v4} from 'uuid';
-
-    import LoadingAttachment from "./Attachments/LoadingAttachment.svelte";
+    import {afterUpdate} from "svelte";
     import ImageAttachment from "./Attachments/ImageAttachment.svelte";
     import DownloadAttachment from "./Attachments/DownloadAttachment.svelte";
     import VideoAttachment from "./Attachments/VideoAttachment.svelte";
     import AudioAttachment from "./Attachments/AudioAttachment.svelte";
-    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
-    import {writable} from "svelte/store";
     import {globalFEService} from "../../FEServices";
+    import {ActivePostStore, PostWithChildren} from "../../stores/ActivePostStore";
 
     export let post
 
@@ -59,6 +54,14 @@
 
     })
 
+    let mouseHover = false;
+
+    async function onAnswerClick(event){
+        const postWithChildren = new PostWithChildren();
+        postWithChildren.parentPost = post;
+        ActivePostStore.set(postWithChildren);
+    }
+
 </script>
 
 <style>
@@ -87,6 +90,19 @@
         margin-right: 15px;
     }
 
+    .post-actions {
+        position: absolute;
+        right: 15px;
+        border: solid gray 1px;
+        padding: 5px;
+        border-radius: 25px;
+        opacity: 0;
+    }
+
+    .postContent:hover > .post-actions {
+        opacity: 1;
+    }
+
 </style>
 
 <div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post">
@@ -95,6 +111,9 @@
         <span>{post.author.login}</span>
     </div>
     <div class="postContent">
+        <div class="post-actions">
+            <div class="post-action" on:click={onAnswerClick} ><i class="fa fa-comment-lines"></i></div>
+        </div>
         <style>
             .postContent h1 {
                 text-align: start;

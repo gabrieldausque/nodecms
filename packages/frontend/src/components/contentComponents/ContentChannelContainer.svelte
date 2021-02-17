@@ -1,16 +1,20 @@
 <script>
     import {getBackendClient} from "../../api/NodeCMSClient";
-    import {afterUpdate, beforeUpdate, onDestroy, onMount} from "svelte";
+    import {afterUpdate, beforeUpdate, onMount} from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";
     import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
+    import {ActivePostStore} from "../../stores/ActivePostStore";
     import {globalFEService} from "../../FEServices";
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
+    import {slide} from 'svelte/transition';
 
     export let channel;
 
     let editor = null;
+    let leftPanelVisible = false;
     $ChannelStore;
+    $ActivePostStore;
 
     async function preloadContentPreview(content){
         const contentElement = document.createElement('div');
@@ -103,6 +107,18 @@
                 }, 100)
             }
         }
+
+        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === channel.key){
+            console.log($ActivePostStore);
+            console.log('left panel visible')
+            leftPanelVisible = true;
+        }
+    }
+
+    function hideLeftPanel() {
+        console.log('toto');
+        leftPanelVisible = false;
+        ActivePostStore.set(undefined);
     }
 
     onMount(async () => {
@@ -114,6 +130,19 @@
         await loadPosts();
     })
 
+    function slideIn(node, {
+        delay=0,
+        duration=100
+    }) {
+        let p = getComputedStyle(node).width;
+        p = parseInt(p.replace('px',''));
+        return {
+            delay,
+            duration,
+            css: t => `width: ${t*p}px;`
+        }
+    }
+
 </script>
 
 <style>
@@ -122,7 +151,6 @@
         display: flex;
         flex-direction: column;
         height:100%;
-        width:100%;
         flex-grow: 4;
         position: relative;
     }
@@ -159,6 +187,14 @@
         padding-top: 5px;
     }
 
+    .channel-right-panel {
+        background: red;
+        height: 100%;
+        position: relative;
+        right:0;
+        width:25vw;
+    }
+
  </style>
 
 <div class="channel">
@@ -185,9 +221,17 @@
                 </div>
             </div>
         {/if}
+
     </div>
     {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
         <PostEditor channelKey={channel.key}></PostEditor>
     {/if}
 </div>
+{#if channel && leftPanelVisible}
+    <div class="channel-right-panel" in:slideIn>
+        <div class="close" on:click={hideLeftPanel}>
+            <i class="fal fa-window-close"></i>
+        </div>
+    </div>
+{/if}
 

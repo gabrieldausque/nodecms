@@ -149,12 +149,11 @@
 <style>
     .channelPanel {
         display: flex;
-        width:100%;
-        height:100%;
+        height: 100%;
     }
     .channelsMenu {
         flex-grow: 1;
-        width:25vw;
+        min-width: 25vw;
     }
 
     .channels-items {

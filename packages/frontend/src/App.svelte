@@ -37,13 +37,13 @@
 <style>
 	main {
 		text-align: center;
-		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
 		background: black;
 		width:100%;
 		height: calc(100vh - 71px);
 		padding: 0;
+		display: flex;
 	}
 
 	h1 {
