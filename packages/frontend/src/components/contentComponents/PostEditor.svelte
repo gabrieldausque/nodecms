@@ -9,6 +9,7 @@
 
     export let channelKey;
     let attachments = [];
+    let parentPost;
     const authorizedMimeTypes = [
         'image/gif',
         'image/png',
@@ -87,8 +88,8 @@
     }
 
     onMount(() => {
-
         window.setTimeout(() => {
+            //TODO get target id from property
             const messageContent = document.getElementById('message');
             messageContent.addEventListener('paste', pasteEventHandler, true);
             let editor = new Editor({

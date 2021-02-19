@@ -143,6 +143,19 @@
         }
     }
 
+    function slideOut(node, {
+        delay=0,
+        duration=100
+    }) {
+        let p = getComputedStyle(node).width;
+        p = parseInt(p.replace('px',''));
+        return {
+            delay,
+            duration,
+            css: t => `width: ${(1 - t)*p}px;`
+        }
+    }
+
 </script>
 
 <style>
@@ -187,12 +200,34 @@
         padding-top: 5px;
     }
 
+    .hidden-channel {
+        margin-top: 5px;
+    }
+
     .channel-right-panel {
-        background: red;
+        background: white;
         height: 100%;
         position: relative;
         right:0;
-        width:25vw;
+        width:33vw;
+        box-shadow: -2px 0px 5px lightgray
+    }
+
+    .channel-right-panel > .header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        padding: 5px;
+        min-height: 60px;
+        align-items: flex-start;
+        border-bottom: solid 1px lightgray;
+    }
+
+    .channel-right-panel > .header > div > h6,
+    .channel-right-panel > .header > div >p {
+        margin-bottom: 0;
     }
 
  </style>
@@ -229,9 +264,19 @@
 </div>
 {#if channel && leftPanelVisible}
     <div class="channel-right-panel" in:slideIn>
-        <div class="close" on:click={hideLeftPanel}>
-            <i class="fal fa-window-close"></i>
+        <div class="header" >
+            <div>
+                <h6>Fil de discussion</h6>
+                <p>#{channel.key}</p>
+            </div>
+            <i  on:click={hideLeftPanel} class="fal fa-window-close"></i>
         </div>
+        <div>
+            <Post post="{$ActivePostStore.parentPost}"></Post>
+        </div>
+        {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
+            <PostEditor channelKey={channel.key} parentPost="{$ActivePostStore.parentPost.id}"></PostEditor>
+        {/if}
     </div>
 {/if}
 
