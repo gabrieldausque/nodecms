@@ -112,6 +112,8 @@
             console.log($ActivePostStore);
             console.log('left panel visible')
             leftPanelVisible = true;
+        } else {
+            leftPanelVisible = false;
         }
     }
 
