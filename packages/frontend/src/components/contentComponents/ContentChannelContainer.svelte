@@ -108,13 +108,7 @@
             }
         }
 
-        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === channel.key){
-            console.log($ActivePostStore);
-            console.log('left panel visible')
-            leftPanelVisible = true;
-        } else {
-            leftPanelVisible = false;
-        }
+
     }
 
     function hideLeftPanel() {
@@ -130,6 +124,13 @@
     beforeUpdate(async() => {
         // document.getElementById('current-posts').innerHTML = '';
         await loadPosts();
+        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === channel.key){
+            console.log($ActivePostStore);
+            console.log('left panel visible')
+            leftPanelVisible = true;
+        } else {
+            leftPanelVisible = false;
+        }
     })
 
     function slideIn(node, {
@@ -261,7 +262,7 @@
 
     </div>
     {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
-        <PostEditor channelKey={channel.key}></PostEditor>
+        <PostEditor channelKey={channel.key} targetId="message"></PostEditor>
     {/if}
 </div>
 {#if channel && leftPanelVisible}
@@ -277,7 +278,7 @@
             <Post post="{$ActivePostStore.parentPost}"></Post>
         </div>
         {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
-            <PostEditor channelKey={channel.key} parentPost="{$ActivePostStore.parentPost.id}"></PostEditor>
+            <PostEditor channelKey={channel.key} parentPost="{$ActivePostStore.parentPost.id}" targetId="messageInThread"></PostEditor>
         {/if}
     </div>
 {/if}

@@ -8,8 +8,11 @@
     import _ from 'underscore';
 
     export let channelKey;
+    export let parentPost;
+    export let targetId;
+
     let attachments = [];
-    let parentPost;
+
     const authorizedMimeTypes = [
         'image/gif',
         'image/png',
@@ -86,97 +89,103 @@
             }
         }
     }
-
-    onMount(() => {
+    
+    afterUpdate(() => {
         window.setTimeout(() => {
             //TODO get target id from property
-            const messageContent = document.getElementById('message');
-            messageContent.addEventListener('paste', pasteEventHandler, true);
-            let editor = new Editor({
-                target: messageContent,
-                props: {
-                    height: '54px',
-                    actions: ['b', 'i', 'u', 'strike', 'ul', 'ol', 'viewHtml',
-                        {
-                            name: 'paste',
-                            icon: '<i class="fas fa-paste"></i>',
-                            title: 'Coller',
-                            result: async () => {
-                                const read = await navigator.clipboard.read()
-                                if (read && read.length > 0) {
-                                    const item = read[0];
-                                    if (Array.isArray(item.types) && item.types.length > 0) {
-                                        const type = item.types[0];
-                                        console.log(type);
-                                        const blob = await item.getType(type);
-                                        if (type.indexOf('image') >= 0) {
-                                            const file = new File([blob], 'image');
-                                            await customPaste(file);
-                                        } else if (type.indexOf('text') >= 0) {
-                                            const reader = new FileReader()
-                                            reader.onload = (e) => {
-                                                const content = messageContent.querySelector('.cl-content');
-                                                content.append(reader.result.toString());
-                                                content.focus();
-                                                document.execCommand('selectAll', false, null);
-                                                document.getSelection().collapseToEnd();
-                                                content.scrollTop = content.scrollHeight;
+            console.log(`targetId : ${targetId}`);
+            console.log(`channelKey : ${channelKey}`);
+            if(targetId){
+                const messageContent = document.getElementById(targetId);
+                if(messageContent.childElementCount === 0) {
+                    messageContent.addEventListener('paste', pasteEventHandler, true);
+                    let editor = new Editor({
+                        target: messageContent,
+                        props: {
+                            height: '54px',
+                            actions: ['b', 'i', 'u', 'strike', 'ul', 'ol', 'viewHtml',
+                                {
+                                    name: 'paste',
+                                    icon: '<i class="fas fa-paste"></i>',
+                                    title: 'Coller',
+                                    result: async () => {
+                                        const read = await navigator.clipboard.read()
+                                        if (read && read.length > 0) {
+                                            const item = read[0];
+                                            if (Array.isArray(item.types) && item.types.length > 0) {
+                                                const type = item.types[0];
+                                                console.log(type);
+                                                const blob = await item.getType(type);
+                                                if (type.indexOf('image') >= 0) {
+                                                    const file = new File([blob], 'image');
+                                                    await customPaste(file);
+                                                } else if (type.indexOf('text') >= 0) {
+                                                    const reader = new FileReader()
+                                                    reader.onload = (e) => {
+                                                        const content = messageContent.querySelector('.cl-content');
+                                                        content.append(reader.result.toString());
+                                                        content.focus();
+                                                        document.execCommand('selectAll', false, null);
+                                                        document.getSelection().collapseToEnd();
+                                                        content.scrollTop = content.scrollHeight;
+                                                    }
+                                                    reader.readAsText(blob);
+                                                }
                                             }
-                                            reader.readAsText(blob);
                                         }
                                     }
-                                }
-                            }
-                        },
-                        {
-                            name: 'attach',
-                            icon: '<i class="fas fa-paperclip"></i>',
-                            title: 'Ajouter une pièce jointe',
-                            result: async () => {
-                                const input = document.createElement('input');
-                                input.type = 'file';
-                                input.accept = authorizedMimeTypes.join(',');
-                                input.onchange = (e) => {
-                                    console.log(input.files);
-                                    if (input.files) {
-                                        for (const file of input.files) {
-                                            customPaste(file, file.name);
+                                },
+                                {
+                                    name: 'attach',
+                                    icon: '<i class="fas fa-paperclip"></i>',
+                                    title: 'Ajouter une pièce jointe',
+                                    result: async () => {
+                                        const input = document.createElement('input');
+                                        input.type = 'file';
+                                        input.accept = authorizedMimeTypes.join(',');
+                                        input.onchange = (e) => {
+                                            console.log(input.files);
+                                            if (input.files) {
+                                                for (const file of input.files) {
+                                                    customPaste(file, file.name);
+                                                }
+                                            }
                                         }
+                                        input.click();
                                     }
                                 }
-                                input.click();
+                            ]
+                        }
+                    });
+                    messageContent.addEventListener('keyup', async (event) => {
+                        const backEndService = await getBackendClient();
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            if (!event.ctrlKey) {
+                                if (!document.querySelectorAll('.attachment-upload').length) {
+                                    messageContent.querySelector('br')?.remove();
+                                    await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
+                                    editor.setHtml('');
+                                    attachments = [];
+                                }
+                            } else {
+                                window.setTimeout(() => {
+                                    const carriageReturn = document.createElement('div');
+                                    carriageReturn.innerHTML = '<br>'
+                                    const content = messageContent.querySelector('.cl-content');
+                                    content.append(carriageReturn);
+                                    content.focus();
+                                    document.execCommand('selectAll', false, null);
+                                    document.getSelection().collapseToEnd();
+                                    content.scrollTop = content.scrollHeight;
+                                }, 150)
                             }
                         }
-                    ]
+                    })
                 }
-            });
-            messageContent.addEventListener('keyup', async (event) => {
-                const backEndService = await getBackendClient();
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    if (!event.ctrlKey) {
-                        if (!document.querySelectorAll('.attachment-upload').length) {
-                            messageContent.querySelector('br')?.remove();
-                            await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
-                            editor.setHtml('');
-                            attachments = [];
-                        }
-                    } else {
-                        window.setTimeout(() => {
-                            const carriageReturn = document.createElement('div');
-                            carriageReturn.innerHTML = '<br>'
-                            const content = messageContent.querySelector('.cl-content');
-                            content.append(carriageReturn);
-                            content.focus();
-                            document.execCommand('selectAll', false, null);
-                            document.getSelection().collapseToEnd();
-                            content.scrollTop = content.scrollHeight;
-                        }, 150)
-                    }
-                }
-            })
-        }, 100)
+            }
+        }, 150)
     })
 
 </script>
@@ -214,7 +223,7 @@
 
 <div class="postCreation">
 
-    <div id="message">
+    <div id="{targetId}">
 
     </div>
 
