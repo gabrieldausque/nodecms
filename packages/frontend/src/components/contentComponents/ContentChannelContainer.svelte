@@ -248,7 +248,9 @@
     <div class="channelContent" id="current-posts">
         {#if $ChannelStore && !$ChannelStore.notAuthorized}
             {#each $ChannelStore.posts as post}
-                <Post post={post}></Post>
+                {#if !post.parentPost}
+                    <Post post={post}></Post>
+                {/if}
             {/each}
         {:else if $ChannelStore && $ChannelStore.notAuthorized}
             <div class="hidden-channel" >
@@ -276,6 +278,11 @@
         </div>
         <div>
             <Post post="{$ActivePostStore.parentPost}"></Post>
+            {#each $ChannelStore.posts as post}
+                {#if post.parentPost === $ActivePostStore.parentPost.id  }
+                    <Post post={post}></Post>
+                {/if}
+            {/each}
         </div>
         {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
             <PostEditor channelKey={channel.key} parentPost="{$ActivePostStore.parentPost.id}" targetId="messageInThread"></PostEditor>
