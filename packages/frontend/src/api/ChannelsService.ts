@@ -59,11 +59,12 @@ export class ChannelsService extends BaseServiceClient {
         return result.data;
     }
 
-    async getChannelPosts(channelName) {
+    async getChannelPosts(channelName, filter?:any) {
         return (await axios.request({
             method:'get',
             baseURL:this.url,
-            url: `channel/${channelName}/posts/`
+            url: `channel/${channelName}/posts/`,
+            params: filter
         })).data;
     }
 
@@ -137,4 +138,9 @@ export class ChannelsService extends BaseServiceClient {
         }
     }
 
+    async getChildrenPosts(channelKey: string, parentPostId: number) {
+        return await this.getChannelPosts(channelKey, {
+            parentPost: parentPostId
+        });
+    }
 }

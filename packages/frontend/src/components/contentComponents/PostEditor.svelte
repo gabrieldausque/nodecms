@@ -11,6 +11,8 @@
     export let parentPost;
     export let targetId;
 
+    console.log(`parent post id : ${parentPost}`);
+
     let attachments = [];
 
     const authorizedMimeTypes = [
@@ -165,7 +167,7 @@
                             if (!event.ctrlKey) {
                                 if (!document.querySelectorAll('.attachment-upload').length) {
                                     messageContent.querySelector('br')?.remove();
-                                    await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments);
+                                    await backEndService.postService.createPost(channelKey, editor.getHtml(false), attachments, parentPost);
                                     editor.setHtml('');
                                     attachments = [];
                                 }

@@ -42,6 +42,7 @@
     }
 
     async function loadPosts() {
+        console.log('loadPost called');
         if (channel && channel.key &&
             channel.key !== $ChannelStore.key
         ) {
@@ -94,6 +95,7 @@
                         await preloadContentPreview(newPost.content);
                     }
                     ChannelStore.update(value => {
+                        console.log(newPost);
                         value.posts.push(newPost);
                         return value;
                     })
@@ -127,6 +129,14 @@
         if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === channel.key){
             console.log($ActivePostStore);
             console.log('left panel visible')
+            if(leftPanelVisible) {
+                console.log('getting children posts');
+                const backEndService = await getBackendClient();
+                const childrenPosts = await backEndService.channelsService.getChildrenPosts(channel.key, $ActivePostStore.parentPost.id);
+                console.log('children');
+                console.log(childrenPosts);
+                $ChannelStore.posts.push(...childrenPosts);
+            }
             leftPanelVisible = true;
         } else {
             leftPanelVisible = false;

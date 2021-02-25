@@ -34,6 +34,7 @@ export default function (app: Application): void {
   const channelPostService = new ChannelPost(options, app);
 
   app.use('/channel/:channelNameOrId/posts', channelPostService);
+  app.use('/channel/:channelNameOrId/posts/:id/posts', channelPostService);
 
   // Get our initialized service so that we can register hooks
   const service:any = app.service('channel/:channelNameOrId/posts');

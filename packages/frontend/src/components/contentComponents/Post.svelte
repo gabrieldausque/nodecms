@@ -9,6 +9,9 @@
 
     export let post
 
+    console.log('Post received');
+    console.log(post);
+
     function createHtmlContent(content) {
         const element = document.createElement('div');
         element.innerHTML = content;
