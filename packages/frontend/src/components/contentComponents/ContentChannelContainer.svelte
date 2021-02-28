@@ -12,7 +12,6 @@
     export let channel;
 
     let editor = null;
-    let leftPanelVisible = false;
     $ChannelStore;
     $ActivePostStore;
 
@@ -41,6 +40,12 @@
         }
     }
 
+    function isLeftPanelVisible() {
+        const b = $ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === channel.key;
+        console.log(`Is left panel visible : ${b}`);
+        return b;
+    }
+
     async function loadPosts() {
         console.log('loadPost called');
         if (channel && channel.key &&
@@ -52,7 +57,19 @@
                 const channelContent = new ChannelContent();
                 channelContent.key = channel.key;
                 try{
+                    console.log('plop 1');
                     channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
+                    console.log('plop 2');
+                    if(isLeftPanelVisible()){
+                        console.log('plop 3');
+                        console.log('getting children posts');
+                        const backEndService = await getBackendClient();
+                        const childrenPosts = await backEndService.channelsService.getChildrenPosts(channel.key, $ActivePostStore.parentPost.id);
+                        for (const p of childrenPosts) {
+                            if (!$ChannelStore.post.find(pt => pt.id === p.id))
+                                $ChannelStore.posts.push(p);
+                        }
+                    }
                     for(const p of channelContent.posts) {
                         if(p.content){
                             await preloadContentPreview(p.content)
@@ -109,13 +126,10 @@
                 }, 100)
             }
         }
-
-
     }
 
     function hideLeftPanel() {
         console.log('toto');
-        leftPanelVisible = false;
         ActivePostStore.set(undefined);
     }
 
@@ -126,21 +140,6 @@
     beforeUpdate(async() => {
         // document.getElementById('current-posts').innerHTML = '';
         await loadPosts();
-        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === channel.key){
-            console.log($ActivePostStore);
-            console.log('left panel visible')
-            if(leftPanelVisible) {
-                console.log('getting children posts');
-                const backEndService = await getBackendClient();
-                const childrenPosts = await backEndService.channelsService.getChildrenPosts(channel.key, $ActivePostStore.parentPost.id);
-                console.log('children');
-                console.log(childrenPosts);
-                $ChannelStore.posts.push(...childrenPosts);
-            }
-            leftPanelVisible = true;
-        } else {
-            leftPanelVisible = false;
-        }
     })
 
     function slideIn(node, {
@@ -277,7 +276,7 @@
         <PostEditor channelKey={channel.key} targetId="message"></PostEditor>
     {/if}
 </div>
-{#if channel && leftPanelVisible}
+{#if channel && isLeftPanelVisible()}
     <div class="channel-right-panel" in:slideIn>
         <div class="header" >
             <div>

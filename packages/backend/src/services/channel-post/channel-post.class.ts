@@ -65,6 +65,9 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
             }
           if(filter) {
             filter.channelKey = channel.key
+            if(!filter.hasOwnProperty('parentPost')){
+              filter.parentPost = undefined;
+            }
           }
         } else {
           console.log('the filter :');

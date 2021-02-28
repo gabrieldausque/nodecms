@@ -48,6 +48,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
   }
 
   async find(filter: Partial<ChannelPost>, executingUser: User | undefined, channelName?:string): Promise<ChannelPost[]> {
+    ChannelPostRules.validateFilter(filter);
     if(filter && channelName){
       filter.channelKey = (filter.channelKey && filter.channelKey === channelName)?
         filter.channelKey:
