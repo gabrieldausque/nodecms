@@ -3,19 +3,19 @@
     import {getBackendClient} from "../../api/NodeCMSClient";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
     import {channelsEventNames} from "../../api/ChannelsService";
+    import {globalFEService} from "../../FEServices";
+    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
+    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
 
     export let properties;
-    export let channelKey;
-    let channel;
     let availableChannels = [];
 
     onMount(async () => {
         const backEndService = await getBackendClient();
         availableChannels = await backEndService.channelsService.getAvailableChannels();
-        if(properties)
+        if(properties && properties.channelKey)
         {
-            channelKey = properties.channelKey;
-            channel = await backEndService.channelsService.getChannel(channelKey);
+            await changeCurrentChannel(properties.channelKey);
         }
     });
 
@@ -121,7 +121,32 @@
         visibility.title = visibilityTooltips[visibility.value];
     }
 
-    async function changeCurrentChannel(event) {
+    async function preloadContentPreview(content){
+        const contentElement = document.createElement('div');
+        contentElement.innerHTML = content;
+        const backendService = await getBackendClient();
+        const webThumbnails = contentElement.querySelectorAll('a[data-link=true]')
+        const tempCache = globalFEService.getService('TempCache');
+        for(const link of webThumbnails){
+            const URL = link.getAttribute('href');
+            console.log('getting tw for ' + URL);
+            if(!tempCache.get(URL)) {
+                const linkPreview = await backendService.utilsService.getWebsiteThumbnail(URL.trim())
+                if(linkPreview) {
+                    const media = await backendService.mediaService.getMedia(linkPreview.mediaId);
+                    const mediaUrl = AttachmentHelpers.getDownloadUrl(media);
+                    link.innerHTML = `
+                                        <div class="link-preview">
+                                            <img src="${mediaUrl}"><div><h6>${linkPreview.title}</h6><br><p>${linkPreview.description}</p></div>
+                                        </div>
+                                    `
+                    tempCache.put(link.getAttribute('href'),link.innerHTML)
+                }
+            }
+        }
+    }
+
+    async function changeCurrentChannelOnclick(event) {
         let selectedChannel = event.target;
         let selectedChannelKey;
         if(selectedChannel.attributes['data-channelKey']){
@@ -130,18 +155,33 @@
             selectedChannel = event.target.parentNode;
             selectedChannelKey = selectedChannel.attributes['data-channelKey'].value;
         }
-        channelKey = selectedChannelKey;
+        console.log('key');
+        console.log(selectedChannelKey);
+        await changeCurrentChannel(selectedChannelKey);
     }
 
-    $:{
-        getBackendClient().then(async (backEndService) => {
-            if(channelKey) {
-                const c = await backEndService.channelsService.getChannel(channelKey);
-                if(channel && channel.id !== c.id)  {
-                    channel = c;
+    async function changeCurrentChannel(channelKey) {
+        if(channelKey){
+            const backendClient = await getBackendClient();
+            const newChannelContentStore = new ChannelContent();
+            newChannelContentStore.key = channelKey;
+            newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
+            newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
+            for(const p of newChannelContentStore.posts) {
+                if(p.content){
+                    await preloadContentPreview(p.content)
+                }
+                if(Array.isArray(p.attachments) && p.attachments.length > 0){
+                    const attachmentsMetadata = [];
+                    for(const a of p.attachments){
+                        const m = await backendClient.mediaService.getMediaMetadata(a);
+                        attachmentsMetadata.push(m);
+                    }
+                    p.attachments = attachmentsMetadata;
                 }
             }
-        })
+            ChannelStore.set(newChannelContentStore);
+        }
     }
 
 </script>
@@ -205,11 +245,11 @@
         <ul class="list-group">
             <li id="show-create-channel" on:click={showCreateChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><i class="fas fa-2x fa-plus-circle"></i><span class="channels-item-label">Ajouter un canal</span></li>
             {#each availableChannels as availableChannel}
-                <li data-channelKey="{availableChannel.key}" on:click={changeCurrentChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><span class="channels-item-label">{availableChannel.label}</span></li>
+                <li data-channelKey="{availableChannel.key}" on:click={changeCurrentChannelOnclick} class="channels-items list-group-item list-group-item-dark list-group-item-action"><span class="channels-item-label">{availableChannel.label}</span></li>
             {/each}
         </ul>
     </div>
-    <ContentChannelContainer channel="{channel}"></ContentChannelContainer>
+    <ContentChannelContainer ></ContentChannelContainer>
 </main>
 
 <div id="CreateChannelModal" class="modal fade" data-keyboard="false">
