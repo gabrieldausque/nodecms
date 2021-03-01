@@ -1,32 +1,39 @@
 <script>
     import {getBackendClient} from "../../api/NodeCMSClient";
-    import {afterUpdate, beforeUpdate, onMount} from "svelte";
+    import { afterUpdate, beforeUpdate, onMount} from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";
-    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
+    import {ChannelStore} from "../../stores/ChannelStore";
     import {ActivePostStore} from "../../stores/ActivePostStore";
-    import {globalFEService} from "../../FEServices";
-    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
-    import {slide} from 'svelte/transition';
 
     let editor = null;
+
     $ChannelStore;
     $ActivePostStore;
 
-
-    function isLeftPanelVisible() {
-        return $ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.channelKey === $ChannelStore.key;
+    function isRightPanelVisible() {
+        console.log('channelstore')
+        console.log($ChannelStore);
+        console.log('activepoststore')
+        console.log($ActivePostStore);
+        const b = $ActivePostStore &&
+            $ActivePostStore.parentPost &&
+            $ActivePostStore.parentPost.channelKey === $ChannelStore.key;
+        console.log(b)
+        return b;
     }
 
-    function hideLeftPanel() {
+    function hideRightPanel() {
         console.log('toto');
         ActivePostStore.set(undefined);
     }
 
     onMount(async () => {
+
     })
 
     beforeUpdate(async() => {
+
         if($ChannelStore.channel){
             const backendClient = await getBackendClient();
             await backendClient.channelsService.subscribeToChannel($ChannelStore.channel.key, (mc => {
@@ -36,6 +43,11 @@
                 })
             }))
         }
+
+    })
+
+    afterUpdate(() => {
+
     })
 
     function slideIn(node, {
@@ -153,7 +165,7 @@
     <div class="channelContent" id="current-posts">
         {#if $ChannelStore && !$ChannelStore.notAuthorized}
             {#each $ChannelStore.posts as post}
-                {#if !post.parentPost}
+                {#if typeof post.parentPost !== 'number'}
                     <Post post={post}></Post>
                 {/if}
             {/each}
@@ -172,14 +184,14 @@
         <PostEditor channelKey={$ChannelStore.channel.key} targetId="message"></PostEditor>
     {/if}
 </div>
-{#if $ChannelStore.channel && isLeftPanelVisible()}
+{#if $ChannelStore.channel && $ActivePostStore && $ActivePostStore.parentPost}
     <div class="channel-right-panel" in:slideIn>
         <div class="header" >
             <div>
                 <h6>Fil de discussion</h6>
                 <p>#{$ChannelStore.key}</p>
             </div>
-            <i  on:click={hideLeftPanel} class="fal fa-window-close"></i>
+            <i on:click={hideRightPanel} class="fal fa-window-close"></i>
         </div>
         <div>
             <Post post="{$ActivePostStore.parentPost}"></Post>

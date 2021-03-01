@@ -6,6 +6,7 @@
     import AudioAttachment from "./Attachments/AudioAttachment.svelte";
     import {globalFEService} from "../../FEServices";
     import {ActivePostStore, PostWithChildren} from "../../stores/ActivePostStore";
+    import {ChannelStore} from "../../stores/ChannelStore";
 
     export let post
 
@@ -62,7 +63,24 @@
     async function onAnswerClick(event){
         const postWithChildren = new PostWithChildren();
         postWithChildren.parentPost = post;
+
         ActivePostStore.set(postWithChildren);
+        const backendClient = await getBackendClient();
+        const children = await backendClient.channelsService.getChildrenPosts(post.channelKey, post.id);
+        ChannelStore.update((cs) => {
+            try{
+                if(Array.isArray(children)){
+                    for(const pc of children) {
+                        if(!cs.posts.find(p => p.id === pc.id)){
+                            cs.posts.push(pc);
+                        }
+                    }
+                }
+            }catch(error) {
+                console.log(error);
+            }
+            return cs;
+        })
     }
 
 </script>
@@ -114,9 +132,11 @@
         <span>{post.author.login}</span>
     </div>
     <div class="postContent">
-        <div class="post-actions">
-            <div class="post-action" on:click={onAnswerClick} ><i class="fa fa-comment-lines"></i></div>
-        </div>
+        {#if typeof post.parentPost !== 'number'}
+            <div class="post-actions">
+                <div class="post-action" on:click={onAnswerClick} ><i class="fa fa-comment-lines"></i></div>
+            </div>
+        {/if}
         <style>
             .postContent h1 {
                 text-align: start;

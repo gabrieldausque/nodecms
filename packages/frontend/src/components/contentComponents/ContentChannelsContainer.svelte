@@ -6,6 +6,7 @@
     import {globalFEService} from "../../FEServices";
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
     import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
+    import {ActivePostStore} from "../../stores/ActivePostStore";
 
     export let properties;
     let availableChannels = [];
@@ -180,6 +181,7 @@
                     p.attachments = attachmentsMetadata;
                 }
             }
+            ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);
         }
     }

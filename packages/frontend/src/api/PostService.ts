@@ -12,7 +12,7 @@ export class PostService  extends BaseServiceClient{
             const attachmentsKeys = [];
             attachments.map((a) => attachmentsKeys.push(a.key));
             let data = undefined;
-            if(!parentId)
+            if(typeof parentId !== 'number')
                 data = {
                     content: postContent,
                     attachments: attachmentsKeys
