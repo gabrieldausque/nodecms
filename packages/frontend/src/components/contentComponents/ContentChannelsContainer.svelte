@@ -7,6 +7,7 @@
     import {AttachmentHelpers} from "../../api/AttachmentHelpers";
     import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
     import {ActivePostStore} from "../../stores/ActivePostStore";
+    import {Helpers} from "../../helpers/Helpers";
 
     export let properties;
     let availableChannels = [];
@@ -122,31 +123,6 @@
         visibility.title = visibilityTooltips[visibility.value];
     }
 
-    async function preloadContentPreview(content){
-        const contentElement = document.createElement('div');
-        contentElement.innerHTML = content;
-        const backendService = await getBackendClient();
-        const webThumbnails = contentElement.querySelectorAll('a[data-link=true]')
-        const tempCache = globalFEService.getService('TempCache');
-        for(const link of webThumbnails){
-            const URL = link.getAttribute('href');
-            console.log('getting tw for ' + URL);
-            if(!tempCache.get(URL)) {
-                const linkPreview = await backendService.utilsService.getWebsiteThumbnail(URL.trim())
-                if(linkPreview) {
-                    const media = await backendService.mediaService.getMedia(linkPreview.mediaId);
-                    const mediaUrl = AttachmentHelpers.getDownloadUrl(media);
-                    link.innerHTML = `
-                                        <div class="link-preview">
-                                            <img src="${mediaUrl}"><div><h6>${linkPreview.title}</h6><br><p>${linkPreview.description}</p></div>
-                                        </div>
-                                    `
-                    tempCache.put(link.getAttribute('href'),link.innerHTML)
-                }
-            }
-        }
-    }
-
     async function changeCurrentChannelOnclick(event) {
         let selectedChannel = event.target;
         let selectedChannelKey;
@@ -156,8 +132,6 @@
             selectedChannel = event.target.parentNode;
             selectedChannelKey = selectedChannel.attributes['data-channelKey'].value;
         }
-        console.log('key');
-        console.log(selectedChannelKey);
         await changeCurrentChannel(selectedChannelKey);
     }
 
@@ -170,7 +144,7 @@
             newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
             for(const p of newChannelContentStore.posts) {
                 if(p.content){
-                    await preloadContentPreview(p.content)
+                    await Helpers.preloadContentPreview(p.content)
                 }
                 if(Array.isArray(p.attachments) && p.attachments.length > 0){
                     const attachmentsMetadata = [];
@@ -183,6 +157,11 @@
             }
             ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);
+            window.setTimeout(() => {
+                const channelContent = document.querySelector('#current-posts');
+                if(channelContent)
+                    channelContent.scrollTop = channelContent.scrollHeight;
+            }, 500)
         }
     }
 

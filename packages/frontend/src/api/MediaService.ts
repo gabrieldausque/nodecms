@@ -9,13 +9,13 @@ export class MediaService extends BaseServiceClient {
         super(axiosInstance, url)
     }
 
-    async getMedia(key:string) {
+    async getMedia(keyOrId:string | number) {
         let response;
         try{
             response = await axios.request({
                 method: 'get',
                 baseURL: this.url,
-                url: `media/${key}`
+                url: `media/${keyOrId}`
             })
             return response.data;
         } catch(error) {

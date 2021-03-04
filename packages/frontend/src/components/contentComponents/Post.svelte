@@ -7,11 +7,9 @@
     import {globalFEService} from "../../FEServices";
     import {ActivePostStore, PostWithChildren} from "../../stores/ActivePostStore";
     import {ChannelStore} from "../../stores/ChannelStore";
+    import {Helpers} from "../../helpers/Helpers";
 
-    export let post
-
-    console.log('Post received');
-    console.log(post);
+    export let post;
 
     function createHtmlContent(content) {
         const element = document.createElement('div');
@@ -20,15 +18,16 @@
     }
 
     function getAttachmentComponent(attachmentMediaType) {
-        if(attachmentMediaType.indexOf('image') >= 0){
-            return ImageAttachment;
-        } else if (attachmentMediaType.indexOf('video') >= 0) {
-            return VideoAttachment;
-        } else if (attachmentMediaType.indexOf('audio') >= 0) {
-            return AudioAttachment;
-        } else {
-            return DownloadAttachment;
+        if(attachmentMediaType){
+            if(attachmentMediaType.indexOf('image') >= 0){
+                return ImageAttachment;
+            } else if (attachmentMediaType.indexOf('video') >= 0) {
+                return VideoAttachment;
+            } else if (attachmentMediaType.indexOf('audio') >= 0) {
+                return AudioAttachment;
+            }
         }
+        return DownloadAttachment;
     }
 
     afterUpdate(() => {
@@ -55,7 +54,6 @@
                 }
             }
         },100);
-
     })
 
     let mouseHover = false;
@@ -67,6 +65,19 @@
         ActivePostStore.set(postWithChildren);
         const backendClient = await getBackendClient();
         const children = await backendClient.channelsService.getChildrenPosts(post.channelKey, post.id);
+        for(const p of children){
+            if(p.content){
+                await Helpers.preloadContentPreview(p.content)
+            }
+            if(Array.isArray(p.attachments) && p.attachments.length > 0){
+                const attachmentsMetadata = [];
+                for(const a of p.attachments){
+                    const m = await backendClient.mediaService.getMediaMetadata(a);
+                    attachmentsMetadata.push(m);
+                }
+                p.attachments = attachmentsMetadata;
+            }
+        }
         ChannelStore.update((cs) => {
             try{
                 if(Array.isArray(children)){
@@ -81,6 +92,11 @@
             }
             return cs;
         })
+        window.setTimeout(() => {
+            const rightPanel = document.querySelector('.channel-right-panel .channelContent');
+            if(rightPanel)
+                rightPanel.scrollTop = rightPanel.scrollHeight;
+        },500);
     }
 
 </script>
@@ -97,6 +113,7 @@
         flex-direction: column;
         width: 100%;
         margin-left: 10px;
+        margin-right: 10px;
     }
 
     .postContent div {
@@ -122,6 +139,10 @@
 
     .postContent:hover > .post-actions {
         opacity: 1;
+    }
+
+    .channel-right-panel > .post {
+        max-width: calc(100% - 15px);
     }
 
 </style>

@@ -41,6 +41,7 @@
 <style>
     .postVideo {
         max-height: 50vh;
+        max-width: 100%;
     }
 </style>
 

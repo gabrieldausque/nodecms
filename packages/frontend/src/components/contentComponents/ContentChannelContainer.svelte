@@ -5,6 +5,7 @@
     import Post from "./Post.svelte";
     import {ChannelStore} from "../../stores/ChannelStore";
     import {ActivePostStore} from "../../stores/ActivePostStore";
+    import {Helpers} from "../../helpers/Helpers";
 
     let editor = null;
 
@@ -29,16 +30,42 @@
     }
 
     onMount(async () => {
-
+        window.setTimeout(() => {
+            const channelContent = document.querySelector('#current-posts');
+            if(channelContent)
+                channelContent.scrollTop = channelContent.scrollHeight;
+        }, 500)
     })
 
     beforeUpdate(async() => {
 
         if($ChannelStore.channel){
             const backendClient = await getBackendClient();
-            await backendClient.channelsService.subscribeToChannel($ChannelStore.channel.key, (mc => {
+            await backendClient.channelsService.subscribeToChannel($ChannelStore.channel.key, (async (mc) => {
+                if(mc.content){
+                    await Helpers.preloadContentPreview(mc.content)
+                }
+                if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
+                    const attachmentsMetadata = [];
+                    for(const a of mc.attachments){
+                        const m = await backendClient.mediaService.getMediaMetadata(a);
+                        attachmentsMetadata.push(m);
+                    }
+                    mc.attachments = attachmentsMetadata;
+                }
                 ChannelStore.update(cs => {
                     cs.posts.push(mc);
+                    window.setTimeout(() => {
+                        if(mc.parentPost){
+                            const rightPanel = document.querySelector('.channel-right-panel .channelContent');
+                            if(rightPanel)
+                                rightPanel.scrollTop = rightPanel.scrollHeight;
+                        }else {
+                            const channelContent = document.querySelector('#current-posts');
+                            if(channelContent)
+                                channelContent.scrollTop = channelContent.scrollHeight;
+                        }
+                    },500);
                     return cs;
                 })
             }))
@@ -112,6 +139,7 @@
     }
 
     .channelContent {
+        max-height: 100%;
         height: auto;
         overflow-y: auto;
         position: relative;
@@ -125,12 +153,14 @@
     }
 
     .channel-right-panel {
+        display: flex;
+        flex-direction: column;
         background: white;
         height: 100%;
         position: relative;
         right:0;
         width:33vw;
-        box-shadow: -2px 0px 5px lightgray
+        box-shadow: -2px 0px 5px lightgray;
     }
 
     .channel-right-panel > .header {
@@ -149,7 +179,6 @@
     .channel-right-panel > .header > div >p {
         margin-bottom: 0;
     }
-
  </style>
 
 <div class="channel">
@@ -193,7 +222,7 @@
             </div>
             <i on:click={hideRightPanel} class="fal fa-window-close"></i>
         </div>
-        <div>
+        <div class="{$ChannelStore.isContributor ? 'channelContent': 'channelContent tall'}">
             <Post post="{$ActivePostStore.parentPost}"></Post>
             {#each $ChannelStore.posts as post}
                 {#if post.parentPost === $ActivePostStore.parentPost.id  }
