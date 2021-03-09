@@ -1,6 +1,4 @@
-
-// @ts-ignore
-import assert from 'assert';
+import * as assert from 'assert';
 import app from '../../src/app';
 import {Server} from "http";
 import {globalInstancesFactory} from "@hermes/composition";
@@ -268,6 +266,72 @@ describe('Channel service With Mongodb', () => {
       )
     }
     assert.fail('No created id');
+  })
+
+  it('should return a children post correctly set', async() => {
+      const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
+      params.route = {
+        channelNameOrId: 'news'
+      };
+      const parentPost = await service.create({
+        content: 'test'
+      }, params);
+      const childPost = await service.create({
+        parentPost: parentPost.id,
+        content:'test in child'
+      }, params);
+      if(typeof childPost.id === 'number'){
+        const actual = await service.get(childPost.id, params);
+        expect(childPost).to.be.eql(childPost);
+        expect(childPost.parentPost).to.be.ok;
+      } else {
+        assert.fail('No created child post');
+      }
+  })
+
+  it('should return all parent post for a channel without children post', async() => {
+    const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
+    params.route = {
+      channelNameOrId: 'news'
+    };
+    const parentPost = await service.create({
+      content: 'test'
+    }, params);
+    const childPost = await service.create({
+      parentPost: parentPost.id,
+      content:'test in child'
+    }, params);
+    const posts:any = await service.find(params);
+    if(Array.isArray(posts)){
+       expect(posts.find(p => typeof p.parentPost !== 'undefined')).not.to.be.true;
+    } else {
+      assert.fail('not an array');
+    }
+
+  })
+
+  it('should return all children post for a parent post', async() => {
+    const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
+    params.route = {
+      channelNameOrId: 'news'
+    };
+    const parentPost = await service.create({
+      content: 'test'
+    }, params);
+    const childPost1 = await service.create({
+      parentPost: parentPost.id,
+      content:'test in child'
+    }, params);
+    const childPost2 = await service.create({
+      parentPost: parentPost.id,
+      content:'test in child 2'
+    }, params);
+    const posts:any = await service.find(params);
+    if(Array.isArray(posts)){
+      expect(posts.find(p => typeof p.parentPost !== 'undefined')).not.to.be.true;
+    } else {
+      assert.fail('not an array');
+    }
   })
 
 });

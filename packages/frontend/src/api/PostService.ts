@@ -7,18 +7,27 @@ export class PostService  extends BaseServiceClient{
         super(axiosInstance, url)
     }
 
-    async createPost(channelKey:string, post:any, attachments:any) {
+    async createPost(channelKey:string, postContent:any, attachments:any, parentId?:number) {
         try {
             const attachmentsKeys = [];
             attachments.map((a) => attachmentsKeys.push(a.key));
+            let data = undefined;
+            if(typeof parentId !== 'number')
+                data = {
+                    content: postContent,
+                    attachments: attachmentsKeys
+                }
+            else
+                data = {
+                    parentPost: parentId,
+                    content: postContent,
+                    attachments: attachmentsKeys
+                }
             await axios.request({
                 method: 'post',
                 baseURL: this.url,
                 url: `channel/${channelKey}/posts`,
-                data: {
-                    content: post,
-                    attachments: attachmentsKeys
-                },
+                data: data,
                 withCredentials: true,
                 headers:this.createHeaders()
             });

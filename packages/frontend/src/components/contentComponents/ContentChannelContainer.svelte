@@ -1,118 +1,119 @@
 <script>
     import {getBackendClient} from "../../api/NodeCMSClient";
-    import {afterUpdate, beforeUpdate, onDestroy, onMount} from "svelte";
+    import { afterUpdate, beforeUpdate, onMount} from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";
-    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
-    import {globalFEService} from "../../FEServices";
-    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
-
-    export let channel;
+    import {ChannelStore} from "../../stores/ChannelStore";
+    import {ActivePostStore} from "../../stores/ActivePostStore";
+    import {Helpers} from "../../helpers/Helpers";
 
     let editor = null;
-    $ChannelStore;
 
-    async function preloadContentPreview(content){
-        const contentElement = document.createElement('div');
-        contentElement.innerHTML = content;
-        const backendService = await getBackendClient();
-        const webThumbnails = contentElement.querySelectorAll('a[data-link=true]')
-        const tempCache = globalFEService.getService('TempCache');
-        for(const link of webThumbnails){
-            const URL = link.getAttribute('href');
-            console.log('getting tw for ' + URL);
-            if(!tempCache.get(URL)) {
-                const linkPreview = await backendService.utilsService.getWebsiteThumbnail(URL.trim())
-                if(linkPreview) {
-                    const media = await backendService.mediaService.getMedia(linkPreview.mediaId);
-                    const mediaUrl = AttachmentHelpers.getDownloadUrl(media);
-                    link.innerHTML = `
-                                        <div class="link-preview">
-                                            <img src="${mediaUrl}"><div><h6>${linkPreview.title}</h6><br><p>${linkPreview.description}</p></div>
-                                        </div>
-                                    `
-                    tempCache.put(link.getAttribute('href'),link.innerHTML)
-                }
-            }
-        }
+    $ChannelStore;
+    $ActivePostStore;
+
+    function isRightPanelVisible() {
+        console.log('channelstore')
+        console.log($ChannelStore);
+        console.log('activepoststore')
+        console.log($ActivePostStore);
+        const b = $ActivePostStore &&
+            $ActivePostStore.parentPost &&
+            $ActivePostStore.parentPost.channelKey === $ChannelStore.key;
+        console.log(b)
+        return b;
     }
 
-    async function loadPosts() {
-        if (channel && channel.key &&
-            channel.key !== $ChannelStore.key
-        ) {
-            let channelAuthorized = true;
-            const backEndService = await getBackendClient();
-            try{
-                const channelContent = new ChannelContent();
-                channelContent.key = channel.key;
-                try{
-                    channelContent.posts = await backEndService.channelsService.getChannelPosts(channel.key);
-                    for(const p of channelContent.posts) {
-                        if(p.content){
-                            await preloadContentPreview(p.content)
-                        }
-                        if(Array.isArray(p.attachments) && p.attachments.length > 0){
-                            const attachmentsMetadata = [];
-                            for(const a of p.attachments){
-                                const m = await backEndService.mediaService.getMediaMetadata(a);
-                                attachmentsMetadata.push(m);
-                            }
-                            p.attachments = attachmentsMetadata;
-                        }
-                    }
-                    ChannelStore.set(channelContent);
-                }catch (e) {
-                    console.log(e);
-                    const cc = new ChannelContent();
-                    cc.key = channel.key;
-                    cc.posts = [];
-                    cc.notAuthorized = true;
-                    ChannelStore.set(cc);
-                    channelAuthorized = false;
-                }
-            }catch(error){
-                console.error(error);
-            }
-            if(channelAuthorized){
-                const channelContent = document.querySelector('.channelContent')
-                const currentChannelKey = channel.key;
-                await backEndService.channelsService.subscribeToChannel(currentChannelKey, async (newPost) => {
-                    if(Array.isArray(newPost.attachments) && newPost.attachments.length > 0){
-                        const attachmentsMetadata = [];
-                        for(const a of newPost.attachments){
-                            const media = await backEndService.mediaService.getMediaMetadata(a);
-                            attachmentsMetadata.push(media);
-                        }
-                        newPost.attachments = attachmentsMetadata;
-                    }
-                    if(newPost.content){
-                        await preloadContentPreview(newPost.content);
-                    }
-                    ChannelStore.update(value => {
-                        value.posts.push(newPost);
-                        return value;
-                    })
-
-                    window.setTimeout(() => {
-                        channelContent.scrollTop = channelContent.scrollHeight;
-                    }, 100)
-                })
-                window.setTimeout(() => {
-                    channelContent.scrollTop = channelContent.scrollHeight;
-                }, 100)
-            }
-        }
+    function hideRightPanel() {
+        console.log('toto');
+        ActivePostStore.set(undefined);
     }
 
     onMount(async () => {
-        // await loadPosts();
+        window.setTimeout(() => {
+            const channelContent = document.querySelector('#current-posts');
+            if(channelContent)
+                channelContent.scrollTop = channelContent.scrollHeight;
+        }, 500)
     })
 
     beforeUpdate(async() => {
-        // document.getElementById('current-posts').innerHTML = '';
-        await loadPosts();
+
+        if($ChannelStore.channel){
+            const backendClient = await getBackendClient();
+            await backendClient.channelsService.subscribeToChannel($ChannelStore.channel.key, (async (mc) => {
+                if(mc.content){
+                    await Helpers.preloadContentPreview(mc.content)
+                }
+                if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
+                    const attachmentsMetadata = [];
+                    for(const a of mc.attachments){
+                        const m = await backendClient.mediaService.getMediaMetadata(a);
+                        attachmentsMetadata.push(m);
+                    }
+                    mc.attachments = attachmentsMetadata;
+                }
+                if(typeof mc.parentPost === 'number'){
+                    const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
+                    if(parentPost){
+                        parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
+                        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
+                            ActivePostStore.update(aps => {
+                                aps.parentPost = parentPost;
+                                return aps;
+                            })
+                        }
+                    }
+                }
+                ChannelStore.update(cs => {
+                    cs.posts.push(mc);
+                    window.setTimeout(() => {
+                        if(mc.parentPost){
+                            const rightPanel = document.querySelector('.channel-right-panel .channelContent');
+                            if(rightPanel)
+                                rightPanel.scrollTop = rightPanel.scrollHeight;
+                        }else {
+                            const channelContent = document.querySelector('#current-posts');
+                            if(channelContent)
+                                channelContent.scrollTop = channelContent.scrollHeight;
+                        }
+                    },500);
+                    return cs;
+                })
+            }))
+        }
+
     })
+
+    afterUpdate(() => {
+
+    })
+
+    function slideIn(node, {
+        delay=0,
+        duration=100
+    }) {
+        let p = getComputedStyle(node).width;
+        p = parseInt(p.replace('px',''));
+        return {
+            delay,
+            duration,
+            css: t => `width: ${t*p}px;`
+        }
+    }
+
+    function slideOut(node, {
+        delay=0,
+        duration=100
+    }) {
+        let p = getComputedStyle(node).width;
+        p = parseInt(p.replace('px',''));
+        return {
+            delay,
+            duration,
+            css: t => `width: ${(1 - t)*p}px;`
+        }
+    }
 
 </script>
 
@@ -122,7 +123,6 @@
         display: flex;
         flex-direction: column;
         height:100%;
-        width:100%;
         flex-grow: 4;
         position: relative;
     }
@@ -151,6 +151,7 @@
     }
 
     .channelContent {
+        max-height: 100%;
         height: auto;
         overflow-y: auto;
         position: relative;
@@ -159,14 +160,45 @@
         padding-top: 5px;
     }
 
+    .hidden-channel {
+        margin-top: 5px;
+    }
+
+    .channel-right-panel {
+        display: flex;
+        flex-direction: column;
+        background: white;
+        height: 100%;
+        position: relative;
+        right:0;
+        width:33vw;
+        box-shadow: -2px 0px 5px lightgray;
+    }
+
+    .channel-right-panel > .header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        padding: 5px;
+        min-height: 60px;
+        align-items: flex-start;
+        border-bottom: solid 1px lightgray;
+    }
+
+    .channel-right-panel > .header > div > h6,
+    .channel-right-panel > .header > div >p {
+        margin-bottom: 0;
+    }
  </style>
 
 <div class="channel">
     <div class="channelInfo">
         <div class="channelHeader">
-            {#if channel && channel.label}
-                <strong><h6>{channel.label}</h6></strong>
-                <span>#{channel.key}</span>
+            {#if $ChannelStore.channel && $ChannelStore.channel.label}
+                <strong><h6>{$ChannelStore.channel.label}</h6></strong>
+                <span>#{$ChannelStore.key}</span>
             {/if}
         </div>
         <div id="test"></div>
@@ -174,7 +206,9 @@
     <div class="channelContent" id="current-posts">
         {#if $ChannelStore && !$ChannelStore.notAuthorized}
             {#each $ChannelStore.posts as post}
-                <Post post={post}></Post>
+                {#if typeof post.parentPost !== 'number'}
+                    <Post post={post}></Post>
+                {/if}
             {/each}
         {:else if $ChannelStore && $ChannelStore.notAuthorized}
             <div class="hidden-channel" >
@@ -185,9 +219,32 @@
                 </div>
             </div>
         {/if}
+
     </div>
-    {#if channel && !$ChannelStore.notAuthorized && channel.isContributor}
-        <PostEditor channelKey={channel.key}></PostEditor>
+    {#if $ChannelStore.channel && !$ChannelStore.notAuthorized && $ChannelStore.channel.isContributor}
+        <PostEditor channelKey={$ChannelStore.channel.key} targetId="message"></PostEditor>
     {/if}
 </div>
+{#if $ChannelStore.channel && $ActivePostStore && $ActivePostStore.parentPost}
+    <div class="channel-right-panel" in:slideIn>
+        <div class="header" >
+            <div>
+                <h6>Fil de discussion</h6>
+                <p>#{$ChannelStore.key}</p>
+            </div>
+            <i on:click={hideRightPanel} class="fal fa-window-close"></i>
+        </div>
+        <div class="{$ChannelStore.isContributor ? 'channelContent': 'channelContent tall'}">
+            <Post post="{$ActivePostStore.parentPost}"></Post>
+            {#each $ChannelStore.posts as post}
+                {#if post.parentPost === $ActivePostStore.parentPost.id  }
+                    <Post post={post}></Post>
+                {/if}
+            {/each}
+        </div>
+        {#if $ChannelStore.channel && !$ChannelStore.notAuthorized && $ChannelStore.channel.isContributor}
+            <PostEditor channelKey={$ChannelStore.channel.key} parentPost="{$ActivePostStore.parentPost.id}" targetId="messageInThread"></PostEditor>
+        {/if}
+    </div>
+{/if}
 

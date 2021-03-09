@@ -56,11 +56,24 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
       let filter:Partial<ChannelPostEntity> = params.query as ChannelPostEntity;
       if(channel){
-        if(!filter){
-          filter = {
-            channelKey:channel.key
+        if(!filter || !filter.channelKey || filter.channelKey !== channel.key){
+          console.log('default filter for post in channel')
+          if(!filter)
+            filter = {
+              channelKey:channel.key,
+              parentPost:undefined
+            }
+          if(filter) {
+            filter.channelKey = channel.key
+            if(!filter.hasOwnProperty('parentPost')){
+              filter.parentPost = undefined;
+            }
           }
+        } else {
+          console.log('the filter :');
+          console.log(filter);
         }
+
         const found = await this.useCase.find(filter, params.user as User, channel.key);
         return found;
       }
