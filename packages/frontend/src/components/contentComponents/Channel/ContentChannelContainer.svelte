@@ -1,11 +1,11 @@
 <script>
-    import {getBackendClient} from "../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../api/NodeCMSClient";
     import { afterUpdate, beforeUpdate, onMount} from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";
-    import {ChannelStore} from "../../stores/ChannelStore";
-    import {ActivePostStore} from "../../stores/ActivePostStore";
-    import {Helpers} from "../../helpers/Helpers";
+    import {ChannelStore} from "../../../stores/ChannelStore";
+    import {ActivePostStore} from "../../../stores/ActivePostStore";
+    import {Helpers} from "../../../helpers/Helpers";
 
     let editor = null;
 

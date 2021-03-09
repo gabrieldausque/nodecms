@@ -1,13 +1,13 @@
 <script>
     import {onMount} from "svelte";
-    import {getBackendClient} from "../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../api/NodeCMSClient";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
-    import {channelsEventNames} from "../../api/ChannelsService";
-    import {globalFEService} from "../../FEServices";
-    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
-    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
-    import {ActivePostStore} from "../../stores/ActivePostStore";
-    import {Helpers} from "../../helpers/Helpers";
+    import {channelsEventNames} from "../../../api/ChannelsService";
+    import {globalFEService} from "../../../FEServices";
+    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
+    import {ChannelContent, ChannelStore} from "../../../stores/ChannelStore";
+    import {ActivePostStore} from "../../../stores/ActivePostStore";
+    import {Helpers} from "../../../helpers/Helpers";
 
     export let properties;
     let availableChannels = [];

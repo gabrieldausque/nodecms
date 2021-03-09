@@ -2,6 +2,7 @@
     import {getBackendClient} from '../api/NodeCMSClient';
     import { onMount } from 'svelte';
     import {UserStore} from "../stores/UserStore";
+    import {DocumentStore} from "../stores/DocumentStore";
 
     export let isLogin = false;
     let backendService = null;
@@ -19,6 +20,10 @@
         UserStore.set({
             isLogin: isLogin,
             login
+        })
+        DocumentStore.update((store) => {
+            store.key = 'welcomePrivate';
+            return store;
         })
         window.jQuery('#LoginModal').modal('hide');
     }
@@ -61,7 +66,10 @@
             isLogin:false,
             login:undefined
         })
-
+        DocumentStore.update((store) => {
+            store.key = "welcome";
+            return store;
+        });
     }
 
     onMount(async () => {
@@ -78,7 +86,28 @@
         }
     })
 
+    async function displayDocument(event) {
+        const documentKey = event.currentTarget.getAttribute('data-document-key');
+        console.log(documentKey);
+        if(documentKey){
+            DocumentStore.update((store) => {
+                store.key = documentKey;
+                return store;
+            })
+        }
+    }
+
 </script>
+
+<style>
+    .btn.dropdown-toggle {
+        margin-bottom: 0;
+    }
+
+    .dropdown-item > span {
+        margin-left: 5px;
+    }
+</style>
 
 {#if !isLogin}
     <div>
@@ -87,10 +116,22 @@
         </button>
     </div>
 {:else}
-    <div>
-        <button type="button" on:click={logout}>
-            Déconnexion
+    <div class="dropdown">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
+            <i class="fas fa-bars"></i>
         </button>
+        <div class="dropdown-menu dropdown-menu-right ">
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="projects">
+                <i class="fas fa-cogs"></i><span>Projets</span>
+            </button>
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
+                <i class="fas fa-comments"></i><span>Channels</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" type="button" on:click={logout}>
+                Déconnexion
+            </button>
+        </div>
     </div>
 {/if}
 

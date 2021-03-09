@@ -1,9 +1,9 @@
 <script>
-    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
+    import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
     import {beforeUpdate, onMount} from "svelte";
     import {writable} from 'svelte/store';
     import LoadingAttachment from "./LoadingAttachment.svelte";
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../../api/NodeCMSClient";
 
     export let attachment
     let media;

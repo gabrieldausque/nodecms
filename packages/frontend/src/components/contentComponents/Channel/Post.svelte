@@ -4,10 +4,10 @@
     import DownloadAttachment from "./Attachments/DownloadAttachment.svelte";
     import VideoAttachment from "./Attachments/VideoAttachment.svelte";
     import AudioAttachment from "./Attachments/AudioAttachment.svelte";
-    import {globalFEService} from "../../FEServices";
-    import {ActivePostStore, PostWithChildren} from "../../stores/ActivePostStore";
-    import {ChannelStore} from "../../stores/ChannelStore";
-    import {Helpers} from "../../helpers/Helpers";
+    import {globalFEService} from "../../../FEServices";
+    import {ActivePostStore, PostWithChildren} from "../../../stores/ActivePostStore";
+    import {ChannelStore} from "../../../stores/ChannelStore";
+    import {Helpers} from "../../../helpers/Helpers";
 
     export let post;
 
