@@ -61,8 +61,10 @@ export class NodeCMSClient {
 
 }
 
+let configuration = null;
 const getClientConfig = async () => {
-    const configuration = await axios.get(`${window.location.href}/clientConfiguration.json`);
+    if(!configuration)
+        configuration = await axios.get(`${window.location.href}/clientConfiguration.json`);
     return configuration;
 }
 

@@ -11,5 +11,17 @@ export class ChannelPostRules extends EntityRules {
     if(!post.content){
       throw new Error('Post must have a content !');
     }
+
+    if(post.parentPost && typeof post.parentPost === 'string') {
+      post.parentPost = parseInt(post.parentPost);
+    }
+  }
+
+  static validateFilter(post:Partial<ChannelPost>) {
+
+    if(post.parentPost && typeof post.parentPost === 'string') {
+      post.parentPost = parseInt(post.parentPost);
+    }
+
   }
 }

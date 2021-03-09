@@ -3,19 +3,21 @@
     import {getBackendClient} from "../../api/NodeCMSClient";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
     import {channelsEventNames} from "../../api/ChannelsService";
+    import {globalFEService} from "../../FEServices";
+    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
+    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
+    import {ActivePostStore} from "../../stores/ActivePostStore";
+    import {Helpers} from "../../helpers/Helpers";
 
     export let properties;
-    export let channelKey;
-    let channel;
     let availableChannels = [];
 
     onMount(async () => {
         const backEndService = await getBackendClient();
         availableChannels = await backEndService.channelsService.getAvailableChannels();
-        if(properties)
+        if(properties && properties.channelKey)
         {
-            channelKey = properties.channelKey;
-            channel = await backEndService.channelsService.getChannel(channelKey);
+            await changeCurrentChannel(properties.channelKey);
         }
     });
 
@@ -121,7 +123,7 @@
         visibility.title = visibilityTooltips[visibility.value];
     }
 
-    async function changeCurrentChannel(event) {
+    async function changeCurrentChannelOnclick(event) {
         let selectedChannel = event.target;
         let selectedChannelKey;
         if(selectedChannel.attributes['data-channelKey']){
@@ -130,18 +132,39 @@
             selectedChannel = event.target.parentNode;
             selectedChannelKey = selectedChannel.attributes['data-channelKey'].value;
         }
-        channelKey = selectedChannelKey;
+        await changeCurrentChannel(selectedChannelKey);
     }
 
-    $:{
-        getBackendClient().then(async (backEndService) => {
-            if(channelKey) {
-                const c = await backEndService.channelsService.getChannel(channelKey);
-                if(channel && channel.id !== c.id)  {
-                    channel = c;
+    async function changeCurrentChannel(channelKey) {
+        if(channelKey){
+            const backendClient = await getBackendClient();
+            const newChannelContentStore = new ChannelContent();
+            newChannelContentStore.key = channelKey;
+            newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
+            newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
+            for(const p of newChannelContentStore.posts) {
+                if(p.content){
+                    await Helpers.preloadContentPreview(p.content)
                 }
+                if(Array.isArray(p.attachments) && p.attachments.length > 0){
+                    const attachmentsMetadata = [];
+                    for(const a of p.attachments){
+                        const m = await backendClient.mediaService.getMediaMetadata(a);
+                        attachmentsMetadata.push(m);
+                    }
+                    p.attachments = attachmentsMetadata;
+                }
+                const childrenPosts = await backendClient.channelsService.getChildrenPosts(p.channelKey, p.id);
+                p.answerCount = childrenPosts.length;
             }
-        })
+            ActivePostStore.set(undefined);
+            ChannelStore.set(newChannelContentStore);
+            window.setTimeout(() => {
+                const channelContent = document.querySelector('#current-posts');
+                if(channelContent)
+                    channelContent.scrollTop = channelContent.scrollHeight;
+            }, 500)
+        }
     }
 
 </script>
@@ -149,12 +172,11 @@
 <style>
     .channelPanel {
         display: flex;
-        width:100%;
-        height:100%;
+        height: 100%;
     }
     .channelsMenu {
         flex-grow: 1;
-        width:25vw;
+        min-width: 25vw;
     }
 
     .channels-items {
@@ -206,11 +228,11 @@
         <ul class="list-group">
             <li id="show-create-channel" on:click={showCreateChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><i class="fas fa-2x fa-plus-circle"></i><span class="channels-item-label">Ajouter un canal</span></li>
             {#each availableChannels as availableChannel}
-                <li data-channelKey="{availableChannel.key}" on:click={changeCurrentChannel} class="channels-items list-group-item list-group-item-dark list-group-item-action"><span class="channels-item-label">{availableChannel.label}</span></li>
+                <li data-channelKey="{availableChannel.key}" on:click={changeCurrentChannelOnclick} class="channels-items list-group-item list-group-item-dark list-group-item-action"><span class="channels-item-label">{availableChannel.label}</span></li>
             {/each}
         </ul>
     </div>
-    <ContentChannelContainer channel="{channel}"></ContentChannelContainer>
+    <ContentChannelContainer ></ContentChannelContainer>
 </main>
 
 <div id="CreateChannelModal" class="modal fade" data-keyboard="false">
