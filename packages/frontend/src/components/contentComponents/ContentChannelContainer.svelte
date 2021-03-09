@@ -53,6 +53,18 @@
                     }
                     mc.attachments = attachmentsMetadata;
                 }
+                if(typeof mc.parentPost === 'number'){
+                    const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
+                    if(parentPost){
+                        parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
+                        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
+                            ActivePostStore.update(aps => {
+                                aps.parentPost = parentPost;
+                                return aps;
+                            })
+                        }
+                    }
+                }
                 ChannelStore.update(cs => {
                     cs.posts.push(mc);
                     window.setTimeout(() => {

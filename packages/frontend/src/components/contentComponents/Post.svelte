@@ -155,7 +155,9 @@
     <div class="postContent">
         {#if typeof post.parentPost !== 'number'}
             <div class="post-actions">
-                <div class="post-action" on:click={onAnswerClick} ><i class="fa fa-comment-lines"></i></div>
+                <div class="post-action" on:click={onAnswerClick} title="Montrer les réponses">
+                    <i class="fa fa-comment-lines"></i>
+                </div>
             </div>
         {/if}
         <style>
@@ -194,5 +196,13 @@
                 <svelte:component this={getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
             {/each}
         {/if}
+        <div class="postMetadata">
+            {#if post.answerCount}
+                <div class="metadata" title="Nombre de réponses">
+                    <span>{post.answerCount}</span>
+                    <i class="fas fa-comment-lines"></i>
+                </div>
+            {/if}
+        </div>
     </div>
 </div>
