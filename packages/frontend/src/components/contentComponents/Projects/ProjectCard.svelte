@@ -28,6 +28,10 @@
         align-items: flex-start;
     }
 
+    .project-card .card-text {
+        text-align: start;
+    }
+
 </style>
 
 <button type="button" id="project-{project.id}" class="btn btn-secondary card project-card" on:click={displayProject}>

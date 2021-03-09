@@ -109,6 +109,40 @@
         margin: 15px;
     }
 
+    .btn.action {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn.action span.spinner-border {
+        margin-right:5px;
+        display: none;
+    }
+
+    .btn.action span.spinner-border.show {
+        margin-right:5px;
+        display: block;
+    }
+
+    .modal-footer-createChannel {
+
+    }
+
+    .modal-footer > button {
+        margin-right: 0;
+        margin-left: auto;
+    }
+
+    #errorOnCreatingProject {
+        max-width: 325px;
+    }
+
+    .modal-title {
+        margin-left: calc(68% - 15px)
+    }
+
+
+
 </style>
 
 <main class="projects-board">
@@ -125,13 +159,13 @@
 
 </main>
 
-<div id="CreateProjectModal" class="modal fade" data-keyboard="false">
+<div id="CreateProjectModal" class="modal fade " data-keyboard="false">
     <style>
         label {
             text-align: start;
         }
     </style>
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="create-channel-modal-title" class="modal-title">Créer un nouveau projet</h5>
