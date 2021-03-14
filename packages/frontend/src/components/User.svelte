@@ -121,8 +121,8 @@
             <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right ">
-            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="projects">
-                <i class="fas fa-cogs"></i><span>Projets</span>
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
+                <i class="fas fa-file-text"></i><span>Documents</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
                 <i class="fas fa-comments"></i><span>Channels</span>
