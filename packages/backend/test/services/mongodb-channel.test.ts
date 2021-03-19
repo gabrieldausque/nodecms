@@ -184,7 +184,9 @@ describe('Channel service With Mongodb', () => {
 
   it('should access to public post from public channel',async () => {
     const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
-    params.route.channelNameOrId = 'news';
+    params.route = {
+      channelNameOrId: 'news'
+    };
     const posts:any = await service.find(params);
     expect([{
       author: posts[0].author.id,
@@ -205,7 +207,9 @@ describe('Channel service With Mongodb', () => {
 
   it('should create a new public post on public channel',async () => {
     const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
-    params.route.channelNameOrId = 'news';
+    params.route = {
+      channelNameOrId: 'news'
+    };
     const created = await service.create({
       content: "test de nouveau post"
     }, params);
