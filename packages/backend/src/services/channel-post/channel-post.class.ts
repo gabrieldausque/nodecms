@@ -54,6 +54,9 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
     if(params && params.user && params.route && params.route.channelNameOrId) {
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
+      const lastIndex:number | string | undefined = params.query?.lastIndex;
+      if(params.query && params.query.hasOwnProperty('lastIndex'))
+        delete params.query.lastIndex;
       let filter:Partial<ChannelPostEntity> = params.query as ChannelPostEntity;
       if(channel){
         if(!filter || !filter.channelKey || filter.channelKey !== channel.key){
@@ -74,7 +77,7 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
           console.log(filter);
         }
 
-        const found = await this.useCase.find(filter, params.user as User, channel.key);
+        const found = await this.useCase.find(filter, lastIndex, params.user as User, channel.key);
         return found;
       }
     }

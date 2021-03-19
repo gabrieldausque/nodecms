@@ -35,8 +35,8 @@ export class DocumentUseCases extends UseCases<Document> {
     return await this.storage.delete(id)
   }
 
-  async find(filter: Partial<Document>, executingUser?: User): Promise<Document[]> {
-    return await this.storage.find(filter);
+  async find(filter: Partial<Document>, lastIndex?:number, executingUser?: User): Promise<Document[]> {
+    return await this.storage.find(filter, lastIndex);
   }
 
   async get(id: string | number, executingUser?: User): Promise<Document> {

@@ -31,7 +31,7 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async find (params?: Params): Promise<MediaDTO[] | Paginated<MediaDTO>> {
-    const medias = await this.useCase.find(params?.query as MediaDTO, params?.user as UserEntity);
+    const medias = await this.useCase.find(params?.query as MediaDTO,undefined, params?.user as UserEntity);
     return medias;
   }
 

@@ -70,7 +70,7 @@ export class ChannelUseCases extends UseCases<Channel> {
     } else if(typeof id === 'string') {
       const found = await this.find({
         key: id
-      }, executingUser);
+      }, undefined,executingUser);
       if(Array.isArray(found) && found.length > 0){
         channel = found[0];
       }
@@ -80,8 +80,8 @@ export class ChannelUseCases extends UseCases<Channel> {
     throw new Error(`Channel with id or key ${id} doesn't exists.`)
   }
 
-  async find(filter: Partial<Channel>, executingUser: User | undefined): Promise<Channel[]> {
-    const found = await this.storage.find(filter);
+  async find(filter: Partial<Channel>, lastIndex?:number, executingUser?: User): Promise<Channel[]> {
+    const found = await this.storage.find(filter, lastIndex);
     found.map(c => {
       ChannelRules.validate(c)
     })

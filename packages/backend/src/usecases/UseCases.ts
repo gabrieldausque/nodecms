@@ -21,7 +21,7 @@ export abstract class UseCases<T extends Entity> {
   }
 
   abstract async get(id : string | number, executingUser?:User) : Promise<T>;
-  abstract async find(filter:Partial<T>, executingUser?:User) : Promise<T[]>;
+  abstract async find(filter:Partial<T>, lastIndex?:number | string, executingUser?:User) : Promise<T[]>;
   abstract async create(entity:T, executingUser?:User): Promise<T>;
   abstract async update(id: string | number, entityToUpdate:T, executingUser?:User): Promise<T>;
   abstract async delete(id: string | number, executingUser?:User): Promise<T>;

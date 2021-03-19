@@ -70,7 +70,8 @@ describe('Channel service With Mongodb', () => {
 
   beforeEach(async () => {
     await initMongoDbTestDatabase();
-    params.route = {};
+    delete params.route
+    delete params.lastIndex
   })
 
   after((done) => {
@@ -332,6 +333,26 @@ describe('Channel service With Mongodb', () => {
     } else {
       assert.fail('not an array');
     }
+  })
+
+  it('should return first page containing 10 post and second page with 6 posts', async() => {
+    const service:ChannelPost = app.service('channel/:channelNameOrId/posts');
+    params.route = {
+      channelNameOrId: 'news'
+    };
+    for(let postIndex = 0; postIndex < 15; postIndex++){
+      await service.create({
+        content:`this is the post ${postIndex}`
+      }, params)
+    }
+    let page:any = await service.find(params);
+    expect(page.length).to.eql(10);
+    params.query = {
+      lastIndex: page[page.length - 1].id
+    };
+    page = await service.find(params)
+    expect(page.length).to.eql(6);
+    expect(page[page.length - 1].id).to.eql(0);
   })
 
 });

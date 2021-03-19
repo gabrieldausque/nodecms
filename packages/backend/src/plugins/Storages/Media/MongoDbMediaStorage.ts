@@ -122,7 +122,7 @@ export class MongoDbMediaStorage extends MongoDbStorage<Media> implements MediaS
     return Array.isArray(media) && media.length > 0;
   }
 
-  async find(filter: Partial<Media> | undefined, collectionName?: string): Promise<Media[]> {
+  async find(filter?: Partial<Media>, lastIndex?:number | string, collectionName?: string): Promise<Media[]> {
     this.checkFileStore();
     if(filter) {
       if(filter.key) {

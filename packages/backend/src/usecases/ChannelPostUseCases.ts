@@ -47,13 +47,13 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
     throw new Error('Not implemented');
   }
 
-  async find(filter: Partial<ChannelPost>, executingUser: User | undefined, channelName?:string): Promise<ChannelPost[]> {
+  async find(filter: Partial<ChannelPost>, lastIndex?:number | string, executingUser?: User, channelName?:string): Promise<ChannelPost[]> {
     ChannelPostRules.validateFilter(filter);
     if(filter && channelName){
       filter.channelKey = (filter.channelKey && filter.channelKey === channelName)?
         filter.channelKey:
         channelName
-      const found =  await this.channelPostStorage.find(filter, filter.channelKey);
+      const found =  await this.channelPostStorage.find(filter,lastIndex, filter.channelKey);
       for(const p of found){
         if(typeof p.author === 'number') {
           const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');

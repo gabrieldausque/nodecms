@@ -88,7 +88,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     throw new Error('Not Implemented')
   }
 
-  async find(filter: Partial<Authentication>, executingUser?:User): Promise<Authentication[]> {
+  async find(filter: Partial<Authentication>, lastIndex?:string | number, executingUser?:User): Promise<Authentication[]> {
     throw new Error('Not Implemented')
   }
 

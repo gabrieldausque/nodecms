@@ -37,17 +37,20 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
     return authorization;
   }
 
-  async find(filter: Authorization, executingUser:User): Promise<Authorization[]> {
+  async find(filter: Authorization, lastIndex?:string | number, executingUser?:User): Promise<Authorization[]> {
     AuthorizationEntityRules.convert(filter);
-    return await this.storage.find(filter);
+    let firstIndex : number | undefined = undefined
+    if(typeof lastIndex != 'undefined' && lastIndex !== null)
+      firstIndex = (await this.get(lastIndex, executingUser)).id
+    return await this.storage.find(filter, firstIndex);
   }
 
-  async get(id: string | number, executingUser:User): Promise<Authorization> {
+  async get(id: string | number, executingUser?:User): Promise<Authorization> {
     const usableId = AuthorizationEntityRules.convertId(id);
     return await this.storage.get(usableId);
   }
 
-  async update(id: string | number, entityToUpdate: Authorization, executingUser:User): Promise<Authorization> {
+  async update(id: string | number, entityToUpdate: Authorization, executingUser?:User): Promise<Authorization> {
     throw new Error('Not allowed');
   }
 

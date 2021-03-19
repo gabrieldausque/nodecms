@@ -42,7 +42,7 @@ export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
         key: params.query.key,
         ownerType: params.query.ownerType,
         ownerId: params.query.ownerId
-      }, executingUser)
+      },undefined, executingUser)
     };
     return []
   }
@@ -60,7 +60,7 @@ export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
         }
       } else {
         const filter = { key: id.toString()}
-        const found = await this.useCase.find(filter, executingUser)
+        const found = await this.useCase.find(filter, undefined, executingUser)
         if(found) {
           if(found.length === 1)
             return found[0];
@@ -75,7 +75,7 @@ export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
           ownerType: params.query.ownerType?params.query.ownerType:'',
           ownerId: params.query.ownerId?params.query.ownerId:null
         }
-        const found = await this.useCase.find(filter, executingUser)
+        const found = await this.useCase.find(filter, undefined, executingUser)
         if(found) {
           if(found.length === 1)
             return found[0];
@@ -138,7 +138,7 @@ export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
       }
       return true;
     } else {
-      const searchData = await this.useCase.find(data, user);
+      const searchData = await this.useCase.find(data, undefined, user);
       if(Array.isArray(searchData) && searchData.length > 0) {
         const oneData = searchData[0];
         if(oneData.isPublic)

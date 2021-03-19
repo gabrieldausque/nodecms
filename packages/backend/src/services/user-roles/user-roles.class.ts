@@ -72,7 +72,7 @@ export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
       if(isNumber(data)) {
         role = await this.roleUseCases.get(parseInt(data.toString()), executingUser);
       } else {
-        role = (await this.roleUseCases.find(data as Role, executingUser))[0]
+        role = (await this.roleUseCases.find(data as Role, undefined, executingUser))[0]
       }
       await this.userUseCases.addRole(user, role, executingUser);
       return role;
@@ -94,7 +94,7 @@ export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
       if(isNumber(id)) {
         role = await this.roleUseCases.get(parseInt(id.toString()), executingUser);
       } else {
-        role = (await this.roleUseCases.find({key:id.toString()}, executingUser))[0]
+        role = (await this.roleUseCases.find({key:id.toString()}, undefined, executingUser))[0]
       }
       await this.userUseCases.addRole(user, role, executingUser);
       return role;
@@ -121,7 +121,7 @@ export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
       if(isNumber(id)) {
         role = await this.roleUseCases.get(parseInt(id.toString()), executingUser);
       } else {
-        role = (await this.roleUseCases.find({key:id.toString()}, executingUser))[0]
+        role = (await this.roleUseCases.find({key:id.toString()}, undefined, executingUser))[0]
       }
       await this.userUseCases.removeRole(user, role, executingUser);
       return role;

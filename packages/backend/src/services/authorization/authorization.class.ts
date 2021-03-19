@@ -39,7 +39,7 @@ export class Authorization extends BaseService<Data, AuthorizationUseCases> {
         right: params.query.right
       }
       if(params.user as UserEntity){
-        const found = await this.useCase.find(filter, params.user as UserEntity);
+        const found = await this.useCase.find(filter, undefined, params.user as UserEntity);
         if(Array.isArray(found) && found.length > 0)
           return found;
       }
