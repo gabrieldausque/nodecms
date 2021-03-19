@@ -29,16 +29,7 @@
         ActivePostStore.set(undefined);
     }
 
-    onMount(async () => {
-        window.setTimeout(() => {
-            const channelContent = document.querySelector('#current-posts');
-            if(channelContent)
-                channelContent.scrollTop = channelContent.scrollHeight;
-        }, 500)
-    })
-
     beforeUpdate(async() => {
-
         if($ChannelStore.channel){
             const backendClient = await getBackendClient();
             await backendClient.channelsService.subscribeToChannel($ChannelStore.channel.key, (async (mc) => {
@@ -66,26 +57,11 @@
                     }
                 }
                 ChannelStore.update(cs => {
-                    cs.posts.push(mc);
-                    window.setTimeout(() => {
-                        if(mc.parentPost){
-                            const rightPanel = document.querySelector('.channel-right-panel .channelContent');
-                            if(rightPanel)
-                                rightPanel.scrollTop = rightPanel.scrollHeight;
-                        }else {
-                            const channelContent = document.querySelector('#current-posts');
-                            if(channelContent)
-                                channelContent.scrollTop = channelContent.scrollHeight;
-                        }
-                    },500);
+                    cs.posts.unshift(mc);
                     return cs;
                 })
             }))
         }
-
-    })
-
-    afterUpdate(() => {
 
     })
 
@@ -235,12 +211,12 @@
             <i on:click={hideRightPanel} class="fal fa-window-close"></i>
         </div>
         <div class="{$ChannelStore.isContributor ? 'channelContent': 'channelContent tall'}">
-            <Post post="{$ActivePostStore.parentPost}"></Post>
             {#each $ChannelStore.posts as post}
                 {#if post.parentPost === $ActivePostStore.parentPost.id  }
                     <Post post={post}></Post>
                 {/if}
             {/each}
+            <Post post="{$ActivePostStore.parentPost}"></Post>
         </div>
         {#if $ChannelStore.channel && !$ChannelStore.notAuthorized && $ChannelStore.channel.isContributor}
             <PostEditor channelKey={$ChannelStore.channel.key} parentPost="{$ActivePostStore.parentPost.id}" targetId="messageInThread"></PostEditor>

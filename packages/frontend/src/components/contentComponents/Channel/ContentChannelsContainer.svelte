@@ -159,11 +159,6 @@
             }
             ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);
-            window.setTimeout(() => {
-                const channelContent = document.querySelector('#current-posts');
-                if(channelContent)
-                    channelContent.scrollTop = channelContent.scrollHeight;
-            }, 500)
         }
     }
 

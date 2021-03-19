@@ -44,10 +44,6 @@
                             {
                                 link.innerHTML = newInnerHTML;
                             }
-                            window.setTimeout(()=> {
-                                const channelContent = document.querySelector('.channelContent')
-                                channelContent.scrollTop = channelContent.scrollHeight
-                            })
                         }
                         window.setTimeout(setInnerLink, 500);
                     }
