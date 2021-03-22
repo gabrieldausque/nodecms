@@ -13,6 +13,7 @@ import {User} from "../../entities/User";
 import {TopicMessage, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {Logger} from "../../plugins/Logging/Logger";
 import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
+import {isNumber} from "../../helpers";
 
 type Data = ChannelPostEntity
 
@@ -54,7 +55,9 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
     if(params && params.user && params.route && params.route.channelNameOrId) {
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
-      const lastIndex:number | string | undefined = params.query?.lastIndex;
+      let lastIndex:number | string | undefined = params.query?.lastIndex;
+      if(isNumber(lastIndex) && typeof lastIndex === 'string')
+        lastIndex = parseInt(lastIndex)
       if(params.query && params.query.hasOwnProperty('lastIndex'))
         delete params.query.lastIndex;
       let filter:Partial<ChannelPostEntity> = params.query as ChannelPostEntity;

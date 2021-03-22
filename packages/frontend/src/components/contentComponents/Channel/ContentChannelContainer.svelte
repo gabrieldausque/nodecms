@@ -91,6 +91,42 @@
         }
     }
 
+    async function onScrollForChildren(event) {
+        if((event.target.scrollHeight - event.target.clientHeight) === event.target.scrollTop){
+            console.log('bottom reach')
+            //TODO : get last children message if needed (number of children post === answerCount of it)
+            if($ActivePostStore && $ActivePostStore.parentPost){
+                const sortAscend = (p1, p2) => {
+                    if(p1.id < p2.id)
+                        return 1
+                    if(p1.id > p2.id)
+                        return -1
+                    return  0
+                }
+                let currentChildren = $ChannelStore.posts.filter(p => p.parentPost === $ActivePostStore.parentPost.id)
+                currentChildren.sort(sortAscend)
+                const lastId = currentChildren[currentChildren.length - 1].id;
+                const backendClient = await getBackendClient();
+                const otherChildrenPage = await backendClient.channelsService.getChildrenPosts($ActivePostStore.parentPost.channelKey,
+                    $ActivePostStore.parentPost.id,
+                    lastId
+                );
+                console.log(otherChildrenPage);
+                if(otherChildrenPage.length){
+                    ChannelStore.update(cs => {
+                        for(const ocp of otherChildrenPage) {
+                            if(!cs.posts.find(p => p.id === ocp.id)){
+                                cs.posts.push(ocp);
+                            }
+                        }
+                        cs.posts.sort(sortAscend)
+                        return cs;
+                    })
+                }
+            }
+        }
+    }
+
 </script>
 
 <style>
@@ -210,7 +246,7 @@
             </div>
             <i on:click={hideRightPanel} class="fal fa-window-close"></i>
         </div>
-        <div class="{$ChannelStore.isContributor ? 'channelContent': 'channelContent tall'}">
+        <div class="{$ChannelStore.isContributor ? 'channelContent': 'channelContent tall'}" on:scroll={onScrollForChildren}>
             {#each $ChannelStore.posts as post}
                 {#if post.parentPost === $ActivePostStore.parentPost.id  }
                     <Post post={post}></Post>

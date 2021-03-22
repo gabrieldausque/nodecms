@@ -154,8 +154,8 @@
                     }
                     p.attachments = attachmentsMetadata;
                 }
-                const childrenPosts = await backendClient.channelsService.getChildrenPosts(p.channelKey, p.id);
-                p.answerCount = childrenPosts.length;
+                p.answerCount = await backendClient.channelsService.getChildrenPostsCount(p.channelKey, p.id);
+
             }
             ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);

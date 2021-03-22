@@ -88,11 +88,6 @@
             }
             return cs;
         })
-        window.setTimeout(() => {
-            const rightPanel = document.querySelector('.channel-right-panel .channelContent');
-            if(rightPanel)
-                rightPanel.scrollTop = rightPanel.scrollHeight;
-        },500);
     }
 
 </script>
