@@ -82,10 +82,22 @@
                             cs.posts.push(pc);
                         }
                     }
+                    cs.posts.sort((p1,p2) => {
+                        if(p1.id > p2.id)
+                            return -1;
+                        if(p1.id < p2.id)
+                            return 1;
+                        return 0;
+                    })
+                    const rightPanel = document.querySelector('.channel-right-panel > .channelContent')
+                    if(rightPanel) {
+                        rightPanel.scrollTop = 0;
+                    }
                 }
             }catch(error) {
                 console.log(error);
             }
+
             return cs;
         })
     }
