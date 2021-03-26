@@ -8,6 +8,8 @@
     import {Helpers} from "../../../helpers/Helpers";
 
     let editor = null;
+    let tailActivated = true;
+    let tailForChildrenActivated = true;
 
     $ChannelStore;
     $ActivePostStore;
@@ -29,43 +31,7 @@
         ActivePostStore.set(undefined);
     }
 
-    beforeUpdate(async() => {
-        if($ChannelStore.channel){
-            const backendClient = await getBackendClient();
-            await backendClient.channelsService.subscribeToChannel($ChannelStore.channel.key, (async (mc) => {
-                if(mc.content){
-                    await Helpers.preloadContentPreview(mc.content)
-                }
-                if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
-                    const attachmentsMetadata = [];
-                    for(const a of mc.attachments){
-                        const m = await backendClient.mediaService.getMediaMetadata(a);
-                        attachmentsMetadata.push(m);
-                    }
-                    mc.attachments = attachmentsMetadata;
-                }
-                if(typeof mc.parentPost === 'number'){
-                    const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
-                    if(parentPost){
-                        parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
-                        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
-                            ActivePostStore.update(aps => {
-                                aps.parentPost = parentPost;
-                                return aps;
-                            })
-                        }
-                    }
-                }
-                ChannelStore.update(cs => {
-                    cs.posts.unshift(mc);
-                    return cs;
-                })
-            }))
-        }
-
-    })
-
-    function slideIn(node, {
+     function slideIn(node, {
         delay=0,
         duration=100
     }) {
@@ -92,20 +58,12 @@
     }
 
     async function onScrollForChildren(event) {
-        if((event.target.scrollHeight - event.target.clientHeight) === event.target.scrollTop){
+        if(event.target.scrollTop === 0){
             console.log('bottom reach')
             //TODO : get last children message if needed (number of children post === answerCount of it)
             if($ActivePostStore && $ActivePostStore.parentPost){
-                const sortAscend = (p1, p2) => {
-                    if(p1.id < p2.id)
-                        return 1
-                    if(p1.id > p2.id)
-                        return -1
-                    return  0
-                }
                 let currentChildren = $ChannelStore.posts.filter(p => p.parentPost === $ActivePostStore.parentPost.id)
-                currentChildren.sort(sortAscend)
-                const lastId = currentChildren[currentChildren.length - 1].id;
+                const lastId = currentChildren[0].id;
                 const backendClient = await getBackendClient();
                 const otherChildrenPage = await backendClient.channelsService.getChildrenPosts($ActivePostStore.parentPost.channelKey,
                     $ActivePostStore.parentPost.id,
@@ -119,13 +77,111 @@
                                 cs.posts.push(ocp);
                             }
                         }
-                        cs.posts.sort(sortAscend)
+                        cs.posts.sort((p1, p2) => {
+                            if(p1.id > p2.id)
+                                return 1;
+                            if(p1.id < p2.id)
+                                return -1;
+                            return 0;
+                        })
                         return cs;
                     })
                 }
             }
         }
+
+        const channelContentView = document.querySelector('.channel-right-panel div.channelContent');
+        if(channelContentView) {
+            const top = channelContentView.clientHeight - channelContentView.scrollHeight;
+            tailForChildrenActivated = channelContentView.scrollTop === top;
+        }
     }
+
+    async function onScrollForCurrentChannel(event) {
+        if(event.target.scrollTop === 0){
+            let posts = $ChannelStore.posts.filter(p => typeof p.parentPost !== "number")
+            console.log(posts);
+            const lastId = posts[0].id;
+            console.log(lastId);
+            const backendClient = await getBackendClient();
+            const nextPage = await backendClient.channelsService.getChannelPosts($ChannelStore.key,
+                undefined,
+                lastId
+            );
+            console.log('next page :');
+            console.log(nextPage);
+            if(nextPage.length){
+                ChannelStore.update(cs => {
+                    for(const ocp of nextPage) {
+                        if(!cs.posts.find(p => p.id === ocp.id)){
+                            cs.posts.push(ocp);
+                        }
+                    }
+                    cs.posts.sort((p1, p2) => {
+                        if(p1.id > p2.id)
+                            return 1;
+                        if(p1.id < p2.id)
+                            return -1;
+                        return 0;
+                    })
+                    return cs;
+                })
+            }
+        }
+
+        const channelContentView = document.querySelector('#current-channel div.channelContent');
+        if(channelContentView) {
+            const top = channelContentView.clientHeight - channelContentView.scrollHeight;
+            tailActivated = channelContentView.scrollTop === top;
+        }
+
+    }
+
+    function isThereNewMessage() {
+        const newMessage = $ChannelStore.posts.findIndex(p => {
+            if(typeof p.isNew === 'boolean' && p.isNew){
+                return true;
+            }
+            return false
+        }) >= 0
+        return newMessage;
+    }
+
+    function isThereNewAnswer() {
+        const newAnswer = $ChannelStore.posts.findIndex(p => {
+            if($ActivePostStore &&
+                $ActivePostStore.parentPost &&
+                typeof p.isNew === 'boolean' && p.isNew && p.parentPost === $ActivePostStore.parentPost.id)
+            {
+                return true;
+            }
+            return false;
+        })
+        return newAnswer;
+    }
+
+    afterUpdate(() => {
+        if(isThereNewMessage()){
+            document.getElementById('newMessage')?.classList.remove('hidden');
+        } else {
+            document.getElementById('newMessage')?.classList.add('hidden');
+        }
+
+        if(tailActivated){
+            const channelContentView = document.querySelector('#current-channel div.channelContent');
+            if(channelContentView) {
+                channelContentView.scrollTop = channelContentView.clientHeight - channelContentView.scrollHeight ;
+            }
+        }
+
+        if(tailForChildrenActivated) {
+            const rightPanel = document.querySelector('.channel-right-panel > .channelContent')
+            if(rightPanel) {
+                rightPanel.scrollTop = rightPanel.clientHeight - rightPanel.scrollHeight;
+            }
+        }
+
+    })
 
 </script>
 
@@ -168,7 +224,7 @@
         overflow-y: auto;
         position: relative;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         padding-top: 5px;
     }
 
@@ -203,19 +259,32 @@
     .channel-right-panel > .header > div >p {
         margin-bottom: 0;
     }
+
+    #newMessage {
+        font-weight: bold;
+    }
+
+    #newMessage.hidden {
+        display:none;
+    }
+
+
  </style>
 
-<div class="channel">
+<div id="current-channel" class="channel">
     <div class="channelInfo">
         <div class="channelHeader">
             {#if $ChannelStore.channel && $ChannelStore.channel.label}
                 <strong><h6>{$ChannelStore.channel.label}</h6></strong>
-                <span>#{$ChannelStore.key}</span>
+                <div>
+                    <span>#{$ChannelStore.key}</span>
+                    <span id="newMessage" class="{isThereNewMessage()?'':'hidden'}">Nouveau message !</span>
+                </div>
             {/if}
         </div>
         <div id="test"></div>
     </div>
-    <div class="channelContent" id="current-posts">
+    <div class="channelContent" id="current-posts" on:scroll={onScrollForCurrentChannel}>
         {#if $ChannelStore && !$ChannelStore.notAuthorized}
             {#each $ChannelStore.posts as post}
                 {#if typeof post.parentPost !== 'number'}
@@ -242,17 +311,20 @@
         <div class="header" >
             <div>
                 <h6>Fil de discussion</h6>
-                <p>#{$ChannelStore.key}</p>
+                <div>
+                    <span>#{$ChannelStore.key}</span>
+                    <span id="newAnswer" class="{isThereNewAnswer()?'':'hidden'}">Nouvelle réponse !</span>
+                </div>
             </div>
             <i on:click={hideRightPanel} class="fal fa-window-close"></i>
         </div>
         <div class="{$ChannelStore.isContributor ? 'channelContent': 'channelContent tall'}" on:scroll={onScrollForChildren}>
+            <Post post="{$ActivePostStore.parentPost}"></Post>
             {#each $ChannelStore.posts as post}
                 {#if post.parentPost === $ActivePostStore.parentPost.id  }
                     <Post post={post}></Post>
                 {/if}
             {/each}
-            <Post post="{$ActivePostStore.parentPost}"></Post>
         </div>
         {#if $ChannelStore.channel && !$ChannelStore.notAuthorized && $ChannelStore.channel.isContributor}
             <PostEditor channelKey={$ChannelStore.channel.key} parentPost="{$ActivePostStore.parentPost.id}" targetId="messageInThread"></PostEditor>

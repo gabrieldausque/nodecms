@@ -1,5 +1,5 @@
 <script>
-    import {afterUpdate} from "svelte";
+    import {afterUpdate, beforeUpdate, onMount} from "svelte";
     import ImageAttachment from "./Attachments/ImageAttachment.svelte";
     import DownloadAttachment from "./Attachments/DownloadAttachment.svelte";
     import VideoAttachment from "./Attachments/VideoAttachment.svelte";
@@ -8,6 +8,7 @@
     import {ActivePostStore, PostWithChildren} from "../../../stores/ActivePostStore";
     import {ChannelStore} from "../../../stores/ChannelStore";
     import {Helpers} from "../../../helpers/Helpers";
+    import { fade } from 'svelte/transition';
 
     export let post;
 
@@ -84,15 +85,11 @@
                     }
                     cs.posts.sort((p1,p2) => {
                         if(p1.id > p2.id)
-                            return -1;
-                        if(p1.id < p2.id)
                             return 1;
+                        if(p1.id < p2.id)
+                            return -1;
                         return 0;
                     })
-                    const rightPanel = document.querySelector('.channel-right-panel > .channelContent')
-                    if(rightPanel) {
-                        rightPanel.scrollTop = 0;
-                    }
                 }
             }catch(error) {
                 console.log(error);
@@ -150,7 +147,7 @@
 
 </style>
 
-<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post">
+<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post" in:fade>
     <div class="author">
         <i class="fas fa-user-circle fa-3x"></i>
         <span>{post.author.login}</span>

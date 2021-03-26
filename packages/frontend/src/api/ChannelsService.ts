@@ -60,12 +60,18 @@ export class ChannelsService extends BaseServiceClient {
     }
 
     async getChannelPosts(channelName, filter?:any, lastPostId?:number) {
-        return (await axios.request({
+        const posts = (await axios.request({
             method:'get',
             baseURL:this.url,
             url: `channel/${channelName}/posts/`,
             params: {...filter, ...{ lastIndex: lastPostId}}
         })).data;
+        for(const p of posts){
+            if(typeof p.parentPost !== 'number'){
+                p.answerCount = await this.getChildrenPostsCount(p.channelKey, p.id);
+            }
+        }
+        return posts;
     }
 
     async subscribeToChannel(channelKey:string, handler:ChannelPostReceived, addNewHandler = false)  {
