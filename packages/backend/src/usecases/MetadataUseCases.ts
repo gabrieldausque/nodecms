@@ -32,9 +32,9 @@ export class MetadataUseCases extends UseCases<Metadata>  {
     return await this.storage.get(usableId);
   }
 
-  async find(filter: Metadata, executingUser?:User):Promise<Metadata[]> {
+  async find(filter: Metadata, lastIndex?:number, executingUser?:User):Promise<Metadata[]> {
     MetadataEntityRules.convertFilter(filter);
-    return await this.storage.find(filter);
+    return await this.storage.find(filter, lastIndex);
   }
 
   async create(data: Metadata, executingUser:User):Promise<Metadata> {
@@ -56,7 +56,7 @@ export class MetadataUseCases extends UseCases<Metadata>  {
         ownerType:metadataToUpdate.ownerType,
         ownerId:metadataToUpdate.ownerId
       }};
-      const foundArray = await this.find(filter, executingUser);
+      const foundArray = await this.find(filter,undefined, executingUser);
       if(Array.isArray(foundArray) && foundArray.length > 0)
         found = foundArray[0];
     }

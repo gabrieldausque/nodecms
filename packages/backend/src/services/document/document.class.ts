@@ -30,7 +30,7 @@ export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
   async find (params?: Params): Promise<DocumentDTO[] | Paginated<DocumentDTO>> {
     if(params){
       const executingUser:UserEntity = params?.user as UserEntity;
-      return await this.useCase.find(params.query as Partial<DocumentEntity>,executingUser);
+      return await this.useCase.find(params.query as Partial<DocumentEntity>,undefined,executingUser);
     }
     return [];
   }

@@ -1,8 +1,8 @@
 <script>
 
-    import {getBackendClient} from "../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../api/NodeCMSClient";
     import {afterUpdate, getContext, onMount} from "svelte";
-    import {FEServices, globalFEService} from "../../FEServices";
+    import {FEServices, globalFEService} from "../../../FEServices";
 
     export let key;
     export let label;

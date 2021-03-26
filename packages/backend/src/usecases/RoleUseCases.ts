@@ -39,8 +39,8 @@ export class RoleUseCases extends UseCases<Role> {
     return await this.storage.delete(usableId)
   }
 
-  async find(filter: Partial<Role>, executingUser:User): Promise<Role[]> {
-    const found = await this.storage.find(filter);
+  async find(filter: Partial<Role>, lastIndex?:number, executingUser?:User): Promise<Role[]> {
+    const found = await this.storage.find(filter, lastIndex);
     return found
   }
 

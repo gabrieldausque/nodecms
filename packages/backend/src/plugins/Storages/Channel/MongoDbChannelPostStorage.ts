@@ -54,19 +54,19 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
     if(isNumber(keyOrId)){
       posts = await this.find({
         id:parseInt(keyOrId.toString())
-      }, channelName);
+      },undefined, channelName);
     } else if(keyOrId) {
       posts = await this.find( {
         key:keyOrId.toString()
-      }, channelName)
+      },undefined, channelName)
     }
     return Array.isArray(posts) && posts.length > 0;
   }
 
-  async find(filter: Partial<ChannelPost> | undefined, channelName?:string): Promise<ChannelPost[]> {
+  async find(filter?: Partial<ChannelPost>, lastIndex?:number, channelName?:string): Promise<ChannelPost[]> {
     if(filter) {
       const collectionName = this.getCollectionNameFromChannelName(channelName);
-      return await this.internalFind(filter, collectionName);
+      return await this.internalFind(filter,lastIndex, collectionName, true);
     }
     return []
   }
@@ -79,7 +79,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
     } else {
       const found = await this.find({
         key:keyOrId.toString()
-      }, channelName);
+      },undefined, channelName);
       if(Array.isArray(found) && found.length > 0){
         post = found[0];
       }
@@ -91,6 +91,12 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
 
   update(data: ChannelPost, channelName?:string): Promise<ChannelPost> {
     throw new Error('Not implemented')
+  }
+
+  validateConfiguration(configuration: MongoDbStorageConfiguration) {
+    configuration.pageSize = (typeof configuration.pageSize === 'number')?
+      configuration.pageSize:
+      10;
   }
 
 }

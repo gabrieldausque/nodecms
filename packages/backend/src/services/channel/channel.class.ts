@@ -39,7 +39,7 @@ export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
   async find (params?: Params): Promise<ChannelDTO[] | Paginated<ChannelDTO>> {
     if(params){
       const executingUser:UserEntity = params?.user as UserEntity;
-      return await this.useCase.find(params.query as Partial<Channel>,executingUser);
+      return await this.useCase.find(params.query as Partial<Channel>,undefined, executingUser);
     }
     return [];
   }

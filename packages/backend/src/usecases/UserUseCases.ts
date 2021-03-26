@@ -71,8 +71,13 @@ export class UserUseCases extends UseCases<User> {
     return await this.storage.get(idOrLogin);
   }
 
-  async find(filter: User, executingUser:User):Promise<User[]> {
-    return await this.storage.find(filter);
+  async find(filter: User, lastIndex?:number | string, executingUser?:User):Promise<User[]> {
+    let firstIndex : number | undefined = (typeof lastIndex === 'number')?
+      lastIndex:
+      (typeof lastIndex === 'string')?
+        (await this.get(lastIndex)).id:
+        lastIndex;
+    return await this.storage.find(filter, firstIndex);
   }
 
   //TODO : create a usecase where only admin users can update the active state
@@ -131,7 +136,7 @@ export class UserUseCases extends UseCases<User> {
       }
     } else {
       filter.key = metadataKeyOrId.toString();
-      const found:Metadata[] = await metadataUseCase.find(filter, executingUser);
+      const found:Metadata[] = await metadataUseCase.find(filter, undefined, executingUser);
       if(Array.isArray(found) && found.length > 0){
         return found[0];
       } else {
@@ -170,7 +175,7 @@ export class UserUseCases extends UseCases<User> {
     if(typeof user.id === 'number'){
       return await roleUseCases.find({
         members:[user.id]
-      }, executingUser);
+      }, undefined, executingUser);
     }
     return [];
   }
@@ -199,7 +204,7 @@ export class UserUseCases extends UseCases<User> {
          const authorizations = await authorizationUseCase.find({
            ...filter,
            ...{ role:role.id}
-         }, executingUser)
+         }, undefined, executingUser)
          if(authorizations.length > 0){
            return true;
          }
@@ -208,7 +213,7 @@ export class UserUseCases extends UseCases<User> {
          const authorizations = await authorizationUseCase.find({
          ...filter,
          ...{ role:role.id}
-       }, executingUser)
+       },undefined, executingUser)
        if(authorizations.length > 0){
          return true;
        }

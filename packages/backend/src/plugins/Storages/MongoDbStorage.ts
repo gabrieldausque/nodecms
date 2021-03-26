@@ -1,15 +1,15 @@
 import {Entity} from '../../entities/Entity';
-import {Storage} from './Storage'
-import {Collection, Db, MongoClient} from 'mongodb';
+import {Storage, StorageConfiguration} from './Storage'
+import {Collection, Db, MongoClient, QuerySelector} from 'mongodb';
 import {globalInstancesFactory} from "@hermes/composition";
 import {Logger} from "../Logging/Logger";
 import {User} from "../../entities/User";
 
-export interface MongoDbStorageConfiguration {
+export interface MongoDbStorageConfiguration extends StorageConfiguration {
   mongodbUser:string,
   mongodbPassword:string,
-  mongodbUrl:string
-  dbName:string
+  mongodbUrl:string,
+  dbName:string,
   collectionName:string
 }
 
@@ -29,7 +29,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
   protected readonly collectionName: string;
 
   protected constructor(configuration:MongoDbStorageConfiguration, logger?:Logger) {
-    super()
+    super(configuration);
     this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}`;
     this.mongoClient = new MongoClient(this.mongodbConnexionString, {
       useUnifiedTopology: true,
@@ -97,13 +97,52 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     )
   }
 
-  protected async internalFind(filter?:Partial<T> | null | undefined | any, collectionName?:string):Promise<T[]> {
+  protected async internalFind(filter?:Partial<T> | null | undefined | any,
+                               lastIndex?:string | number,
+                               collectionName?:string, sortDescending?:boolean):Promise<T[]> {
     const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     let found:T[] = [];
     if(filter){
-      found = await (await this.getCollection(finalCollectionName))
-        .find(filter)
-        .toArray();
+      const query:any = {...filter};
+      if(typeof lastIndex === "number" || typeof lastIndex === "string"){
+          const firstElement = (typeof lastIndex === 'number')?
+            (await this.internalGet(lastIndex, collectionName)):
+            (await this.internalFind({key:lastIndex}, undefined, collectionName))[0];
+          if(sortDescending)
+            query.id = {
+              $lt: firstElement?.id
+            }
+          else
+            query.id = {
+              $gt: firstElement?.id
+            }
+      }
+      if(typeof this.pageSize === 'number')
+      {
+        if(sortDescending){
+          found = await (await this.getCollection(finalCollectionName))
+            .find(query)
+            .sort({id:-1})
+            .limit(this.pageSize)
+            .toArray();
+        } else {
+          found = await (await this.getCollection(finalCollectionName))
+            .find(query)
+            .limit(this.pageSize)
+            .toArray();
+        }
+      } else {
+        if(sortDescending){
+          found = await (await this.getCollection(finalCollectionName))
+            .find(filter)
+            .sort({id:-1})
+            .toArray();
+        }else{
+          found = await (await this.getCollection(finalCollectionName))
+            .find(filter)
+            .toArray();
+        }
+      }
     }
     found.map((f:any) => {
       delete f._id
@@ -125,7 +164,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   abstract get(keyOrId: string | number, collectionName?:string): Promise<T>;
 
-  abstract find(filter?: Partial<T>, collectionName?:string): Promise<T[]>;
+  abstract find(filter?: Partial<T>, lastIndex?:number, collectionName?:string): Promise<T[]>;
 
   abstract create(data: Partial<T>, collectionName?:string): Promise<T>;
 

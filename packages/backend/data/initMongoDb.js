@@ -315,6 +315,47 @@ function initData(){
     },
     visibility: 'protected',
     ownerId: 0
+  });
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'channels',
+    content: {
+      bodies:[
+        {
+          order:0,
+          type:'channel',
+          properties:{
+            channelKey:"news"
+          }
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0
+  });
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'projects',
+    content: {
+      headers:[
+        {
+          order:0,
+          type: 'title',
+          properties: {
+            title:'Les projets de la Team-A'
+          }
+        }
+      ],
+      bodies:[
+        {
+          order:0,
+          type:'projects',
+          properties:{}
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0
   })
 
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});

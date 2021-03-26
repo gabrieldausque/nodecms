@@ -57,32 +57,41 @@
         flex-grow: 1;
         height: 100%;
     }
+
+    .container-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    }
 </style>
 
-{#if properties}
-    {#if typeof properties.globalStyle === "string"}
-        {@html Helpers.styleOpeningLabel + properties.globalStyle + Helpers.styleClosingLabel}
-    {/if}
-    {#if Array.isArray(properties.headers) && properties.headers.length > 0}
-        <header>
-            {#each properties.headers as container}
-                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
-            {/each}
-        </header>
-    {/if}
-    <main class="{properties.classes}" style="{properties.style}">
-        <svelte:component this="{properties.title}" title="{properties.title}"></svelte:component>
-        {#if Array.isArray(properties.bodies)}
-            {#each properties.bodies as container}
-                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
-            {/each}
+<div class="container-content">
+    {#if properties}
+        {#if typeof properties.globalStyle === "string"}
+            {@html Helpers.styleOpeningLabel + properties.globalStyle + Helpers.styleClosingLabel}
         {/if}
-    </main>
-    {#if Array.isArray(properties.header) && properties.header.length > 0}
-        <footer>
-            {#each properties.header as container}
-                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
-            {/each}
-        </footer>
+        {#if Array.isArray(properties.headers) && properties.headers.length > 0}
+            <header>
+                {#each properties.headers as container}
+                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                {/each}
+            </header>
+        {/if}
+        <main class="{properties.classes}" style="{properties.style}">
+            <svelte:component this="{properties.title}" title="{properties.title}"></svelte:component>
+            {#if Array.isArray(properties.bodies)}
+                {#each properties.bodies as container}
+                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                {/each}
+            {/if}
+        </main>
+        {#if Array.isArray(properties.header) && properties.header.length > 0}
+            <footer>
+                {#each properties.header as container}
+                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                {/each}
+            </footer>
+        {/if}
     {/if}
-{/if}
+</div>

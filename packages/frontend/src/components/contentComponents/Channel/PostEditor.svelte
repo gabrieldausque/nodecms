@@ -2,7 +2,7 @@
 
     import Editor from "cl-editor";
     import {afterUpdate, onMount} from "svelte";
-    import {getBackendClient} from "../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../api/NodeCMSClient";
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
     import _ from 'underscore';

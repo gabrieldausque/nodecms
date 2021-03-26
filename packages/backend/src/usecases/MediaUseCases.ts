@@ -57,8 +57,8 @@ export class MediaUseCases extends UseCases<Media> {
     throw new NotFoundError(`Media with id ${id} not found`);
   }
 
-  async find(filter: Partial<Media>, executingUser?: User | undefined): Promise<Media[]> {
-    const found = await this.storage.find(filter);
+  async find(filter: Partial<Media>, lastIndex?:number, executingUser?: User | undefined): Promise<Media[]> {
+    const found = await this.storage.find(filter, lastIndex);
     const iter = [...found];
     for(const m of iter){
       if(!(await this.isDataAuthorized(m,'r', executingUser))){
