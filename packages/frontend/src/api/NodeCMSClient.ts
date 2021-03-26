@@ -7,6 +7,7 @@ import {DocumentService} from "./DocumentService";
 import {ChannelsService} from "./ChannelsService";
 import {UserService} from "./UserService";
 import {UtilsService} from "./UtilsService";
+import {ProjectsService} from "./ProjectsService";
 
 
 export class NodeCMSClient {
@@ -21,6 +22,7 @@ export class NodeCMSClient {
     public channelsService: ChannelsService;
     public userService: UserService;
     public utilsService: UtilsService;
+    public projectsService: ProjectsService;
 
     constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
         this.url = cmsUrl;
@@ -38,6 +40,7 @@ export class NodeCMSClient {
         this.channelsService = new ChannelsService(this.axiosInstance, this.url, socketIoHost, this.env);
         this.userService = new UserService(this.axiosInstance, this.url);
         this.utilsService = new UtilsService(this.axiosInstance, this.url);
+        this.projectsService = new ProjectsService(this.axiosInstance, this.url);
     }
 
     createHeaders() {

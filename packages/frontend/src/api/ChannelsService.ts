@@ -59,13 +59,19 @@ export class ChannelsService extends BaseServiceClient {
         return result.data;
     }
 
-    async getChannelPosts(channelName, filter?:any) {
-        return (await axios.request({
+    async getChannelPosts(channelName, filter?:any, lastPostId?:number) {
+        const posts = (await axios.request({
             method:'get',
             baseURL:this.url,
             url: `channel/${channelName}/posts/`,
-            params: filter
+            params: {...filter, ...{ lastIndex: lastPostId}}
         })).data;
+        for(const p of posts){
+            if(typeof p.parentPost !== 'number'){
+                p.answerCount = await this.getChildrenPostsCount(p.channelKey, p.id);
+            }
+        }
+        return posts;
     }
 
     async subscribeToChannel(channelKey:string, handler:ChannelPostReceived, addNewHandler = false)  {
@@ -138,9 +144,23 @@ export class ChannelsService extends BaseServiceClient {
         }
     }
 
-    async getChildrenPosts(channelKey: string, parentPostId: number) {
+    async getChildrenPosts(channelKey: string, parentPostId: number, lastPostId?:number) {
         return await this.getChannelPosts(channelKey, {
             parentPost: parentPostId
-        });
+        }, lastPostId);
+    }
+
+    async getChildrenPostsCount(channelKey, id):Promise<number> {
+        let count = 0;
+        let children:any[] = []
+        let lastChildrenId:number | undefined = undefined;
+        do {
+            children = (await this.getChildrenPosts(channelKey, id, lastChildrenId))
+            if(children.length > 0){
+                lastChildrenId = children[children.length - 1].id;
+                count += children.length;
+            }
+        }while(children.length > 0)
+        return count;
     }
 }

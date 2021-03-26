@@ -75,38 +75,19 @@ describe('Role service', () => {
   });
 
   it('should get a role when asked for', async() => {
-    let response = await axios.request({
-      url: getUrl('role/administrators'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    expect({
-      id:response.data.id,
-      key:response.data.key,
-      description: response.data.description,
-      members: response.data.members,
-      ownerId: response.data.ownerId
-    }).to.be.eql({
+    const service:Role = app.service('role');
+    let createdRole:Partial<RoleEntity> = await service.get('administrators', params);
+    delete createdRole.creationDate;
+    expect(createdRole).to.be.eql({
       id:0,
       key:"administrators",
       description:"Administrators group",
       members:[0],
       ownerId:0
     })
-    response = await axios.request({
-      url: getUrl('role/0'),
-      method: "GET",
-      headers: {
-        cookie: finalCookie
-      }
-    })
-    expect({      id:response.data.id,
-      key:response.data.key,
-      description: response.data.description,
-      members: response.data.members,
-      ownerId: response.data.ownerId}).to.be.eql({
+    createdRole =  await service.get(0, params);
+    delete createdRole.creationDate;
+    expect(createdRole).to.be.eql({
       id:0,
       key:"administrators",
       description:"Administrators group",

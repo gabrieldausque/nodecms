@@ -78,6 +78,7 @@ create apache conf file
                             RewriteRule (.+)/api/(.+) $1/$2
                             ProxyPass "http://127.0.0.1:3030"
                             ProxyPassReverse "http://127.0.0.1:3030"
+                            ProxyPassReverseCookiePath "/" "/api"
                     </Location>
     
                     <Location ~ "/socket.io/*>

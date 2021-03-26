@@ -33,7 +33,7 @@ export class User extends BaseService<UserDTO, UserUseCases>  {
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
       const executingUser:UserEntity = params?.user as UserEntity;
-      return await this.useCase.find(params.filter, executingUser);
+      return await this.useCase.find(params.filter,undefined, executingUser);
     }
     return [];
   }

@@ -1,7 +1,7 @@
 <script>
-    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
+    import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
     import {writable} from "svelte/store";
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../../api/NodeCMSClient";
     import {beforeUpdate, onMount} from "svelte";
     import LoadingAttachment from "./LoadingAttachment.svelte";
 

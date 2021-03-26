@@ -3,28 +3,23 @@
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
-	import ContentChannelsContainer from './components/contentComponents/ContentChannelsContainer.svelte';
+	import ContentChannelsContainer from './components/contentComponents/Channel/ContentChannelsContainer.svelte';
+	import ContentProjectsContainer from './components/contentComponents/Projects/ContentProjectsContainer.svelte';
+	import ContentTitle from './components/contentComponents/ContentTitle.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
-	import {UserStore} from "./stores/UserStore";
 	import {getBackendClient} from "./api/NodeCMSClient";
 	import ErrorModal from "./components/ErrorModal.svelte";
+	import {DocumentStore} from "./stores/DocumentStore";
 
-	export let documentKey;
+	$DocumentStore;
 
 	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer);
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer);
 	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
-
-	const unsubscribe = UserStore.subscribe(async (value) => {
-		window.setTimeout(async() => {
-			if (value && value.isLogin)
-				documentKey = "welcomePrivate";
-			else
-				documentKey = "welcome"
-		})
-	})
+	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
+	globalContentContainerFactory.registerContentContainer('title',ContentTitle);
 
 	onMount(async() => {
 		const backendClient = await getBackendClient();
@@ -64,6 +59,6 @@
 	<TopNavBar></TopNavBar>
 </header>
 <main>
-	<ContentGenericContainer documentKey={documentKey}></ContentGenericContainer>
+	<ContentGenericContainer documentKey={$DocumentStore.key}></ContentGenericContainer>
 </main>
 <ErrorModal></ErrorModal>

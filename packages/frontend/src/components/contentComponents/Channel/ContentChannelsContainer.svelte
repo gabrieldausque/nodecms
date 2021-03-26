@@ -1,13 +1,13 @@
 <script>
     import {onMount} from "svelte";
-    import {getBackendClient} from "../../api/NodeCMSClient";
+    import {getBackendClient} from "../../../api/NodeCMSClient";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
-    import {channelsEventNames} from "../../api/ChannelsService";
-    import {globalFEService} from "../../FEServices";
-    import {AttachmentHelpers} from "../../api/AttachmentHelpers";
-    import {ChannelContent, ChannelStore} from "../../stores/ChannelStore";
-    import {ActivePostStore} from "../../stores/ActivePostStore";
-    import {Helpers} from "../../helpers/Helpers";
+    import {channelsEventNames} from "../../../api/ChannelsService";
+    import {globalFEService} from "../../../FEServices";
+    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
+    import {ChannelContent, ChannelStore} from "../../../stores/ChannelStore";
+    import {ActivePostStore} from "../../../stores/ActivePostStore";
+    import {Helpers} from "../../../helpers/Helpers";
 
     export let properties;
     let availableChannels = [];
@@ -141,7 +141,47 @@
             const newChannelContentStore = new ChannelContent();
             newChannelContentStore.key = channelKey;
             newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
+
+            await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, (async (mc) => {
+                if(mc.content){
+                    await Helpers.preloadContentPreview(mc.content)
+                }
+                if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
+                    const attachmentsMetadata = [];
+                    for(const a of mc.attachments){
+                        const m = await backendClient.mediaService.getMediaMetadata(a);
+                        attachmentsMetadata.push(m);
+                    }
+                    mc.attachments = attachmentsMetadata;
+                }
+                if(typeof mc.parentPost === 'number'){
+                    const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
+                    if(parentPost){
+                        parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
+                        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
+                            ActivePostStore.update(aps => {
+                                aps.parentPost = parentPost;
+                                return aps;
+                            })
+                        }
+                    }
+                }
+                mc.isNew = true;
+                ChannelStore.update(cs => {
+                    cs.posts.push(mc);
+                    return cs;
+                })
+            }))
+
+
             newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
+            newChannelContentStore.posts.sort((p1, p2) => {
+                if(p1.id > p2.id)
+                    return 1;
+                if(p1.id < p2.id)
+                    return -1;
+                return 0;
+            })
             for(const p of newChannelContentStore.posts) {
                 if(p.content){
                     await Helpers.preloadContentPreview(p.content)
@@ -154,16 +194,10 @@
                     }
                     p.attachments = attachmentsMetadata;
                 }
-                const childrenPosts = await backendClient.channelsService.getChildrenPosts(p.channelKey, p.id);
-                p.answerCount = childrenPosts.length;
+
             }
             ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);
-            window.setTimeout(() => {
-                const channelContent = document.querySelector('#current-posts');
-                if(channelContent)
-                    channelContent.scrollTop = channelContent.scrollHeight;
-            }, 500)
         }
     }
 

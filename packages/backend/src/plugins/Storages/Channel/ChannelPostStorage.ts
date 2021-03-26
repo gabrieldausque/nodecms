@@ -7,7 +7,7 @@ export interface ChannelPostStorage extends Storage<ChannelPost> {
 
   get(keyOrId:string | number, channelName?:string):Promise<ChannelPost>;
 
-  find(filter? : Partial<ChannelPost>,channelName?:string): Promise<ChannelPost[]>
+  find(filter? : Partial<ChannelPost>, lastIndex?:string | number, channelName?:string): Promise<ChannelPost[]>
 
   create(data: ChannelPost,channelName?:string): Promise<ChannelPost>;
 
