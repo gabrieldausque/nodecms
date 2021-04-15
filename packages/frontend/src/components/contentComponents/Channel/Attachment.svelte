@@ -68,14 +68,16 @@
                 const blob = new Blob([localBuffer], { type: media.mediaType});
                 div.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
             } else {
-                const fileIcon = document.createElement('i');
-                fileIcon.classList.add('fas');
-                fileIcon.classList.add('fa-2x');
-                fileIcon.classList.add(icons[media.mediaType]?icons[media.mediaType]:icons.default);
-                div.prepend(fileIcon);
+                if(!div.querySelector('i.fas')){
+                    const fileIcon = document.createElement('i');
+                    fileIcon.classList.add('fas');
+                    fileIcon.classList.add('fa-2x');
+                    fileIcon.classList.add(icons[media.mediaType]?icons[media.mediaType]:icons.default);
+                    div.prepend(fileIcon);
+                }
             }
         } else if(error) {
-
+            //Do nothing
         }
     })
 

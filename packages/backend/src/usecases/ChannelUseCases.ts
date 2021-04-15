@@ -259,6 +259,7 @@ export class ChannelUseCases extends UseCases<Channel> {
     }
     //TODO : add service channel-roles !!!
     data.isContributor = await this.isUserContributor(data as ChannelEntity, u, u);
+    data.isReader = await this.isUserReader(data as ChannelEntity, u, u);
     return isAuthorized;
   }
 

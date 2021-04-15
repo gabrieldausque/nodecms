@@ -268,6 +268,9 @@
         display:none;
     }
 
+    .hidden-channel {
+        margin-top: 25px;
+    }
 
  </style>
 
@@ -285,13 +288,13 @@
         <div id="test"></div>
     </div>
     <div class="channelContent" id="current-posts" on:scroll={onScrollForCurrentChannel}>
-        {#if $ChannelStore && !$ChannelStore.notAuthorized}
+        {#if $ChannelStore && $ChannelStore.channel && $ChannelStore.channel.isReader}
             {#each $ChannelStore.posts as post}
                 {#if typeof post.parentPost !== 'number'}
                     <Post post={post}></Post>
                 {/if}
             {/each}
-        {:else if $ChannelStore && $ChannelStore.notAuthorized}
+        {:else if $ChannelStore && $ChannelStore.channel && !$ChannelStore.channel.isReader}
             <div class="hidden-channel" >
                 <i class="fas fa-10x fa-eye-slash"></i>
                 <div class="hidden-channel-label">
@@ -300,7 +303,6 @@
                 </div>
             </div>
         {/if}
-
     </div>
     {#if $ChannelStore.channel && !$ChannelStore.notAuthorized && $ChannelStore.channel.isContributor}
         <PostEditor channelKey={$ChannelStore.channel.key} targetId="message"></PostEditor>

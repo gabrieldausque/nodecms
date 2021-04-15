@@ -142,60 +142,61 @@
             newChannelContentStore.key = channelKey;
             newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
 
-            await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, (async (mc) => {
-                if(mc.content){
-                    await Helpers.preloadContentPreview(mc.content)
-                }
-                if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
-                    const attachmentsMetadata = [];
-                    for(const a of mc.attachments){
-                        const m = await backendClient.mediaService.getMediaMetadata(a);
-                        attachmentsMetadata.push(m);
+            if(newChannelContentStore.channel.isReader){
+                await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, (async (mc) => {
+                    if(mc.content){
+                        await Helpers.preloadContentPreview(mc.content)
                     }
-                    mc.attachments = attachmentsMetadata;
-                }
-                if(typeof mc.parentPost === 'number'){
-                    const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
-                    if(parentPost){
-                        parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
-                        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
-                            ActivePostStore.update(aps => {
-                                aps.parentPost = parentPost;
-                                return aps;
-                            })
+                    if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
+                        const attachmentsMetadata = [];
+                        for(const a of mc.attachments){
+                            const m = await backendClient.mediaService.getMediaMetadata(a);
+                            attachmentsMetadata.push(m);
+                        }
+                        mc.attachments = attachmentsMetadata;
+                    }
+                    if(typeof mc.parentPost === 'number'){
+                        const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
+                        if(parentPost){
+                            parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
+                            if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
+                                ActivePostStore.update(aps => {
+                                    aps.parentPost = parentPost;
+                                    return aps;
+                                })
+                            }
                         }
                     }
-                }
-                mc.isNew = true;
-                ChannelStore.update(cs => {
-                    cs.posts.push(mc);
-                    return cs;
+                    mc.isNew = true;
+                    ChannelStore.update(cs => {
+                        cs.posts.push(mc);
+                        return cs;
+                    })
+                }))
+                newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
+                newChannelContentStore.posts.sort((p1, p2) => {
+                    if(p1.id > p2.id)
+                        return 1;
+                    if(p1.id < p2.id)
+                        return -1;
+                    return 0;
                 })
-            }))
-
-
-            newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
-            newChannelContentStore.posts.sort((p1, p2) => {
-                if(p1.id > p2.id)
-                    return 1;
-                if(p1.id < p2.id)
-                    return -1;
-                return 0;
-            })
-            for(const p of newChannelContentStore.posts) {
-                if(p.content){
-                    await Helpers.preloadContentPreview(p.content)
-                }
-                if(Array.isArray(p.attachments) && p.attachments.length > 0){
-                    const attachmentsMetadata = [];
-                    for(const a of p.attachments){
-                        const m = await backendClient.mediaService.getMediaMetadata(a);
-                        attachmentsMetadata.push(m);
+                for(const p of newChannelContentStore.posts) {
+                    if(p.content){
+                        await Helpers.preloadContentPreview(p.content)
                     }
-                    p.attachments = attachmentsMetadata;
-                }
+                    if(Array.isArray(p.attachments) && p.attachments.length > 0){
+                        const attachmentsMetadata = [];
+                        for(const a of p.attachments){
+                            const m = await backendClient.mediaService.getMediaMetadata(a);
+                            attachmentsMetadata.push(m);
+                        }
+                        p.attachments = attachmentsMetadata;
+                    }
 
+                }
             }
+
             ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);
         }
