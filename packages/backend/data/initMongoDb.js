@@ -335,21 +335,21 @@ function initData(){
   });
   teamADb.documents.insert({
     id: newId('documents'),
-    key: 'projects',
+    key: 'documents',
     content: {
       headers:[
         {
           order:0,
           type: 'title',
           properties: {
-            title:'Les projets de la Team-A'
+            title:'Documents'
           }
         }
       ],
       bodies:[
         {
           order:0,
-          type:'projects',
+          type:'documents',
           properties:{}
         }
       ]
