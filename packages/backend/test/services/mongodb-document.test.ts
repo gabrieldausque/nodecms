@@ -353,4 +353,36 @@ describe('Document service', () => {
     })
   })
 
+  it("should return 10 first documents on first call and then the rest of it", async() => {
+    const service:Document = app.service('document');
+    for(let i = 0; i < 13; i++){
+      await service.create({
+        key: `document-${i}`,
+        content: {
+          bodies:[
+            {
+              order:0,
+              type: 'text',
+              properties:{
+                content:`<p>document-${i}</p>`
+              }
+            }
+          ]
+        }
+      }, params)
+    }
+    const documents:any = await service.find(params);
+    expect(documents.length).to.eql(10);
+    const newParams = {
+      ...params,
+      ...{
+        query: {
+          lastIndex: documents[documents.length - 1].id
+        }
+      }
+    };
+    const nextDocuments:any = await service.find(newParams)
+    expect(nextDocuments.length).to.eql(6);
+  })
+
 });

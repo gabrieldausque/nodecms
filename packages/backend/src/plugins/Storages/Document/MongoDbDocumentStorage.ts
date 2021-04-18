@@ -1,4 +1,4 @@
-import {MongoDbStorage} from "../MongoDbStorage";
+import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
 import {Document} from "../../../entities/Document";
 import {DocumentStorage} from "./DocumentStorage";
 import {isNumber} from "../../../helpers";
@@ -62,9 +62,9 @@ export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements 
     return Array.isArray(documents) && documents.length > 0;
   }
 
-  async find(filter: Partial<Document> | undefined): Promise<Document[]> {
+  async find(filter: Partial<Document> | undefined, lastIndex?:number): Promise<Document[]> {
     if(filter){
-      return await this.internalFind(filter);
+      return await this.internalFind(filter, lastIndex, this.collectionName);
     }
     return await this.internalFind({});
   }
@@ -89,6 +89,12 @@ export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements 
   async update(data: Partial<Document>): Promise<Document> {
     await this.internalUpdate(data);
     return await this.get(data.id as number);
+  }
+
+  validateConfiguration(configuration: MongoDbStorageConfiguration) {
+    configuration.pageSize = (typeof configuration.pageSize === 'number')?
+      configuration.pageSize:
+      10;
   }
 
 }

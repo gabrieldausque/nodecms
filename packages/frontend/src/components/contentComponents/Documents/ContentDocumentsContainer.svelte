@@ -3,9 +3,11 @@
 </script>
 
 <style>
+    .documents-list {
 
+    }
 </style>
 
-<div>
+<ul class="documents-list">
 
-</div>
+</ul>
