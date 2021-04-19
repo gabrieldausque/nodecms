@@ -1,9 +1,22 @@
 <script>
 
     import {DocumentsStore} from "../../../stores/DocumentsStore";
+    import {Helpers} from "../../../helpers/Helpers";
+    import {EditableDocumentsStore} from "../../../stores/EditableDocumentStore";
 
     $DocumentsStore;
 
+    async function displayDocument(event){
+        await Helpers.displayDocument(event.currentTarget.getAttribute("data-document-key"))
+    }
+
+    async function editDocument(event) {
+        EditableDocumentsStore.update(eds => {
+            eds.key = event.currentTarget.getAttribute("data-document-key");
+            return eds;
+        })
+        await Helpers.displayDocument("documentEditor");
+    }
 
 </script>
 
@@ -63,15 +76,15 @@
                 <tr>
                     <th scope="row">{document.id}</th>
                     <th scope="row">{document.key}</th>
-                    <th>{document.ownerId}</th>
+                    <th>{document.author.login}</th>
                     <th>{new Date(document.creationDate).toLocaleString()}</th>
                     <th>{new Date(document.updateDate).toLocaleString()}</th>
                     <th>
                     {#if document.isReader}
-                        <button type="button" class="btn btn-secondary" title="Voir le document"><i class="fas fa-book-reader"></i></button>
+                        <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Voir le document" on:click={displayDocument}><i class="fas fa-book-reader"></i></button>
                     {/if}
                     {#if document.isEditor}
-                        <button type="button" class="btn btn-secondary" title="Editer le document"><i class="fas fa-edit"></i></button>
+                        <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Editer le document" on:click={editDocument}><i class="fas fa-edit"></i></button>
                     {/if}
                 </tr>
             {/each}

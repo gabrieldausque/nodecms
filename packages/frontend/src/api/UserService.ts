@@ -3,6 +3,7 @@ import type {AxiosInstance} from "axios";
 import axios from "axios";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import {v4 as uuid} from 'uuid';
+import {globalFEService} from "../FEServices";
 
 export class UserService extends BaseServiceClient {
 
@@ -63,4 +64,18 @@ export class UserService extends BaseServiceClient {
         }
     }
 
+    async getUser(ownerId: number) {
+        try{
+            const user = await axios.request({
+                method:'get',
+                baseURL:this.url,
+                url:`user/${ownerId}`
+            });
+            return user.data;
+        }catch(error) {
+            globalFEService.getService('displayError').displayError('Erreur lors de la recherche d\'utilisateurs',
+                error.response.data.message);
+            throw(error);
+        }
+    }
 }

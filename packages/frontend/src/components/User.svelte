@@ -94,8 +94,11 @@
             if(documentKey === 'documents'){
                 const services = await getBackendClient();
                 $DocumentsStore.documents = await services.documentService.findDocument();
-                console.log($DocumentsStore.documents);
+                for(const doc of $DocumentsStore.documents){
+                    doc.author = await services.userService.getUser(doc.ownerId);
+                }
             };
+            console.log($DocumentsStore.documents);
             DocumentStore.update((store) => {
                 store.key = documentKey;
                 return store;
@@ -128,7 +131,7 @@
         </button>
         <div class="dropdown-menu dropdown-menu-right ">
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
-                <i class="fas fa-file-text"></i><span>Documents</span>
+                <i class="fas fa-file-alt"></i><span>Documents</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
                 <i class="fas fa-comments"></i><span>Channels</span>

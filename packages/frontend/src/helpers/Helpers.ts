@@ -1,6 +1,8 @@
 import {getBackendClient} from "../api/NodeCMSClient";
 import {globalFEService} from "../FEServices";
 import {AttachmentHelpers} from "../api/AttachmentHelpers";
+import {DocumentsStore} from "../stores/DocumentsStore";
+import {DocumentStore} from "../stores/DocumentStore";
 
 export class Helpers {
     static styleOpeningLabel = '<style>';
@@ -30,4 +32,25 @@ export class Helpers {
             }
         }
     }
+
+    static async displayDocument(documentKey:string) {
+        if(documentKey){
+            if(documentKey === 'documents'){
+                const services = await getBackendClient();
+                const newDocuments = await services.documentService.findDocument();
+                for(const doc of newDocuments){
+                    doc.author = await services.userService.getUser(doc.ownerId);
+                }
+                DocumentsStore.update(s => {
+                    s.documents = newDocuments
+                    return s;
+                })
+            };
+            DocumentStore.update((store) => {
+                store.key = documentKey;
+                return store;
+            })
+        }
+    }
+    
 }
