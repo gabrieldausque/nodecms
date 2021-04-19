@@ -114,7 +114,7 @@ describe('Channel service With Mongodb', () => {
 
     })
     let read = await service.get(created.id as number, params);
-    expect(read).to.be.eql({ ...created, ...{"isContributor": true}});
+    expect(read).to.be.eql({ ...created, ...{isContributor: true, isReader:true}});
   })
 
   it('should remove a public channel just created', async() => {
@@ -153,7 +153,8 @@ describe('Channel service With Mongodb', () => {
       label: "Actualités",
       readers: [],
       visibility: "public",
-      isContributor: true
+      isContributor: true,
+      isReader:true
     },{
         readers:[readersRole[0].id],
         contributors:[contributorsRole[0].id],
@@ -163,7 +164,8 @@ describe('Channel service With Mongodb', () => {
         key: "MyPublicChannel",
         label: "A public channel",
         visibility: "public",
-        isContributor: true
+        isContributor: true,
+        isReader: true
       }]);
     if(typeof created.id === 'number'){
       await service.remove(created.id, params);
@@ -175,7 +177,9 @@ describe('Channel service With Mongodb', () => {
         id: 0,
         key: "news",
         label: "Actualités",
-        visibility: "public",isContributor: true
+        visibility: "public",
+        isContributor: true,
+        isReader:true
       }]);
     } else {
       assert.fail('No id for created channel')
@@ -245,7 +249,8 @@ describe('Channel service With Mongodb', () => {
           editors: [5,1],
           contributors:[4,1],
           administrators:[6,0,1],
-          isContributor: true
+          isContributor: true,
+          isReader:true
         }
       );
       await service.patch(created.id, {
@@ -266,7 +271,8 @@ describe('Channel service With Mongodb', () => {
           editors: [5,1,2],
           contributors:[4,1,2],
           administrators:[6,0,1,2],
-          isContributor: true
+          isContributor: true,
+          isReader: true
         }
       )
     }

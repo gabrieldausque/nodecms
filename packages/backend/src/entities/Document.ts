@@ -15,5 +15,7 @@ export interface Document extends Entity {
   editorRoles:number[]
   editors:number[]
   readerRoles:number[],
-  readers:number[]
+  readers:number[],
+  creationDate:Date,
+  updateDate:Date
 }

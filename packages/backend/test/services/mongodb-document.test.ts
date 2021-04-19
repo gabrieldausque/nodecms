@@ -57,6 +57,7 @@ describe('Document service', () => {
 
   beforeEach(async () => {
     await initMongoDbTestDatabase();
+    params.query = {}
   })
 
   after(async()=> {
@@ -79,7 +80,12 @@ describe('Document service', () => {
     params.query = {
       key: 'NewDocument'
     };
-    const gotten:any = await service.find(params);
+    let gotten:Partial<DocumentEntity>[] = await service.find(params) as Partial<DocumentEntity>[];
+    if(Array.isArray(gotten) && gotten[0])
+    {
+      delete gotten[0].isReader;
+      delete gotten[0].isEditor;
+    }
     expect(created).to.be.eql(gotten[0])
   })
 
@@ -94,12 +100,17 @@ describe('Document service', () => {
     params.query = {
       key: 'NewDocument'
     };
-    let gotten:any = await service.find(params);
+    let gotten:Partial<DocumentEntity>[] = await service.find(params) as Partial<DocumentEntity>[];
+    if(Array.isArray(gotten) && gotten[0])
+    {
+      delete gotten[0].isReader;
+      delete gotten[0].isEditor;
+    }
     expect(created).to.be.eql(gotten[0])
     if(typeof created.id === 'number'){
       const deleted = await service.remove(created.id, params)
       expect(created).to.be.eql(deleted)
-      gotten = await service.find(params);
+      gotten = await service.find(params) as Partial<DocumentEntity>[];
       expect(gotten.length).to.be.eql(0);
     }else {
       assert.fail('No id in created');
@@ -110,6 +121,8 @@ describe('Document service', () => {
   it('should get public document without authentication', async() => {
     const service:Document = app.service('document');
     const publicDoc = await service.get(0);
+    delete publicDoc.creationDate;
+    delete publicDoc.updateDate;
     expect(publicDoc).to.eql({
       id: 0,
       ownerId:0,
@@ -134,6 +147,8 @@ describe('Document service', () => {
     const service:Document = app.service('document');
     const standardUserParam = await getAuthenticationParams('standarduser', 'standard', port, clientUniqueId);
     const protectedDoc = await service.get(1, standardUserParam);
+    delete protectedDoc.creationDate;
+    delete protectedDoc.updateDate;
     return expect(protectedDoc).to.be.eql({
       id:1,
       ownerId:0,
@@ -165,6 +180,8 @@ describe('Document service', () => {
     const service:Document = app.service('document');
     const otherUserParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
     const protectedDoc = await service.get(2, otherUserParams);
+    delete protectedDoc.creationDate;
+    delete protectedDoc.updateDate;
     return expect(protectedDoc).to.be.eql({
       id:2,
       ownerId:0,
@@ -182,6 +199,8 @@ describe('Document service', () => {
   it('should get private document with admin authentication', async() => {
     const service:Document = app.service('document');
     const protectedDoc = await service.get(2, params);
+    delete protectedDoc.updateDate;
+    delete protectedDoc.creationDate;
     return expect(protectedDoc).to.be.eql({
       id:2,
       ownerId:0,
@@ -204,6 +223,10 @@ describe('Document service', () => {
         visibility:'public'
       }
     });
+    for(const doc of protectedDocs){
+      delete doc.updateDate;
+      delete doc.creationDate;
+    }
     return Promise.all([
       expect(protectedDocs.length).to.be.eql(1),
       expect(protectedDocs[0]).to.be.eql({
@@ -216,7 +239,9 @@ describe('Document service', () => {
         editorRoles: [],
         visibility: 'public',
         content: { prop: 'MyContentProp'},
-        key: 'welcome'
+        key: 'welcome',
+        isReader: true,
+        isEditor: false
       })
     ])
   })
@@ -228,20 +253,13 @@ describe('Document service', () => {
       ownerId:0
     };
     const protectedDocs:any = await service.find(standardUserParam);
+    for(const doc of protectedDocs){
+      delete doc.updateDate;
+      delete doc.creationDate;
+    }
     return Promise.all([
       expect(protectedDocs.length).to.be.eql(2),
       expect(protectedDocs).to.be.eql([{
-        id:0,
-        ownerId:0,
-        readers: [],
-        documentType: 'default',
-        readerRoles: [],
-        editors: [],
-        editorRoles: [],
-        visibility: 'public',
-        content: { prop: 'MyContentProp'},
-        key: 'welcome'
-      },{
         id:1,
         ownerId:0,
         readers: [],
@@ -251,7 +269,22 @@ describe('Document service', () => {
         editorRoles: [1],
         visibility: 'protected',
         content: { prop: 'MyContentPropProtected'},
-        key: 'welcomeProtected'
+        key: 'welcomeProtected',
+        isReader:true,
+        isEditor: false
+      }, {
+        id:0,
+        ownerId:0,
+        readers: [],
+        documentType: 'default',
+        readerRoles: [],
+        editors: [],
+        editorRoles: [],
+        visibility: 'public',
+        content: { prop: 'MyContentProp'},
+        key: 'welcome',
+        isReader: true,
+        isEditor:false
       }])
     ])
   })
@@ -263,19 +296,25 @@ describe('Document service', () => {
       ownerId:0
     };
     const protectedDocs:any = await service.find(specialUserParam);
+    for(const doc of protectedDocs){
+      delete doc.updateDate;
+      delete doc.creationDate;
+    }
     return Promise.all([
       expect(protectedDocs.length).to.be.eql(3),
       expect(protectedDocs).to.be.eql([{
-        id:0,
+        id:2,
         ownerId:0,
         readers: [],
         documentType: 'default',
-        readerRoles: [],
+        readerRoles: [1],
         editors: [],
-        editorRoles: [],
-        visibility: 'public',
-        content: { prop: 'MyContentProp'},
-        key: 'welcome'
+        editorRoles: [0],
+        visibility: 'private',
+        content: { prop: 'MyContentPropPrivate'},
+        key: 'welcomePrivate',
+        isReader: true,
+        isEditor: false
       },{
         id:1,
         ownerId:0,
@@ -286,18 +325,22 @@ describe('Document service', () => {
         editorRoles: [1],
         visibility: 'protected',
         content: { prop: 'MyContentPropProtected'},
-        key: 'welcomeProtected'
+        key: 'welcomeProtected',
+        isReader: true,
+        isEditor:true
       },{
-        id:2,
+        id:0,
         ownerId:0,
         readers: [],
         documentType: 'default',
-        readerRoles: [1],
+        readerRoles: [],
         editors: [],
-        editorRoles: [0],
-        visibility: 'private',
-        content: { prop: 'MyContentPropPrivate'},
-        key: 'welcomePrivate'
+        editorRoles: [],
+        visibility: 'public',
+        content: { prop: 'MyContentProp'},
+        key: 'welcome',
+        isReader:true,
+        isEditor:false
       }])
     ])
   })
@@ -331,13 +374,16 @@ describe('Document service', () => {
   it('should create a document with extended authentication (non admin)', async() => {
     const service:Document = app.service('document');
     const elevatedParams = await getAuthenticationParams('otheruser','anotherpassword',port, clientUniqueId);
-    return expect(await service.create({
+    const createdDoc = await service.create({
       content: {
         aProp: "A property"
       },
       key: "a doc",
       visibility: "private"
-    }, elevatedParams)).to.be.eql({
+    }, elevatedParams);
+    delete createdDoc.creationDate;
+    delete createdDoc.updateDate;
+    return expect(createdDoc).to.be.eql({
       content: {
         aProp: "A property"
       },

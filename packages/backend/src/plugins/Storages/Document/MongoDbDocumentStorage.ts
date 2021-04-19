@@ -64,7 +64,10 @@ export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements 
 
   async find(filter: Partial<Document> | undefined, lastIndex?:number): Promise<Document[]> {
     if(filter){
-      return await this.internalFind(filter, lastIndex, this.collectionName);
+      return await this.internalFind(filter,
+        lastIndex,
+        this.collectionName,
+        true);
     }
     return await this.internalFind({});
   }

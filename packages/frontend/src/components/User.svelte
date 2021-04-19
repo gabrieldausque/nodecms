@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import {UserStore} from "../stores/UserStore";
     import {DocumentStore} from "../stores/DocumentStore";
+    import {DocumentsStore} from "../stores/DocumentsStore";
 
     export let isLogin = false;
     let backendService = null;
@@ -90,6 +91,11 @@
         const documentKey = event.currentTarget.getAttribute('data-document-key');
         console.log(documentKey);
         if(documentKey){
+            if(documentKey === 'documents'){
+                const services = await getBackendClient();
+                $DocumentsStore.documents = await services.documentService.findDocument();
+                console.log($DocumentsStore.documents);
+            };
             DocumentStore.update((store) => {
                 store.key = documentKey;
                 return store;

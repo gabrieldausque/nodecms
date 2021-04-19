@@ -44,8 +44,8 @@ function initData(){
   //TripleA
   teamADb.users.insert({id:  newId('users'), login:"Amanda",password:"f0fe507b8952faed1d75ba5a093d609e:6d409f10366620:e2793c9e785d065f28d70d2de3ab2d71",isActive:true});
 
-  teamADb.roles.insert({id:  newId('roles'), key:"administrators", description:"Administrators group", members:[0], ownerId:0, creationDate: new Date()});
-  teamADb.roles.insert({id:  newId('roles'), key:"specialUsers", description:"special Users group", members:[1,2], ownerId:0, creationDate: new Date()});
+  teamADb.roles.insert({id:  newId('roles'), key:"administrators", description:"Administrators group", members:[0,1], ownerId:0, creationDate: new Date()});
+  teamADb.roles.insert({id:  newId('roles'), key:"specialUsers", description:"special Users group", members:[2], ownerId:0, creationDate: new Date()});
   teamADb.roles.insert({id:  newId('roles'), key:"users", description:"Users group", members:[3,4,5], ownerId:0, creationDate: new Date()});
 
 
@@ -297,7 +297,9 @@ function initData(){
       footers:[]
     },
     visibility: 'public',
-    ownerId: 0
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
   });
   teamADb.documents.insert({
     id: newId('documents'),
@@ -314,7 +316,9 @@ function initData(){
       ]
     },
     visibility: 'protected',
-    ownerId: 0
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
   });
   teamADb.documents.insert({
     id: newId('documents'),
@@ -331,21 +335,15 @@ function initData(){
       ]
     },
     visibility: 'protected',
-    ownerId: 0
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
   });
   teamADb.documents.insert({
     id: newId('documents'),
     key: 'documents',
     content: {
-      headers:[
-        {
-          order:0,
-          type: 'title',
-          properties: {
-            title:'Documents'
-          }
-        }
-      ],
+      headers:[ ],
       bodies:[
         {
           order:0,
@@ -355,7 +353,9 @@ function initData(){
       ]
     },
     visibility: 'protected',
-    ownerId: 0
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
   })
 
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});
