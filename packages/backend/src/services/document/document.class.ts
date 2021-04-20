@@ -7,24 +7,33 @@ import {DocumentUseCases} from "../../usecases/DocumentUseCases";
 import {Document as DocumentEntity, DocumentVisibility} from "../../entities/Document";
 import {NotAcceptable, NotAuthenticated, NotFound} from "@feathersjs/errors";
 import {isNumber} from "../../helpers";
+import { TopicService, TopicServiceConfiguration } from '@hermes/topicservice';
+import { globalInstancesFactory } from '@hermes/composition';
 
 type DocumentDTO = Partial<DocumentEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
-
+  topicService:{
+    contractName:string
+    configuration?:any
+  }
 }
 
 export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
 
   options: ServiceOptions;
+  private topicService: TopicService;
 
   constructor (options: ServiceOptions = {
     storage:{
       contractName:'Default'
-    }
+    },
+    topicService: { contractName: 'Default'}
   }, app: Application) {
     super(app,'document', 'Document', options);
     this.options = options;
+    this.topicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService',
+      options.topicService.contractName, TopicServiceConfiguration.load(options.topicService.configuration));
   }
 
   async find (params?: Params): Promise<DocumentDTO[] | Paginated<DocumentDTO>> {
@@ -47,8 +56,14 @@ export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
   }
 
   async create (data: DocumentDTO, params?: Params): Promise<DocumentDTO> {
-    if(params && params.user && params.user as User)
-      return await this.useCase.create(data, params.user as User)
+    if(params && params.user && params.user as User){
+      const created = await this.useCase.create(data, params.user as User);
+      await this.topicService.publish('documents.actions', {
+        action:'creation',
+        document:created.key
+      });
+      return created;
+    }
     throw new NotAuthenticated('User is not authenticated.');
   }
 

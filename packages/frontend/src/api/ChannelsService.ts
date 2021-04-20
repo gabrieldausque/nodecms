@@ -41,7 +41,8 @@ export class ChannelsService extends BaseServiceClient {
             this.topicServiceClient.readyHandler = () => {
                 this.topicServiceClient.subscribe(channelsEventNames.channelsActions, async (t,m) => {
                     const channelAction = m.content
-                    document.dispatchEvent(new Event(channelsEventNames.channelsActions));
+                    document.dispatchEvent(
+                        new CustomEvent(channelsEventNames.channelsActions, {detail: channelAction}));
                 })
             };
             (window as any).cmsClient = this;

@@ -89,16 +89,15 @@
 
     async function displayDocument(event) {
         const documentKey = event.currentTarget.getAttribute('data-document-key');
-        console.log(documentKey);
         if(documentKey){
             if(documentKey === 'documents'){
                 const services = await getBackendClient();
                 $DocumentsStore.documents = await services.documentService.findDocument();
-                for(const doc of $DocumentsStore.documents){
-                    doc.author = await services.userService.getUser(doc.ownerId);
-                }
+                const indexes = $DocumentsStore.documents.map(d => d.id);
+                $DocumentsStore.hasNext = (await services.documentService.findDocument({
+                    lastIndex: Math.min(...indexes)
+                })).length > 0
             };
-            console.log($DocumentsStore.documents);
             DocumentStore.update((store) => {
                 store.key = documentKey;
                 return store;

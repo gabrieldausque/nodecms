@@ -7,8 +7,11 @@ import {globalFEService} from "../FEServices";
 
 export class UserService extends BaseServiceClient {
 
+    public isAuthenticated:boolean;
+
     constructor(axiosInstance: AxiosInstance, url:string) {
         super(axiosInstance, url);
+        this.isAuthenticated = false;
     }
 
     getClientUniqueId() {
@@ -30,6 +33,7 @@ export class UserService extends BaseServiceClient {
         })
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
         document.dispatchEvent(authenticateEvent);
+        this.isAuthenticated = value.data;
         return value.data;
     }
 
@@ -44,6 +48,7 @@ export class UserService extends BaseServiceClient {
                 clientUniqueId: this.getClientUniqueId()
             }
         })
+        this.isAuthenticated = true;
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
         document.dispatchEvent(authenticateEvent);
     }
@@ -62,6 +67,7 @@ export class UserService extends BaseServiceClient {
         }catch(error){
             console.error(error);
         }
+        this.isAuthenticated = false;
     }
 
     async getUser(ownerId: number) {

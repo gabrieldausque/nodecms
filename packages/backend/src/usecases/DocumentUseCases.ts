@@ -50,6 +50,8 @@ export class DocumentUseCases extends UseCases<Document> {
   async get(id: string | number, executingUser?: User): Promise<Document> {
     const entity = await this.storage.get(id);
     DocumentRules.validateForRead(entity);
+    entity.isReader = executingUser?await this.isUserReader(entity, executingUser):entity.visibility === DocumentVisibility.public;
+    entity.isEditor = executingUser?await this.isUserEditor(entity, executingUser):false;
     if(await this.isDataAuthorized(entity,'r', executingUser))
       return entity;
     else

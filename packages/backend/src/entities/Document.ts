@@ -6,9 +6,25 @@ export const DocumentVisibility = {
   private:"private"
 }
 
+export interface DocumentComponent {
+  order:number,
+  type: string,
+  properties: {
+    [prop:string] : any
+  }
+}
+
 export interface Document extends Entity {
   key:string,
-  content: { [prop:string] : any },
+  content: {
+    globalStyle?: string,
+    style?: string,
+    classes?: string
+    headers?:DocumentComponent[]
+    bodies?:DocumentComponent[]
+    footers?:[]
+    [prop:string] : any
+  },
   visibility:string,
   ownerId:number,
   documentType?:string,
