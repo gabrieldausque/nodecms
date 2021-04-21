@@ -357,6 +357,24 @@ function initData(){
     creationDate: new Date(),
     updateDate: new Date()
   })
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'documentEditor',
+    content: {
+      headers:[ ],
+      bodies:[
+        {
+          order:0,
+          type:'documentEditor',
+          properties:{}
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  })
 
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',

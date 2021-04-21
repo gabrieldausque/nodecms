@@ -6,6 +6,7 @@
 	import ContentChannelsContainer from './components/contentComponents/Channel/ContentChannelsContainer.svelte';
 	import ContentProjectsContainer from './components/contentComponents/Projects/ContentProjectsContainer.svelte';
 	import ContentDocumentsContainer from './components/contentComponents/Documents/ContentDocumentsContainer.svelte';
+	import ContentDocumentEditor from './components/contentComponents/Documents/ContentDocumentEditor.svelte';
 	import ContentTitle from './components/contentComponents/ContentTitle.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
@@ -21,7 +22,8 @@
 	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
 	globalContentContainerFactory.registerContentContainer('title',ContentTitle);
-	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer)
+	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer);
+	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor);
 
 	onMount(async() => {
 		const backendClient = await getBackendClient();
