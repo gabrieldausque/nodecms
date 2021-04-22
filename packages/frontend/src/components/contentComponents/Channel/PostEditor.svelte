@@ -94,9 +94,6 @@
     
     afterUpdate(() => {
         window.setTimeout(() => {
-            //TODO get target id from property
-            console.log(`targetId : ${targetId}`);
-            console.log(`channelKey : ${channelKey}`);
             if(targetId){
                 const messageContent = document.getElementById(targetId);
                 if(messageContent.childElementCount === 0) {
@@ -146,7 +143,6 @@
                                         input.type = 'file';
                                         input.accept = authorizedMimeTypes.join(',');
                                         input.onchange = (e) => {
-                                            console.log(input.files);
                                             if (input.files) {
                                                 for (const file of input.files) {
                                                     customPaste(file, file.name);

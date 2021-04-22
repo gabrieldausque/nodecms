@@ -2,7 +2,7 @@
 
     import {DocumentsStore} from "../../../stores/DocumentsStore";
     import {Helpers} from "../../../helpers/Helpers";
-    import {EditableDocumentsStore} from "../../../stores/EditableDocumentStore";
+    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {getBackendClient} from "../../../api/NodeCMSClient";
     import {onMount, afterUpdate, beforeUpdate} from 'svelte';
     import {documentsEventName} from "../../../api/DocumentService";
@@ -15,8 +15,12 @@
     }
 
     async function editDocument(event) {
-        EditableDocumentsStore.update(eds => {
-            eds.key = event.currentTarget.getAttribute("data-document-key");
+        const services = await getBackendClient();
+        const documentKey = event.currentTarget.getAttribute("data-document-key")
+        const documentContent = await services.documentService.getDocument(documentKey)
+        EditableDocumentStore.update(eds => {
+            eds.key = documentKey;
+            eds.document = documentContent;
             return eds;
         })
         await Helpers.displayDocument("documentEditor");

@@ -2,6 +2,7 @@
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
+	import ContentTextContainerEditor from './components/contentComponents/ContentTextContainerEditor.svelte';
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
 	import ContentChannelsContainer from './components/contentComponents/Channel/ContentChannelsContainer.svelte';
 	import ContentProjectsContainer from './components/contentComponents/Projects/ContentProjectsContainer.svelte';
@@ -16,12 +17,17 @@
 
 	$DocumentStore;
 
-	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer);
-	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer);
-	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer);
-	globalContentContainerFactory.registerContentContainer('channel', ContentChannelsContainer)
+	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer,
+			'Conteneur', 'fas fa-sitemap');
+	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
+			'Texte', 'fas fa-text', ContentTextContainerEditor);
+	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer,
+			'Image','fas fa-image');
+	globalContentContainerFactory.registerContentContainer('channels', ContentChannelsContainer,
+			'Canaux', 'fas fa-signal-stream')
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
-	globalContentContainerFactory.registerContentContainer('title',ContentTitle);
+	globalContentContainerFactory.registerContentContainer('title',ContentTitle,
+			'Titre', 'fas fa-heading');
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor);
 
