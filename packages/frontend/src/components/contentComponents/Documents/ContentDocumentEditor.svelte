@@ -3,26 +3,12 @@
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {globalContentContainerFactory} from "../../../ContentContainerFactory";
     import {beforeUpdate, afterUpdate, onDestroy} from 'svelte';
-    import { JSONEditor } from 'svelte-jsoneditor'
     import ContentDefaultEditor from '../ContentDefaultEditor.svelte';
     import {Helpers} from "../../../helpers/Helpers";
 
     $EditableDocumentStore;
 
-    beforeUpdate(() => {
-        console.log('before')
-    })
-
-    afterUpdate(() => {
-        console.log($EditableDocumentStore.document)
-    })
-
-    onDestroy(() => {
-        console.log('destroying');
-    })
-
     function handleDragStart(e) {
-        console.log(e)
         e.dataTransfer.dropEffect = 'copy';
         e.dataTransfer.setData('template', 'todefine');
     }
@@ -155,16 +141,7 @@
                                     <svelte:component this="{globalContentContainerFactory.registeredConstructors[headerComponent.type].editorConstructor}"
                                                       properties="{headerComponent.properties}"></svelte:component>
                                 {:else}
-                                    <JSONEditor json="{headerComponent}" onChange={
-                                    (event) => {
-                                        $EditableDocumentStore.document.content.headers.splice(
-                                            $EditableDocumentStore.document.content.headers.indexOf(headerComponent),
-                                            1,
-                                            event.json
-                                        )
-                                        console.log($EditableDocumentStore);
-                                    }
-                                }></JSONEditor>
+                                    <ContentDefaultEditor component={headerComponent}></ContentDefaultEditor>
                                 {/if}
                             {/each}
                         {/if }
@@ -207,16 +184,7 @@
                                     <svelte:component this="{globalContentContainerFactory.registeredConstructors[footerComponent.type].editorConstructor}"
                                                       properties="{footerComponent.properties}"></svelte:component>
                                 {:else}
-                                    <JSONEditor json="{footerComponent}" onChange={
-                                    (event) => {
-                                        $EditableDocumentStore.document.content.bodies.splice(
-                                            $EditableDocumentStore.document.content.bodies.indexOf(footerComponent),
-                                            1,
-                                            event.json
-                                        )
-                                        console.log($EditableDocumentStore);
-                                    }
-                                }></JSONEditor>
+                                    <ContentDefaultEditor component={footerComponent}></ContentDefaultEditor>
                                 {/if}
                             {/each}
                         {/if }

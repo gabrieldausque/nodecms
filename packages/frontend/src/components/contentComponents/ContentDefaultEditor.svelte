@@ -1,20 +1,27 @@
 <script>
 
-    import { JSONEditor } from 'svelte-jsoneditor';
     import {globalContentContainerFactory} from "../../ContentContainerFactory";
     import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import {v4 as uuid} from 'uuid';
     import {ComponentEditorStore} from '../../stores/ComponentEditorStore';
-    import {onDestroy} from 'svelte';
+    import hljs from 'highlight.js/lib/core';
+    import json from 'highlight.js/lib/languages/json';
+    import _ from 'underscore';
+    hljs.registerLanguage('json', json);
+
+
+
     export let component;
     $ComponentEditorStore;
     let id=uuid();
 
-    onDestroy(() => {
-        console.log('destroying default');
-    })
-
+    const highlight = _.debounce(hljs.highlightBlock, 500);
 </script>
+
+<svelte:head>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+</svelte:head>
 
 <style>
 
@@ -59,6 +66,15 @@
     .reduced {
         transform:scale(0.25) translateX(-100vw);
     }
+
+    .code {
+        white-space: pre;
+    }
+
+    :global(.hljs-string) {
+        white-space: pre-line;
+    }
+
 </style>
 
 <div on:click={() => {
@@ -72,12 +88,21 @@
     <div class="close" on:click={() => {
         $ComponentEditorStore = '';
     }}><i class="fal fa-window-close"></i></div>
+    <div contenteditable="true" class="code" on:input={(event) => {
+        console.log(event.target);
+        // TODO : change in highlight and update, using debounce to update the component itself
+        highlight(event.target);
+        console.log(event.target.textContent);
+    }}>
+        {JSON.stringify(component, null, 4)}
+    </div>
     <textarea on:change={(event) => {
         const reg = new RegExp(/\u00A0/g)
         const stringiFied = event.target.value;
         const newJson = JSON.parse(stringiFied.replace(reg,''))
         console.log(newJson)
         EditableDocumentStore.update(eds => {
+                //todo change target for header and footer (to be set by caller)
                 eds.document.content.bodies.splice(
                 $EditableDocumentStore.document.content.bodies.indexOf(component),
                 1,
