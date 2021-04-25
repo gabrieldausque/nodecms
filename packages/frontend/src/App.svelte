@@ -2,7 +2,7 @@
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
-	import ContentTextContainerEditor from './components/contentComponents/ContentTextContainerEditor.svelte';
+	import ContentTextContainerEditor from './components/contentComponents/Editors/ContentTextContainerEditor.svelte';
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
 	import ContentChannelsContainer from './components/contentComponents/Channel/ContentChannelsContainer.svelte';
 	import ContentProjectsContainer from './components/contentComponents/Projects/ContentProjectsContainer.svelte';

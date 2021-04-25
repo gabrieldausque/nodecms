@@ -3,10 +3,14 @@
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {globalContentContainerFactory} from "../../../ContentContainerFactory";
     import {beforeUpdate, afterUpdate, onDestroy} from 'svelte';
-    import ContentDefaultEditor from '../Editors/Default/ContentDefaultEditor.svelte';
+    import ContentDefaultEditor from '../Editors/ContentDefaultEditor.svelte';
     import {Helpers} from "../../../helpers/Helpers";
 
     $EditableDocumentStore;
+    let blockEditorComponent = {
+        component:undefined,
+        zone:undefined
+    };
 
     function handleDragStart(e) {
         e.dataTransfer.dropEffect = 'copy';
@@ -97,7 +101,47 @@
         margin-bottom: 100px;
     }
 
+    .editor-panel {
+        background: white;
+        position: absolute;
+        height: calc(100vh - 121px);
+        width: 50vw;
+        left: 50vw;
+        transition: left 200ms linear;
+        border-left: solid 1px lightgray;
+        top: 121px;
+        padding: 5px;
+    }
 
+    .editor-panel div {
+        text-align: left;
+    }
+
+    .editor-panel.hidden {
+        left: 100vw;
+    }
+
+    .editor-panel h4 {
+        height: 37px;
+        border-bottom: solid 1px lightgray;
+    }
+
+    :global(.editor-panel > .highlightEditor) {
+        width: 100%;
+        height: calc(100% - 45px) !important;
+    }
+
+    .close {
+        position:absolute;
+        top: 0;
+        right: 0;
+        margin-top: 2px;
+        margin-right: 2px;
+    }
+
+    .drop-zone.reduced {
+        transform: scale(0.4) translateX(-60vw);
+    }
 
 </style>
 
@@ -147,7 +191,7 @@
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps</h5>
-                    <div id="document-bodies" class="drop-zone">
+                    <div id="document-bodies" class="drop-zone {blockEditorComponent.zone === 'body'?'reduced':''}">
                         {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
                             {#each $EditableDocumentStore.document.content.bodies.sort((c1, c2) => {
                                 if(c1.order > c2.order)
@@ -156,11 +200,12 @@
                                     return -1;
                                 return 0;
                             }) as bodyComponent}
-                                {#if globalContentContainerFactory.registeredConstructors[bodyComponent.type].editorConstructor}
-                                    <svelte:component this="{globalContentContainerFactory.registeredConstructors[bodyComponent.type].editorConstructor}" properties="{bodyComponent.properties}"></svelte:component>
-                                {:else}
-                                    <ContentDefaultEditor component={bodyComponent}></ContentDefaultEditor>
-                                {/if}
+                                <div on:click={() => {
+                                    blockEditorComponent.component = bodyComponent;
+                                    blockEditorComponent.zone = 'body'
+                                }}>
+                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(bodyComponent.type)}" properties="{bodyComponent.properties}"></svelte:component>
+                                </div>
                             {/each}
                         {/if }
                     </div>
@@ -190,6 +235,21 @@
                 </div>
             </div>
 
+        {/if}
+    </div>
+    <div class="editor-panel {blockEditorComponent.component?'':'hidden'}">
+        <h4> Propriétés </h4>
+        <div class="close" on:click={() => {
+        blockEditorComponent.component = undefined;
+        blockEditorComponent.zone = undefined;
+    }}><i class="fal fa-window-close"></i></div>
+        {#if blockEditorComponent.component}
+            {#if globalContentContainerFactory.registeredConstructors[blockEditorComponent.component.type].editorConstructor}
+                <svelte:component this="{globalContentContainerFactory.registeredConstructors[blockEditorComponent.component.type].editorConstructor}"
+                                  properties="{blockEditorComponent.component.properties}"></svelte:component>
+            {:else}
+                <ContentDefaultEditor component={blockEditorComponent.component}></ContentDefaultEditor>
+            {/if}
         {/if}
     </div>
 </main>
