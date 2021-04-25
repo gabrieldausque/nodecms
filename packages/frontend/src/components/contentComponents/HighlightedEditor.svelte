@@ -22,8 +22,6 @@
 
     onMount(() => {
         document.querySelectorAll('.highlightEditor').forEach(htmlElement => {
-            console.log ('higlighting')
-            console.log(htmlElement)
             hljs.highlightBlock(htmlElement);
         })
     })
@@ -49,10 +47,7 @@
 </style>
 
 <div id={id} contenteditable="true" class="highlightEditor" on:input={(event) => {
-        console.log(event.target);
-        // TODO : change in highlight and update, using debounce to update the component itself
         highlight(event.target);
-        console.log(event.target.textContent);
     }}>
     {content}
 </div>

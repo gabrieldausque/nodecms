@@ -124,4 +124,23 @@ export class DocumentService extends BaseServiceClient {
                 error)
         }
     }
+
+    async updateDocument(documentUpdated:any){
+        try{
+            console.log(documentUpdated);
+            const result = (await axios.request({
+                method: 'put',
+                baseURL: this.url,
+                url:`document/${documentUpdated.id}`,
+                data:documentUpdated,
+                withCredentials:true,
+                headers:this.createHeaders()
+            }))
+            console.log(result);
+        } catch(error) {
+            const errorService = globalFEService.getService('displayError');
+            errorService.displayError('Erreur lors de la mise à jour du document',
+                error)
+        }
+    }
 }

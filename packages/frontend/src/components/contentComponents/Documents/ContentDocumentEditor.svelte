@@ -17,6 +17,11 @@
         e.dataTransfer.setData('template', 'todefine');
     }
 
+    async function saveDocument(e) {
+        const services = await getBackendClient();
+        await services.documentService.updateDocument($EditableDocumentStore.document);
+    }
+
 </script>
 
 <style>
@@ -71,14 +76,20 @@
     .documentEditorMenuBar {
         background: white;
         display: flex;
+        justify-content: flex-end;
+        align-items: center;
         padding: 2px;
         border-bottom: solid 1px lightgray;
         height:50px;
     }
 
-    #documentSettingsButton {
-        margin-left:auto;
-        margin-right:0;
+    .toolbarButton {
+        margin: 0 5px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .section {
@@ -163,7 +174,10 @@
                 {@html Helpers.styleOpeningLabel + $EditableDocumentStore.document.content.globalStyle + Helpers.styleClosingLabel}
             {/if}
             <div class="documentEditorMenuBar">
-                <button id="documentSettingsButton" type="button" title="Paramètres du document">
+                <button on:click={saveDocument} class="toolbarButton" type="button" title="Enregistrer">
+                    <i class="fas fa-save"></i>
+                </button>
+                <button type="button" class="toolbarButton" title="Paramètres du document">
                     <i class="fas fa-cogs"></i>
                 </button>
             </div>
@@ -193,14 +207,15 @@
                     <h5>Corps</h5>
                     <div id="document-bodies" class="drop-zone {blockEditorComponent.zone === 'body'?'reduced':''}">
                         {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
-                            {#each $EditableDocumentStore.document.content.bodies.sort((c1, c2) => {
+                            {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
                                 if(c1.order > c2.order)
                                     return 1;
                                 if(c1.order < c2.order)
                                     return -1;
                                 return 0;
                             }) as bodyComponent}
-                                <div on:click={() => {
+                                <div on:click={(event) => {
+                                    event.stopPropagation();
                                     blockEditorComponent.component = bodyComponent;
                                     blockEditorComponent.zone = 'body'
                                 }}>

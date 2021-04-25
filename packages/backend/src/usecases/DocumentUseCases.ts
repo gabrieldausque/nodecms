@@ -63,8 +63,8 @@ export class DocumentUseCases extends UseCases<Document> {
     if(!await this.isDataAuthorized(data, 'w', executingUser))
       throw new Error('Not Authorized');
     else {
-      data.updateDate = new Date();
-      return await this.storage.update(data);
+      entityToUpdate.updateDate = new Date();
+      return await this.storage.update(entityToUpdate);
     }
   }
 

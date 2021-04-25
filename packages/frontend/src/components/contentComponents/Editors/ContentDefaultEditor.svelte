@@ -12,6 +12,7 @@
 
     function handleChange(code) {
         const newJson = JSON.parse(code);
+        console.log(newJson)
         EditableDocumentStore.update(eds => {
             //todo change target for header and footer (to be set by caller)
             eds.document.content.bodies.splice(
@@ -19,6 +20,7 @@
                 1,
                 newJson
             );
+            console.log(eds);
             return eds;
         });
     }
@@ -30,6 +32,9 @@
     .highlightEditor {
         width: 100%;
         height: calc(100% - 45px) !important;
+        overflow-y: auto;
+        overflow-x: none;
+
     }
 
 
