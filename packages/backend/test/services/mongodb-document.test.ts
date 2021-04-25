@@ -133,7 +133,9 @@ describe('Document service', () => {
       editorRoles: [],
       visibility: 'public',
       content: { prop: 'MyContentProp'},
-      key: 'welcome'
+      key: 'welcome',
+      "isEditor": false,
+      "isReader": true
     })
   })
 
@@ -159,7 +161,9 @@ describe('Document service', () => {
       editorRoles: [1],
       visibility: 'protected',
       content: { prop: 'MyContentPropProtected'},
-      key: 'welcomeProtected'
+      key: 'welcomeProtected',
+      isEditor: false,
+      isReader: true
     })
   })
 
@@ -192,7 +196,9 @@ describe('Document service', () => {
       editorRoles: [0],
       visibility: 'private',
       content: { prop: 'MyContentPropPrivate'},
-      key: 'welcomePrivate'
+      key: 'welcomePrivate',
+      "isEditor": false,
+      "isReader": true
     });
   })
 
@@ -211,7 +217,9 @@ describe('Document service', () => {
       editorRoles: [0],
       visibility: 'private',
       content: { prop: 'MyContentPropPrivate'},
-      key: 'welcomePrivate'
+      key: 'welcomePrivate',
+      "isEditor": true,
+      "isReader": true
     });
   })
 
