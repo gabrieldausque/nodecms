@@ -5,9 +5,10 @@
     import {onMount} from 'svelte';
     import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import {ComponentEditorStore} from "../../stores/ComponentEditorStore";
+    import HighlightedEditor from "./HighlightedEditor.svelte";
 
     export let properties;
-    let id=uuid();
+    let id = uuid();
     $ComponentEditorStore;
 
     onMount(() => {
@@ -17,11 +18,11 @@
             console.log(contentText);
             const editor = new Editor({
                 target: contentText,
-                props:{
+                props: {
                     actions: [
                         'b', 'i', 'u', 'strike', 'ul', 'ol', 'viewHtml'
                     ],
-                    html:properties.content
+                    html: properties.content
                 }
             });
             editor.$on('change', (e) => {
@@ -38,8 +39,8 @@
         background: white;
         position: absolute;
         height: calc(100vh - 121px);
-        width: 25vw;
-        left: 75vw;
+        width: 50vw;
+        left: 50vw;
         transition: left 200ms linear;
         border-left: solid 1px lightgray;
         top: 121px;
@@ -68,14 +69,14 @@
     }
 
     .reduced {
-        transform:scale(0.50) translateX(-25vw);
+        transform:scale(0.25) translateX(-100vw) translateY(-100vh);
     }
 
 </style>
 
 <div on:click={() => {
     $ComponentEditorStore = id;
-}} class="{$ComponentEditorStore === id ? 'reduced':''}">
+}} class="{$ComponentEditorStore ? 'reduced':''}">
     <ContentTextContainer properties="{properties}"></ContentTextContainer>
 </div>
 
@@ -90,10 +91,13 @@
     </div>
     <div class="">
         <label for="style">Style :</label>
-        <textarea id="style"
-                  placeholder="Taper le style css"
-                  bind:value={properties.style}
-        ></textarea>
+        <HighlightedEditor
+                id="style"
+                content={properties.style}
+                onChange={(newstyle) => {
+                    properties.style = newstyle
+                }}
+        ></HighlightedEditor>
     </div>
     <div class="">
         <label for="content-{id}">Texte :</label>

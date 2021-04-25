@@ -3,7 +3,7 @@
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {globalContentContainerFactory} from "../../../ContentContainerFactory";
     import {beforeUpdate, afterUpdate, onDestroy} from 'svelte';
-    import ContentDefaultEditor from '../ContentDefaultEditor.svelte';
+    import ContentDefaultEditor from '../Editors/Default/ContentDefaultEditor.svelte';
     import {Helpers} from "../../../helpers/Helpers";
 
     $EditableDocumentStore;
@@ -42,7 +42,7 @@
 
     #toolbox {
         background: white;
-        width: 25vw;
+        width: 120px;
         display: flex;
         flex-wrap: wrap;
         align-content: flex-start;
@@ -51,7 +51,7 @@
     }
 
     #document {
-        width: 75vw;
+        width: calc(100vw - 120px);
         height: 100%;
         max-height: 100%;
         min-height: 100%;
@@ -129,8 +129,6 @@
                     <div id="document-headers" class="drop-zone">
                         {#if Array.isArray($EditableDocumentStore.document.content.headers)}
                             {#each $EditableDocumentStore.document.content.headers.sort((c1, c2) => {
-                                console.log(c1);
-                                console.log(c2);
                                 if(c1.order > c2.order)
                                     return 1;
                                 if(c1.order < c2.order)
