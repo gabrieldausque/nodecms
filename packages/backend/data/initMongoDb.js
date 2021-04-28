@@ -66,6 +66,12 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"role",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"role",right:"x",role:2})
 
+  //rights for users
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"user",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"user",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"user",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"user",right:"x",role:2})
+
   //rights for authorizations
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"authorizations",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"authorizations",right:"x",role:2})
@@ -127,6 +133,8 @@ function initData(){
 
   //rights for user data access
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:0})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"w",role:0})
 
   teamADb.documents.insert({

@@ -82,7 +82,7 @@ export default {
     get: [async (context:any) => {
       const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
       if(!await service.isDataAuthorized(context.result, 'r',context.params.user)) {
-        throw new Forbidden('RoleDTO asked is not authorized for your account');
+        throw new Forbidden(`Data asked for service ${context.path} is not authorized for your account`);
       }
     }],
     create: [],
