@@ -1,5 +1,5 @@
 <script>
-   import Editor from "cl-editor";
+    import Editor from "cl-editor";
     import {v4 as uuid} from 'uuid';
     import {onMount} from 'svelte';
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
@@ -70,3 +70,4 @@
     <div id="content-{id}">
     </div>
 </div>
+

@@ -154,6 +154,10 @@
         transform: scale(0.4) translateX(-60vw);
     }
 
+    .component-container:hover {
+        border: solid 2px red;
+    }
+
 </style>
 
 <main class="editor-main">
@@ -214,12 +218,29 @@
                                     return -1;
                                 return 0;
                             }) as bodyComponent}
-                                <div on:click={(event) => {
-                                    event.stopPropagation();
-                                    blockEditorComponent.component = bodyComponent;
-                                    blockEditorComponent.zone = 'body'
+                                <div class="component-container" on:click={(event) => {
+                                    if(event.button === 0) {
+                                        document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                        event.stopPropagation();
+                                        blockEditorComponent.component = bodyComponent;
+                                        blockEditorComponent.zone = 'body'
+                                    }
+                                }} on:contextmenu={(event) => {
+                                   event.preventDefault();
+                                   if(!blockEditorComponent.component) {
+                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                       const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
+                                       contextMenu.classList.add('show');
+                                       contextMenu.style.top = `${event.clientY}px`;
+                                       contextMenu.style.left = `${event.clientX}px`;
+                                   }
                                 }}>
                                     <svelte:component this="{globalContentContainerFactory.getContentContainer(bodyComponent.type)}" properties="{bodyComponent.properties}"></svelte:component>
+                                    <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
+                                         <a class="dropdown-item" href="" on:click={(event) => {
+                                             event.target.parentNode.classList.remove('show');
+                                         }}>Editer</a>
+                                    </div>
                                 </div>
                             {/each}
                         {/if }
