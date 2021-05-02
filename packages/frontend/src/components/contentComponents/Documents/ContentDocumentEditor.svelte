@@ -197,12 +197,29 @@
                                     return -1;
                                 return 0;
                             }) as headerComponent}
-                                {#if globalContentContainerFactory.registeredConstructors[headerComponent.type].editorConstructor}
-                                    <svelte:component this="{globalContentContainerFactory.registeredConstructors[headerComponent.type].editorConstructor}"
-                                                      properties="{headerComponent.properties}"></svelte:component>
-                                {:else}
-                                    <ContentDefaultEditor component={headerComponent}></ContentDefaultEditor>
-                                {/if}
+                                <div class="component-container" on:contextmenu={(event) => {
+                                   event.stopPropagation();
+                                    event.preventDefault();
+                                   if(!blockEditorComponent.component) {
+                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                       const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
+                                       contextMenu.classList.add('show');
+                                       contextMenu.style.top = `${event.clientY}px`;
+                                       contextMenu.style.left = `${event.clientX}px`;
+                                   }
+                                }}>
+                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(headerComponent.type)}" properties="{headerComponent.properties}">
+                                    </svelte:component>
+                                    <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
+                                        <a class="dropdown-item" href="" on:click={(event) => {
+                                             event.stopPropagation();
+                                             event.preventDefault();
+                                             document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                             blockEditorComponent.component = headerComponent;
+                                             blockEditorComponent.zone = 'header'
+                                         }}>Editer</a>
+                                    </div>
+                                </div>
                             {/each}
                         {/if }
                     </div>
@@ -218,15 +235,9 @@
                                     return -1;
                                 return 0;
                             }) as bodyComponent}
-                                <div class="component-container" on:click={(event) => {
-                                    if(event.button === 0) {
-                                        document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                        event.stopPropagation();
-                                        blockEditorComponent.component = bodyComponent;
-                                        blockEditorComponent.zone = 'body'
-                                    }
-                                }} on:contextmenu={(event) => {
-                                   event.preventDefault();
+                                <div class="component-container" on:contextmenu={(event) => {
+                                   event.stopPropagation();
+                                    event.preventDefault();
                                    if(!blockEditorComponent.component) {
                                        document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
                                        const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
@@ -238,7 +249,11 @@
                                     <svelte:component this="{globalContentContainerFactory.getContentContainer(bodyComponent.type)}" properties="{bodyComponent.properties}"></svelte:component>
                                     <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
                                          <a class="dropdown-item" href="" on:click={(event) => {
-                                             event.target.parentNode.classList.remove('show');
+                                             event.stopPropagation();
+                                             event.preventDefault();
+                                             document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                             blockEditorComponent.component = bodyComponent;
+                                             blockEditorComponent.zone = 'body'
                                          }}>Editer</a>
                                     </div>
                                 </div>
@@ -259,12 +274,29 @@
                                     return -1;
                                 return 0;
                             }) as footerComponent}
-                                {#if globalContentContainerFactory.registeredConstructors[footerComponent.type].editorConstructor}
-                                    <svelte:component this="{globalContentContainerFactory.registeredConstructors[footerComponent.type].editorConstructor}"
-                                                      properties="{footerComponent.properties}"></svelte:component>
-                                {:else}
-                                    <ContentDefaultEditor component={footerComponent}></ContentDefaultEditor>
-                                {/if}
+                                <div class="component-container" on:contextmenu={(event) => {
+                                   event.stopPropagation();
+                                    event.preventDefault();
+                                   if(!blockEditorComponent.component) {
+                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                       const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
+                                       contextMenu.classList.add('show');
+                                       contextMenu.style.top = `${event.clientY}px`;
+                                       contextMenu.style.left = `${event.clientX}px`;
+                                   }
+                                }}>
+                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(footerComponent.type)}" properties="{footerComponent.properties}">
+                                    </svelte:component>
+                                    <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
+                                        <a class="dropdown-item" href="" on:click={(event) => {
+                                             event.stopPropagation();
+                                             event.preventDefault();
+                                             document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                             blockEditorComponent.component = footerComponent;
+                                             blockEditorComponent.zone = 'footer'
+                                         }}>Editer</a>
+                                    </div>
+                                </div>
                             {/each}
                         {/if }
                     </div>
