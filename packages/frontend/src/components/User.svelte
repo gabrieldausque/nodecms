@@ -129,6 +129,9 @@
             <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right ">
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="media">
+                <i class="fas fa-file-alt"></i><span>Media</span>
+            </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
                 <i class="fas fa-file-alt"></i><span>Documents</span>
             </button>

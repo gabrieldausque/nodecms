@@ -53,7 +53,8 @@ function configureSwagger(app: Application): void {
         '^user',
         '^metadata',
         '^document',
-        '^channel'
+        '^channel',
+        '^media'
       ]
     }
   }));

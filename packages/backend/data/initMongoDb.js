@@ -139,6 +139,26 @@ function initData(){
 
   teamADb.documents.insert({
     id: newId('documents'),
+    key: 'media',
+    content: {
+      headers:[ ],
+      bodies:[
+        {
+          order:0,
+          type:'all-media',
+          properties:{}
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  })
+
+
+  teamADb.documents.insert({
+    id: newId('documents'),
     key: 'documents',
     content: {
       headers:[ ],
