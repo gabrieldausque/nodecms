@@ -1,6 +1,8 @@
 <script>
 
-    export let mediaList;
+    import {AllMediaStores} from "../../../stores/AllMediaStores";
+
+    $AllMediaStores;
 
 </script>
 
