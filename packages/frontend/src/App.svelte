@@ -1,4 +1,5 @@
 <script lang="ts">
+
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
@@ -9,6 +10,8 @@
 	import ContentDocumentsContainer from './components/contentComponents/Documents/ContentDocumentsContainer.svelte';
 	import ContentDocumentEditor from './components/contentComponents/Documents/ContentDocumentEditor.svelte';
 	import ContentTitle from './components/contentComponents/ContentTitle.svelte';
+	import ContentAllMediaContainer from './components/contentComponents/Media/ContentAllMediaContainer.svelte';
+
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
 	import {getBackendClient} from "./api/NodeCMSClient";
@@ -30,7 +33,7 @@
 			'Titre', 'fas fa-heading');
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor);
-
+	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
 	onMount(async() => {
 		const backendClient = await getBackendClient();
 		const title = await backendClient.getMetadata('title');
