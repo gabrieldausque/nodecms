@@ -16,4 +16,5 @@ export interface Media extends Entity {
   ownerId: string,
   readers:number[],
   blob?: Buffer
+  tags: string[]
 }

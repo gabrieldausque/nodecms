@@ -6,6 +6,7 @@
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
     import _ from 'underscore';
+    import {MediaService} from "../../../api/MediaService";
 
     export let channelKey;
     export let parentPost;
@@ -15,25 +16,8 @@
 
     let attachments = [];
 
-    const authorizedMimeTypes = [
-        'image/gif',
-        'image/png',
-        'image/jpeg',
-        'image/bmp',
-        'image/webp',
-        'image/svg+xml',
-        'audio/mp3',
-        'audio/mpeg',
-        'audio/webm',
-        'audio/ogg',
-        'audio/aac',
-        'audio/wav',
-        'video/webm',
-        'video/ogg',
-        'video/mp4',
-        'video/x-msvideo',
-        'application/pdf'
-    ]
+    const authorizedMimeTypes = MediaService.AuthorizedMimeTypes;
+
     async function customPaste(file, label) {
         const backEndService = await getBackendClient();
         const keyAndLabel = uuid.v4()
@@ -61,11 +45,9 @@
     }, 1000, false);
 
     async function pasteEventHandler(event) {
-        console.log('pasted')
         event.preventDefault();
         event.stopPropagation();
         for (const i of event.clipboardData.items) {
-            console.log(i.kind);
             if (i.kind === 'file') {
                 const f = i.getAsFile();
                 await customPaste(f);

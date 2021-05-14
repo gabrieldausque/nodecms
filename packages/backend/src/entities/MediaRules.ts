@@ -50,6 +50,9 @@ export class MediaRules extends EntityRules{
     if(!entity.readers)
       entity.readers = [];
 
+    if(!entity.tags)
+      entity.tags = [];
+
     let p = new Promise<string>((resolve, reject) => {
       if(entity.blob)
         magic.detect(entity.blob, (err, result) => {

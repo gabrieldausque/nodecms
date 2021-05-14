@@ -210,7 +210,8 @@
 <main class="documentsPanel">
     <div class="documentsMenu">
         <ul class="list-group">
-            <li class="documentsAction list-group-item list-group-item-dark list-group-item-action" id="show-create-document" on:click={showCreateDocument}>
+            <li class="documentsAction list-group-item list-group-item-dark list-group-item-action"
+                id="show-create-document" on:click={showCreateDocument}>
                 <i class="fas fa-2x fa-plus-circle"></i><span>Créer un document</span>
             </li>
         </ul>

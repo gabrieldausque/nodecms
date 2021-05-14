@@ -5,6 +5,27 @@ import {globalFEService} from "../FEServices";
 
 export class MediaService extends BaseServiceClient {
 
+    public static AuthorizedMimeTypes = [
+        'image/gif',
+        'image/png',
+        'image/jpeg',
+        'image/bmp',
+        'image/webp',
+        'image/svg+xml',
+        'audio/mp3',
+        'audio/mpeg',
+        'audio/webm',
+        'audio/ogg',
+        'audio/aac',
+        'audio/wav',
+        'video/webm',
+        'video/ogg',
+        'video/mp4',
+        'video/x-msvideo',
+        'application/pdf'
+    ]
+
+
     constructor(axiosInstance: AxiosInstance, url:string) {
         super(axiosInstance, url)
     }
