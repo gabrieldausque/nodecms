@@ -11,25 +11,61 @@
     }
 
     async function onKeyOrLabelChange(event){
-        const services = await getBackendClient();
         const key = document.getElementById('mediaKey');
         const label = document.getElementById('mediaLabel');
 
-        if(!key.value){
-            if(label.value)
-                key.value = label.value;
-            else
-                key.setAttribute('invalid','');
-            if(await services.mediaService.mediaExists(key.value))
-                key.setAttribute('invalid','');
+        if((!key.value) && (label.value)) {
+            key.value = label.value;
         }
 
-        if(!label.value)
+        if((!label.value) && (key.value))
         {
-            if(key.value)
-                label.value = key.value
-            else
-                key.setAttribute('invalid','');
+            label.value = key.value;
+        }
+
+        await validateUploadForm();
+    }
+
+    async function validateUploadForm() {
+        const services = await getBackendClient();
+        const key = document.getElementById('mediaKey');
+        const label = document.getElementById('mediaLabel');
+        const mediaFile = document.getElementById('mediaFile');
+
+        let isInvalid = false;
+
+        if((!key.value) ||
+            (await services.mediaService.mediaExists(key.value))) {
+            key.classList.remove('is-valid');
+            key.classList.add('is-invalid');
+            isInvalid = true;
+        } else {
+            key.classList.remove('is-invalid');
+            key.classList.add('is-valid');
+        }
+
+        if(!label.value){
+            label.classList.remove('is-valid');
+            label.classList.add('is-invalid');
+            isInvalid = true;
+        } else {
+            label.classList.add('is-valid');
+            label.classList.remove('is-invalid');
+        }
+
+        if(mediaFile.files.length === 0){
+            mediaFile.classList.add('is-invalid');
+            mediaFile.classList.remove('is-valid');
+            isInvalid = true;
+        } else {
+            mediaFile.classList.add('is-valid');
+            mediaFile.classList.remove('is-invalid');
+        }
+
+        if(isInvalid) {
+            document.getElementById('do-upload-media').setAttribute('disabled', '');
+        } else {
+            document.getElementById('do-upload-media').removeAttribute('disabled');
         }
     }
 
@@ -97,6 +133,10 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
+    }
+
+    #uploading-media-loading {
+        display: none;
     }
 
 </style>
@@ -167,7 +207,7 @@
                         <label for="mediaFile">Fichier</label>
                         <input type="file"
                                accept="{MediaService.AuthorizedMimeTypes.join(',')}"
-                               id="mediaFile" name="mediaFile">
+                               id="mediaFile" name="mediaFile" on:change={validateUploadForm}>
                     </div>
                     <div class="mb-3">
                         <label for="mediaTags">Tags</label>
@@ -181,7 +221,7 @@
                 <div id="errorOnUploadingMedia" class="alert alert-danger fade">
                     <div id="errorOnUploadingMediaContent"></div>
                 </div>
-                <button type="button" class="btn action btn-danger " >
+                <button id="do-upload-media" type="button" class="btn action btn-danger " disabled>
                     <span id="uploading-media-loading" class="spinner-border"></span> Upload Media
                 </button>
             </div>
