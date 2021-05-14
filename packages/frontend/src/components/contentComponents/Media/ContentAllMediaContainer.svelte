@@ -10,6 +10,29 @@
         jQuery('#UploadMediaModal').modal('show');
     }
 
+    async function onKeyOrLabelChange(event){
+        const services = await getBackendClient();
+        const key = document.getElementById('mediaKey');
+        const label = document.getElementById('mediaLabel');
+
+        if(!key.value){
+            if(label.value)
+                key.value = label.value;
+            else
+                key.setAttribute('invalid','');
+            if(await services.mediaService.mediaExists(key.value))
+                key.setAttribute('invalid','');
+        }
+
+        if(!label.value)
+        {
+            if(key.value)
+                label.value = key.value
+            else
+                key.setAttribute('invalid','');
+        }
+    }
+
 </script>
 
 <style>
@@ -69,6 +92,13 @@
         margin: 0;
     }
 
+    #UploadMediaForm div.mb-3 {
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
 </style>
 
 <main class="all-media-panel">
@@ -107,15 +137,17 @@
                     <div class="mb-3">
                         <label for="mediaKey">Clé</label>
                         <input
+                                on:change={onKeyOrLabelChange}
                                 class="form-control"
                                 id="mediaKey" name="mediaKey" type="text" required>
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback" >
                             La clé ne peut pas être vide et doit être unique.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="mediaLabel">Label</label>
                         <input
+                                on:change={onKeyOrLabelChange}
                                class="form-control"
                                id="mediaLabel" name="mediaLabel" type="text" required>
                         <div class="invalid-feedback">
