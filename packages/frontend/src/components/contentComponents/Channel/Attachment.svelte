@@ -46,7 +46,7 @@
                             mediaReaders.push(...channel.contributors)
                         if(Array.isArray(channel.readers))
                             mediaReaders.push(...channel.readers)
-                        media = await backEndService.mediaService.createMedia(file, key, label, visibility, mediaReaders);
+                        media = await backEndService.mediaService.createMedia(file, key, label, visibility,[], mediaReaders);
                     }
                     media = await backEndService.mediaService.getMediaMetadata(key);
                 } catch(error) {

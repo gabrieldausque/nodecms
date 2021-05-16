@@ -1,6 +1,6 @@
 {
   "cors": {
-    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://.+\\.myhost.domain[:0-9]*"]
+    "validOrigins": ["http(s){0,1}://localhost[:0-9]*","http(s){0,1}://.+\\.myhost.domain[:0-9]*","http(s){0,1}://arrakis[:0-9]*"]
   },
   "authentication": {
     "authentication" : {

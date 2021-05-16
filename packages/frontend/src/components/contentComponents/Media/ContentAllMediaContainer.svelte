@@ -2,8 +2,22 @@
 
     import {AllMediaStores} from "../../../stores/AllMediaStores";
     import {MediaService} from "../../../api/MediaService";
+    import {onMount} from "svelte";
 
     $AllMediaStores;
+
+    onMount(() => {
+        const modal = jQuery('#UploadMediaModal');
+        modal.on('hidden.bs.modal', () => {
+            document.getElementById('mediaTags').value = '';
+            document.getElementById('mediaLabel').value = '';
+            document.getElementById('mediaKey').value = '';
+            document.getElementById('mediaVisibility').value = 'protected';
+            document.getElementById('mediaFile'). value =  '';
+            document.getElementById('do-upload-media-text').innerText = 'Upload Media';
+            document.getElementById('do-upload-media').setAttribute('disabled','');
+        })
+    })
 
     function showUploadMedia(event) {
         console.log('click');
@@ -66,6 +80,36 @@
             document.getElementById('do-upload-media').setAttribute('disabled', '');
         } else {
             document.getElementById('do-upload-media').removeAttribute('disabled');
+        }
+    }
+
+    async function doUploadMedia() {
+        document.getElementById('uploading-media-loading').classList.add('show');
+        document.getElementById('do-upload-media-text').innerText = 'Uploading ...';
+        document.getElementById('do-upload-media').setAttribute('disabled','');
+        let closeAfterAction = true;
+        try {
+            const services = await getBackendClient();
+            await services.mediaService.createMedia(
+                document.getElementById('mediaFile').files[0],
+                document.getElementById('mediaKey').value,
+                document.getElementById('mediaLabel').value,
+                document.getElementById('mediaVisibility').value,
+                document.getElementById('mediaTags').value.split(' ')
+            )
+        } catch(error){
+            document.getElementById('errorOnUploadingMediaContent').innerText = error.message;
+            document.getElementById('do-upload-media-text').innerText = 'Upload Media';
+            await validateUploadForm()
+            closeAfterAction = false;
+        } finally {
+            document.getElementById('uploading-media-loading').classList.remove('show');
+            if(closeAfterAction){
+                document.getElementById('do-upload-media-text').innerText = 'Upload OK';
+                window.setTimeout(() => {
+                    jQuery('#UploadMediaModal').modal('hide');
+                }, 2000)
+            }
         }
     }
 
@@ -139,6 +183,10 @@
         display: none;
     }
 
+    #uploading-media-loading.show {
+        display: block;
+    }
+
 </style>
 
 <main class="all-media-panel">
@@ -208,6 +256,9 @@
                         <input type="file"
                                accept="{MediaService.AuthorizedMimeTypes.join(',')}"
                                id="mediaFile" name="mediaFile" on:change={validateUploadForm}>
+                        <div class="invalid-feedback">
+                            Un fichier a uploader doit être sélectionné.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="mediaTags">Tags</label>
@@ -221,8 +272,8 @@
                 <div id="errorOnUploadingMedia" class="alert alert-danger fade">
                     <div id="errorOnUploadingMediaContent"></div>
                 </div>
-                <button id="do-upload-media" type="button" class="btn action btn-danger " disabled>
-                    <span id="uploading-media-loading" class="spinner-border"></span> Upload Media
+                <button id="do-upload-media" type="button" class="btn action btn-danger " disabled on:click={doUploadMedia}>
+                    <span id="uploading-media-loading" class="spinner-border"></span><span id="do-upload-media-text">Upload Media</span>
                 </button>
             </div>
         </div>

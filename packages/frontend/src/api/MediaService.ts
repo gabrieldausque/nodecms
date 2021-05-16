@@ -61,7 +61,7 @@ export class MediaService extends BaseServiceClient {
         }
     }
 
-    async createMedia(file:any, key:string, label:string, visibility:string, readers:[]) {
+    async createMedia(file:any, key:string, label:string, visibility:string,tags:string[]= [], readers:[] = []) {
         try {
             const b = new Blob([file]);
             const f = new FormData();
@@ -69,6 +69,9 @@ export class MediaService extends BaseServiceClient {
             f.append('label',label);
             f.append('key',key);
             f.append('blob',b);
+            for(const tag of tags){
+                f.append(`tags[${tags.indexOf(tag)}]`, tag)
+            }
             for(const readerRoleId of readers){
                 f.append(`readers[${readers.indexOf(readerRoleId)}]`,readerRoleId);
             }
