@@ -47,7 +47,6 @@ logger.debug('Initializing cors');
 app.use(cors({
   credentials: true,
   origin: (origin, callback) => {
-    logger.debug(`Request from origin : ${origin}`);
     const validOriginsRegexps = app.get('cors').validOrigins;
     let isOriginValid = false;
     if(!origin || (origin && Array.isArray(validOriginsRegexps))){
@@ -79,7 +78,7 @@ app.use(cors({
 }));
 app.use(compress());
 app.use(express.json({
-  limit:'100 mb'
+  limit:'500 mb'
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
@@ -108,7 +107,5 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
-
-
 
 export default app;

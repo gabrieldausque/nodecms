@@ -158,9 +158,11 @@ export class MongoDbMediaStorage extends MongoDbStorage<Media> implements MediaS
     throw new Error(`No media with key or id ${keyOrId}.`)
   }
 
-  update(data: Media, collectionName?: string): Promise<Media> {
-    this.checkFileStore();
-    throw new Error('Not Implemented')
+  async update(data: Media, collectionName?: string): Promise<Media> {
+    await this.internalUpdate(data)
+    return (await this.find({
+      key: data.key
+    }))[0];
   }
 
 }

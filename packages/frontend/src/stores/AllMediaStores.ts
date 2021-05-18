@@ -1,15 +1,11 @@
 import { writable } from "svelte/store";
 
-export class Media {
-
-}
-
 export class AllMedia {
 
-    private medias: Media[];
+    private media: any[];
 
     constructor() {
-        this.medias = []
+        this.media = []
     }
 
 }

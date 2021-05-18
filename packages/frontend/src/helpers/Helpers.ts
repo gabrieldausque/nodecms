@@ -3,6 +3,11 @@ import {globalFEService} from "../FEServices";
 import {AttachmentHelpers} from "../api/AttachmentHelpers";
 import {DocumentsStore} from "../stores/DocumentsStore";
 import {DocumentStore} from "../stores/DocumentStore";
+import ImageAttachment from "../components/contentComponents/Channel/Attachments/ImageAttachment.svelte";
+import VideoAttachment from "../components/contentComponents/Channel/Attachments/VideoAttachment.svelte";
+import AudioAttachment from "../components/contentComponents/Channel/Attachments/AudioAttachment.svelte";
+import DownloadAttachment from "../components/contentComponents/Channel/Attachments/DownloadAttachment.svelte";
+
 
 export class Helpers {
     static styleOpeningLabel = '<style>';
@@ -52,5 +57,18 @@ export class Helpers {
             })
         }
     }
-    
+
+    static getAttachmentComponent(attachmentMediaType:string) {
+        if(attachmentMediaType){
+            if(attachmentMediaType.indexOf('image') >= 0){
+                return ImageAttachment;
+            } else if (attachmentMediaType.indexOf('video') >= 0) {
+                return VideoAttachment;
+            } else if (attachmentMediaType.indexOf('audio') >= 0) {
+                return AudioAttachment;
+            }
+        }
+        return DownloadAttachment;
+    }
+
 }

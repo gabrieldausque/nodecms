@@ -1,9 +1,5 @@
 <script>
-    import {afterUpdate, beforeUpdate, onMount} from "svelte";
-    import ImageAttachment from "./Attachments/ImageAttachment.svelte";
-    import DownloadAttachment from "./Attachments/DownloadAttachment.svelte";
-    import VideoAttachment from "./Attachments/VideoAttachment.svelte";
-    import AudioAttachment from "./Attachments/AudioAttachment.svelte";
+    import {afterUpdate} from "svelte";
     import {globalFEService} from "../../../FEServices";
     import {ActivePostStore, PostWithChildren} from "../../../stores/ActivePostStore";
     import {ChannelStore} from "../../../stores/ChannelStore";
@@ -16,19 +12,6 @@
         const element = document.createElement('div');
         element.innerHTML = content;
         return element.outerHTML;
-    }
-
-    function getAttachmentComponent(attachmentMediaType) {
-        if(attachmentMediaType){
-            if(attachmentMediaType.indexOf('image') >= 0){
-                return ImageAttachment;
-            } else if (attachmentMediaType.indexOf('video') >= 0) {
-                return VideoAttachment;
-            } else if (attachmentMediaType.indexOf('audio') >= 0) {
-                return AudioAttachment;
-            }
-        }
-        return DownloadAttachment;
     }
 
     afterUpdate(() => {
@@ -193,7 +176,7 @@
         {@html createHtmlContent(post.content)}
         {#if Array.isArray(post.attachments) && post.attachments.length > 0}
             {#each post.attachments as attachmentKey}
-                <svelte:component this={getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
+                <svelte:component this={Helpers.getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
             {/each}
         {/if}
         <div class="postMetadata">

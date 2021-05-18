@@ -4,8 +4,10 @@ import {Media as MediaEntity, MediaVisibility} from "../../entities/Media";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MediaUseCases} from "../../usecases/MediaUseCases";
 import {NotAuthenticated, NotImplemented} from "@feathersjs/errors";
-import {User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "../../entities/User";
 import {isNumber} from "../../helpers";
+import {Authorization} from "../../entities/Authorization";
+import {NotFoundError} from "../../entities/Errors/NotFoundError";
 
 type MediaDTO = Partial<MediaEntity>
 
@@ -53,7 +55,9 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async patch (id: NullableId, data: MediaDTO, params?: Params): Promise<MediaDTO> {
-    throw new NotImplemented();
+    if(id && params && params.user)
+      return this.useCase.update(id, data, params.user as UserEntity);
+    throw new NotFoundError();
   }
 
   async remove (id: NullableId, params?: Params): Promise<MediaDTO> {
@@ -122,4 +126,10 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
     }
     return true;
   }
+
+  async isAuthorized(context: any): Promise<boolean> {
+    const result = await super.isAuthorized(context);
+    return result;
+  }
+
 }

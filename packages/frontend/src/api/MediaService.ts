@@ -44,7 +44,7 @@ export class MediaService extends BaseServiceClient {
         }
     }
 
-    async getMediaMetadata(keyOrId:string) {
+    async getMediaMetadata(key:string) {
         let response;
         try{
             response = await axios.request({
@@ -52,10 +52,31 @@ export class MediaService extends BaseServiceClient {
                 baseURL: this.url,
                 url: 'media',
                 params: {
-                    key:keyOrId
+                    key:key
                 }
             })
             return response.data[0];
+        }catch(error) {
+            console.error(error);
+        }
+    }
+
+    async findMedia(filter:{
+            key?:string,
+            label?:string,
+            mediaType?:string,
+            ownerId?:number
+            tags?:string[]
+    }) {
+        let response;
+        try{
+            response = await axios.request({
+                method:'get',
+                baseURL: this.url,
+                url: 'media',
+                params: filter
+            })
+            return response.data;
         }catch(error) {
             console.error(error);
         }
@@ -86,6 +107,29 @@ export class MediaService extends BaseServiceClient {
             })
         } catch(error) {
             globalFEService.getService('displayError').displayError('Erreur lors de la création d\'un media', error.response.data.message);
+            throw error;
+        }
+    }
+
+    async updateMedia(key:string, label:string, visibility:string,tags:string[]= [], readers:[] = []) {
+        try {
+            const f = new FormData();
+            f.append('visibility',visibility);
+            f.append('label',label);
+            f.append('key',key);
+            for(const tag of tags){
+                f.append(`tags[${tags.indexOf(tag)}]`, tag)
+            }
+            for(const readerRoleId of readers){
+                f.append(`readers[${readers.indexOf(readerRoleId)}]`,readerRoleId);
+            }
+            await axios.request({
+                method: 'PATCH',
+                baseURL: this.url,
+                url: `media/${key}`,
+                data:f
+            })
+        } catch(error) {
             throw error;
         }
     }

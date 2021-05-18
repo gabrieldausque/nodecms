@@ -39,7 +39,7 @@
 </script>
 
 <style>
-    .postVideo {
+    .attachment-video {
         max-height: 50vh;
         max-width: 100%;
     }
@@ -51,7 +51,7 @@
     <video id="{`video-${media.key}`}"
            controls
            on:click={handleVideoClick}
-           class="postVideo"
+           class="attachment-video"
            src="{AttachmentHelpers.getDownloadUrl(media)}"
            type="{media.mediaType}" >
         <track kind="captions">
