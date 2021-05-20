@@ -7,7 +7,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
     "test": "lerna run test --stream",
-    "dev": "npm run init-dev-db && lerna run --stream dev",
+    "dev": "lerna run init-db && lerna run --stream dev",
     "dev-backend": "lerna run --stream dev-backend",
     "dev-front": "lerna run --stream dev-front",
     "build": "lerna run build",

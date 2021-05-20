@@ -11,6 +11,7 @@
 	import ContentDocumentEditor from './components/contentComponents/Documents/ContentDocumentEditor.svelte';
 	import ContentTitle from './components/contentComponents/ContentTitle.svelte';
 	import ContentAllMediaContainer from './components/contentComponents/Media/ContentAllMediaContainer.svelte';
+	import ContentMediaContainer from './components/contentComponents/ContentMediaContainer.svelte';
 
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
@@ -34,6 +35,8 @@
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor);
 	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
+	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer);
+
 	onMount(async() => {
 		const backendClient = await getBackendClient();
 		const title = await backendClient.getMetadata('title');

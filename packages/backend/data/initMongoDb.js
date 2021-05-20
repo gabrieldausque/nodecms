@@ -137,6 +137,22 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"w",role:0})
 
+  //init media
+  teamADb.media.insert({
+    id: newId('media'),
+    key: 'logo',
+    visibility: 'public',
+    label: 'team-a logo',
+    mediaType: 'image/png',
+    ownerId: 0,
+    storagePath: 'uploads/a-team_logo.png',
+    readers: [],
+    tags: []
+  })
+
+  //init documents
+
+  //media editor
   teamADb.documents.insert({
     id: newId('documents'),
     key: 'media',
@@ -156,7 +172,7 @@ function initData(){
     updateDate: new Date()
   })
 
-
+  // documents lists and editor
   teamADb.documents.insert({
     id: newId('documents'),
     key: 'documents',
@@ -193,6 +209,8 @@ function initData(){
     creationDate: new Date(),
     updateDate: new Date()
   })
+
+  // channels access
   teamADb.documents.insert({
     id: newId('documents'),
     key: 'channels',
@@ -212,6 +230,8 @@ function initData(){
     creationDate: new Date(),
     updateDate: new Date()
   });
+
+  // welcome pages
   teamADb.documents.insert({
     id: newId('documents'),
     key: 'welcomePrivate',
@@ -371,9 +391,10 @@ function initData(){
             bodies:[
               {
                 order:1,
-                type:'image',
+                type:'media',
                 properties: {
-                  uri:"https://frontend.myhost.domain/api/a-team_logo.png",
+                  mediaType:"image/png",
+                  key: "logo",
                   style:`
                         width:50vh;
                         height:50vh;
@@ -404,6 +425,7 @@ function initData(){
     updateDate: new Date()
   });
 
+  // channels creation
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',
     content:`<h1> Bienvenue Sur le Channel news</h1>

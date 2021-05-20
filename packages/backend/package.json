@@ -9,8 +9,8 @@
     "feathers"
   ],
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Gabriel DAUSQUE",
+    "email": "gabrieldausque.pro@gmail.com"
   },
   "contributors": [],
   "bugs": {},
@@ -39,7 +39,7 @@
     "coverage": "nyc --reporter=cobertura ts-mocha \"test/**/*.ts\" --recursive --exit",
     "build": "node_modules/.bin/shx rm -rf dist/ && tsc ",
     "dev-backend": "npm run dev",
-    "init-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
+    "init-db": "shx cp ./public/a-team_logo.png ./uploads/a-team_logo.png && mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./data/initMongoDb.js"
   },
   "standard": {
     "env": [

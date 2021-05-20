@@ -29,6 +29,7 @@
             document.getElementById('media-visibility-for-update').value = 'protected';
             document.getElementById('do-update-media-text').innerText = 'Enregistrer';
             document.getElementById('do-update-media').removeAttribute('disabled');
+            mediaToEdit = undefined;
         });
     })
 
@@ -138,7 +139,7 @@
         }
     }
 
-    const searchMedia = _.debounce(debounceSearchMedia, 500);
+    const searchMedia = _.debounce(debounceSearchMedia, 1000);
 
     async function debounceSearchMedia() {
         const services = await getBackendClient();
