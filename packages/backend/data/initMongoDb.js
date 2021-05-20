@@ -393,6 +393,7 @@ function initData(){
                 order:1,
                 type:'media',
                 properties: {
+                  globalStyle: " #image-logo { height: 100%; width: 100%; max-height: 100%; }",
                   mediaType:"image/png",
                   key: "logo",
                   style:`
@@ -404,6 +405,9 @@ function initData(){
                         background-size: cover;
                         overflow: visible;
                         position: relative;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
                         `,
                   content:  `
                         <div class="main-logo-border-top"></div>

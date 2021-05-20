@@ -2,15 +2,13 @@
 
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {globalContentContainerFactory} from "../../../ContentContainerFactory";
-    import {beforeUpdate, afterUpdate, onDestroy} from 'svelte';
     import ContentDefaultEditor from '../Editors/ContentDefaultEditor.svelte';
     import {Helpers} from "../../../helpers/Helpers";
+    import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
+    import BlockEditor from "../Editors/BlockEditor.svelte";
 
     $EditableDocumentStore;
-    let blockEditorComponent = {
-        component:undefined,
-        zone:undefined
-    };
+    $BlockEditorComponentStore;
 
     function handleDragStart(e) {
         e.dataTransfer.dropEffect = 'copy';
@@ -154,8 +152,9 @@
         transform: scale(0.4) translateX(-60vw);
     }
 
-    .component-container:hover {
-        border: solid 2px red;
+    .editor-content {
+        max-height: calc(100% - 37px);
+        overflow-y: auto;
     }
 
 </style>
@@ -197,36 +196,14 @@
                                     return -1;
                                 return 0;
                             }) as headerComponent}
-                                <div class="component-container" on:contextmenu={(event) => {
-                                   event.stopPropagation();
-                                    event.preventDefault();
-                                   if(!blockEditorComponent.component) {
-                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                       const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
-                                       contextMenu.classList.add('show');
-                                       contextMenu.style.top = `${event.clientY}px`;
-                                       contextMenu.style.left = `${event.clientX}px`;
-                                   }
-                                }}>
-                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(headerComponent.type)}" properties="{headerComponent.properties}">
-                                    </svelte:component>
-                                    <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
-                                        <a class="dropdown-item" href="" on:click={(event) => {
-                                             event.stopPropagation();
-                                             event.preventDefault();
-                                             document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                             blockEditorComponent.component = headerComponent;
-                                             blockEditorComponent.zone = 'header'
-                                         }}>Editer</a>
-                                    </div>
-                                </div>
+                                <BlockEditor component="headerComponent" zone="header"></BlockEditor>
                             {/each}
                         {/if }
                     </div>
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps</h5>
-                    <div id="document-bodies" class="drop-zone {blockEditorComponent.zone === 'body'?'reduced':''}">
+                    <div id="document-bodies" class="drop-zone {$BlockEditorComponentStore.zone === 'body'?'reduced':''}">
                         {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
                             {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
                                 if(c1.order > c2.order)
@@ -235,28 +212,7 @@
                                     return -1;
                                 return 0;
                             }) as bodyComponent}
-                                <div class="component-container" on:contextmenu={(event) => {
-                                   event.stopPropagation();
-                                    event.preventDefault();
-                                   if(!blockEditorComponent.component) {
-                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                       const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
-                                       contextMenu.classList.add('show');
-                                       contextMenu.style.top = `${event.clientY}px`;
-                                       contextMenu.style.left = `${event.clientX}px`;
-                                   }
-                                }}>
-                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(bodyComponent.type)}" properties="{bodyComponent.properties}"></svelte:component>
-                                    <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
-                                         <a class="dropdown-item" href="" on:click={(event) => {
-                                             event.stopPropagation();
-                                             event.preventDefault();
-                                             document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                             blockEditorComponent.component = bodyComponent;
-                                             blockEditorComponent.zone = 'body'
-                                         }}>Editer</a>
-                                    </div>
-                                </div>
+                                <BlockEditor component={bodyComponent} zone="body"></BlockEditor>
                             {/each}
                         {/if }
                     </div>
@@ -274,29 +230,7 @@
                                     return -1;
                                 return 0;
                             }) as footerComponent}
-                                <div class="component-container" on:contextmenu={(event) => {
-                                   event.stopPropagation();
-                                    event.preventDefault();
-                                   if(!blockEditorComponent.component) {
-                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                       const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
-                                       contextMenu.classList.add('show');
-                                       contextMenu.style.top = `${event.clientY}px`;
-                                       contextMenu.style.left = `${event.clientX}px`;
-                                   }
-                                }}>
-                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(footerComponent.type)}" properties="{footerComponent.properties}">
-                                    </svelte:component>
-                                    <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
-                                        <a class="dropdown-item" href="" on:click={(event) => {
-                                             event.stopPropagation();
-                                             event.preventDefault();
-                                             document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
-                                             blockEditorComponent.component = footerComponent;
-                                             blockEditorComponent.zone = 'footer'
-                                         }}>Editer</a>
-                                    </div>
-                                </div>
+                                <BlockEditor component={footerComponent} zone="footer"></BlockEditor>
                             {/each}
                         {/if }
                     </div>
@@ -305,19 +239,21 @@
 
         {/if}
     </div>
-    <div class="editor-panel {blockEditorComponent.component?'':'hidden'}">
+    <div class="editor-panel {$BlockEditorComponentStore.component?'':'hidden'}">
         <h4> Propriétés </h4>
         <div class="close" on:click={() => {
-        blockEditorComponent.component = undefined;
-        blockEditorComponent.zone = undefined;
+        $BlockEditorComponentStore.component = undefined;
+        $BlockEditorComponentStore.zone = undefined;
     }}><i class="fal fa-window-close"></i></div>
-        {#if blockEditorComponent.component}
-            {#if globalContentContainerFactory.registeredConstructors[blockEditorComponent.component.type].editorConstructor}
-                <svelte:component this="{globalContentContainerFactory.registeredConstructors[blockEditorComponent.component.type].editorConstructor}"
-                                  properties="{blockEditorComponent.component.properties}"></svelte:component>
-            {:else}
-                <ContentDefaultEditor component={blockEditorComponent.component}></ContentDefaultEditor>
+        <div class="editor-content">
+            {#if $BlockEditorComponentStore.component}
+                {#if globalContentContainerFactory.registeredConstructors[$BlockEditorComponentStore.component.type].editorConstructor}
+                    <svelte:component this="{globalContentContainerFactory.registeredConstructors[$BlockEditorComponentStore.component.type].editorConstructor}"
+                                      properties="{$BlockEditorComponentStore.component.properties}"></svelte:component>
+                {:else}
+                    <ContentDefaultEditor component={$BlockEditorComponentStore.component}></ContentDefaultEditor>
+                {/if}
             {/if}
-        {/if}
+        </div>
     </div>
 </main>

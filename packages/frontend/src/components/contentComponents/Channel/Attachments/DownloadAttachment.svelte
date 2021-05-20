@@ -55,7 +55,10 @@
 {#if !media || typeof media.id === 'undefined'}
     <LoadingAttachment attachment={attachment}></LoadingAttachment>
 {:else if typeof media.id === 'number'}
-    <a id="download-{media.id}" class="attachment-download" href="{AttachmentHelpers.getDownloadUrl(media)}" target="_blank">
+    <a id="download-{media.id}"
+       data-media-key="{media.key}"
+       class="attachment-download"
+       href="{AttachmentHelpers.getDownloadUrl(media)}" target="_blank">
         <div class="attachment-download">
             <i class="fas fa-2x {icons[media.mediaType]}"></i>
             <label>{media.label}</label>

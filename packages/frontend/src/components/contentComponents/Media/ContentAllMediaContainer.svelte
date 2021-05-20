@@ -6,6 +6,7 @@
     import {onMount, afterUpdate} from "svelte";
     import {v4 as uuid} from 'uuid';
     import _ from 'underscore';
+    import MediaSearchBar from "./MediaSearchBar.svelte";
 
     $AllMediaStores;
     let mediaToEdit;
@@ -17,9 +18,9 @@
             document.getElementById('mediaLabel').value = '';
             document.getElementById('mediaKey').value = '';
             document.getElementById('mediaVisibility').value = 'protected';
-            document.getElementById('mediaFile'). value =  '';
+            document.getElementById('mediaFile').value = '';
             document.getElementById('do-upload-media-text').innerText = 'Upload Media';
-            document.getElementById('do-upload-media').setAttribute('disabled','');
+            document.getElementById('do-upload-media').setAttribute('disabled', '');
         })
         const updateModal = jQuery('#edit-media-modal');
         updateModal.on('hidden.bs.modal', () => {
@@ -34,7 +35,7 @@
     })
 
     afterUpdate(() => {
-        if(mediaToEdit){
+        if (mediaToEdit) {
             document.getElementById('media-key-for-update').innerText = mediaToEdit.key;
             document.getElementById('media-label-for-update').value = mediaToEdit.label;
             document.getElementById('media-tags-for-update').value = mediaToEdit.tags.join(' ');
@@ -48,16 +49,15 @@
         jQuery('#upload-media-modal').modal('show');
     }
 
-    async function onKeyOrLabelChange(event){
+    async function onKeyOrLabelChange(event) {
         const key = document.getElementById('mediaKey');
         const label = document.getElementById('mediaLabel');
 
-        if((!key.value) && (label.value)) {
+        if ((!key.value) && (label.value)) {
             key.value = label.value;
         }
 
-        if((!label.value) && (key.value))
-        {
+        if ((!label.value) && (key.value)) {
             label.value = key.value;
         }
 
@@ -72,7 +72,7 @@
 
         let isInvalid = false;
 
-        if((!key.value) ||
+        if ((!key.value) ||
             (await services.mediaService.mediaExists(key.value))) {
             key.classList.remove('is-valid');
             key.classList.add('is-invalid');
@@ -82,7 +82,7 @@
             key.classList.add('is-valid');
         }
 
-        if(!label.value){
+        if (!label.value) {
             label.classList.remove('is-valid');
             label.classList.add('is-invalid');
             isInvalid = true;
@@ -91,7 +91,7 @@
             label.classList.remove('is-invalid');
         }
 
-        if(mediaFile.files.length === 0){
+        if (mediaFile.files.length === 0) {
             mediaFile.classList.add('is-invalid');
             mediaFile.classList.remove('is-valid');
             isInvalid = true;
@@ -100,7 +100,7 @@
             mediaFile.classList.remove('is-invalid');
         }
 
-        if(isInvalid) {
+        if (isInvalid) {
             document.getElementById('do-upload-media').setAttribute('disabled', '');
         } else {
             document.getElementById('do-upload-media').removeAttribute('disabled');
@@ -110,7 +110,7 @@
     async function doUploadMedia() {
         document.getElementById('uploading-media-loading').classList.add('show');
         document.getElementById('do-upload-media-text').innerText = 'Uploading ...';
-        document.getElementById('do-upload-media').setAttribute('disabled','');
+        document.getElementById('do-upload-media').setAttribute('disabled', '');
         document.getElementById('error-uploading-media').classList.remove('show');
         let closeAfterAction = true;
         try {
@@ -122,7 +122,7 @@
                 document.getElementById('mediaVisibility').value,
                 document.getElementById('mediaTags').value.split(' ')
             )
-        } catch(error){
+        } catch (error) {
             document.getElementById('error-uploading-media-content').innerText = error.message;
             document.getElementById('do-upload-media-text').innerText = 'Upload Media';
             document.getElementById('error-uploading-media').classList.add('show');
@@ -130,7 +130,7 @@
             closeAfterAction = false;
         } finally {
             document.getElementById('uploading-media-loading').classList.remove('show');
-            if(closeAfterAction){
+            if (closeAfterAction) {
                 document.getElementById('do-upload-media-text').innerText = 'Upload OK';
                 window.setTimeout(() => {
                     jQuery('#upload-media-modal').modal('hide');
@@ -139,66 +139,12 @@
         }
     }
 
-    const searchMedia = _.debounce(debounceSearchMedia, 1000);
-
-    async function debounceSearchMedia() {
-        const services = await getBackendClient();
-        const results = [];
-        const searchBar = document.getElementById('search-media-keyword')
-        try{
-            if(searchBar.value){
-                const searchPromises = [];
-                for(const keyword of searchBar.value.split(' ')){
-                    searchPromises.push(services.mediaService.getMediaMetadata(keyword));
-                    searchPromises.push(services.mediaService.findMedia({
-                        label: keyword
-                    }))
-                }
-                searchPromises.push(services.mediaService.findMedia({
-                    tags: searchBar.value.split(' ')
-                }))
-                const searchResults = await Promise.all(searchPromises);
-                const pushFoundMedia = (media) => {
-                    if(media && results.findIndex(m => m.id === media.id) < 0){
-                        results.push(media)
-                    }
-                }
-                for(const result of searchResults){
-                    if(Array.isArray(result)){
-                        for(const m of result){
-                            pushFoundMedia(m)
-                        }
-                    } else {
-                        pushFoundMedia(result)
-                    }
-                }
-                if(results.length > 0){
-                    AllMediaStores.update(ams => {
-                        ams.media = results;
-                        return ams;
-                    })
-                }
-            } else {
-                AllMediaStores.update(ams => {
-                    ams.media = [];
-                    return ams;
-                })
-            }
-
-        } catch(error) {
-            globalFEService.getService('displayError').displayError('Erreur pendant la recherche', error.message)
-        } finally {
-            document.querySelector('.searching').classList.remove('show')
-        }
+    function onSearchStarted() {
+        document.querySelector('.searching').classList.add('show');
     }
 
-    function onKeyUp() {
-        document.querySelector('.searching').classList.add('show');
-        AllMediaStores.update(ams => {
-            ams.media = [];
-            return ams;
-        })
-        searchMedia()
+    function onSearchEnded() {
+        document.querySelector('.searching').classList.remove('show');
     }
 
     async function displayMediaEdit(mediaKey) {
@@ -210,7 +156,7 @@
 
         let isInvalid = false;
 
-        if(!label.value){
+        if (!label.value) {
             label.classList.remove('is-valid');
             label.classList.add('is-invalid');
             isInvalid = true;
@@ -219,7 +165,7 @@
             label.classList.remove('is-invalid');
         }
 
-        if(isInvalid) {
+        if (isInvalid) {
             document.getElementById('do-update-media').setAttribute('disabled', '');
         } else {
             document.getElementById('do-update-media').removeAttribute('disabled');
@@ -229,7 +175,7 @@
     async function doUpdateMedia() {
         document.getElementById('update-media-loading').classList.add('show');
         document.getElementById('do-update-media-text').innerText = 'En cours ...';
-        document.getElementById('do-update-media').setAttribute('disabled','');
+        document.getElementById('do-update-media').setAttribute('disabled', '');
         document.getElementById('error-updating-media').classList.remove('show');
         let closeAfterAction = true;
         try {
@@ -240,7 +186,7 @@
                 document.getElementById('media-visibility-for-update').value,
                 document.getElementById('media-tags-for-update').value.split(' ')
             )
-        } catch(error){
+        } catch (error) {
             document.getElementById('error-updating-media-content').innerText = error.message;
             document.getElementById('do-update-media-text').innerText = 'Enregistrer';
             document.getElementById('error-updating-media').classList.add('show');
@@ -248,7 +194,7 @@
             closeAfterAction = false;
         } finally {
             document.getElementById('update-media-loading').classList.remove('show');
-            if(closeAfterAction){
+            if (closeAfterAction) {
                 document.getElementById('do-update-media-text').innerText = 'Enregistrement OK';
                 window.setTimeout(() => {
                     jQuery('#edit-media-modal').modal('hide');
@@ -285,34 +231,6 @@
         min-height: 100%;
         overflow: hidden;
         background: white;
-    }
-
-    .media-search-bar-container {
-        width: calc(100% - 10px);
-        position: relative;
-        margin: 5px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-    .media-search-bar {
-        width: calc(100% - 44px);
-        border-bottom-right-radius: 0 ;
-        border-top-right-radius: 0;
-        margin:0;
-    }
-    .media-search-bar:focus-visible {
-        border-bottom-right-radius: 0 ;
-        border-top-right-radius: 0;
-    }
-    .do-search {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 39px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        margin: 0;
     }
 
     #upload-media-form div.mb-3,
@@ -410,15 +328,10 @@
         </ul>
     </div>
     <div class="all-media">
-        <div class="media-search-bar-container">
-            <input class="media-search-bar"
-                   type="text"
-                   id="search-media-keyword"
-                   placeholder="Taper le mot clé"
-                   on:keyup={onKeyUp}
-            >
-            <button type="button" class="do-search btn btn-dark"><i class="fas fa-search"></i></button>
-        </div>
+        <MediaSearchBar
+                on:search-started={onSearchStarted}
+                on:search-ended={onSearchEnded}
+        ></MediaSearchBar>
         <div class="searching">
             <span>Recherche en cours</span>
             <div>

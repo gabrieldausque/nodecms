@@ -46,6 +46,7 @@ export class ContentContainerFactory {
                 constructors.push(this.registeredConstructors[c]);
             }
         }
+        console.log(constructors);
         return constructors;
     }
 }

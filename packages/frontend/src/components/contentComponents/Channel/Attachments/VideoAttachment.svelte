@@ -49,6 +49,7 @@
     <LoadingAttachment attachment={attachment}></LoadingAttachment>
 {:else if typeof media.id === 'number'}
     <video id="{`video-${media.key}`}"
+           data-media-key="{media.key}"
            controls
            on:click={handleVideoClick}
            class="attachment-video"

@@ -1,26 +1,20 @@
 <script>
 
-    import {globalContentContainerFactory} from "../../../ContentContainerFactory";
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {v4 as uuid} from 'uuid';
-    import {ComponentEditorStore} from '../../../stores/ComponentEditorStore';
     import HighlightedEditor from "../HighlightedEditor.svelte";
 
     export let component;
-    $ComponentEditorStore;
     let id = uuid();
 
     function handleChange(code) {
         const newJson = JSON.parse(code);
-        console.log(newJson)
+        for(const propName in newJson){
+            if(newJson.hasOwnProperty(propName)){
+                component[propName] = newJson[propName];
+            }
+        }
         EditableDocumentStore.update(eds => {
-            //todo change target for header and footer (to be set by caller)
-            eds.document.content.bodies.splice(
-                $EditableDocumentStore.document.content.bodies.indexOf(component),
-                1,
-                newJson
-            );
-            console.log(eds);
             return eds;
         });
     }
@@ -34,7 +28,6 @@
         height: calc(100% - 45px) !important;
         overflow-y: auto;
         overflow-x: none;
-
     }
 
 

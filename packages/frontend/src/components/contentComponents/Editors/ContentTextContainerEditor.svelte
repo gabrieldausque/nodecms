@@ -59,8 +59,8 @@
     <HighlightedEditor
             id="style"
             content={properties.style}
-            onChange={(newstyle) => {
-                properties.style = newstyle
+            onChange={(newStyle) => {
+                properties.style = newStyle
                 updateEds();
             }}
     ></HighlightedEditor>

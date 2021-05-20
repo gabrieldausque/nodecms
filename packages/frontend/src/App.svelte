@@ -14,9 +14,9 @@
 	import ContentTitle from './components/contentComponents/ContentTitle.svelte';
 	import ContentAllMediaContainer from './components/contentComponents/Media/ContentAllMediaContainer.svelte';
 	import ContentMediaContainer from './components/contentComponents/ContentMediaContainer.svelte';
-
+	import ContentMediaContainerEditor from './components/contentComponents/Editors/ContentMediaContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
-	import {afterUpdate, createEventDispatcher, onMount} from "svelte";
+	import {onMount} from "svelte";
 	import {getBackendClient} from "./api/NodeCMSClient";
 	import ErrorModal from "./components/ErrorModal.svelte";
 	import {DocumentStore} from "./stores/DocumentStore";
@@ -38,7 +38,8 @@
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor);
 	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
-	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer);
+	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer, 'Media', 'fas fa-photo-video', ContentMediaContainerEditor);
+
 
 	onMount(async() => {
 		const backendClient = await getBackendClient();

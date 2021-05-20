@@ -1,9 +1,11 @@
 <script>
     import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
-    import {beforeUpdate, onMount} from "svelte";
+    import {beforeUpdate, onMount, createEventDispatcher} from "svelte";
     import {writable} from 'svelte/store';
     import LoadingAttachment from "./LoadingAttachment.svelte";
     import {getBackendClient} from "../../../../api/NodeCMSClient";
+
+    const dispatch = createEventDispatcher();
 
     export let attachment
     let media;
@@ -46,5 +48,10 @@
 {#if !media}
     <LoadingAttachment attachment={attachment}></LoadingAttachment>
 {:else if typeof media.id === 'number'}
-    <div id="image-{attachment}" class="attachment-image" style="background-image: {AttachmentHelpers.getImageUrl(media)}"></div>
+    <div on:click={(event) => {
+        dispatch('click', event);
+    }} data-media-key="{media.key}"
+         id="image-{attachment}"
+         class="attachment-image"
+         style="background-image: {AttachmentHelpers.getImageUrl(media)}"></div>
 {/if}
