@@ -22,11 +22,15 @@
             isLogin: isLogin,
             login
         })
-        DocumentStore.update((store) => {
-            store.key = 'welcomePrivate';
-            return store;
-        })
-        window.jQuery('#LoginModal').modal('hide');
+
+        const params = (new URL(document.location.href)).searchParams;
+        if(!params.get('documentKey')){
+            DocumentStore.update((store) => {
+                store.key = 'welcomePrivate';
+                return store;
+            })
+        }
+        window.jQuery('#LoginModal')?.modal('hide');
     }
 
     let authenticate = async () => {

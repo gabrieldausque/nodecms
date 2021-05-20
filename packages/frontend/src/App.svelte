@@ -1,5 +1,7 @@
 <script lang="ts">
 
+	import {Router, Route, Link} from "svelte-routing";
+
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
@@ -20,6 +22,7 @@
 	import {DocumentStore} from "./stores/DocumentStore";
 
 	$DocumentStore;
+	export let url="";
 
 	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer,
 			'Conteneur', 'fas fa-sitemap');
@@ -41,6 +44,7 @@
 		const backendClient = await getBackendClient();
 		const title = await backendClient.getMetadata('title');
 		document.querySelector('head title').innerHTML = title;
+
 	})
 
 </script>
@@ -78,3 +82,4 @@
 	<ContentGenericContainer documentKey={$DocumentStore.key}></ContentGenericContainer>
 </main>
 <ErrorModal></ErrorModal>
+

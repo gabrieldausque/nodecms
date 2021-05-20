@@ -31,7 +31,8 @@
     "@types/socket.io-client": "^1.4.34",
     "@types/node": "^14.14.14",
     "@types/http-proxy": "^1.17.4",
-    "@types/highlight.js": "^10.1.0"
+    "@types/highlight.js": "^10.1.0",
+    "svelte-routing": "^1.6.0"
   },
   "dependencies": {
     "sirv-cli": "^1.0.0",
