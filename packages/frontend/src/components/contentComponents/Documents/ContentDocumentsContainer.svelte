@@ -47,19 +47,19 @@
     }
 
     onMount(() => {
-        document.addEventListener(documentsEventName.documentsActions,
-        async(documentActionEvent) =>{
-            const services = await getBackendClient();
-            const document = await services.documentService.getDocument(documentActionEvent.detail.document);
-            DocumentsStore.update(ds => {
-                ds.documents.push(document);
-                return ds
-            })
+        Helpers.subscribeToDocumentEvent(documentsEventName.documentsActions,
+            async(documentActionEvent) =>{
+                const services = await getBackendClient();
+                const document = await services.documentService.getDocument(documentActionEvent.detail.document);
+                DocumentsStore.update(ds => {
+                    console.log("pushing to store");
+                    ds.documents.push(document);
+                    return ds
+                })
         })
     })
 
     afterUpdate(() => {
-
         const rows = Array.from(document.querySelectorAll('#documents-table tbody > tr'));;
         rows.sort((r1,r2) => {
             const r1Id = parseInt(r1.getAttribute('data-document-id'));
@@ -70,7 +70,6 @@
                 return -1;
             return 0;
         })
-        console.log(rows);
         const tableBody = document.querySelector('#documents-table tbody');
         for(const row of rows){
             row.remove();
@@ -231,22 +230,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                {#each $DocumentsStore.documents as document}
-                    <tr data-document-id="{document.id}" transition:fade>
-                        <th scope="row">{document.id}</th>
-                        <th scope="row">{document.key}</th>
-                        <th>{document.author.login}</th>
-                        <th>{new Date(document.creationDate).toLocaleString()}</th>
-                        <th>{new Date(document.updateDate).toLocaleString()}</th>
-                        <th>
-                            {#if document.isReader}
-                                <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Voir le document" on:click={displayDocument}><i class="fas fa-book-reader"></i></button>
-                            {/if}
-                            {#if document.isEditor}
-                                <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Editer le document" on:click={editDocument}><i class="fas fa-edit"></i></button>
-                            {/if}
-                    </tr>
-                {/each}
+                {#if Array.isArray($DocumentsStore.documents)}
+                    {#each $DocumentsStore.documents as document}
+                        <tr data-document-id="{document.id}" transition:fade>
+                            <th scope="row">{document.id}</th>
+                            <th scope="row">{document.key}</th>
+                            <th>{document.author.login}</th>
+                            <th>{new Date(document.creationDate).toLocaleString()}</th>
+                            <th>{new Date(document.updateDate).toLocaleString()}</th>
+                            <th>
+                                {#if document.isReader}
+                                    <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Voir le document" on:click={displayDocument}><i class="fas fa-book-reader"></i></button>
+                                {/if}
+                                {#if document.isEditor}
+                                    <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Editer le document" on:click={editDocument}><i class="fas fa-edit"></i></button>
+                                {/if}
+                        </tr>
+                    {/each}
+                {/if}
                 </tbody>
             </table>
             {#if $DocumentsStore.hasNext}

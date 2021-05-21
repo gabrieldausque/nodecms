@@ -5,7 +5,7 @@
 
     import hljs from 'highlight.js/lib/core';
     import _ from 'underscore';
-    import {onMount} from 'svelte';
+    import {onMount, onDestroy} from 'svelte';
     import json from 'highlight.js/lib/languages/json'
     import css from 'highlight.js/lib/languages/css'
 
@@ -18,12 +18,16 @@
         if(typeof onChange === 'function'){
             onChange(htmlElement.textContent.replace(reg,''))
         }
-    }, 1000);
+    }, 2000);
 
     onMount(() => {
         document.querySelectorAll('.highlightEditor').forEach(htmlElement => {
             hljs.highlightBlock(htmlElement);
         })
+    })
+
+    onDestroy(() => {
+
     })
 
 </script>

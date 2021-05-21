@@ -35,8 +35,8 @@
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
 	globalContentContainerFactory.registerContentContainer('title',ContentTitle,
 			'Titre', 'fas fa-heading');
-	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer);
-	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor);
+	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
+	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
 	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
 	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer, 'Media', 'fas fa-photo-video', ContentMediaContainerEditor);
 

@@ -208,6 +208,7 @@
     .channelPanel {
         display: flex;
         height: 100%;
+        width: 100%;
     }
     .channelsMenu {
         flex-grow: 1;

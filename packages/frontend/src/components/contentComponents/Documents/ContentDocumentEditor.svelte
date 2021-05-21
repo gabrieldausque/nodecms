@@ -107,7 +107,6 @@
         padding: 4px;
         border-bottom: solid 1px lightgray;
         box-shadow: inset 0px -3px 18px -14px;
-        margin-bottom: 100px;
     }
 
     .editor-panel {
@@ -149,13 +148,34 @@
     }
 
     .drop-zone.reduced {
-        transform: scale(0.4) translateX(-60vw);
+        transform: scale(0.4) translateX(-72%);
     }
 
     .editor-content {
         max-height: calc(100% - 37px);
         overflow-y: auto;
     }
+
+    #headers,
+    #footers {
+        position:relative;
+        min-height: 15%;
+        height:auto;
+    }
+
+    #bodies {
+        position: relative;
+        min-height: 70%;
+        height:auto
+    }
+
+    #document-headers,
+    #document-footers,
+    #document-bodies {
+        min-height: calc(100% - 41px);
+    }
+
+
 
 </style>
 

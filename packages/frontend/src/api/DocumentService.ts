@@ -79,7 +79,6 @@ export class DocumentService extends BaseServiceClient {
                 headers: this.createHeaders()
             })
             const obtained = response.data;
-            console.log(obtained)
             const services = await getBackendClient();
             if(services.userService.isAuthenticated){
                 obtained.author =  await services.userService.getUser(obtained.ownerId);

@@ -12,7 +12,7 @@
 
     import Editor from "cl-editor";
     import {v4 as uuid} from 'uuid';
-    import {onMount} from 'svelte';
+    import {onMount, onDestroy} from 'svelte';
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import HighlightedEditor from "../HighlightedEditor.svelte";
     import MediaSearchBar from "../Media/MediaSearchBar.svelte";
@@ -46,6 +46,10 @@
         })
     })
 
+    onDestroy(() => {
+        AllMediaStores.media = [];
+    })
+
     function updateEds() {
         EditableDocumentStore.update(eds => {
             return eds;
@@ -53,7 +57,11 @@
     }
 
     function onSearchStarted() {
+        document.querySelector('.searching').classList.add('show');
+    }
 
+    function onSearchEnded() {
+        document.querySelector('.searching').classList.remove('show');
     }
 
     async function onMediaClick(event){
@@ -95,17 +103,112 @@
     .all-media-list {
         min-height: 25vh;
     }
+
+    :global(.highlightEditor) {
+        max-height: 25vh;
+        overflow-y: auto;
+    }
+
+    #media-select-zone {
+        height:25vh;
+        max-height:25vh;
+        width:100%;
+        max-width: 100%;
+        overflow:hidden;
+    }
+
+    #media-select-zone .all-media-list {
+        overflow-y: auto;
+        height: calc(100% - 39px);
+        min-height: calc(100% - 39px);
+        max-height: calc(100% - 39px);
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .media-editor :global(.attachment-image),
+    .media-editor :global(.attachment-video),
+    .media-editor :global(.attachment-download),
+    .media-editor :global(.attachment-upload),
+    .media-editor .media-container
+    {
+        min-height: 100px;
+        max-height: 150px;
+        min-width: 100px;
+        max-width: 150px;
+    }
+
+    .searching {
+        width: 50%;
+        height: 5vh;
+        align-self: center;
+        justify-self: center;
+        bottom: calc(50% - 20px);
+        left:calc(50% - 100px);
+        position: absolute;
+        font-size: 2vh;
+        display: none;
+    }
+
+    .searching .first-point {
+        animation: 1s linear infinite fading;
+    }
+
+    .searching .second-point {
+        animation: 1s linear 250ms infinite fading;
+    }
+
+    .searching .third-point {
+        animation: 1s linear 500ms infinite fading;
+    }
+
+    :global(.searching.show) {
+        display: flex !important;
+    }
+
+    @keyframes fading {
+        50% { opacity: 0}
+    }
+
+    .media-container {
+        margin: 15px;
+    }
+
+    .media-container:hover {
+        border: solid red 5px !important;
+        border-radius: 5px !important;
+    }
+
+    .media-container.selected {
+        border: solid blue 2px;
+        border-radius: 2px;
+    }
+
+    .current-media {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
 </style>
 
-<div>
+<div class="media-editor">
     <div class="media">
         <label for="media">Media :</label>
-        <svelte:component this={Helpers.getAttachmentComponent(properties.mediaType)} attachment={properties.key}/>
-        <div id="media">
-            <MediaSearchBar on:search-started={onSearchStarted}></MediaSearchBar>
+        <div id="media" class="current-media">
+                <svelte:component this={Helpers.getAttachmentComponent(properties.mediaType)} attachment={properties.key}/>
+        </div>
+        <div id="media-select-zone">
+            <MediaSearchBar on:search-started={onSearchStarted} on:search-ended={onSearchEnded}></MediaSearchBar>
             <div class="all-media-list">
+                <div class="searching">
+                    <span>Recherche en cours</span>
+                    <div>
+                        <span class="first-point">.</span><span class="second-point">.</span><span class="third-point">.</span>
+                    </div>
+                </div>
                 {#each $AllMediaStores.media as media}
-                    <div class="media-container">
+                    <div class="media-container" class:selected={media.key === properties.key}>
                         <svelte:component on:click={onMediaClick} this={Helpers.getAttachmentComponent(media.mediaType)} attachment={media.key}/>
                     </div>
                 {/each}

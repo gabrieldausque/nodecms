@@ -15,10 +15,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 100%;
     }
 
     .component-container:hover {
         border: solid 2px red;
+    }
+
+    .contextual-menu {
+        position: fixed !important;
     }
 </style>
 
@@ -26,11 +31,12 @@
                                    event.stopPropagation();
                                    event.preventDefault();
                                    if(!$BlockEditorComponentStore.component) {
+                                       console.log(event);
                                        document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
                                        const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
                                        contextMenu.classList.add('show');
-                                       contextMenu.style.top = `${event.clientY}px`;
-                                       contextMenu.style.left = `${event.clientX}px`;
+                                       contextMenu.style.top = `${event.y}px`;
+                                       contextMenu.style.left = `${event.x}px`;
                                    }
                                 }}>
     <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
@@ -61,7 +67,11 @@
                 <svelte:self component={footerComponent} zone={zone}></svelte:self>
             {/each}
         {/if}
-    {:else}
+    {:else if globalContentContainerFactory.registeredConstructors[component.type].canDisplayInEditMode}
         <svelte:component this="{globalContentContainerFactory.getContentContainer(component.type)}" properties="{component.properties}"></svelte:component>
+    {:else}
+        <div>
+            Ce bloc n'est pas affichable en mode édition du document
+        </div>
     {/if}
 </div>

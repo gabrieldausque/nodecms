@@ -96,6 +96,7 @@
         if(documentKey){
             if(documentKey === 'documents'){
                 const services = await getBackendClient();
+                $DocumentsStore.documents = [];
                 $DocumentsStore.documents = await services.documentService.findDocument();
                 const indexes = $DocumentsStore.documents.map(d => d.id);
                 $DocumentsStore.hasNext = (await services.documentService.findDocument({

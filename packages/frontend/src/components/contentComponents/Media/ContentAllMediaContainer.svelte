@@ -210,6 +210,7 @@
     .all-media-panel {
         display: flex;
         height:100%;
+        width: 100%;
     }
     .media-menu {
         flex-grow: 1;
@@ -226,7 +227,6 @@
     }
     .all-media {
         flex-grow: 12;
-        height: 100%;
         max-height: 100%;
         min-height: 100%;
         overflow: hidden;
@@ -256,6 +256,9 @@
     .all-media-list {
         display: flex;
         flex-wrap: wrap;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .media-container {

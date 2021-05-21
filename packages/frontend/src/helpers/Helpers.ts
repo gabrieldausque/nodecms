@@ -13,6 +13,8 @@ export class Helpers {
     static styleOpeningLabel = '<style>';
     static styleClosingLabel = '</style>';
 
+    static documentEventsSubscribed:string[] = []
+
     static async preloadContentPreview(content){
         const contentElement = document.createElement('div');
         contentElement.innerHTML = content;
@@ -69,6 +71,13 @@ export class Helpers {
             }
         }
         return DownloadAttachment;
+    }
+
+    static subscribeToDocumentEvent(eventName:string, handler:any){
+        if(Helpers.documentEventsSubscribed.indexOf(eventName) < 0){
+            document.addEventListener(eventName, handler);
+            Helpers.documentEventsSubscribed.push(eventName);
+        }
     }
 
 }

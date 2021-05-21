@@ -1,20 +1,30 @@
 export class ContentContainerFactory {
-    registeredConstructors: {
-        constructor: any
-        title?: string,
-        cssClasses?: string
+    public registeredConstructors: {
+        [constructorKey:string ] : {
+            constructor: any
+            title?: string,
+            cssClasses?: string
+            editorConstructor?: any
+            canDisplayInEditMode: boolean
+        }
     }
 
     constructor() {
         this.registeredConstructors = {}
     }
 
-    registerContentContainer(key:string, contentContainerConstructor:any, title?:string, cssClasses?:string, editorConstructor?:any){
+    registerContentContainer(key:string,
+                             contentContainerConstructor:any,
+                             titleForEdition?:string,
+                             cssClassesForEdition?:string,
+                             editorConstructor?:any,
+                             canDisplayInEditMode:boolean = true){
         this.registeredConstructors[key] = {
             constructor: contentContainerConstructor,
-            title: title,
-            cssClasses: cssClasses,
-            editorConstructor:editorConstructor
+            title: titleForEdition,
+            cssClasses: cssClassesForEdition,
+            editorConstructor:editorConstructor,
+            canDisplayInEditMode: canDisplayInEditMode
         };
     }
 
@@ -46,7 +56,6 @@ export class ContentContainerFactory {
                 constructors.push(this.registeredConstructors[c]);
             }
         }
-        console.log(constructors);
         return constructors;
     }
 }
