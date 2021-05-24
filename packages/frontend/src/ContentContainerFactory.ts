@@ -1,10 +1,11 @@
 export class ContentContainerFactory {
     public registeredConstructors: {
         [constructorKey:string ] : {
-            constructor: any
+            type:string,
+            constructor: any,
             title?: string,
-            cssClasses?: string
-            editorConstructor?: any
+            cssClasses?: string,
+            editorConstructor?: any,
             canDisplayInEditMode: boolean
         }
     }
@@ -20,6 +21,7 @@ export class ContentContainerFactory {
                              editorConstructor?:any,
                              canDisplayInEditMode:boolean = true){
         this.registeredConstructors[key] = {
+            type: key,
             constructor: contentContainerConstructor,
             title: titleForEdition,
             cssClasses: cssClassesForEdition,

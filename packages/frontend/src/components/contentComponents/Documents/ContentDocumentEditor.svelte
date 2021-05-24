@@ -10,14 +10,39 @@
     $EditableDocumentStore;
     $BlockEditorComponentStore;
 
-    function handleDragStart(e) {
-        e.dataTransfer.dropEffect = 'copy';
-        e.dataTransfer.setData('template', 'todefine');
-    }
-
     async function saveDocument(e) {
         const services = await getBackendClient();
         await services.documentService.updateDocument($EditableDocumentStore.document);
+    }
+
+    function onDropZoneEnter(event){
+        event.preventDefault();
+        if(event.target)
+            event.target.classList.add('on-hover');
+    }
+
+    function onDropZoneExit(event){
+        event.preventDefault();
+        if(event.target)
+            event.target.classList.remove('on-hover');
+    }
+
+    function onDropComponent(event){
+        if(event.target)
+            event.target.classList.remove('on-hover');
+        const newBlock = {
+            order: parseInt(event.target.getAttribute('data-order')),
+            type: event.dataTransfer.getData('constructorType'),
+            properties:{}
+        }
+        const zone = event.target.getAttribute('data-zone');
+        EditableDocumentStore.update(eds => {
+            if(!Array.isArray(eds.document.content[zone])){
+                eds.document.content[zone] = [];
+            }
+            eds.document.content[zone].push(newBlock)
+            return eds;
+        })
     }
 
 </script>
@@ -147,7 +172,7 @@
         margin-right: 2px;
     }
 
-    .drop-zone.reduced {
+    .reduced {
         transform: scale(0.4) translateX(-72%);
     }
 
@@ -175,7 +200,13 @@
         min-height: calc(100% - 41px);
     }
 
+    .drop-zone {
+        height:20px;
+    }
 
+    .drop-zone.on-hover {
+        background: red;
+    }
 
 </style>
 
@@ -184,9 +215,13 @@
         {#each globalContentContainerFactory.getConstructors() as constructorMetadata}
             {#if constructorMetadata.title}
                 <div draggable="true"
-                     on:dragstart={handleDragStart}
                      class="content-button {constructorMetadata.cssClasses}"
-                     title="{constructorMetadata.title}">
+                     title="{constructorMetadata.title}"
+                     on:dragstart={(event) => {
+                         event.dataTransfer.moveEffect = 'copy';
+                         event.dataTransfer.setData('constructorType', constructorMetadata.type)
+                     }}
+                >
                 </div>
             {/if}
         {/each}
@@ -207,8 +242,9 @@
             <div class="documentEditorContent">
                 <div id="headers" class="section">
                     <h5>En tête</h5>
-                    <div id="document-headers" class="drop-zone">
-                        {#if Array.isArray($EditableDocumentStore.document.content.headers)}
+                    <div id="document-headers" class="{$BlockEditorComponentStore.zone === 'headers'?'reduced':''}">
+                        {#if Array.isArray($EditableDocumentStore.document.content.headers) &&
+                        $EditableDocumentStore.document.content.headers.length > 0}
                             {#each $EditableDocumentStore.document.content.headers.sort((c1, c2) => {
                                 if(c1.order > c2.order)
                                     return 1;
@@ -216,14 +252,39 @@
                                     return -1;
                                 return 0;
                             }) as headerComponent}
-                                <BlockEditor component="headerComponent" zone="header"></BlockEditor>
+                                <div class="drop-zone"
+                                     data-zone="headers"
+                                     data-order="{typeof headerComponent.order === 'number'?headerComponent.order - 1:0}"
+                                     on:dragenter={onDropZoneEnter}
+                                     on:dragleave={onDropZoneExit}
+                                     on:drop={onDropComponent}
+                                     on:dragover={(event) => { event.preventDefault(); return false;}}
+                                ></div>
+                                <BlockEditor component={headerComponent} zone="headers"></BlockEditor>
+                                <div class="drop-zone"
+                                     data-zone="headers"
+                                     on:dragenter={onDropZoneEnter}
+                                     on:dragleave={onDropZoneExit}
+                                     on:drop={onDropComponent}
+                                     on:dragover={(event) => { event.preventDefault(); return false;}}
+                                     data-order="{typeof headerComponent.order === 'number' ? headerComponent.order + 1:1}"
+                                ></div>
                             {/each}
+                        {:else}
+                            <div class="drop-zone"
+                                 data-order="0"
+                                 data-zone="headers"
+                                 on:dragenter={onDropZoneEnter}
+                                 on:dragleave={onDropZoneExit}
+                                 on:drop={onDropComponent}
+                                 on:dragover={(event) => { event.preventDefault(); return false;}}
+                            ></div>
                         {/if }
                     </div>
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps</h5>
-                    <div id="document-bodies" class="drop-zone {$BlockEditorComponentStore.zone === 'body'?'reduced':''}">
+                    <div id="document-bodies" class="{$BlockEditorComponentStore.zone === 'body'?'reduced':''}">
                         {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
                             {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
                                 if(c1.order > c2.order)
@@ -232,14 +293,18 @@
                                     return -1;
                                 return 0;
                             }) as bodyComponent}
+                                <div class="drop-zone"></div>
                                 <BlockEditor component={bodyComponent} zone="body"></BlockEditor>
+                                <div class="drop-zone"></div>
+                            {:else}
+                                <div class="drop-zone"></div>
                             {/each}
                         {/if }
                     </div>
                 </div>
                 <div id="footers" class="section">
                     <h5>Pied de page</h5>
-                    <div id="document-footers" class="drop-zone">
+                    <div id="document-footers" class="{$BlockEditorComponentStore.zone === 'footers'?'reduced':''}">
                         {#if Array.isArray($EditableDocumentStore.document.content.footers)}
                             {#each $EditableDocumentStore.document.content.footers.sort((c1, c2) => {
                                 console.log(c1);
@@ -250,7 +315,11 @@
                                     return -1;
                                 return 0;
                             }) as footerComponent}
-                                <BlockEditor component={footerComponent} zone="footer"></BlockEditor>
+                                <div class="drop-zone"></div>
+                                <BlockEditor component={footerComponent} zone="footers"></BlockEditor>
+                                <div class="drop-zone"></div>
+                            {:else}
+                                <div class="drop-zone"></div>
                             {/each}
                         {/if }
                     </div>
