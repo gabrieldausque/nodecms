@@ -1,6 +1,6 @@
 import {Storage} from '../Storage'
-import {Authentication} from "../../../entities/Authentication";
-import {Authorization} from "../../../entities/Authorization";
+import {Authentication} from "@nodecms/backend-data/Authentication";
+import {Authorization} from "@nodecms/backend-data/Authorization";
 
 export interface AuthenticationStorage extends Storage<Authentication> {
 

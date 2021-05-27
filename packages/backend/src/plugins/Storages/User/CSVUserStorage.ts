@@ -3,7 +3,7 @@ import {UserStorage} from './UserStorage';
 import * as fs from "fs";
 const fsPromises = fs.promises;
 import * as path from "path";
-import {User} from "../../../entities/User";
+import {User} from "@nodecms/backend-data/User";
 
 export class CSVUserStorage extends CSVStorage<User> implements UserStorage {
   public static metadata : any[] = [

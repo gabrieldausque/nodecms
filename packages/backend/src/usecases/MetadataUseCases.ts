@@ -1,10 +1,10 @@
 import {MetadataStorage} from "../plugins/Storages/Metadata/MetadataStorage";
-import {MetadataEntityRules} from "../entities/MetadataEntityRules";
+import {MetadataEntityRules} from "@nodecms/backend-dataMetadataEntityRules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
-import {Metadata} from "../entities/Metadata";
-import {User} from "../entities/User";
-import {isNumber} from "../helpers";
+import {Metadata} from "@nodecms/backend-dataMetadata";
+import {User} from "@nodecms/backend-dataUser";
+import {isNumber} from "@nodecms/backend-datahelpers";
 
 export interface MetadataUseCasesConfiguration extends UseCaseConfiguration {
 }

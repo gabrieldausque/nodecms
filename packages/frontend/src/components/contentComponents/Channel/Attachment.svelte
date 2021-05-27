@@ -1,6 +1,6 @@
 <script>
 
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import {afterUpdate, getContext, onMount} from "svelte";
     import {FEServices, globalFEService} from "../../../FEServices";
 

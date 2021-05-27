@@ -1,13 +1,10 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {Media as MediaEntity, MediaVisibility} from "../../entities/Media";
+import {Media as MediaEntity, MediaVisibility, User as UserEntity} from "@nodecms/backend-data";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MediaUseCases} from "../../usecases/MediaUseCases";
 import {NotAuthenticated, NotImplemented} from "@feathersjs/errors";
-import {User, User as UserEntity} from "../../entities/User";
-import {isNumber} from "../../helpers";
-import {Authorization} from "../../entities/Authorization";
-import {NotFoundError} from "../../entities/Errors/NotFoundError";
+import {isNumber} from "@nodecms/backend-data";
 
 type MediaDTO = Partial<MediaEntity>
 

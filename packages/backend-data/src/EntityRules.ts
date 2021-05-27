@@ -1,4 +1,4 @@
-import {isNumber} from "../helpers";
+import {isNumber} from "./helpers";
 
 export abstract class EntityRules {
 

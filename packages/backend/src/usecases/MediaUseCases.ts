@@ -1,14 +1,14 @@
 import {UseCases} from "./UseCases";
-import {Media, MediaVisibility} from "../entities/Media";
-import {User} from "../entities/User";
+import {Media, MediaVisibility} from "@nodecms/backend-dataMedia";
+import {User} from "@nodecms/backend-dataUser";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
-import {MediaRules} from "../entities/MediaRules";
+import {MediaRules} from "@nodecms/backend-dataMediaRules";
 import {MediaStorage} from "../plugins/Storages/Media/MediaStorage";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
-import {AlreadyExistsError} from "../entities/Errors/AlreadyExistsError";
-import {NotFoundError} from "../entities/Errors/NotFoundError";
-import {NotAuthorizedError} from "../entities/Errors/NotAuthorizedError";
+import {AlreadyExistsError} from "@nodecms/backend-dataErrors/AlreadyExistsError";
+import {NotFoundError} from "@nodecms/backend-dataErrors/NotFoundError";
+import {NotAuthorizedError} from "@nodecms/backend-dataErrors/NotAuthorizedError";
 import {RoleUseCases} from "./RoleUseCases";
 
 export interface MediaUseCasesConfiguration extends UseCaseConfiguration {

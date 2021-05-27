@@ -11,10 +11,10 @@ import {ProjectsService} from "./ProjectsService";
 
 
 export class NodeCMSClient {
-    private url: string;
+    private readonly url: string;
 
-    private axiosInstance: AxiosInstance;
-    private env:string;
+    private readonly axiosInstance: AxiosInstance;
+    private readonly env?:string;
 
     public mediaService:MediaService;
     public postService: PostService;
@@ -24,7 +24,7 @@ export class NodeCMSClient {
     public utilsService: UtilsService;
     public projectsService: ProjectsService;
 
-    constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?) {
+    constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?:string) {
         this.url = cmsUrl;
         axios.defaults.withCredentials = true;
         this.env = env;
@@ -64,15 +64,15 @@ export class NodeCMSClient {
 
 }
 
-let configuration = null;
+//TODO : type the client configuration
+let configuration:any = null;
 const getClientConfig = async () => {
     if(!configuration)
         configuration = await axios.get(`${window.location.origin}/clientConfiguration.json`);
     return configuration;
 }
 
-let backendClient = null;
-
+let backendClient:NodeCMSClient;
 export const getBackendClient = async ():Promise<NodeCMSClient> => {
     const configuration = await getClientConfig();
     if(!backendClient){

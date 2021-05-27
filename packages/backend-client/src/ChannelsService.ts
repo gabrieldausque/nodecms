@@ -2,7 +2,8 @@ import axios, {AxiosInstance} from "axios";
 import {BaseServiceClient} from "./BaseServiceClient";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import io from "socket.io-client";
-import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy";
+import {SocketIOTopicServiceClientProxy} from "@hermes/topicservice/dist/clients/SocketIOTopicServiceClientProxy.js";
+import {Channel} from "@nodecms/backend-data/dist";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -11,9 +12,9 @@ export const channelsEventNames = {
 }
 
 export class ChannelsService extends BaseServiceClient {
-    private topicServiceClient: SocketIOTopicServiceClientProxy;
+    private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
-    private readonly env:string;
+    private readonly env?:string;
 
     constructor(axiosInstance: AxiosInstance, url:string, socketIoHost:string = '/', env?:string) {
         super(axiosInstance, url);
@@ -27,7 +28,7 @@ export class ChannelsService extends BaseServiceClient {
         console.log('disconnected');
         if(this.topicServiceClient){
             this.topicServiceClient.socket.close();
-            this.topicServiceClient = null;
+            this.topicServiceClient = undefined;
         }
     }
 
@@ -39,7 +40,7 @@ export class ChannelsService extends BaseServiceClient {
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             this.topicServiceClient.readyHandler = () => {
-                this.topicServiceClient.subscribe(channelsEventNames.channelsActions, async (t,m) => {
+                this.topicServiceClient?.subscribe(channelsEventNames.channelsActions, async (t,m) => {
                     const channelAction = m.content
                     document.dispatchEvent(
                         new CustomEvent(channelsEventNames.channelsActions, {detail: channelAction}));
@@ -49,7 +50,7 @@ export class ChannelsService extends BaseServiceClient {
         }
     }
 
-    async getChannel(channelName) {
+    async getChannel(channelName:string) {
         const result = (await axios.request({
             method: 'get',
             baseURL: this.url,
@@ -60,7 +61,7 @@ export class ChannelsService extends BaseServiceClient {
         return result.data;
     }
 
-    async getChannelPosts(channelName, filter?:any, lastPostId?:number) {
+    async getChannelPosts(channelName:string, filter?:any, lastPostId?:number) {
         const posts = (await axios.request({
             method:'get',
             baseURL:this.url,
@@ -79,7 +80,7 @@ export class ChannelsService extends BaseServiceClient {
         await this.createTopicServiceClient();
         const channelTopic = `channels.${channelKey}.posts`;
         const subscribe = async() => {
-            await this.topicServiceClient.subscribe(channelTopic, async (t,m) => {
+            await this.topicServiceClient?.subscribe(channelTopic, async (t,m) => {
                 try{
                     await handler(m.content);
                 }catch(error) {
@@ -88,10 +89,12 @@ export class ChannelsService extends BaseServiceClient {
             })
         }
         if(typeof handler === 'function'){
-            if((this.topicServiceClient.subscriptions?.indexOf(channelTopic) >= 0 && addNewHandler) ||
-                this.topicServiceClient.subscriptions?.indexOf(channelTopic) < 0
-            ){
-                await subscribe();
+            if(this.topicServiceClient) {
+                if((this.topicServiceClient.subscriptions?.indexOf(channelTopic) >= 0 && addNewHandler) ||
+                    this.topicServiceClient.subscriptions?.indexOf(channelTopic) < 0
+                ){
+                    await subscribe();
+                }
             }
         }
     }
@@ -107,7 +110,7 @@ export class ChannelsService extends BaseServiceClient {
         return result.data;
     }
 
-    async exists(channelKeyOrId){
+    async exists(channelKeyOrId:string){
         try{
             const result = (await axios.request({
                 method: 'get',
@@ -123,7 +126,7 @@ export class ChannelsService extends BaseServiceClient {
         return false;
     }
 
-    async createChannel(channel) {
+    async createChannel(channel:Partial<Channel>) {
         try {
             const result = (await axios.request({
                 method: 'post',
@@ -151,7 +154,7 @@ export class ChannelsService extends BaseServiceClient {
         }, lastPostId);
     }
 
-    async getChildrenPostsCount(channelKey, id):Promise<number> {
+    async getChildrenPostsCount(channelKey:string, id:number):Promise<number> {
         let count = 0;
         let children:any[] = []
         let lastChildrenId:number | undefined = undefined;

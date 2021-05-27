@@ -6,7 +6,7 @@ import {UserUseCases} from "../usecases/UserUseCases";
 import { globalInstancesFactory } from '@hermes/composition';
 import {UseCases} from "../usecases/UseCases";
 import {AuthenticationUseCases} from "../usecases/AuthenticationUseCases";
-import {isNumber} from "../helpers";
+import {isNumber} from "@nodecms/backend-datahelpers";
 
 export interface BaseServiceConfiguration {
   paginate?:number

@@ -2,7 +2,7 @@
 <script>
 
     import {globalContentContainerFactory} from "../../ContentContainerFactory";
-    import {getBackendClient} from '../../api/NodeCMSClient';
+    import {getBackendClient} from '';
     import {beforeUpdate, onMount} from 'svelte';
     import {Helpers} from "../../helpers/Helpers";
 

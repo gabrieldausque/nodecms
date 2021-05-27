@@ -1,22 +1,19 @@
 import {BaseServiceClient} from "./BaseServiceClient";
 import type {AxiosInstance} from "axios";
 import axios from "axios";
-import {globalFEService} from "../FEServices";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import io from "socket.io-client";
-import {channelsEventNames} from "./ChannelsService";
-import {SocketIOTopicServiceClientProxy} from "../../includes/SocketIOTopicServiceClientProxy";
 import {getBackendClient} from "./NodeCMSClient";
-import {DocumentsStore} from "../stores/DocumentsStore";
+import {SocketIOTopicServiceClientProxy} from "@hermes/topicservice/dist/clients/SocketIOTopicServiceClientProxy";
 
 export const documentsEventName = {
     documentsActions: 'documents.actions'
 }
 
 export class DocumentService extends BaseServiceClient {
-    private topicServiceClient: SocketIOTopicServiceClientProxy;
+    private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
-    private env: string;
+    private env?: string;
 
     constructor(axiosInstance: AxiosInstance, url:string, socketIoHost:string = '/', env?:string) {
         super(axiosInstance, url);
@@ -32,7 +29,7 @@ export class DocumentService extends BaseServiceClient {
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             this.topicServiceClient.readyHandler = () => {
-                this.topicServiceClient.subscribe(documentsEventName.documentsActions, async (t,m) => {
+                this.topicServiceClient?.subscribe(documentsEventName.documentsActions, async (t,m) => {
                     const documentAction = m.content;
                     document.dispatchEvent(new CustomEvent(documentsEventName.documentsActions, {
                         detail: documentAction
@@ -64,8 +61,6 @@ export class DocumentService extends BaseServiceClient {
             }
             return found;
         } catch(error) {
-            globalFEService.getService('displayError').displayError('Erreur lors de la recherche des documents',
-                error.response.data.message);
             throw(error);
         }
     }
@@ -85,7 +80,6 @@ export class DocumentService extends BaseServiceClient {
             }
             return obtained;
         }catch(error){
-            globalFEService.getService('displayError').displayError('Erreur lors de la lecture d\'un document', error.response.data.message);
             throw(error);
         }
     }
@@ -118,9 +112,7 @@ export class DocumentService extends BaseServiceClient {
             }));
             return result.data;
         } catch(error) {
-            const errorService = globalFEService.getService('displayError');
-            errorService.displayError('Erreur lors de la création de document',
-                error)
+            throw error
         }
     }
 
@@ -137,9 +129,7 @@ export class DocumentService extends BaseServiceClient {
             }))
             console.log(result);
         } catch(error) {
-            const errorService = globalFEService.getService('displayError');
-            errorService.displayError('Erreur lors de la mise à jour du document',
-                error)
+            throw error;
         }
     }
 }

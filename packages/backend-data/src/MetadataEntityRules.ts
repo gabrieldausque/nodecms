@@ -1,4 +1,4 @@
-import {isNumber} from "../helpers";
+import {isNumber} from "./helpers";
 import {EntityRules} from "./EntityRules";
 import {Metadata} from "./Metadata";
 

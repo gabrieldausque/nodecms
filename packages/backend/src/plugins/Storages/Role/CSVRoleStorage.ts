@@ -2,10 +2,10 @@ import {RoleStorage} from "./RoleStorage";
 import path from "path";
 const dataLoader = require('csv-load-sync');
 import * as fs from 'fs';
-import {isNumber} from '../../../helpers';
+import {isNumber} from '@nodecms/backend-data';
 import {CSVStorage} from "../CSVStorage";
-import {Metadata} from "../../../entities/Metadata";
-import {Role} from "../../../entities/Role";
+import {Metadata} from "@nodecms/backend-data";
+import {Role} from "@nodecms/backend-data";
 const fsPromises = fs.promises;
 
 export class CSVRoleStorage extends CSVStorage<Role> implements RoleStorage{

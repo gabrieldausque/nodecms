@@ -1,17 +1,17 @@
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserStorage} from '../plugins/Storages/User/UserStorage';
-import {UserEntityRules} from "../entities/UserEntityRules";
+import {UserEntityRules} from "@nodecms/backend-dataUserEntityRules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
 import {MetadataUseCases} from "./MetadataUseCases";
-import {isNumber} from "../helpers";
+import {isNumber} from "@nodecms/backend-datahelpers";
 import {RoleUseCases} from "./RoleUseCases";
 import {AuthorizationUseCases} from "./AuthorizationUseCases";
-import {Metadata} from "../entities/Metadata";
-import {Authorization} from "../entities/Authorization";
-import {Role} from "../entities/Role";
-import {User} from "../entities/User";
-import {Entity} from "../entities/Entity";
+import {Metadata} from "@nodecms/backend-dataMetadata";
+import {Authorization} from "@nodecms/backend-dataAuthorization";
+import {Role} from "@nodecms/backend-dataRole";
+import {User} from "@nodecms/backend-dataUser";
+import {Entity} from "@nodecms/backend-dataEntity";
 
 export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 

@@ -5,7 +5,7 @@ import {Server} from "http";
 import axios from "axios";
 import {globalInstancesFactory} from "@hermes/composition";
 import {Document} from "../../src/services/document/document.class"
-import {Document as DocumentEntity} from "../../src/entities/Document"
+import {Document as DocumentEntity} from "../../../backend-data/src/Document"
 import {v4 as uuid} from "uuid";
 const port = app.get('port') || 3030;
 

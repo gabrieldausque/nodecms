@@ -9,7 +9,7 @@ import {Server} from "http";
 import {globalInstancesFactory} from "@hermes/composition";
 import {expect,getAuthenticationParams, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {Media as MediaService} from "../../src/services/media/media.class";
-import {Media, MediaVisibility} from '../../src/entities/Media';
+import {Media, MediaVisibility} from '../../../backend-data/src/Media';
 import axios from "axios";
 import * as fs from 'fs';
 import {v4 as uuid} from "uuid";

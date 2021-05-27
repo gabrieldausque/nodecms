@@ -1,5 +1,6 @@
 export class TempCache {
-    private innerCache: { [key:string] : any};
+
+    private readonly innerCache: { [key:string] : any};
     constructor() {
         this.innerCache = {};
     }
@@ -7,7 +8,7 @@ export class TempCache {
         this.innerCache[key] = data;
     }
 
-    get(key):any {
+    get(key:string):any {
         const data = this.innerCache[key];
         return data;
     }

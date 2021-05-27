@@ -1,6 +1,5 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {Metadata} from "../../../entities/Metadata";
-import {isNumber} from "../../../helpers";
+import {Metadata, isNumber} from "@nodecms/backend-data";
 
 export class MongoDbMetadataStorage extends MongoDbStorage<Metadata> {
 

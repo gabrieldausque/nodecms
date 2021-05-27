@@ -3,17 +3,16 @@ import { Application } from '../../declarations';
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {ChannelPost as ChannelPostEntity} from '../../entities/ChannelPost'
+import {ChannelPost as ChannelPostEntity} from '@nodecms/backend-data/ChannelPost'
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {ChannelPostUseCases} from "../../usecases/ChannelPostUseCases";
 import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {globalInstancesFactory} from "@hermes/composition";
-import {Channel, ChannelVisibility} from "../../entities/Channel";
-import {User} from "../../entities/User";
+import {Channel, ChannelVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {TopicMessage, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {Logger} from "../../plugins/Logging/Logger";
-import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
-import {isNumber} from "../../helpers";
+import {NotAuthorizedError} from "@nodecms/backend-data";
 
 type Data = ChannelPostEntity
 

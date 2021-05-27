@@ -1,8 +1,8 @@
 import path from 'path';
 import * as fs from 'fs';
 import {Storage} from './Storage';
-import {Metadata} from "../../entities/Metadata";
-import {Entity} from "../../entities/Entity";
+import {Metadata} from "@nodecms/backend-data/Metadata";
+import {Entity} from "@nodecms/backend-data/Entity";
 
 const fsPromises = fs.promises;
 

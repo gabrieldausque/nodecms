@@ -8,7 +8,7 @@ import {getUrl, expect, initMongoDbTestDatabase} from "../../src/tests/TestsHelp
 import app from '../../src/app';
 import {globalInstancesFactory} from "@hermes/composition";
 import {Role} from "../../src/services/role/role.class";
-import {Role as RoleEntity} from '../../src/entities/Role';
+import {Role as RoleEntity} from '../../../backend-data/src/Role';
 import {getAuthenticationParams} from "../../src/tests/TestsHelpers";
 import {v4 as uuid} from "uuid";
 const port = app.get('port') || 3030;

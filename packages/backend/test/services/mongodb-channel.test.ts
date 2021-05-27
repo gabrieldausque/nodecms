@@ -6,7 +6,7 @@ import {expect, getAuthenticationParams, initMongoDbTestDatabase} from "../../sr
 import axios from "axios";
 import * as url from "url";
 import {promisify} from "util";
-import {Channel as ChannelEntity, ChannelVisibility} from "../../src/entities/Channel";
+import {Channel as ChannelEntity, ChannelVisibility} from "../../../backend-data/src/Channel";
 import {Channel} from "../../src/services/channel/channel.class";
 import {ChannelPost} from "../../src/services/channel-post/channel-post.class";
 import {Role} from "../../src/services/role/role.class";

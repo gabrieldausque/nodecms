@@ -1,7 +1,7 @@
 import App from './App.svelte';
-import {getBackendClient} from './api/NodeCMSClient';
+import {getBackendClient} from '../../backend-client/src/NodeCMSClient';
 import {FEServices, globalFEService} from "./FEServices";
-import {TempCache} from "./api/TempCache";
+import {TempCache} from "../../backend-client/src/TempCache";
 import {DocumentStore} from "./stores/DocumentStore";
 
 const params = (new URL(window.location.href)).searchParams;

@@ -1,12 +1,11 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
-import {User, User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "@nodecms/backend-data";
 import {DocumentUseCases} from "../../usecases/DocumentUseCases";
-import {Document as DocumentEntity, DocumentVisibility} from "../../entities/Document";
+import {Document as DocumentEntity, DocumentVisibility} from "@nodecms/backend-data";
 import {NotAcceptable, NotAuthenticated, NotFound} from "@feathersjs/errors";
-import {isNumber} from "../../helpers";
+import {isNumber} from "@nodecms/backend-data";
 import { TopicService, TopicServiceConfiguration } from '@hermes/topicservice';
 import { globalInstancesFactory } from '@hermes/composition';
 

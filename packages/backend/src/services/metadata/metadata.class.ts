@@ -1,11 +1,10 @@
-import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
+import { Id, NullableId, Paginated, Params} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
-import {NotAcceptable, NotFound} from "@feathersjs/errors";
-import {isNumber} from "../../helpers";
-import {globalInstancesFactory} from "@hermes/composition";
-import {User, User as UserEntity} from "../../entities/User";
+import {NotFound} from "@feathersjs/errors";
+import {isNumber} from "@nodecms/backend-data";
+import {User as UserEntity} from "@nodecms/backend-data";
 
 
 export interface MetadataDTO {

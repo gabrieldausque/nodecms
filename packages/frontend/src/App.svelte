@@ -17,7 +17,7 @@
 	import ContentMediaContainerEditor from './components/contentComponents/Editors/ContentMediaContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {onMount} from "svelte";
-	import {getBackendClient} from "./api/NodeCMSClient";
+	import {getBackendClient} from "@nodecms/backend-client";
 	import ErrorModal from "./components/ErrorModal.svelte";
 	import {DocumentStore} from "./stores/DocumentStore";
 

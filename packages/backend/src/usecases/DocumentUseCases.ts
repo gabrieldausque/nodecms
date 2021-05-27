@@ -1,13 +1,13 @@
 import {UseCases} from "./UseCases";
-import {Document, DocumentVisibility} from "../entities/Document";
-import {User} from "../entities/User";
-import {DocumentRules} from "../entities/DocumentRules";
+import {Document, DocumentVisibility} from "@nodecms/backend-dataDocument";
+import {User} from "@nodecms/backend-dataUser";
+import {DocumentRules} from "@nodecms/backend-dataDocumentRules";
 import {DocumentStorage} from "../plugins/Storages/Document/DocumentStorage";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
-import {Role} from "../entities/Role";
+import {Role} from "@nodecms/backend-dataRole";
 
 export class DocumentUseCases extends UseCases<Document> {
 

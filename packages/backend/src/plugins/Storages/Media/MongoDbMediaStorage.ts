@@ -1,14 +1,11 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
 import {MediaStorage} from "./MediaStorage";
-import {Media} from "../../../entities/Media";
+import {Media, isNumber, MediaRules} from "@nodecms/backend-data";
 import * as fs from "fs";
 import {promisify} from 'util';
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 import {v4} from 'uuid';
-
-import {isNumber} from "../../../helpers";
-import {MediaRules} from "../../../entities/MediaRules";
 
 export interface MongoDbMediaStorageConfiguration extends MongoDbStorageConfiguration {
   fsStore:string

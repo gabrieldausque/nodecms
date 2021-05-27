@@ -1,7 +1,6 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {Authorization} from "../../../entities/Authorization";
+import {Authorization, isNumber} from "@nodecms/backend-data";
 import {AuthorizationStorage} from "./AuthorizationStorage";
-import {isNumber} from "../../../helpers";
 
 export class MongoDbAuthorizationStorage extends MongoDbStorage<Authorization> {
 

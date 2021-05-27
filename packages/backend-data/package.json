@@ -1,0 +1,23 @@
+{
+  "name": "@nodecms/backend-data",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "dependencies": {
+    "shx": "^0.3.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2"
+  },
+  "author": {
+    "name": "Gabriel DAUSQUE",
+    "email": "gabrieldausque.pro@gmail.com"
+  },
+  "contributors": ["gabrieldausque.pro@gmail.com"],
+  "bugs": {},
+  "directories": {
+    "lib": "src"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/shx rm -rf dist/ && tsc "
+  }
+}

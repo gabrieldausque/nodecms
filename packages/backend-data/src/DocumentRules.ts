@@ -1,7 +1,7 @@
 import {EntityRules} from "./EntityRules";
 import {User} from "./User";
 import {Document, DocumentVisibility} from "./Document"
-import {isNumber} from "../helpers";
+import {isNumber} from "./helpers";
 import { globalInstancesFactory } from "@hermes/composition";
 
 export class DocumentRules extends EntityRules {

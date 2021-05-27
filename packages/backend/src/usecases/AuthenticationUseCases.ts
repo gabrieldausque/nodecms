@@ -1,12 +1,12 @@
 import {UseCases} from "./UseCases";
-import {Authentication} from "../entities/Authentication";
-import {User} from "../entities/User";
+import {Authentication} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from '@hermes/composition';
 import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../plugins/Authentication/AuthenticationPlugin";
-import {AuthenticationEntityRules} from "../entities/AuthenticationEntityRules";
-import {InvalidAuthenticationError} from "../entities/Errors/InvalidAuthenticationError";
+import {AuthenticationEntityRules} from "@nodecms/backend-data";
+import {InvalidAuthenticationError} from "@nodecms/backend-data";
 import {UserUseCases} from "./UserUseCases";
 import os from "os";
 

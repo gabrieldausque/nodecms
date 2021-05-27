@@ -1,9 +1,9 @@
 <script>
-    import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
+    import {AttachmentHelpers} from "../../../../../../backend-client/src/AttachmentHelpers";
     import {beforeUpdate, onMount, createEventDispatcher} from "svelte";
     import {writable} from 'svelte/store';
     import LoadingAttachment from "./LoadingAttachment.svelte";
-    import {getBackendClient} from "../../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
 
     const dispatch = createEventDispatcher();
 

@@ -1,0 +1,21 @@
+{
+  "name": "@nodecms/backend-client",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@nodecms/backend-data": "*",
+    "@hermes/topicservice": "^2.0.7"
+  },
+  "author": {
+    "name": "Gabriel DAUSQUE",
+    "email": "gabrieldausque.pro@gmail.com"
+  },
+  "contributors": ["gabrieldausque.pro@gmail.com"],
+  "bugs": {},
+  "directories": {
+    "lib": "src"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/shx rm -rf dist/ && tsc "
+  }
+}

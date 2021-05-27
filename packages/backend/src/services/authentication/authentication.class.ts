@@ -1,17 +1,11 @@
 import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/feathers';
 import {Application} from '../../declarations';
-import {globalInstancesFactory} from "@hermes/composition";
-import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/Authentication/AuthenticationPlugin";
 import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
-import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {User, User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "@nodecms/backend-data";
 import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
-import {UserUseCases} from "../../usecases/UserUseCases";
-import {isNumber} from "../../helpers";
-import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
-import {Authentication as AuthenticationEntity} from '../../entities/Authentication';
-import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
+import {NotAuthorizedError} from "@nodecms/backend-data";
+import {Authentication as AuthenticationEntity} from '@nodecms/backend-data';
 
 type Data = Partial<AuthenticationEntity>;
 

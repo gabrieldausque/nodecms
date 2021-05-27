@@ -9,8 +9,8 @@ export class PostService  extends BaseServiceClient{
 
     async createPost(channelKey:string, postContent:any, attachments:any, parentId?:number) {
         try {
-            const attachmentsKeys = [];
-            attachments.map((a) => attachmentsKeys.push(a.key));
+            const attachmentsKeys:string[] = [];
+            attachments.map((a:any) => attachmentsKeys.push(a.key));
             let data = undefined;
             if(typeof parentId !== 'number')
                 data = {

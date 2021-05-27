@@ -1,8 +1,6 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {Document} from "../../../entities/Document";
+import {Document, Channel, isNumber} from "@nodecms/backend-data";
 import {DocumentStorage} from "./DocumentStorage";
-import {isNumber} from "../../../helpers";
-import {Channel} from "../../../entities/Channel";
 
 export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements DocumentStorage {
 

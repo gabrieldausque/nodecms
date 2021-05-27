@@ -1,11 +1,9 @@
 import {BaseServiceClient} from "./BaseServiceClient";
 // @ts-ignore
 import {AxiosInstance} from "axios";
-import {Project} from "../stores/ProjectStore";
+import type {Project} from '@nodecms/backend-data';
 
 export class ProjectsService extends BaseServiceClient {
-
-
 
     projects:Array<Project>;
 
@@ -14,7 +12,7 @@ export class ProjectsService extends BaseServiceClient {
         this.projects = new Array<Project>();
     }
 
-    getRandomInt(max) {
+    getRandomInt(max:number) {
         let nextId = Math.floor(Math.random() * Math.floor(max));
         while(this.projects.find(p => p.id === nextId)){
             nextId = Math.floor(Math.random() * Math.floor(max));
@@ -25,10 +23,14 @@ export class ProjectsService extends BaseServiceClient {
     async createProject(label:string,
                         key:string,
                         description?:string) {
-        const p = new Project();
+        const p:Project = {
+            label: '',
+            key: '',
+            description: ''
+        };
         p.key = key;
         p.id = this.getRandomInt(10000);
-        p.description = description;
+        p.description = description?description:'';
         p.label = label;
         this.projects.push(p);
         console.log(this);

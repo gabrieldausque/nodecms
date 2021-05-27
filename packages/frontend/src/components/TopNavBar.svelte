@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {getBackendClient} from '../api/NodeCMSClient';
+    import {getBackendClient} from '@nodecms/backend-client';
     import User from "./User.svelte";
     import {onMount} from "svelte";
 

@@ -1,9 +1,8 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {User} from "../../../entities/User";
-import {Logger} from "../../Logging/Logger";
+import {User} from "@nodecms/backend-data";
 import {globalInstancesFactory} from "@hermes/composition";
 import {EncryptionPlugin} from "../../Encryption/EncryptionPlugin";
-import {isNumber} from "../../../helpers";
+import {isNumber} from "@nodecms/backend-data";
 
 export interface MongoDbUserStorageConfiguration extends MongoDbStorageConfiguration{
   encryptionPluginContractName:string

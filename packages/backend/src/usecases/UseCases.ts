@@ -1,11 +1,11 @@
 import {Storage} from "../plugins/Storages/Storage";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
-import {Entity} from "../entities/Entity";
+import {Entity} from "@nodecms/backend-dataEntity";
 import {AuthorizationUseCases} from "./AuthorizationUseCases";
 import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
-import {User} from "../entities/User";
+import {User} from "@nodecms/backend-dataUser";
 
 export abstract class UseCases<T extends Entity> {
   public storage: Storage<T>;
