@@ -287,21 +287,21 @@
                 <form id="CreateChannelForm" class="">
                     <div class="mb-3">
                         <label for="channelLabel">Label</label>
-                        <input on:change={onLabelChanged} class="form-control" id="channelLabel" name="channelLabel" type="text" required>
+                        <input on:blur={onLabelChanged} class="form-control" id="channelLabel" name="channelLabel" type="text" required>
                         <div class="invalid-feedback">
                             Le label ne peut pas être vide.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="channelKey">Clé unique du canal</label>
-                        <input on:change={onKeyChanged} class="form-control" id="channelKey" name="channelKey" type="text" required>
+                        <input on:blur={onKeyChanged} class="form-control" id="channelKey" name="channelKey" type="text" required>
                         <div class="invalid-feedback">
                             La clé ne peut pas être vide ou un canal avec la même clé existe déjà.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="channelVisibility">Visibilité</label>
-                        <select on:change={onVisibilityChanged} class="form-select" id="channelVisibility" name="channelVisibility" required title="Un canal privé n'est accessible et visible que par ses membres">
+                        <select on:blur={onVisibilityChanged} class="form-select" id="channelVisibility" name="channelVisibility" required title="Un canal privé n'est accessible et visible que par ses membres">
                             <option value="private" >Privé</option>
                             <option value="protected" >Protégé</option>
                             <option value="public">Public</option>

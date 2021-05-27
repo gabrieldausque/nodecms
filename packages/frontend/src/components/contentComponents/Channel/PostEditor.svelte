@@ -1,6 +1,6 @@
 <script>
 
-    import Editor from "cl-editor";
+    import Editor from "cl-editor/src/Editor.svelte";
     import {afterUpdate, onMount} from "svelte";
     import {getBackendClient} from "@nodecms/backend-client";
     import * as uuid from 'uuid';

@@ -1,16 +1,23 @@
 import {BaseServiceClient} from "./BaseServiceClient";
-import type {AxiosInstance} from "axios";
-import axios from "axios";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import {v4 as uuid} from 'uuid';
+import {Authentication, User} from "@nodecms/backend-data/dist";
 
-export class UserService extends BaseServiceClient {
+export class AuthenticationService extends BaseServiceClient<Authentication> {
+    constructor(url: string) {
+        super(url, 'authentication');
+    }
+}
+
+export class UserService extends BaseServiceClient<User> {
 
     public isAuthenticated:boolean;
+    private authenticationService: AuthenticationService;
 
-    constructor(axiosInstance: AxiosInstance, url:string) {
-        super(axiosInstance, url);
+    constructor(url:string) {
+        super(url, 'user');
         this.isAuthenticated = false;
+        this.authenticationService = new AuthenticationService(this.url);
     }
 
     getClientUniqueId() {
@@ -25,27 +32,18 @@ export class UserService extends BaseServiceClient {
     }
 
     async checkAuthentication() {
-        const value = await axios.request({
-            method:'get',
-            baseURL:this.url,
-            url:'authentication'
-        })
+        const value = await this.authenticationService.find();
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
         document.dispatchEvent(authenticateEvent);
-        this.isAuthenticated = value.data;
-        return value.data;
+        this.isAuthenticated = true;
+        return value;
     }
 
     async authenticate(login:string, password:string){
-        await axios.request({
-            method:'post',
-            baseURL:this.url,
-            url:'authentication',
-            data: {
-                login,
-                password,
-                clientUniqueId: this.getClientUniqueId()
-            }
+        await this.authenticationService.create({
+            login,
+            password,
+            clientUniqueId: this.getClientUniqueId()
         })
         this.isAuthenticated = true;
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
@@ -54,15 +52,8 @@ export class UserService extends BaseServiceClient {
 
     async logOut() {
         try{
-            const response = await axios.request({
-                method:'delete',
-                baseURL:this.url,
-                url:'authentication',
-                headers:this.createHeaders()
-            });
-            console.log(response);
+            const response = await this.authenticationService.delete(0);
             const logoutEvent = new Event(NodeCMSFrontEndEvents.UserLogoutEventName);
-            document.dispatchEvent(logoutEvent);
         }catch(error){
             console.error(error);
         }
@@ -71,12 +62,7 @@ export class UserService extends BaseServiceClient {
 
     async getUser(ownerId: number) {
         try{
-            const user = await axios.request({
-                method:'get',
-                baseURL:this.url,
-                url:`user/${ownerId}`
-            });
-            return user.data;
+            return await this.get(ownerId);
         }catch(error) {
             throw(error);
         }

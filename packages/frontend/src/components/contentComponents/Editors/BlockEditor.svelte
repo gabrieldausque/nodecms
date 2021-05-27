@@ -41,13 +41,13 @@
                                    }
                                 }}>
     <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
-        <a class="dropdown-item" href="" on:click={(event) => {
+        <div class="dropdown-item" on:click={(event) => {
                                              event.stopPropagation();
                                              event.preventDefault();
                                              document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
                                              $BlockEditorComponentStore.component = component;
                                              $BlockEditorComponentStore.zone = zone;
-                                         }}>Editer</a>
+                                         }}>Editer</div>
     </div>
     {#if component.properties.globalStyle}
         {@html Helpers.styleOpeningLabel + component.properties.globalStyle + Helpers.styleClosingLabel}

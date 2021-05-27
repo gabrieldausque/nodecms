@@ -278,7 +278,7 @@
                 <div id="CreateDocumentForm" class="">
                     <div class="mb-3">
                         <label for="documentKey">Clé</label>
-                        <input on:change={onDocumentKeyChanged}
+                        <input on:blur={onDocumentKeyChanged}
                                class="form-control"
                                id="documentKey" name="documentKey" type="text" required>
                         <div class="invalid-feedback">
@@ -287,7 +287,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="documentVisibility">Visibilité</label>
-                        <select on:change={onVisibilityChanged} class="form-select"
+                        <select on:blur={onVisibilityChanged} class="form-select"
                                 id="documentVisibility" name="documentVisibility"
                                 required title="Un document privé n'est accessible et visible que par ses lecteurs et les administrateurs">
                             <option value="private" >Privé</option>

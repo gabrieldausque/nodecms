@@ -41,12 +41,13 @@
     "sirv-cli": "^1.0.0",
     "axios": "^0.21.1",
     "cl-editor": "^2.1.1",
-    "socket.io-client": "^2.3.1",
+    "socket.io-client": "^2.4.0",
     "uuid": "^8.3.2",
     "jquery": "^3.5.1",
     "underscore": "^1.12.0",
     "highlight.js": "^10.7.2",
     "@nodecms/backend-data": "^0.0.0",
-    "@nodecms/backend-client": "^0.0.0"
+    "@nodecms/backend-client": "^0.0.0",
+    "@types/underscore": "^1.11.2"
   }
 }

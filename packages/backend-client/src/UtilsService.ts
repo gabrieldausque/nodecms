@@ -1,33 +1,17 @@
 import {BaseServiceClient} from "./BaseServiceClient";
-import type {AxiosInstance} from "axios";
-
-export interface WebThumbnail {
-    mediaId: number,
-    title: string,
-    description: string,
-    url: string
-}
+import {WebThumbnail} from "@nodecms/backend-data/dist";
 
 export type NullableWebThumbnail = WebThumbnail | null | undefined;
 
-export class UtilsService extends BaseServiceClient {
+export class UtilsService extends BaseServiceClient<WebThumbnail> {
 
-    constructor(axiosInstance: AxiosInstance, url:string) {
-        super(axiosInstance, url);
+    constructor(url:string) {
+        super(url, 'webthumbnail');
     }
 
     async getWebsiteThumbnail(URL:string):Promise<NullableWebThumbnail>{
         try {
-            const mediaThumbnail:WebThumbnail = (await this.axiosInstance.request({
-                method:'get',
-                baseURL:this.url,
-                url:'webthumbnail',
-                params:{
-                    id:URL
-                }
-            })).data[0]
-            console.log(mediaThumbnail);
-            return mediaThumbnail;
+            return await this.get(URL);
         }catch(error){
             console.error(error);
         }

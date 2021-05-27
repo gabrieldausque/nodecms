@@ -8,9 +8,8 @@ import nodeGlobals from "rollup-plugin-node-globals";
 import builtins from 'rollup-plugin-node-builtins';
 import babel from '@rollup/plugin-babel';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
-
-import css from 'rollup-plugin-css-only';
 const production = !process.env.ROLLUP_WATCH;
+import css from 'rollup-plugin-css-only';
 
 function serve() {
 	let server;
@@ -39,12 +38,16 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/js/node-cms/bundle.js',
-		globals:{
-			'https':'https'
-		}
+		file: 'public/js/node-cms/bundle.js'
 	},
 	plugins: [
+		svelte({
+			// enable run-time checks when not in production
+			dev: !production,
+			// we'll extract any component CSS out into
+			// a separate file - better for performance
+			cssEmit: false
+		}),
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -58,14 +61,6 @@ export default {
 		typescript({ sourceMap: !production }),
 		nodeGlobals(),
 		builtins(),
-		nodePolyfills(),
-		babel({babelHelpers: "bundled"}),
-		svelte({
-			emitCss: false,
-			compilerOptions: {
-				dev: !production
-			}
-		}),
 		css({ output: 'bundle.css'}),
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated

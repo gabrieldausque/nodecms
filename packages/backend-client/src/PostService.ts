@@ -1,17 +1,17 @@
-import axios, {AxiosInstance} from "axios";
 import {BaseServiceClient} from "./BaseServiceClient";
+import {ChannelPost} from "@nodecms/backend-data/dist";
 
-export class PostService  extends BaseServiceClient{
+export class PostService  extends BaseServiceClient<ChannelPost>{
 
-    constructor(axiosInstance: AxiosInstance, url:string) {
-        super(axiosInstance, url)
+    constructor(url:string) {
+        super(url, 'posts')
     }
 
     async createPost(channelKey:string, postContent:any, attachments:any, parentId?:number) {
         try {
             const attachmentsKeys:string[] = [];
             attachments.map((a:any) => attachmentsKeys.push(a.key));
-            let data = undefined;
+            let data:ChannelPost;
             if(typeof parentId !== 'number')
                 data = {
                     content: postContent,
@@ -23,14 +23,19 @@ export class PostService  extends BaseServiceClient{
                     content: postContent,
                     attachments: attachmentsKeys
                 }
-            await axios.request({
-                method: 'post',
-                baseURL: this.url,
-                url: `channel/${channelKey}/posts`,
-                data: data,
-                withCredentials: true,
-                headers:this.createHeaders()
+            const request = new XMLHttpRequest();
+            request.open('POST', `channel/${channelKey}/posts`, true);
+            const requestPromise = new Promise<ChannelPost>((resolve, reject) => {
+                this.createHeaders(request);
+                request.onreadystatechange = () => {
+                    if(request.status === 201)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
+                request.send(JSON.stringify(data));
             });
+            return await requestPromise;
         }catch(error) {
             console.log(error);
         }

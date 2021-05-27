@@ -21,7 +21,6 @@
 	import {DocumentStore} from "./stores/DocumentStore";
 
 	$DocumentStore;
-	export let url="";
 
 	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer,
 			'Conteneur', 'fas fa-sitemap');

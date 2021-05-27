@@ -5,6 +5,7 @@ import io from "socket.io-client";
 // @ts-ignore
 import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy.js";
 import type {Channel} from "@nodecms/backend-data";
+import {ChannelPost} from "@nodecms/backend-data/dist";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -12,13 +13,13 @@ export const channelsEventNames = {
     channelsActions:'channels.actions'
 }
 
-export class ChannelsService extends BaseServiceClient {
+export class ChannelsService extends BaseServiceClient<Channel> {
     private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
     private readonly env?:string;
 
-    constructor(axiosInstance: AxiosInstance, url:string, socketIoHost:string = '/', env?:string) {
-        super(axiosInstance, url);
+    constructor(url:string, socketIoHost:string = '/', env?:string) {
+        super(url, 'channel');
         this.socketIoUrl = socketIoHost?socketIoHost:this.url;
         this.env = env;
         document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, this.createTopicServiceClient.bind(this));
@@ -52,25 +53,36 @@ export class ChannelsService extends BaseServiceClient {
     }
 
     async getChannel(channelName:string) {
-        const result = (await axios.request({
-            method: 'get',
-            baseURL: this.url,
-            url: `channel/${channelName}`,
-            withCredentials: true,
-            headers:this.createHeaders()
-        }));
-        return result.data;
+        return await this.get(channelName);
     }
 
     async getChannelPosts(channelName:string, filter?:any, lastPostId?:number) {
-        const posts = (await axios.request({
-            method:'get',
-            baseURL:this.url,
-            url: `channel/${channelName}/posts/`,
-            params: {...filter, ...{ lastIndex: lastPostId}}
-        })).data;
+        const request = new XMLHttpRequest();
+        const url = `channel/${channelName}/posts/`;
+        const params = {...filter, ...{ lastIndex: lastPostId}};
+        request.open('GET', url, true);
+        const requestPromise = new Promise<ChannelPost[]>((resolve, reject) => {
+            this.createHeaders(request);
+            request.onreadystatechange = () => {
+                if(request.status === 200)
+                    resolve(JSON.parse(request.responseText));
+                else
+                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
+            }
+            const p:URLSearchParams = new URLSearchParams();
+            if(params)
+            {
+                for(const filter in params){
+                    if(params.hasOwnProperty(filter)){
+                        params.append(filter,params[filter]);
+                    }
+                }
+            }
+            request.send(p);
+        });
+        const posts = await requestPromise;
         for(const p of posts){
-            if(typeof p.parentPost !== 'number'){
+            if(typeof p.parentPost !== 'number' && p.channelKey && typeof p.id === 'number'){
                 p.answerCount = await this.getChildrenPostsCount(p.channelKey, p.id);
             }
         }
@@ -101,43 +113,21 @@ export class ChannelsService extends BaseServiceClient {
     }
 
     async getAvailableChannels() {
-        const result = (await axios.request({
-            method: 'get',
-            baseURL: this.url,
-            url: `channel`,
-            withCredentials: true,
-            headers:this.createHeaders()
-        }));
-        return result.data;
+        return await this.find();
     }
 
     async exists(channelKeyOrId:string){
         try{
-            const result = (await axios.request({
-                method: 'get',
-                baseURL: this.url,
-                url: `channel/${channelKeyOrId}`,
-                withCredentials: true,
-                headers:this.createHeaders()
-            }));
-            return result.status === 200;
+            return typeof (await this.get(channelKeyOrId)).id === 'number';
         }catch(error){
 
         }
         return false;
     }
 
-    async createChannel(channel:Partial<Channel>) {
+    async createChannel(channel:Channel) {
         try {
-            const result = (await axios.request({
-                method: 'post',
-                baseURL: this.url,
-                url: `channel`,
-                data: channel,
-                withCredentials: true,
-                headers:this.createHeaders()
-            }));
-            return result.data;
+            return this.create(channel);
         }catch(error){
             console.error(error);
             console.log(error.response);

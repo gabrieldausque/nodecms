@@ -1,8 +1,7 @@
-import type {AxiosInstance} from "axios";
-import axios from "axios";
 import {BaseServiceClient} from "./BaseServiceClient";
+import {Media, NotAuthorizedError} from "@nodecms/backend-data/dist";
 
-export class MediaService extends BaseServiceClient {
+export class MediaService extends BaseServiceClient<Media> {
 
     public static AuthorizedMimeTypes = [
         'image/gif',
@@ -24,37 +23,23 @@ export class MediaService extends BaseServiceClient {
         'application/pdf'
     ]
 
-
-    constructor(axiosInstance: AxiosInstance, url:string) {
-        super(axiosInstance, url)
+    constructor(url:string) {
+        super(url, 'media');
     }
 
     async getMedia(keyOrId:string | number) {
-        let response;
         try{
-            response = await axios.request({
-                method: 'get',
-                baseURL: this.url,
-                url: `media/${keyOrId}`
-            })
-            return response.data;
+            return await this.get(keyOrId);
         } catch(error) {
             console.error(error);
         }
     }
 
     async getMediaMetadata(key:string) {
-        let response;
         try{
-            response = await axios.request({
-                method:'get',
-                baseURL: this.url,
-                url: 'media',
-                params: {
-                    key:key
-                }
-            })
-            return response.data[0];
+            return (await this.find({
+                key: key
+            }))[0]
         }catch(error) {
             console.error(error);
         }
@@ -64,18 +49,11 @@ export class MediaService extends BaseServiceClient {
             key?:string,
             label?:string,
             mediaType?:string,
-            ownerId?:number
+            ownerId?:string
             tags?:string[]
     }) {
-        let response;
         try{
-            response = await axios.request({
-                method:'get',
-                baseURL: this.url,
-                url: 'media',
-                params: filter
-            })
-            return response.data;
+            return await this.find(filter);
         }catch(error) {
             console.error(error);
         }
@@ -95,18 +73,31 @@ export class MediaService extends BaseServiceClient {
             for(const readerRoleId of readers){
                 f.append(`readers[${readers.indexOf(readerRoleId)}]`,readerRoleId);
             }
-            await axios.request({
-                method: 'post',
-                baseURL: this.url,
-                url: 'media',
-                data:f,
-                headers: {
-                    'Content-Type': 'multipart/form-data; boundary=${data._boundary}',
+            const request = new XMLHttpRequest();
+            request.open('POST', `${this.url}/${this.service}`, true);
+            const requestPromise = new Promise<Media>((resolve, reject) => {
+                this.createHeaders(request);
+                request.setRequestHeader('Content-Type', 'multipart/form-data; boundary=${data._boundary}')
+                request.onreadystatechange = () => {
+                    if(request.status === 201)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
                 }
-            })
+                request.send(f);
+            });
+            return await requestPromise;
         } catch(error) {
             throw error;
         }
+    }
+
+    async create(entity:Media):Promise<Media> {
+        throw new NotAuthorizedError('This method is not available for media creation. Use createMedia instead.')
+    }
+
+    async update(entity:Media):Promise<Media> {
+        throw new NotAuthorizedError('This method is not available for media creation. Use updateMedia instead.')
     }
 
     async updateMedia(key:string, label:string, visibility:string,tags:string[]= [], readers:[] = []) {
@@ -121,12 +112,19 @@ export class MediaService extends BaseServiceClient {
             for(const readerRoleId of readers){
                 f.append(`readers[${readers.indexOf(readerRoleId)}]`,readerRoleId);
             }
-            await axios.request({
-                method: 'PATCH',
-                baseURL: this.url,
-                url: `media/${key}`,
-                data:f
-            })
+            const request = new XMLHttpRequest();
+            request.open('PATCH', `${this.url}/${this.service}`, true);
+            const requestPromise = new Promise<Media>((resolve, reject) => {
+                this.createHeaders(request);
+                request.onreadystatechange = () => {
+                    if(request.status === 201)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
+                request.send(f);
+            });
+            return await requestPromise;
         } catch(error) {
             throw error;
         }
@@ -139,5 +137,6 @@ export class MediaService extends BaseServiceClient {
         }catch(ex){
             console.error(ex);
         }
+        return false;
     }
 }

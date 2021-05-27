@@ -46,7 +46,7 @@
         overflow-y: hidden;
     }
 
-    .attachment-download > label {
+    .attachment-download > div.label {
         margin-bottom: 0;
         margin-left: 5px;
     }
@@ -61,7 +61,7 @@
        href="{AttachmentHelpers.getDownloadUrl(media)}" target="_blank">
         <div class="attachment-download">
             <i class="fas fa-2x {icons[media.mediaType]}"></i>
-            <label>{media.label}</label>
+            <div class="label">{media.label}</div>
         </div>
     </a>
 {/if}

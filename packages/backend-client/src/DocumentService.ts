@@ -1,22 +1,21 @@
 import {BaseServiceClient} from "./BaseServiceClient";
-import type {AxiosInstance} from "axios";
-import axios from "axios";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import io from "socket.io-client";
 import {getBackendClient} from "./NodeCMSClient";
 import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy";
+import {Document as DocumentEntity} from '@nodecms/backend-data';
 
 export const documentsEventName = {
     documentsActions: 'documents.actions'
 }
 
-export class DocumentService extends BaseServiceClient {
+export class DocumentService extends BaseServiceClient<DocumentEntity> {
     private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
     private env?: string;
 
-    constructor(axiosInstance: AxiosInstance, url:string, socketIoHost:string = '/', env?:string) {
-        super(axiosInstance, url);
+    constructor(url:string, socketIoHost:string = '/', env?:string) {
+        super(url, 'document');
         this.socketIoUrl = socketIoHost?socketIoHost:this.url;
         document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, this.createTopicServiceClient.bind(this));
     }
@@ -45,21 +44,7 @@ export class DocumentService extends BaseServiceClient {
         lastIndex?:number
     }) {
         try {
-            const response = await axios.request({
-                method:'get',
-                baseURL:this.url,
-                url:`document`,
-                headers: this.createHeaders(),
-                params: filter
-            })
-            const found:any[] = response.data;
-            const services = await getBackendClient();
-            if(services.userService.isAuthenticated){
-                for(const doc of found){
-                    doc.author = await services.userService.getUser(doc.ownerId);
-                }
-            }
-            return found;
+            return await this.find(filter);
         } catch(error) {
             throw(error);
         }
@@ -67,13 +52,7 @@ export class DocumentService extends BaseServiceClient {
 
     async getDocument(key:string) {
         try{
-            const response = await axios.request({
-                method:'get',
-                baseURL:this.url,
-                url:`document/${key}`,
-                headers: this.createHeaders()
-            })
-            const obtained = response.data;
+            const obtained = await this.get(key);
             const services = await getBackendClient();
             if(services.userService.isAuthenticated){
                 obtained.author =  await services.userService.getUser(obtained.ownerId);
@@ -86,48 +65,24 @@ export class DocumentService extends BaseServiceClient {
 
     async exists(key: string) {
         try {
-            const result = (await  axios.request({
-                method: 'get',
-                baseURL: this.url,
-                url:  `document/${key}`,
-                withCredentials: true,
-                headers:this.createHeaders()
-            }))
-            return result.status === 200;
+            return typeof (await this.get(key)).id === 'number'
         }catch(error) {
 
         }
         return false;
     }
 
-    async createDocument(newDocument: any) {
+    async createDocument(newDocument: DocumentEntity) {
         try {
-            const result = (await axios.request({
-                method:'post',
-                baseURL: this.url,
-                url:'document',
-                data:newDocument,
-                withCredentials:true,
-                headers:this.createHeaders()
-            }));
-            return result.data;
+            return await this.create(newDocument)
         } catch(error) {
             throw error
         }
     }
 
-    async updateDocument(documentUpdated:any){
+    async updateDocument(documentUpdated:DocumentEntity){
         try{
-            console.log(documentUpdated);
-            const result = (await axios.request({
-                method: 'put',
-                baseURL: this.url,
-                url:`document/${documentUpdated.id}`,
-                data:documentUpdated,
-                withCredentials:true,
-                headers:this.createHeaders()
-            }))
-            console.log(result);
+            return await this.update(documentUpdated);
         } catch(error) {
             throw error;
         }

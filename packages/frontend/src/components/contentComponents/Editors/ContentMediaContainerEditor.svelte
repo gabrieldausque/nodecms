@@ -10,7 +10,7 @@
 
 <script>
 
-    import Editor from "cl-editor";
+    import Editor from "cl-editor/src/Editor.svelte";
     import {v4 as uuid} from 'uuid';
     import {onMount, onDestroy} from 'svelte';
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";

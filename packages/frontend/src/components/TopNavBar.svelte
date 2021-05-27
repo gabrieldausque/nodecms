@@ -21,10 +21,10 @@
 
 <nav class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container d-flex justify-content-between">
-        <a class="navbar-brand d-flex align-items-center">
-            <img src="{imgSrc}" height="45px" width="45px" alt="an image">
+        <div class="navbar-brand d-flex align-items-center">
+            <img src="{imgSrc}" height="45px" width="45px" alt="application logo">
             <strong>{title}</strong>
-        </a>
+        </div>
         <User></User>
     </div>
 </nav>

@@ -1,14 +1,14 @@
 import {BaseServiceClient} from "./BaseServiceClient";
-// @ts-ignore
-import {AxiosInstance} from "axios";
 import type {Project} from '@nodecms/backend-data';
 
-export class ProjectsService extends BaseServiceClient {
+//TODO : Move this to extensions projects
+
+export class ProjectsService extends BaseServiceClient<Project> {
 
     projects:Array<Project>;
 
-    constructor(axiosInstance: AxiosInstance, url:string) {
-        super(axiosInstance, url);
+    constructor(url:string) {
+        super(url, 'project');
         this.projects = new Array<Project>();
     }
 
