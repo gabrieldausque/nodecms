@@ -6,14 +6,11 @@
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
     import _ from 'underscore';
-    import {MediaService} from "../../../api/MediaService";
+    import {MediaService} from "@nodecms/backend-client";
 
     export let channelKey;
     export let parentPost;
     export let targetId;
-
-    console.log(`parent post id : ${parentPost}`);
-
     let attachments = [];
 
     const authorizedMimeTypes = MediaService.AuthorizedMimeTypes;

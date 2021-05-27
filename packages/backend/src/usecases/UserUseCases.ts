@@ -1,17 +1,17 @@
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserStorage} from '../plugins/Storages/User/UserStorage';
-import {UserEntityRules} from "@nodecms/backend-dataUserEntityRules";
+import {UserEntityRules} from "@nodecms/backend-data-rules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
 import {MetadataUseCases} from "./MetadataUseCases";
-import {isNumber} from "@nodecms/backend-datahelpers";
+import {isNumber} from "@nodecms/backend-data";
 import {RoleUseCases} from "./RoleUseCases";
 import {AuthorizationUseCases} from "./AuthorizationUseCases";
-import {Metadata} from "@nodecms/backend-dataMetadata";
-import {Authorization} from "@nodecms/backend-dataAuthorization";
-import {Role} from "@nodecms/backend-dataRole";
-import {User} from "@nodecms/backend-dataUser";
-import {Entity} from "@nodecms/backend-dataEntity";
+import {Metadata} from "@nodecms/backend-data";
+import {Authorization} from "@nodecms/backend-data";
+import {Role} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {Entity} from "@nodecms/backend-data";
 
 export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 
@@ -230,7 +230,7 @@ export class UserUseCases extends UseCases<User> {
   }
 
   secureUserForExternal(user:User):Partial<User> {
-    delete user.password
+    user.password = "***";
     return user;
   }
 

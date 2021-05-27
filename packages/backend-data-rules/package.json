@@ -1,13 +1,13 @@
 {
-  "name": "@nodecms/backend-client",
+  "name": "@nodecms/backend-data-rules",
   "version": "0.0.0",
   "main": "dist/index.js",
   "dependencies": {
-    "@nodecms/backend-data": "^0.0.0",
-    "socket.io-client": "^2.4.0",
-    "axios": "^0.21.1"
+    "mmmagic": "^0.5.3",
+    "@nodecms/backend-data": "*"
   },
   "devDependencies": {
+    "typescript": "^4.3.2",
     "shx": "^0.3.3"
   },
   "author": {

@@ -1,8 +1,7 @@
 import {EntityRules} from "./EntityRules";
-import {User} from "./User";
-import {Document, DocumentVisibility} from "./Document"
-import {isNumber} from "./helpers";
-import { globalInstancesFactory } from "@hermes/composition";
+import {User} from "@nodecms/backend-data";
+import {Document, DocumentVisibility} from "@nodecms/backend-data"
+import {isNumber} from "@nodecms/backend-data";
 
 export class DocumentRules extends EntityRules {
   static validate(document:Partial<Document>, executingUser?:User):void{

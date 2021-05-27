@@ -2,8 +2,9 @@ import axios, {AxiosInstance} from "axios";
 import {BaseServiceClient} from "./BaseServiceClient";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import io from "socket.io-client";
-import {SocketIOTopicServiceClientProxy} from "@hermes/topicservice/dist/clients/SocketIOTopicServiceClientProxy.js";
-import {Channel} from "@nodecms/backend-data/dist";
+// @ts-ignore
+import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy.js";
+import type {Channel} from "@nodecms/backend-data";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -40,7 +41,7 @@ export class ChannelsService extends BaseServiceClient {
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             this.topicServiceClient.readyHandler = () => {
-                this.topicServiceClient?.subscribe(channelsEventNames.channelsActions, async (t,m) => {
+                this.topicServiceClient?.subscribe(channelsEventNames.channelsActions, async (t:any,m:any) => {
                     const channelAction = m.content
                     document.dispatchEvent(
                         new CustomEvent(channelsEventNames.channelsActions, {detail: channelAction}));
@@ -80,7 +81,7 @@ export class ChannelsService extends BaseServiceClient {
         await this.createTopicServiceClient();
         const channelTopic = `channels.${channelKey}.posts`;
         const subscribe = async() => {
-            await this.topicServiceClient?.subscribe(channelTopic, async (t,m) => {
+            await this.topicServiceClient?.subscribe(channelTopic, async (t:any,m:any) => {
                 try{
                     await handler(m.content);
                 }catch(error) {

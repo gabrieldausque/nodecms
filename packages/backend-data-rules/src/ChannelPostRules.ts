@@ -1,5 +1,5 @@
 import {EntityRules} from "./EntityRules";
-import {ChannelPost} from "./ChannelPost";
+import {ChannelPost} from "@nodecms/backend-data";
 
 export class ChannelPostRules extends EntityRules {
   static validate(post:ChannelPost) {

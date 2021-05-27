@@ -1,5 +1,5 @@
 import {EntityRules} from "./EntityRules";
-import {Authorization} from "./Authorization";
+import {Authorization} from "@nodecms/backend-data";
 
 export class AuthorizationEntityRules extends EntityRules {
   static convert(entity:Authorization):Authorization {

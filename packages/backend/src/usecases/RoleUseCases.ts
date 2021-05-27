@@ -1,10 +1,10 @@
 import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
-import {RoleEntityRules} from "@nodecms/backend-dataRoleEntityRules";
-import {Role} from "@nodecms/backend-dataRole";
-import {User} from "@nodecms/backend-dataUser";
-import {AlreadyExistsError} from "@nodecms/backend-dataErrors/AlreadyExistsError";
-import {InvalidKeyError} from "@nodecms/backend-dataErrors/InvalidKeyError";
+import {RoleEntityRules} from "@nodecms/backend-data-rules";
+import {Role} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {AlreadyExistsError} from "@nodecms/backend-data";
+import {InvalidKeyError} from "@nodecms/backend-data";
 
 interface RoleUseCasesConfiguration extends UseCaseConfiguration {};
 

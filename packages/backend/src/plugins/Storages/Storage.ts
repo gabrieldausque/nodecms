@@ -1,4 +1,4 @@
-import {Entity} from "@nodecms/backend-data/Entity";
+import {Entity} from "@nodecms/backend-data";
 
 export interface StorageConfiguration {
   pageSize?:number;

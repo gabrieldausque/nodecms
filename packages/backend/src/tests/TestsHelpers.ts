@@ -12,7 +12,7 @@ import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
 import axios from "axios";
 import {MongoDbChannelStorage} from "../plugins/Storages/Channel/MongoDbChannelStorage";
 import {MongoDbChannelPostStorage} from "../plugins/Storages/Channel/MongoDbChannelPostStorage";
-import {ChannelVisibility} from "@nodecms/backend-dataChannel";
+import {ChannelVisibility} from "@nodecms/backend-data";
 import {MongoDbDocumentStorage} from "../plugins/Storages/Document/MongoDbDocumentStorage";
 
 export function getUrl(pathname?: string, host?:string, port?:number):string {

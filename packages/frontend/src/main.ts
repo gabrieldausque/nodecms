@@ -1,9 +1,13 @@
-import App from './App.svelte';
-import {getBackendClient} from '../../backend-client/src/NodeCMSClient';
-import {FEServices, globalFEService} from "./FEServices";
-import {TempCache} from "../../backend-client/src/TempCache";
-import {DocumentStore} from "./stores/DocumentStore";
+//import {DocumentStore} from "./stores/DocumentStore";
+//import App from './App.svelte';
+//import {globalFEService} from "./FEServices";
 
+import {getBackendClient, TempCache} from "@nodecms/backend-client";
+// import {Entity} from "@nodecms/backend-data";
+
+export const coucou = () => console.log('hello');
+(window as any).coucou = coucou;
+/*
 const params = (new URL(window.location.href)).searchParams;
 const documentKeyFromUrl = params.get('documentKey');
 if(documentKeyFromUrl)
@@ -20,11 +24,7 @@ else
 		return store;
 	})
 }
-
-
-
-
-
+console.log('before app');
 const app = new App({
 	target: document.body
 });
@@ -32,4 +32,4 @@ const app = new App({
 (window as any).getBackendClient = getBackendClient;
 globalFEService.registerService('TempCache',new TempCache());
 
-export default app;
+export default app;*/

@@ -2,9 +2,7 @@
     import {onMount} from "svelte";
     import {getBackendClient} from "@nodecms/backend-client";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
-    import {channelsEventNames} from "../../../../../backend-client/src/ChannelsService";
-    import {globalFEService} from "../../../FEServices";
-    import {AttachmentHelpers} from "../../../../../backend-client/src/AttachmentHelpers";
+    import {channelsEventNames} from "@nodecms/backend-client";
     import {ChannelContent, ChannelStore} from "../../../stores/ChannelStore";
     import {ActivePostStore} from "../../../stores/ActivePostStore";
     import {Helpers} from "../../../helpers/Helpers";

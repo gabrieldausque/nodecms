@@ -1,12 +1,11 @@
 import {UseCases} from "./UseCases";
-import {Channel as ChannelEntity, Channel, ChannelVisibility} from "@nodecms/backend-dataChannel";
-import {User} from "@nodecms/backend-dataUser";
-import {isNumber} from "@nodecms/backend-datahelpers";
+import {Channel as ChannelEntity, Channel, ChannelVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {isNumber} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
-import {ChannelRules} from "@nodecms/backend-dataChannelRules";
-import {Entity} from "@nodecms/backend-dataEntity";
+import {ChannelRules} from "@nodecms/backend-data-rules";
 import {RoleUseCases} from "./RoleUseCases";
 
 interface ChannelUseCasesConfiguration extends UseCaseConfiguration {};

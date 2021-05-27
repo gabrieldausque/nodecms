@@ -137,3 +137,4 @@ lib/
 /packages/backend-data/dist/
 /package.json.lerna_backup
 /packages/backend-client/dist/
+/packages/backend/uploads/

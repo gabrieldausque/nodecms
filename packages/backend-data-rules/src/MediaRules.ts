@@ -1,6 +1,6 @@
 import {EntityRules} from "./EntityRules";
-import {Media, MediaVisibility} from "./Media";
-import {User} from "./User";
+import {Media, MediaVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {Magic, MAGIC_CONTINUE, MAGIC_MIME_TYPE} from "mmmagic";
 
 

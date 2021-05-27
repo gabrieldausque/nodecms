@@ -1,9 +1,8 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {UserUseCases} from "../../usecases/UserUseCases";
-import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {ChannelPost as ChannelPostEntity} from '@nodecms/backend-data/ChannelPost'
+import {ChannelPost as ChannelPostEntity} from '@nodecms/backend-data'
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {ChannelPostUseCases} from "../../usecases/ChannelPostUseCases";
 import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";

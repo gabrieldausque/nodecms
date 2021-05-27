@@ -1,10 +1,12 @@
 export {AttachmentHelpers} from './AttachmentHelpers';
 export {BaseServiceClient} from './BaseServiceClient';
-export {ChannelsService} from './ChannelsService';
-export {DocumentService} from './DocumentService';
+export {ChannelsService, channelsEventNames} from './ChannelsService';
+export {DocumentService, documentsEventName} from './DocumentService';
 export {MediaService} from './MediaService';
 export {PostService} from './PostService';
 export {ProjectsService} from './ProjectsService';
 export {TempCache} from './TempCache';
 export {UserService} from './UserService';
 export {UtilsService} from './UtilsService';
+export {NodeCMSClient, getBackendClient} from './NodeCMSClient';
+export {NodeCMSFrontEndEvents} from './NodeCMSFrontEndEvents';

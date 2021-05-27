@@ -1,6 +1,6 @@
-import {isNumber} from "./helpers";
+import {isNumber} from "@nodecms/backend-data";
 import {EntityRules} from "./EntityRules";
-import {Metadata} from "./Metadata";
+import {Metadata} from "@nodecms/backend-data";
 
 export class MetadataEntityRules extends EntityRules {
   static validateKey(key:string):boolean {

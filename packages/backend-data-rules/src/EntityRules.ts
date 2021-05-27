@@ -1,4 +1,4 @@
-import {isNumber} from "./helpers";
+import {isNumber} from "@nodecms/backend-data";
 
 export abstract class EntityRules {
 

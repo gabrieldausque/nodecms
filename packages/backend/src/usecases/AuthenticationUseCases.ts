@@ -5,7 +5,7 @@ import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from '@hermes/composition';
 import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
 import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../plugins/Authentication/AuthenticationPlugin";
-import {AuthenticationEntityRules} from "@nodecms/backend-data";
+import {AuthenticationEntityRules} from "@nodecms/backend-data-rules";
 import {InvalidAuthenticationError} from "@nodecms/backend-data";
 import {UserUseCases} from "./UserUseCases";
 import os from "os";
@@ -42,7 +42,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
   private tokenTTL: number;
 
   constructor(configuration:AuthenticationUseCasesConfiguration) {
-    super('authentication', 'Authentication', configuration);
+    super('authentication', 'Authentication', configuration, true);
     this.authorityKey = os.hostname();
     this.tokenTTL = 86400;
     this.encryptor = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', configuration.encryption.contractName, configuration.encryption.configuration);

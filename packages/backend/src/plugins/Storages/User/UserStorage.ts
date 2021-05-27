@@ -1,5 +1,5 @@
 import {Storage} from "../Storage";
-import {User} from "@nodecms/backend-data/User";
+import {User} from "@nodecms/backend-data";
 
 export interface UserStorage extends Storage<User> {
   exists(loginOrId:string|number|Partial<User>):Promise<boolean>;

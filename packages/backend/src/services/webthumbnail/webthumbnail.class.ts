@@ -1,10 +1,10 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { WebThumbnail as WebThumbnailEntity } from "@nodecms/backend-data/WebThumbnail";
+import { WebThumbnail as WebThumbnailEntity } from "@nodecms/backend-data";
 import {MethodNotAllowed, NotAuthenticated, NotImplemented} from "@feathersjs/errors";
 import {UserUseCases} from "../../usecases/UserUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
-import {User, User as UserEntity} from '@nodecms/backend-data/User';
+import {User, User as UserEntity} from '@nodecms/backend-data';
 import {WebThumbnailUseCase} from "../../usecases/WebThumbnailUseCase";
 import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
 

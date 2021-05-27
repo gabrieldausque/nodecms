@@ -3,8 +3,8 @@ import { Application } from '../../declarations';
 import {BaseService} from "../BaseService";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
-import {User as UserEntity} from "@nodecms/backend-data/User";
-import {Role as RoleEntity} from '@nodecms/backend-data/Role';
+import {User as UserEntity} from "@nodecms/backend-data";
+import {Role as RoleEntity} from '@nodecms/backend-data';
 
 type RoleDTO = Partial<RoleEntity>
 

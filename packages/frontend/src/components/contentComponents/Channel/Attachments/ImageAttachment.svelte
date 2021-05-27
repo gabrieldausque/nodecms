@@ -1,5 +1,5 @@
 <script>
-    import {AttachmentHelpers} from "../../../../../../backend-client/src/AttachmentHelpers";
+    import {AttachmentHelpers} from "@nodecms/backend-client";
     import {beforeUpdate, onMount, createEventDispatcher} from "svelte";
     import {writable} from 'svelte/store';
     import LoadingAttachment from "./LoadingAttachment.svelte";

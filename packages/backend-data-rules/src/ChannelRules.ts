@@ -1,5 +1,5 @@
 import {EntityRules} from "./EntityRules";
-import {Channel, ChannelVisibility} from "./Channel";
+import {Channel, ChannelVisibility} from "@nodecms/backend-data";
 
 export class ChannelRules extends EntityRules {
 

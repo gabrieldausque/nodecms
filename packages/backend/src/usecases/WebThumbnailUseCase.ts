@@ -1,13 +1,11 @@
-import {WebThumbnail} from "@nodecms/backend-dataWebThumbnail";
-import {NotImplementedError} from "@nodecms/backend-dataErrors/NotImplementedError";
+import {WebThumbnail} from "@nodecms/backend-data";
 import {JSDOM} from 'jsdom';
 import axios from 'axios';
-import html = Mocha.reporters.html;
 import {MediaUseCases} from "./MediaUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
 import {v4} from 'uuid';
-import {MediaVisibility} from "@nodecms/backend-dataMedia";
-import {User} from "@nodecms/backend-dataUser";
+import {MediaVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 
 export class WebThumbnailUseCase {
 

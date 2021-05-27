@@ -1,6 +1,6 @@
 import {EntityRules} from "./EntityRules";
-import {Authentication} from "./Authentication";
-import {InvalidAuthenticationError} from "./Errors/InvalidAuthenticationError";
+import {Authentication} from "@nodecms/backend-data";
+import {InvalidAuthenticationError} from "@nodecms/backend-data";
 
 export class AuthenticationEntityRules extends EntityRules {
 

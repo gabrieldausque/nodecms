@@ -3,9 +3,9 @@
     import {DocumentsStore} from "../../../stores/DocumentsStore";
     import {Helpers} from "../../../helpers/Helpers";
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import {onMount, afterUpdate, beforeUpdate} from 'svelte';
-    import {documentsEventName} from "../../../api/DocumentService";
+    import {documentsEventName} from "@nodecms/backend-client";
     import { fade } from 'svelte/transition';
 
     $DocumentsStore;

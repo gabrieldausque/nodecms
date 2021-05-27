@@ -4,7 +4,7 @@ import {Media as MediaEntity, MediaVisibility, User as UserEntity} from "@nodecm
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MediaUseCases} from "../../usecases/MediaUseCases";
 import {NotAuthenticated, NotImplemented} from "@feathersjs/errors";
-import {isNumber} from "@nodecms/backend-data";
+import {isNumber, NotFoundError} from "@nodecms/backend-data";
 
 type MediaDTO = Partial<MediaEntity>
 

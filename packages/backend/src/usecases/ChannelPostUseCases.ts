@@ -1,13 +1,13 @@
 import {UseCases} from "./UseCases";
-import {ChannelPost} from "@nodecms/backend-dataChannelPost";
-import {User} from "@nodecms/backend-dataUser";
+import {ChannelPost} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {ChannelPostStorage} from "../plugins/Storages/Channel/ChannelPostStorage";
-import {isNumber} from "@nodecms/backend-datahelpers";
-import {ChannelPostRules} from "@nodecms/backend-dataChannelPostRules";
+import {isNumber} from "@nodecms/backend-data";
+import {ChannelPostRules} from "@nodecms/backend-data-rules";
 import {ChannelUseCases} from "./ChannelUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
-import {Channel} from "@nodecms/backend-dataChannel";
+import {Channel} from "@nodecms/backend-data";
 import {UserUseCases} from "./UserUseCases";
 
 interface ChannelPostUseCasesConfiguration extends UseCaseConfiguration {

@@ -1,6 +1,6 @@
 import {EntityRules} from "./EntityRules";
-import {Metadata} from "./Metadata";
-import {User} from "./User";
+import {Metadata} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 
 export class UserEntityRules extends EntityRules {
 

@@ -1,5 +1,5 @@
 import {Storage} from '../Storage'
-import {Media} from "@nodecms/backend-data/Media";
+import {Media} from "@nodecms/backend-data";
 
 export interface MediaStorage extends Storage<Media> {
 

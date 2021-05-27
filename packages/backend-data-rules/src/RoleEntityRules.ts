@@ -1,6 +1,6 @@
 import {EntityRules} from "./EntityRules";
-import {Role} from "./Role";
-import {User} from "./User";
+import {Role} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 
 export class RoleEntityRules extends EntityRules {
 

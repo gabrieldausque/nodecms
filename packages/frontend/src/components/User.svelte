@@ -1,5 +1,5 @@
 <script>
-    import {getBackendClient} from '@nodecms/backend-client';
+    import {getBackendClient} from '../api/Service';
     import { onMount } from 'svelte';
     import {UserStore} from "../stores/UserStore";
     import {DocumentStore} from "../stores/DocumentStore";

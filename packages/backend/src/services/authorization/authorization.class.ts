@@ -1,13 +1,10 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {globalInstancesFactory} from "@hermes/composition";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
-import {query} from "winston";
 import {MethodNotAllowed, NotAcceptable, NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
-import {UserUseCases} from "../../usecases/UserUseCases";
-import {Authorization as AuthorizationEntity} from "@nodecms/backend-data/Authorization";
-import {User as UserEntity} from "@nodecms/backend-data/User";
+import {Authorization as AuthorizationEntity} from "@nodecms/backend-data";
+import {User as UserEntity} from "@nodecms/backend-data";
 
 type Data = AuthorizationEntity;
 

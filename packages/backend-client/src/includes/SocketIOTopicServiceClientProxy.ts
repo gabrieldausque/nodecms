@@ -5,38 +5,38 @@ export class SocketIOTopicServiceClientProxy {
   /**
    * True if the client has been correctly registered to the server (aka the topicClientId has been set)
    */
-  isReady=false;
+  isReady:boolean = false;
   /**
    * id of the client that has been received from the server after registering
    */
-  topicClientId="";
+  topicClientId:string ="";
   /**
    * id of reconnected client
    */
-  reconnectedTopicClientId="";
+  reconnectedTopicClientId:string ="";
   /**
    * handler to be execute just after the client has been registered on server side
    */
-  readyHandler=null;
+  readyHandler:any = null;
   /**
    * the socket used to communicate to the client object on server side
    */
-  socket;
+  socket:any;
   /**
    * The list of current subscriptions
    */
-  subscriptions;
+  subscriptions:string[];
   /**
    * @param socket The socket used to connect to the topicservice server
    * @param readyHandler The handler to be executed just after the client has been registered
    */
-  constructor(socket, readyHandler) {
+  constructor(socket:any, readyHandler?:any) {
     this.isReady = false;
     this.socket = socket;
     this.subscriptions = [];
     this.ready(readyHandler);
     const current = this;
-    this.socket.on('clientId', (clientId) => {
+    this.socket.on('clientId', (clientId:string) => {
       console.log('clientId ' + clientId)
       if(!current.topicClientId){
         current.topicClientId = clientId;
@@ -62,9 +62,9 @@ export class SocketIOTopicServiceClientProxy {
   /**
    * Set an error handler to be executed when an error is sent to the client
    */
-  onError(errorHandler){
+  onError(errorHandler:any){
     const topic = this.topicClientId+".errors";
-    this.socket.on(topic, (topicMessage) => {
+    this.socket.on(topic, (topicMessage:any) => {
       if(typeof errorHandler === 'function'){
           errorHandler(topic, topicMessage);
       }
@@ -74,7 +74,7 @@ export class SocketIOTopicServiceClientProxy {
    * Set the Handler to be executed just after the client has been registered on server side
    * @param readyHandler
    */
-  ready(readyHandler){
+  ready(readyHandler?:any){
     if(typeof readyHandler === 'function'){
       this.readyHandler = readyHandler;
     }
@@ -85,12 +85,12 @@ export class SocketIOTopicServiceClientProxy {
    * @param topic The topic to listen
    * @param handler The handler to be executed when a message is received for the listened topic
    */
-  async subscribe(topic, handler){
+  async subscribe(topic:any, handler:any){
     this.socket.emit(this.topicClientId + '.subscribe', topic);
     if(this.subscriptions.indexOf(topic) < 0){
       this.subscriptions.push(topic);
     }
-    this.socket.on(topic,(topicMessage) => {
+    this.socket.on(topic,(topicMessage:any) => {
       handler(topicMessage.fromTopic, topicMessage);
     })
   }
@@ -100,7 +100,7 @@ export class SocketIOTopicServiceClientProxy {
    * @param topic The topic to publish on
    * @param topicContent The content of the message to be published
    */
-  async publish(topic,topicContent){
+  async publish(topic:any,topicContent:any){
     this.socket.emit(this.topicClientId + '.publish',{
       topic:topic,
       content:topicContent
@@ -111,10 +111,10 @@ export class SocketIOTopicServiceClientProxy {
    * List all subscriptions registered on server side
    * @param callback the callback to be executed when the list of subscriptions are received
    */
-  async getSubscriptions(callback){
+  async getSubscriptions(callback:any){
     const currentClient = this;
     const subscriptionsListTopic = this.topicClientId + '.subscriptions.list';
-    this.subscribe(subscriptionsListTopic, (topic, topicMessage) => {
+    this.subscribe(subscriptionsListTopic, (topic:any, topicMessage:any) => {
       currentClient.unSubscribe(subscriptionsListTopic).then(() => {});
       callback(topic, topicMessage);
     });
@@ -125,7 +125,7 @@ export class SocketIOTopicServiceClientProxy {
    * Unsubscribe all handlers for the specified topic
    * @param topic the topic to unsubscribe
    */
-  async unSubscribe(topic) {
+  async unSubscribe(topic:any) {
     this.socket.removeAllListeners(topic);
     if(this.subscriptions.indexOf(topic) >= 0){
       this.subscriptions.slice(this.subscriptions.indexOf(topic),1);

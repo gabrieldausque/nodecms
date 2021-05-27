@@ -1,9 +1,7 @@
-import {Entity} from '@nodecms/backend-data/Entity';
+import {Entity} from '@nodecms/backend-data';
 import {Storage, StorageConfiguration} from './Storage'
 import {Collection, Db, MongoClient, QuerySelector} from 'mongodb';
-import {globalInstancesFactory} from "@hermes/composition";
 import {Logger} from "../Logging/Logger";
-import {User} from "@nodecms/backend-data/User";
 
 export interface MongoDbStorageConfiguration extends StorageConfiguration {
   mongodbUser:string,

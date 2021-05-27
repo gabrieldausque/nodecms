@@ -1,6 +1,5 @@
-import {ChannelPost} from "@nodecms/backend-data/ChannelPost";
+import {ChannelPost} from "@nodecms/backend-data";
 import {Storage} from '../Storage';
-import {Metadata} from "@nodecms/backend-data/Metadata";
 
 export interface ChannelPostStorage extends Storage<ChannelPost> {
   exists(keyOrId:string | number, channelName?:string):Promise<boolean>;

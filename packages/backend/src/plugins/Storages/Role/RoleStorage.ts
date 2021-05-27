@@ -1,5 +1,5 @@
 import {Storage} from '../Storage'
-import {Role} from "@nodecms/backend-data/Role";
+import {Role} from "@nodecms/backend-data";
 
 export interface RoleStorage extends Storage<Role> {
   exists(keyOrId:string | number):Promise<boolean>;

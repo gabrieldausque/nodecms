@@ -1,0 +1,1 @@
+export {getBackendClient} from '@nodecms/backend-client/dist';

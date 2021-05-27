@@ -1,7 +1,6 @@
 <script lang="ts">
 
-	import {Router, Route, Link} from "svelte-routing";
-
+	import {FEServices, globalFEService} from "./FEServices";
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
@@ -17,7 +16,7 @@
 	import ContentMediaContainerEditor from './components/contentComponents/Editors/ContentMediaContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {onMount} from "svelte";
-	import {getBackendClient} from "@nodecms/backend-client";
+	import {getBackendClient, TempCache} from "@nodecms/backend-client";
 	import ErrorModal from "./components/ErrorModal.svelte";
 	import {DocumentStore} from "./stores/DocumentStore";
 
@@ -51,6 +50,7 @@
 </script>
 
 <style>
+
 	main {
 		text-align: center;
 		max-width: 240px;

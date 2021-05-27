@@ -4,7 +4,7 @@ import axios from "axios";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import io from "socket.io-client";
 import {getBackendClient} from "./NodeCMSClient";
-import {SocketIOTopicServiceClientProxy} from "@hermes/topicservice/dist/clients/SocketIOTopicServiceClientProxy";
+import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy";
 
 export const documentsEventName = {
     documentsActions: 'documents.actions'
@@ -29,7 +29,7 @@ export class DocumentService extends BaseServiceClient {
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             this.topicServiceClient.readyHandler = () => {
-                this.topicServiceClient?.subscribe(documentsEventName.documentsActions, async (t,m) => {
+                this.topicServiceClient?.subscribe(documentsEventName.documentsActions, async (t:any,m:any) => {
                     const documentAction = m.content;
                     document.dispatchEvent(new CustomEvent(documentsEventName.documentsActions, {
                         detail: documentAction

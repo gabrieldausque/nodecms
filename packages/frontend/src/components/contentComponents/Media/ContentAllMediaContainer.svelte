@@ -1,7 +1,7 @@
 <script>
 
     import {AllMediaStores} from "../../../stores/AllMediaStores";
-    import {MediaService} from "../../../api/MediaService";
+    import {MediaService} from "@nodecms/backend-client";
     import {Helpers} from "../../../helpers/Helpers";
     import {onMount, afterUpdate} from "svelte";
     import {v4 as uuid} from 'uuid';

@@ -36,7 +36,7 @@ export default function (app: Application) {
   // Initialize our service with any options it requires
   app.use('/media',
     multipartMiddleWare.single('blob'),
-    async (req, res, next) => {
+    async (req:any, res:any, next:any) => {
       if(req.file){
         const p = new Promise(((resolve, reject) => {
           fs.readFile(req.file.path, (err, buffer) => {
@@ -44,7 +44,7 @@ export default function (app: Application) {
               reject(err);
             else {
               req.body.blob = buffer;
-              resolve();
+              resolve(undefined);
             }
           })
         }));

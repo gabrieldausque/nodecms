@@ -6,7 +6,7 @@ import {UserUseCases} from "../usecases/UserUseCases";
 import { globalInstancesFactory } from '@hermes/composition';
 import {UseCases} from "../usecases/UseCases";
 import {AuthenticationUseCases} from "../usecases/AuthenticationUseCases";
-import {isNumber} from "@nodecms/backend-datahelpers";
+import {isNumber} from "@nodecms/backend-data";
 
 export interface BaseServiceConfiguration {
   paginate?:number
@@ -32,9 +32,9 @@ export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMe
       options) as U;
   }
 
-    abstract async find(params?: Params | undefined): Promise<T | T[] | Paginated<T>>
+    abstract find(params?: Params | undefined): Promise<T | T[] | Paginated<T>>
 
-    abstract async get(id: Id, params?: Params | undefined): Promise<T>
+    abstract get(id: Id, params?: Params | undefined): Promise<T>
 
     abstract create(data: Partial<T> | Partial<T>[], params?: Params | undefined): Promise<T | T[]>
 
