@@ -29,7 +29,15 @@ export class MediaService extends BaseServiceClient<Media> {
 
     async getMedia(keyOrId:string | number) {
         try{
-            return await this.get(keyOrId);
+            if(typeof keyOrId === "number")
+                return await this.get(keyOrId);
+            else {
+                const metadata = await this.getMediaMetadata(keyOrId);
+                if(metadata && typeof metadata.id === 'number')
+                    return await this.get(metadata.id);
+                else
+                    throw new Error( `No Media with key ${keyOrId}`);
+            }
         } catch(error) {
             console.error(error);
         }
@@ -76,13 +84,15 @@ export class MediaService extends BaseServiceClient<Media> {
             const request = new XMLHttpRequest();
             request.open('POST', `${this.url}/${this.service}`, true);
             const requestPromise = new Promise<Media>((resolve, reject) => {
-                this.createHeaders(request);
-                request.setRequestHeader('Content-Type', 'multipart/form-data; boundary=${data._boundary}')
+                request.withCredentials = true;
+                // request.setRequestHeader('Content-Type', 'multipart/form-data; boundary=${data._boundary}')
                 request.onreadystatechange = () => {
-                    if(request.status === 201)
-                        resolve(JSON.parse(request.responseText));
-                    else
-                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                    if(request.readyState === 4) {
+                        if(request.status === 201)
+                            resolve(JSON.parse(request.responseText));
+                        else
+                            reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                    }
                 }
                 request.send(f);
             });
@@ -117,10 +127,12 @@ export class MediaService extends BaseServiceClient<Media> {
             const requestPromise = new Promise<Media>((resolve, reject) => {
                 this.createHeaders(request);
                 request.onreadystatechange = () => {
-                    if(request.status === 201)
-                        resolve(JSON.parse(request.responseText));
-                    else
-                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                    if(request.readyState === 4){
+                        if(request.status === 201)
+                            resolve(JSON.parse(request.responseText));
+                        else
+                            reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                    }
                 }
                 request.send(f);
             });

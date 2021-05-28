@@ -10,6 +10,7 @@
     export let attachment
     let media;
     const mediaStore = writable({});
+
     mediaStore.subscribe((value) => {
         if(!media || media.id !== value.id)
             media = value;
@@ -19,6 +20,7 @@
         if(!media || media.key !== attachment){
             const backendClient = await getBackendClient();
             const m = await backendClient.mediaService.getMedia(attachment);
+
             mediaStore.set(m);
         }
     }

@@ -9,6 +9,7 @@
     import { fade } from 'svelte/transition';
 
     $DocumentsStore;
+    console.log($DocumentsStore);
 
     async function displayDocument(event){
         await Helpers.displayDocument(event.currentTarget.getAttribute("data-document-key"))

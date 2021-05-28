@@ -194,7 +194,6 @@
 
                 }
             }
-
             ActivePostStore.set(undefined);
             ChannelStore.set(newChannelContentStore);
         }

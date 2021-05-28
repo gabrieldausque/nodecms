@@ -41,6 +41,7 @@
                 await backendService.userService.authenticate(login, password);
                 isLogin = true;
             }catch (e) {
+                console.log(e);
                 let message;
                 if(e.response && e.response.data && e.response.data.message){
                     message = e.response.data.message;

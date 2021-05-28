@@ -8,5 +8,6 @@ export {ProjectsService} from './ProjectsService';
 export {TempCache} from './TempCache';
 export {UserService} from './UserService';
 export {UtilsService} from './UtilsService';
-export {NodeCMSClient, getBackendClient} from './NodeCMSClient';
+export {NodeCMSClient} from './NodeCMSClient';
 export {NodeCMSFrontEndEvents} from './NodeCMSFrontEndEvents';
+export {getBackendClient} from './services-factory';

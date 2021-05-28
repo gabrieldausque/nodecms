@@ -18,6 +18,7 @@
         if(typeof onChange === 'function'){
             onChange(htmlElement.textContent.replace(reg,''))
         }
+
     }, 2000);
 
     onMount(() => {

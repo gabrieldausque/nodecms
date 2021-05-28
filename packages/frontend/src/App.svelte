@@ -42,7 +42,7 @@
 	onMount(async() => {
 		const backendClient = await getBackendClient();
 		const title = await backendClient.getMetadata('title');
-		document.querySelector('head title').innerHTML = title;
+		document.querySelector('head title').innerHTML = title.value;
 
 	})
 

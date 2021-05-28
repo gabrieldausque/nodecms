@@ -24,11 +24,11 @@ export class PostService  extends BaseServiceClient<ChannelPost>{
                     attachments: attachmentsKeys
                 }
             const request = new XMLHttpRequest();
-            request.open('POST', `channel/${channelKey}/posts`, true);
+            request.open('POST', `${this.url}/channel/${channelKey}/posts`, true);
             const requestPromise = new Promise<ChannelPost>((resolve, reject) => {
                 this.createHeaders(request);
                 request.onreadystatechange = () => {
-                    if(request.status === 201)
+                    if(request.status === 201 || request.status === 200)
                         resolve(JSON.parse(request.responseText));
                     else
                         reject(new Error(`Error ${request.status} : ${request.responseText}`))

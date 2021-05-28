@@ -37,6 +37,7 @@ export default function (app: Application) {
   app.use('/media',
     multipartMiddleWare.single('blob'),
     async (req:any, res:any, next:any) => {
+      const r = res;
       if(req.file){
         const p = new Promise(((resolve, reject) => {
           fs.readFile(req.file.path, (err, buffer) => {

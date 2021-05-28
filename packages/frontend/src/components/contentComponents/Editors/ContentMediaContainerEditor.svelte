@@ -230,7 +230,7 @@
     <div class="style">
         <label for="style">Style :</label>
         <HighlightedEditor
-                id="style"
+                id={`style-${id}`}
                 content={properties.style}
                 onChange={(newStyle) => {
                     properties.style = newStyle

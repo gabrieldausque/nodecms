@@ -21,10 +21,12 @@ export abstract class BaseServiceClient<T extends Entity> {
         const requestPromise = new Promise<T>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {
-                if(request.status === 201)
-                    resolve(JSON.parse(request.responseText));
-                else
-                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                if(request.readyState === 4){
+                    if(request.status === 201 || request.status === 200)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
             }
             request.send(JSON.stringify(entity));
         });
@@ -37,10 +39,12 @@ export abstract class BaseServiceClient<T extends Entity> {
         const requestPromise = new Promise<T>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {
-                if(request.status === 200)
-                    resolve(JSON.parse(request.responseText));
-                else
-                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                if(request.readyState === 4){
+                    if(request.status === 200 || request.status === 201)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
             }
             request.send(JSON.stringify(entity));
         });
@@ -49,48 +53,60 @@ export abstract class BaseServiceClient<T extends Entity> {
 
     async get(entityKeyOrId:string|number):Promise<T>{
         const request = new XMLHttpRequest();
-        const url = typeof entityKeyOrId === 'number'?
-            `${this.url}/${this.service}/${entityKeyOrId}`:
-            `${this.url}/${this.service}`;
+        const params:undefined|URLSearchParams = typeof entityKeyOrId === 'string'?
+            new URLSearchParams():
+            undefined;
+        if(params)
+            params.append('key',entityKeyOrId.toString());
+        const url = params?
+            `${this.url}/${this.service}?${params.toString()}`:
+            `${this.url}/${this.service}/${entityKeyOrId}`;
         request.open('GET', url, true);
         const requestPromise = new Promise<T>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {
-                if(request.status === 200)
-                    resolve(JSON.parse(request.responseText));
-                else
-                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                if(request.readyState === 4) {
+                    if(request.status === 200 ){
+                        const found = JSON.parse(request.responseText);
+                        if(Array.isArray(found) && found.length > 0){
+                            resolve(found[0]);
+                        } else
+                            resolve(found);
+                    }
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
             }
-            const params:undefined|URLSearchParams = typeof entityKeyOrId === 'string'?
-                new URLSearchParams():
-                undefined;
-            if(params)
-                params.append('key',entityKeyOrId.toString());
-            request.send(params);
+            request.send();
         });
         return await requestPromise;
     }
 
     async find(entityFilter?:Partial<T>):Promise<T[]> {
         const request = new XMLHttpRequest();
-        request.open('GET', `${this.url}/${this.service}`, true);
+        const params = entityFilter?
+            new URLSearchParams():
+            undefined;
+        if(params && entityFilter)
+            for(const propName in entityFilter){
+                if(entityFilter.hasOwnProperty(propName)){
+                    params.append(propName, entityFilter[propName].toString());
+                }
+            }
+        const url:string = params?
+            `${this.url}/${this.service}?${params.toString()}`:
+            `${this.url}/${this.service}`;
+        request.open('GET', url, true);
         const requestPromise = new Promise<T[]>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {
-                if(request.status === 200)
-                    resolve(JSON.parse(request.responseText));
-                else
-                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
-            }
-            const params = entityFilter?
-                new URLSearchParams():
-                undefined;
-            if(params && entityFilter)
-                for(const propName in entityFilter){
-                    if(entityFilter.hasOwnProperty(propName)){
-                        params.append(propName, JSON.stringify(entityFilter[propName]));
-                    }
+                if(request.readyState === 4){
+                    if(request.status === 200)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
                 }
+            }
             request.send();
         });
         return await requestPromise;
@@ -106,17 +122,15 @@ export abstract class BaseServiceClient<T extends Entity> {
         const requestPromise = new Promise<T>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {
-                if(request.status === 200)
-                    resolve(JSON.parse(request.responseText));
-                else
-                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                if(request.readyState === 4){
+                    if(request.status === 200)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
             }
-            const params = new URLSearchParams()
             request.send();
         });
         return await requestPromise;
     }
-
-
-
 }

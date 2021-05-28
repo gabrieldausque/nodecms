@@ -1,9 +1,9 @@
 import {BaseServiceClient} from "./BaseServiceClient";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import io from "socket.io-client";
-import {getBackendClient} from "./NodeCMSClient";
 import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy";
 import {Document as DocumentEntity} from '@nodecms/backend-data';
+import {getBackendClient} from "./services-factory";
 
 export const documentsEventName = {
     documentsActions: 'documents.actions'
@@ -44,7 +44,13 @@ export class DocumentService extends BaseServiceClient<DocumentEntity> {
         lastIndex?:number
     }) {
         try {
-            return await this.find(filter);
+            const documents = await this.find(filter);
+            const services = await getBackendClient();
+            for(const doc of documents){
+                const author = await services.userService.get(doc.ownerId);
+                doc.author = author;
+            }
+            return documents;
         } catch(error) {
             throw(error);
         }
@@ -52,6 +58,7 @@ export class DocumentService extends BaseServiceClient<DocumentEntity> {
 
     async getDocument(key:string) {
         try{
+            console.log(`Getting document with key ${key}`);
             const obtained = await this.get(key);
             const services = await getBackendClient();
             if(services.userService.isAuthenticated){

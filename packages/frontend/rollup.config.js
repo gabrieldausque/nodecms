@@ -42,11 +42,7 @@ export default {
 	},
 	plugins: [
 		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			// we'll extract any component CSS out into
-			// a separate file - better for performance
-			cssEmit: false
+			emitCss: false
 		}),
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
@@ -55,7 +51,9 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte',
+				'@nodecms/backend-data',
+				'@nodecms/backend-client']
 		}),
 		commonjs(),
 		typescript({ sourceMap: !production }),

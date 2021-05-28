@@ -58,29 +58,39 @@ export class ChannelsService extends BaseServiceClient<Channel> {
 
     async getChannelPosts(channelName:string, filter?:any, lastPostId?:number) {
         const request = new XMLHttpRequest();
-        const url = `channel/${channelName}/posts/`;
         const params = {...filter, ...{ lastIndex: lastPostId}};
+        const p:URLSearchParams = new URLSearchParams();
+        let paramsCount = 0;
+        if(params)
+        {
+            for(const filter in params){
+                if(params.hasOwnProperty(filter) &&
+                    typeof params[filter] !== 'undefined') {
+                    p.append(filter,params[filter].toString());
+                    paramsCount++;
+                }
+            }
+        }
+        const url = paramsCount > 0?
+            `${this.url}/channel/${channelName}/posts?${p.toString()}`:
+            `${this.url}/channel/${channelName}/posts`
+        ;
+        console.log(url);
         request.open('GET', url, true);
         const requestPromise = new Promise<ChannelPost[]>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {
-                if(request.status === 200)
-                    resolve(JSON.parse(request.responseText));
-                else
-                    reject(new Error(`Error ${request.status} : ${request.responseText}`))
-            }
-            const p:URLSearchParams = new URLSearchParams();
-            if(params)
-            {
-                for(const filter in params){
-                    if(params.hasOwnProperty(filter)){
-                        params.append(filter,params[filter]);
-                    }
+                if(request.readyState === 4) {
+                    if(request.status === 200)
+                        resolve(JSON.parse(request.responseText));
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
                 }
             }
-            request.send(p);
+            request.send();
         });
         const posts = await requestPromise;
+        console.log(posts);
         for(const p of posts){
             if(typeof p.parentPost !== 'number' && p.channelKey && typeof p.id === 'number'){
                 p.answerCount = await this.getChildrenPostsCount(p.channelKey, p.id);

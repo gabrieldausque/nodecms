@@ -15,10 +15,6 @@
     $ActivePostStore;
 
     function isRightPanelVisible() {
-        console.log('channelstore')
-        console.log($ChannelStore);
-        console.log('activepoststore')
-        console.log($ActivePostStore);
         const b = $ActivePostStore &&
             $ActivePostStore.parentPost &&
             $ActivePostStore.parentPost.channelKey === $ChannelStore.key;
@@ -27,7 +23,6 @@
     }
 
     function hideRightPanel() {
-        console.log('toto');
         ActivePostStore.set(undefined);
     }
 
@@ -100,16 +95,12 @@
     async function onScrollForCurrentChannel(event) {
         if(event.target.scrollTop === 0){
             let posts = $ChannelStore.posts.filter(p => typeof p.parentPost !== "number")
-            console.log(posts);
             const lastId = posts[0].id;
-            console.log(lastId);
             const backendClient = await getBackendClient();
             const nextPage = await backendClient.channelsService.getChannelPosts($ChannelStore.key,
                 undefined,
                 lastId
             );
-            console.log('next page :');
-            console.log(nextPage);
             if(nextPage.length){
                 ChannelStore.update(cs => {
                     for(const ocp of nextPage) {
