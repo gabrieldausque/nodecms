@@ -35,7 +35,7 @@ export abstract class BaseServiceClient<T extends Entity> {
 
     async update(entity:T):Promise<T> {
         const request = new XMLHttpRequest();
-        request.open('PUT', `${this.url}/${this.service}`, true);
+        request.open('PUT', `${this.url}/${this.service}/${entity.id}`, true);
         const requestPromise = new Promise<T>((resolve, reject) => {
             this.createHeaders(request);
             request.onreadystatechange = () => {

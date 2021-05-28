@@ -1,6 +1,5 @@
 <script lang="ts">
 
-	import {FEServices, globalFEService} from "./FEServices";
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
@@ -14,6 +13,7 @@
 	import ContentAllMediaContainer from './components/contentComponents/Media/ContentAllMediaContainer.svelte';
 	import ContentMediaContainer from './components/contentComponents/ContentMediaContainer.svelte';
 	import ContentMediaContainerEditor from './components/contentComponents/Editors/ContentMediaContainerEditor.svelte';
+	import ContentImageContainerEditor from './components/contentComponents/Editors/ContentImageContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {onMount} from "svelte";
 	import {getBackendClient, TempCache} from "@nodecms/backend-client";
@@ -27,7 +27,7 @@
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
 			'Texte', 'fas fa-text', ContentTextContainerEditor);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer,
-			'Image','fas fa-image');
+			'Image','fas fa-image', ContentImageContainerEditor);
 	globalContentContainerFactory.registerContentContainer('channels', ContentChannelsContainer,
 			'Canaux', 'fas fa-signal-stream')
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
@@ -36,7 +36,10 @@
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
 	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
-	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer, 'Media', 'fas fa-photo-video', ContentMediaContainerEditor);
+	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer,
+			'Media',
+			'fas fa-photo-video',
+			ContentMediaContainerEditor);
 
 
 	onMount(async() => {

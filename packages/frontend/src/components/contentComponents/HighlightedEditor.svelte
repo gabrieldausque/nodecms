@@ -18,7 +18,6 @@
         if(typeof onChange === 'function'){
             onChange(htmlElement.textContent.replace(reg,''))
         }
-
     }, 2000);
 
     onMount(() => {
@@ -51,7 +50,7 @@
 
 </style>
 
-<div id={id} contenteditable="true" class="highlightEditor" on:input={(event) => {
+<div id={id} contenteditable="true" class="highlightEditor" on:keyup={(event) => {
         highlight(event.target);
     }}>
     {content}

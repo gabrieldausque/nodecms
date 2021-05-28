@@ -59,7 +59,7 @@ export class DocumentUseCases extends UseCases<Document> {
   }
 
   async update(id: string | number, entityToUpdate: Partial<Document>, executingUser: User): Promise<Document> {
-    const data = await this.get(id);
+    const data = await this.get(id, executingUser);
     if(!await this.isDataAuthorized(data, 'w', executingUser))
       throw new Error('Not Authorized');
     else {

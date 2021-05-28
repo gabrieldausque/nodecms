@@ -10,11 +10,11 @@
     let id = uuid();
     $ComponentEditorStore;
 
-    afterUpdate(() => {
-        console.log('editor updated');
-    })
-
     onMount(() => {
+        if(!properties.uri){
+            properties.uri = '';
+            properties = properties;
+        }
         window.setTimeout(() => {
             const contentText = document.getElementById(`content-${id}`)
             console.log(contentText);
@@ -40,6 +40,10 @@
         })
     }
 
+    afterUpdate(() => {
+        console.log('editor updated');
+    })
+
 </script>
 
 <style>
@@ -54,7 +58,15 @@
 
 </style>
 
-<div class="">
+<div class="url">
+    <label for="uri-{id}">Url</label>
+    <input id="uri-{id}" type="url" class="form-control" placeholder="Taper l'url de l'image"
+           on:blur={() => {
+               properties.uri = document.getElementById(`uri-${id}`).value;
+               updateEds();
+           }}>
+</div>
+<div class="classes">
     <label for="classes">CSS Classes :</label>
     <input id="classes" type="text" class="form-control" placeholder="Taper le nom des classes css séparées par un espace" bind:value={properties.classes}>
 </div>
