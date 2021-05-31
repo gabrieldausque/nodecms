@@ -6,7 +6,8 @@ import ImageAttachment from "../components/contentComponents/Channel/Attachments
 import VideoAttachment from "../components/contentComponents/Channel/Attachments/VideoAttachment.svelte";
 import AudioAttachment from "../components/contentComponents/Channel/Attachments/AudioAttachment.svelte";
 import DownloadAttachment from "../components/contentComponents/Channel/Attachments/DownloadAttachment.svelte";
-import {ChannelContent} from "../stores/ChannelStore";
+import {channelsCache, observableChannelCache} from "../stores/ChannelStore";
+import type {Channel} from "@nodecms/backend-data";
 
 
 export class Helpers {
@@ -80,17 +81,40 @@ export class Helpers {
         }
     }
 
-    static async getChannelContentAndSubscribe(channelKey:string, onMessageReceived:(mc:any) => Promise<void>) {
+    static async getChannelContentAndSubscribe(channelKey:string) {
         if(channelKey){
+            let channel:Channel;
             const backendClient = await getBackendClient();
-            const newChannelContentStore = new ChannelContent();
-            newChannelContentStore.key = channelKey;
-            newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
 
-            if(newChannelContentStore.channel.isReader){
-                await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, onMessageReceived)
-                newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey, );
-                for(const p of newChannelContentStore.posts) {
+            if(!channelsCache.hasChannel(channelKey)){
+                channel = await backendClient.channelsService.getChannel(channelKey);
+                channelsCache.addChannel(channel);
+            }
+            channel = channelsCache[channelKey].channel;
+            if(channel.isReader){
+                await backendClient.channelsService.subscribeToChannel(channel.key, async (mc) => {
+                    if(mc.content){
+                        await Helpers.preloadContentPreview(mc.content)
+                    }
+                    if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
+                        const attachmentsMetadata = [];
+                        for(const a of mc.attachments){
+                            const m = await backendClient.mediaService.getMediaMetadata(a);
+                            attachmentsMetadata.push(m);
+                        }
+                        mc.attachments = attachmentsMetadata;
+                    }
+                    mc.isNew = true;
+                    observableChannelCache.update(occ => {
+                        for(const p of occ[channelKey].posts){
+                            p.isNew = false;
+                        }
+                        occ[channelKey].posts.push(mc);
+                        return occ;
+                    })
+                })
+                channelsCache[channelKey].posts = await backendClient.channelsService.getChannelPosts(channelKey);
+                for(const p of channelsCache[channelKey].posts) {
                     if(p.content){
                         await Helpers.preloadContentPreview(p.content)
                     }
@@ -102,10 +126,11 @@ export class Helpers {
                         }
                         p.attachments = attachmentsMetadata;
                     }
-
                 }
             }
-            return newChannelContentStore;
+            observableChannelCache.update(occ => {
+                return occ;
+            })
         }
     }
 
