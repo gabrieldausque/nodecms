@@ -1,3 +1,6 @@
+import {setBackendClient, getClientConfig} from "./services-factory";
+import {NodeCMSClient} from "./NodeCMSClient";
+
 export {AttachmentHelpers} from './AttachmentHelpers';
 export {BaseServiceClient} from './BaseServiceClient';
 export {ChannelsService, channelsEventNames} from './ChannelsService';
@@ -10,4 +13,10 @@ export {UserService} from './UserService';
 export {UtilsService} from './UtilsService';
 export {NodeCMSClient} from './NodeCMSClient';
 export {NodeCMSFrontEndEvents} from './NodeCMSFrontEndEvents';
-export {getBackendClient} from './services-factory';
+export {NodeCMSClientContract} from "./NodeCMSClientContract";
+export {getClientConfig, setBackendClient, getBackendClient} from './services-factory';
+
+const config:any = getClientConfig()
+setBackendClient(new NodeCMSClient(config.backendHost, config.socketIoHost, config.env));
+
+

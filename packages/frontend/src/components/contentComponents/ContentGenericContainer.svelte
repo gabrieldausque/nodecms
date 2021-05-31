@@ -53,16 +53,16 @@
 </script>
 
 <style>
-    main {
-        flex-grow: 1;
-        height: 100%;
-    }
-
     .container-content {
         display: flex;
         flex-direction: column;
         width: 100%;
         height: 100%;
+    }
+    .container-content > main {
+        flex-grow: 1;
+        height: 100%;
+        overflow:auto;
     }
 </style>
 

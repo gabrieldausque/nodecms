@@ -11,5 +11,3 @@ export class ChannelContent  {
     }
 
 }
-
-export const ChannelStore = writable(new ChannelContent())

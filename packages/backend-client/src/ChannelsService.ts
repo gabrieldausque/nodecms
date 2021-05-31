@@ -75,7 +75,6 @@ export class ChannelsService extends BaseServiceClient<Channel> {
             `${this.url}/channel/${channelName}/posts?${p.toString()}`:
             `${this.url}/channel/${channelName}/posts`
         ;
-        console.log(url);
         request.open('GET', url, true);
         const requestPromise = new Promise<ChannelPost[]>((resolve, reject) => {
             this.createHeaders(request);
@@ -90,7 +89,6 @@ export class ChannelsService extends BaseServiceClient<Channel> {
             request.send();
         });
         const posts = await requestPromise;
-        console.log(posts);
         for(const p of posts){
             if(typeof p.parentPost !== 'number' && p.channelKey && typeof p.id === 'number'){
                 p.answerCount = await this.getChildrenPostsCount(p.channelKey, p.id);

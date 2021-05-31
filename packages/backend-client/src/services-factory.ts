@@ -1,31 +1,27 @@
-import {NodeCMSClient} from "./NodeCMSClient";
+import {NodeCMSClientContract} from "./NodeCMSClientContract";
 
 let configuration:any = null;
-const getClientConfig = async () => {
+export const getClientConfig = ():any => {
     if(!configuration){
         const request = new XMLHttpRequest();
-        request.open('GET',`${window.location.origin}/clientConfiguration.json`);
-        const p = new Promise<any>((resolve, reject) => {
-            request.onreadystatechange = () => {
-                if(request.readyState === 4){
-                    if(request.status === 200)
-                        resolve(JSON.parse(request.responseText))
-                    else
-                        reject(new Error(`Couldn\'t get config from server : ${request.responseText}`))
-                }
-            }
-            request.send();
-        })
-        configuration = await p;
+        request.open('GET',`${window.location.origin}/clientConfiguration.json`, false);
+        request.send();
+        if(request.status === 200)
+            configuration = JSON.parse(request.responseText);
+        else
+            throw new Error(`Couldn\'t get config from server : ${request.responseText}`)
     }
     return configuration;
 }
 
-let backendClient:NodeCMSClient;
-export const getBackendClient = async ():Promise<NodeCMSClient> => {
-    const configuration = await getClientConfig();
-    if(!backendClient){
-        backendClient = new NodeCMSClient(configuration.backendHost, configuration.socketIoHost, configuration.env);
-    }
-    return backendClient;
+let backendClient:NodeCMSClientContract;
+export const getBackendClient = async ():Promise<NodeCMSClientContract> => {
+    if(backendClient)
+        return backendClient;
+    throw new Error('BackendClient not initialized, please check your initialization sequence');
 };
+
+export const setBackendClient = (newBackendClient:NodeCMSClientContract):NodeCMSClientContract => {
+    backendClient = newBackendClient;
+    return backendClient;
+}

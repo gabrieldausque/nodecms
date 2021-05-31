@@ -65,8 +65,6 @@
     }
 
     async function onMediaClick(event){
-        console.log('receive media click ...');
-        console.log(event);
         const services = await getBackendClient();
         if(event.detail &&
            event.detail.target &&

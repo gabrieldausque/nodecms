@@ -22,7 +22,7 @@
                 target: contentText,
                 props: {
                     actions: [
-                        'b', 'i', 'u', 'strike', 'ul', 'ol', 'viewHtml'
+                        'left', 'center','right','justify','b', 'i', 'u', 'strike', 'ul', 'ol', 'a','viewHtml',
                     ],
                     html: properties.content
                 }
@@ -59,12 +59,23 @@
     <input id="classes" type="text" class="form-control" placeholder="Taper le nom des classes css séparées par un espace" bind:value={properties.classes}>
 </div>
 <div class="style">
-    <label for={`style-${id}`}>Style :</label>
+    <label for={`style-${id}`}>Container Style :</label>
     <HighlightedEditor
             id={`style-${id}`}
             content={properties.style?properties.style:''}
             onChange={(newStyle) => {
                 properties.style = newStyle
+                updateEds();
+            }}
+    ></HighlightedEditor>
+</div>
+<div class="style">
+    <label for={`global-style-${id}`}>Global Style :</label>
+    <HighlightedEditor
+            id={`global-style-${id}`}
+            content={properties.globalStyle?properties.innerStyle:''}
+            onChange={(newStyle) => {
+                properties.globalStyle = newStyle
                 updateEds();
             }}
     ></HighlightedEditor>

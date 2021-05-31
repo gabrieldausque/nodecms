@@ -169,14 +169,14 @@
 
 <style>
 
-    .postCreation {
+    .post-creation {
         border: solid lightgray 1px;
-        position : sticky;
-        bottom : 5px;
         margin: 5px;
         height:auto;
         width: calc(100% - 10px);
-        top: calc(100vh - 100px);
+        position: sticky;
+        bottom:5px;
+        outline: solid white 5px;
     }
 
     .attachments {
@@ -198,7 +198,7 @@
 
 </style>
 
-<div class="postCreation">
+<div class="post-creation">
 
     <div id="{targetId}">
 

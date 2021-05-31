@@ -6,6 +6,7 @@
 	import ContentTextContainerEditor from './components/contentComponents/Editors/ContentTextContainerEditor.svelte';
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
 	import ContentChannelsContainer from './components/contentComponents/Channel/ContentChannelsContainer.svelte';
+	import ContentChannelContainer from './components/contentComponents/Channel/ContentChannelContainer.svelte';
 	import ContentProjectsContainer from './components/contentComponents/Projects/ContentProjectsContainer.svelte';
 	import ContentDocumentsContainer from './components/contentComponents/Documents/ContentDocumentsContainer.svelte';
 	import ContentDocumentEditor from './components/contentComponents/Documents/ContentDocumentEditor.svelte';
@@ -22,14 +23,14 @@
 
 	$DocumentStore;
 
-	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer,
-			'Conteneur', 'fas fa-sitemap');
+	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer);
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
 			'Texte', 'fas fa-text', ContentTextContainerEditor);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer,
 			'Image','fas fa-image', ContentImageContainerEditor);
-	globalContentContainerFactory.registerContentContainer('channels', ContentChannelsContainer,
-			'Canaux', 'fas fa-signal-stream')
+	globalContentContainerFactory.registerContentContainer('channels', ContentChannelsContainer)
+	globalContentContainerFactory.registerContentContainer('channel', ContentChannelContainer,
+			'Canal', 'fas fa-signal-stream')
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
 	globalContentContainerFactory.registerContentContainer('title',ContentTitle,
 			'Titre', 'fas fa-heading');

@@ -28,10 +28,12 @@ export class PostService  extends BaseServiceClient<ChannelPost>{
             const requestPromise = new Promise<ChannelPost>((resolve, reject) => {
                 this.createHeaders(request);
                 request.onreadystatechange = () => {
-                    if(request.status === 201 || request.status === 200)
-                        resolve(JSON.parse(request.responseText));
-                    else
-                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                    if(request.readyState === 4){
+                        if(request.status === 201 || request.status === 200)
+                            resolve(JSON.parse(request.responseText));
+                        else
+                            reject(new Error(`Error ${request.status} : ${request.responseText}`));
+                    }
                 }
                 request.send(JSON.stringify(data));
             });

@@ -1,12 +1,12 @@
-import {getBackendClient} from "@nodecms/backend-client";
+import {getBackendClient, AttachmentHelpers} from '@nodecms/backend-client';
 import {globalFEService} from "../FEServices";
-import {AttachmentHelpers} from "@nodecms/backend-client";
 import {DocumentsStore} from "../stores/DocumentsStore";
 import {DocumentStore} from "../stores/DocumentStore";
 import ImageAttachment from "../components/contentComponents/Channel/Attachments/ImageAttachment.svelte";
 import VideoAttachment from "../components/contentComponents/Channel/Attachments/VideoAttachment.svelte";
 import AudioAttachment from "../components/contentComponents/Channel/Attachments/AudioAttachment.svelte";
 import DownloadAttachment from "../components/contentComponents/Channel/Attachments/DownloadAttachment.svelte";
+import {ChannelContent} from "../stores/ChannelStore";
 
 
 export class Helpers {
@@ -77,6 +77,35 @@ export class Helpers {
         if(Helpers.documentEventsSubscribed.indexOf(eventName) < 0){
             document.addEventListener(eventName, handler);
             Helpers.documentEventsSubscribed.push(eventName);
+        }
+    }
+
+    static async getChannelContentAndSubscribe(channelKey:string, onMessageReceived:(mc:any) => Promise<void>) {
+        if(channelKey){
+            const backendClient = await getBackendClient();
+            const newChannelContentStore = new ChannelContent();
+            newChannelContentStore.key = channelKey;
+            newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
+
+            if(newChannelContentStore.channel.isReader){
+                await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, onMessageReceived)
+                newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey, );
+                for(const p of newChannelContentStore.posts) {
+                    if(p.content){
+                        await Helpers.preloadContentPreview(p.content)
+                    }
+                    if(Array.isArray(p.attachments) && p.attachments.length > 0){
+                        const attachmentsMetadata = [];
+                        for(const a of p.attachments){
+                            const m = await backendClient.mediaService.getMediaMetadata(a);
+                            attachmentsMetadata.push(m);
+                        }
+                        p.attachments = attachmentsMetadata;
+                    }
+
+                }
+            }
+            return newChannelContentStore;
         }
     }
 

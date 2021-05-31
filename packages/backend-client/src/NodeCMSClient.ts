@@ -7,19 +7,20 @@ import {UserService} from "./UserService";
 import {UtilsService} from "./UtilsService";
 import {ProjectsService} from "./ProjectsService";
 import {MetadataService} from "./MetadataService";
+import {NodeCMSClientContract} from "./NodeCMSClientContract";
 
-export class NodeCMSClient {
+export class NodeCMSClient implements NodeCMSClientContract {
     private readonly url: string;
     private readonly env?:string;
 
-    public mediaService:MediaService;
-    public postService: PostService;
-    public documentService: DocumentService;
-    public channelsService: ChannelsService;
-    public userService: UserService;
-    public utilsService: UtilsService;
-    public projectsService: ProjectsService;
-    private metadataService: MetadataService;
+    mediaService: MediaService;
+    postService: PostService;
+    documentService: DocumentService;
+    channelsService: ChannelsService;
+    userService: UserService;
+    utilsService: UtilsService;
+    projectsService: ProjectsService;
+    metadataService: MetadataService;
 
     constructor(cmsUrl:string = "/", socketIoHost:string = "/", env?:string) {
         this.url = cmsUrl;
@@ -34,7 +35,7 @@ export class NodeCMSClient {
         this.metadataService = new MetadataService(this.url);
     }
 
-    async getMetadata(key:string) {
+    async getMetadata(key: string) {
         return await this.metadataService.get(key);
     }
 

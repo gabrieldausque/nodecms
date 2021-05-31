@@ -57,7 +57,6 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
       let filter:Partial<ChannelPostEntity> = params.query as ChannelPostEntity;
       if(channel){
         if(!filter || !filter.channelKey || filter.channelKey !== channel.key){
-          console.log('default filter for post in channel')
           if(!filter)
             filter = {
               channelKey:channel.key,

@@ -3,12 +3,11 @@
     import {getBackendClient} from "@nodecms/backend-client";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
     import {channelsEventNames} from "@nodecms/backend-client";
-    import {ChannelContent, ChannelStore} from "../../../stores/ChannelStore";
-    import {ActivePostStore} from "../../../stores/ActivePostStore";
-    import {Helpers} from "../../../helpers/Helpers";
 
     export let properties;
     let availableChannels = [];
+    let ActivePost;
+    let Channel;
 
     onMount(async () => {
         const backEndService = await getBackendClient();
@@ -135,67 +134,7 @@
 
     async function changeCurrentChannel(channelKey) {
         if(channelKey){
-            const backendClient = await getBackendClient();
-            const newChannelContentStore = new ChannelContent();
-            newChannelContentStore.key = channelKey;
-            newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
-
-            if(newChannelContentStore.channel.isReader){
-                await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, (async (mc) => {
-                    if(mc.content){
-                        await Helpers.preloadContentPreview(mc.content)
-                    }
-                    if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
-                        const attachmentsMetadata = [];
-                        for(const a of mc.attachments){
-                            const m = await backendClient.mediaService.getMediaMetadata(a);
-                            attachmentsMetadata.push(m);
-                        }
-                        mc.attachments = attachmentsMetadata;
-                    }
-                    if(typeof mc.parentPost === 'number'){
-                        const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
-                        if(parentPost){
-                            parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
-                            if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
-                                ActivePostStore.update(aps => {
-                                    aps.parentPost = parentPost;
-                                    return aps;
-                                })
-                            }
-                        }
-                    }
-                    mc.isNew = true;
-                    ChannelStore.update(cs => {
-                        cs.posts.push(mc);
-                        return cs;
-                    })
-                }))
-                newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
-                newChannelContentStore.posts.sort((p1, p2) => {
-                    if(p1.id > p2.id)
-                        return 1;
-                    if(p1.id < p2.id)
-                        return -1;
-                    return 0;
-                })
-                for(const p of newChannelContentStore.posts) {
-                    if(p.content){
-                        await Helpers.preloadContentPreview(p.content)
-                    }
-                    if(Array.isArray(p.attachments) && p.attachments.length > 0){
-                        const attachmentsMetadata = [];
-                        for(const a of p.attachments){
-                            const m = await backendClient.mediaService.getMediaMetadata(a);
-                            attachmentsMetadata.push(m);
-                        }
-                        p.attachments = attachmentsMetadata;
-                    }
-
-                }
-            }
-            ActivePostStore.set(undefined);
-            ChannelStore.set(newChannelContentStore);
+            Channel = channelKey
         }
     }
 
@@ -206,6 +145,7 @@
         display: flex;
         height: 100%;
         width: 100%;
+        max-height: calc(100vh - 71px);
     }
     .channelsMenu {
         flex-grow: 1;
@@ -265,7 +205,9 @@
             {/each}
         </ul>
     </div>
-    <ContentChannelContainer ></ContentChannelContainer>
+    <ContentChannelContainer ActivePostStore={undefined} properties={{
+        channelKey : Channel
+    }}></ContentChannelContainer>
 </main>
 
 <div id="CreateChannelModal" class="modal fade" data-keyboard="false">

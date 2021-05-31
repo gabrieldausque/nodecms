@@ -14,7 +14,6 @@
     .component-container {
         display: flex;
         align-items: center;
-        justify-content: center;
         height: 100%;
         min-height: 30px;
     }
@@ -32,7 +31,6 @@
                                    event.stopPropagation();
                                    event.preventDefault();
                                    if(!$BlockEditorComponentStore.component) {
-                                       console.log(event);
                                        document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
                                        const contextMenu = event.target.closest('.component-container').querySelector('.contextual-menu');
                                        contextMenu.classList.add('show');

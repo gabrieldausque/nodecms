@@ -1,5 +1,6 @@
 <script>
 
+    import {getBackendClient} from "@nodecms/backend-client";
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import {globalContentContainerFactory} from "../../../ContentContainerFactory";
     import ContentDefaultEditor from '../Editors/ContentDefaultEditor.svelte';
@@ -173,7 +174,7 @@
     }
 
     .reduced {
-        transform: scale(0.4) translateX(-72%);
+        transform: scale(0.4) translateX(-72%) translateY(-72%);
     }
 
     .editor-content {
