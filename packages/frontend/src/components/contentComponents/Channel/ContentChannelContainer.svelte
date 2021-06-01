@@ -288,6 +288,7 @@
         display: flex;
         flex-direction: row;
         height:100%;
+        max-height:calc(100vh - 71px);
         flex-grow: 4;
         position: relative;
     }
@@ -397,7 +398,7 @@
  </style>
 
 {#if $observableChannelCache[properties.channelKey]}
-    <div id={`channel-${properties.channelKey}`} class="channel">
+    <div id={`channel-${properties.channelKey}`} class="channel" style="{properties.style?properties.style:''}">
         <div class="channelInfo">
             <div class="channelHeader">
                 {#if $observableChannelCache[properties.channelKey].channel && $observableChannelCache[properties.channelKey].channel.label}
@@ -471,7 +472,7 @@
     </div>
 
 {:else}
-    <div>
+    <div style="{properties.style?properties.style:''}">
         No Channel
     </div>
 {/if}

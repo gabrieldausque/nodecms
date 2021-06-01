@@ -145,6 +145,7 @@
         border-left: solid 1px lightgray;
         top: 121px;
         padding: 5px;
+        z-index: 3;
     }
 
     .editor-panel div {
