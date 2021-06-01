@@ -42,6 +42,7 @@
     async function onAnswerClick(event){
         const postWithChildren = new PostWithChildren();
         postWithChildren.parentPost = post;
+        post.isNew = false;
         const backendClient = await getBackendClient();
         const children = await backendClient.channelsService.getChildrenPosts(post.channelKey, post.id);
         for(const p of children){
@@ -113,7 +114,7 @@
 
 </style>
 
-<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post" class:new-post={post.isNew}  in:fade>
+<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post" class:new-post={post.isNew} in:fade>
     <div class="author">
         <i class="fas fa-user-circle fa-3x"></i>
         <span>{post.author.login}</span>

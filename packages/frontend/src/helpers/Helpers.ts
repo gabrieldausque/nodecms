@@ -108,8 +108,20 @@ export class Helpers {
                     observableChannelCache.update(occ => {
                         for(const p of occ[channelKey].posts){
                             p.isNew = false;
+                            if(typeof mc.parentPost === 'number' && p.id === mc.parentPost){
+                                if(typeof p.answerCount !== 'number')
+                                    p.answerCount = 0;
+                                p.answerCount++;
+                            }
                         }
                         occ[channelKey].posts.push(mc);
+                        occ[channelKey].posts.sort((p1,p2) => {
+                            if(p1.id > p2.id)
+                                return -1;
+                            if(p1.id < p2.id)
+                                return 1
+                            return 0;
+                        })
                         return occ;
                     })
                 })

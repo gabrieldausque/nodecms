@@ -66,8 +66,7 @@
             const bottom = channelContentView.scrollHeight - channelContentView.clientHeight;
             if(event.target.scrollTop === bottom){
                 if(ActivePost && ActivePost.parentPost && $observableChannelCache[properties.channelKey]){
-                    let currentChildren = $observableChannelCache[properties.channelKey].posts.filter(p => p.parentPost === ActivePost.parentPost.id)
-                    const lastId = currentChildren[currentChildren.length - 1].id;
+                    const lastId = ActivePost.posts[ActivePost.posts.length - 1].id;
                     const backendClient = await getBackendClient();
                     const otherChildrenPage = await backendClient.channelsService.getChildrenPosts(ActivePost.parentPost.channelKey,
                         ActivePost.parentPost.id,
@@ -76,7 +75,7 @@
                     let toUpdate = false
                     if(otherChildrenPage.length){
                         for(const ocp of otherChildrenPage) {
-                            if(!$observableChannelCache[properties.channelKey].posts.find(p => p.id === ocp.id)){
+                            if(!ActivePost.posts.find(p => p.id === ocp.id)){
                                 if(ocp.content){
                                     await Helpers.preloadContentPreview(ocp.content)
                                 }
@@ -88,21 +87,19 @@
                                     }
                                     ocp.attachments = attachmentsMetadata;
                                 }
-                                $observableChannelCache[properties.channelKey].posts.push(ocp);
+                                ActivePost.posts.push(ocp);
                                 toUpdate = true;
                             }
                         }
                         if(toUpdate){
-                            $observableChannelCache[properties.channelKey].posts.sort((p1, p2) => {
+                            ActivePost.posts.sort((p1, p2) => {
                                 if(p1.id > p2.id)
                                     return -1;
                                 if(p1.id < p2.id)
                                     return 1;
                                 return 0;
                             })
-                            observableChannelCache.update(occ => {
-                                return occ;
-                            })
+                            ActivePost = ActivePost;
                         }
                     }
                 }
@@ -144,10 +141,13 @@
                             toUpdate = true;
                         }
                     }
-                    if(toUpdate)
-                        $observableChannelCache.update(occ => {
+                    if(toUpdate) {
+                        console.log('update after scroll down')
+                        observableChannelCache.update(occ => {
                             return occ;
                         })
+                    }
+
                 }
             }
             tailActivated = channelContentView.scrollTop === 0;
@@ -157,7 +157,10 @@
     function isThereNewMessage() {
         if($observableChannelCache[properties.channelKey]){
             const newMessage = $observableChannelCache[properties.channelKey].posts.findIndex(p => {
-                if(typeof p.isNew === 'boolean' && p.isNew){
+                if( (typeof p.parentPost === 'undefined' ||
+                     p.parentPost === null) &&
+                    typeof p.isNew === 'boolean' &&
+                    p.isNew) {
                     return true;
                 }
                 return false
@@ -172,12 +175,14 @@
             const newAnswer = $observableChannelCache[properties.channelKey].posts.findIndex(p => {
                 if(ActivePost &&
                    ActivePost.parentPost &&
-                    typeof p.isNew === 'boolean' && p.isNew && p.parentPost === ActivePost.parentPost.id)
+                   p.parentPost === ActivePost.parentPost.id &&
+                   typeof p.isNew === 'boolean' &&
+                   p.isNew)
                 {
                     return true;
                 }
                 return false;
-            })
+            }) >= 0;
             return newAnswer;
         }
         return false;
@@ -196,16 +201,45 @@
     })
 
     beforeUpdate(() => {
+        if(isThereNewAnswer()){
+            const newAnswers = $observableChannelCache[properties.channelKey].posts.filter(p => p.parentPost === ActivePost.parentPost.id);
+            if(newAnswers && newAnswers.length > 0){
+                for(const p of ActivePost.posts){
+                    p.isNew = false;
+                }
+                for(const a of newAnswers){
+                    $observableChannelCache[properties.channelKey].posts.splice(
+                        $observableChannelCache[properties.channelKey].posts.indexOf(a), 1);
+                    ActivePost.posts.push(a);
+                }
+                ActivePost.posts.sort((p1,p2) => {
+                    if(p1.id > p2.id)
+                        return -1;
+                    if(p1.id < p2.id)
+                        return 1;
+                    return 0;
+                })
+                ActivePost = ActivePost;
+            }
+        }
     })
 
     afterUpdate(async () => {
 
         await createChannelFromKey()
 
+
+
         if(isThereNewMessage()){
-            document.getElementById('newMessage')?.classList.remove('hidden');
+            document.getElementById(`new-message-for-${properties.channelKey}`)?.classList.remove('hidden');
         } else {
-            document.getElementById('newMessage')?.classList.add('hidden');
+            document.getElementById(`new-message-for-${properties.channelKey}`)?.classList.add('hidden');
+        }
+
+        if(isThereNewAnswer()){
+            document.getElementById(`new-answer-for-${properties.channelKey}`)?.classList.remove('hidden');
+        } else {
+            document.getElementById(`new-answer-for-${properties.channelKey}`)?.classList.add('hidden');
         }
 
         if($observableChannelCache.hasChannel(properties.channelKey) && tailActivated){
@@ -302,7 +336,7 @@
         display: flex;
         flex-direction: column;
         background: white;
-        height: 100%;
+        height: calc(100% - 60px);
         position: relative;
         right:0;
         width:33vw;
@@ -344,7 +378,20 @@
     }
 
     .channel-right-panel div.channelContent {
-        max-height: calc(100% - 120px);
+        max-height: calc(100% - 60px);
+    }
+
+    :global(.new-post) {
+        animation: 500ms linear fadeIn;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 
  </style>
@@ -357,7 +404,7 @@
                     <strong><h6>{$observableChannelCache[properties.channelKey].channel.label}</h6></strong>
                     <div>
                         <span>#{properties.channelKey}</span>
-                        <span id="new-message-for-{properties.channelKey}" class="{isThereNewMessage()?'new-label':'hidden'}">Nouveau message !</span>
+                        <span id="new-message-for-{properties.channelKey}" class="new-label {isThereNewMessage()?'':'hidden'}">Nouveau message !</span>
                     </div>
                 {/if}
             </div>
@@ -371,12 +418,6 @@
                     {#if typeof post.parentPost !== 'number'}
                         <Post post={post} on:answer-clicked={(p) => {
                             ActivePost = p.detail;
-                            for(const np of ActivePost.posts){
-                                if(!$observableChannelCache[properties.channelKey].posts.find(p => p.id === np.id)){
-                                    $observableChannelCache[properties.channelKey].posts.push(np);
-                                }
-                            }
-                            observableChannelCache.update(occ => occ);
                 }}></Post>
                     {/if}
                 {/each}
@@ -406,13 +447,13 @@
                         <h6>Fil de discussion</h6>
                         <div>
                             <span>#{properties.channelKey}</span>
-                            <span id="new-answer-for-{properties.channelKey}" class="{isThereNewAnswer()?'new-label':'hidden'}"> Nouvelle réponse !</span>
+                            <span id="new-answer-for-{properties.channelKey}" class="new-label {isThereNewAnswer()?'':'hidden'}"> Nouvelle réponse !</span>
                         </div>
                     </div>
                     <i on:click={hideRightPanel} class="fal fa-window-close"></i>
                 </div>
                 <div class="channelContent" on:scroll={onScrollForChildren}>
-                    {#each $observableChannelCache[properties.channelKey].posts as post}
+                    {#each ActivePost.posts as post}
                         {#if post.parentPost === ActivePost.parentPost.id  }
                             <Post post={post}></Post>
                         {/if}
