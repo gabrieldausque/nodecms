@@ -50,6 +50,31 @@
         }
     }
 
+    function getRows(containers){
+        const rows = []
+        const rowIndexes = containers.map(c => typeof c.row === 'number'? c.row : 0).sort();
+        for(const rowIndex of rowIndexes){
+            const row = []
+            for(const colContainer of containers.filter(c => {
+                if(rowIndex === 0)
+                    return c.row === rowIndex || typeof c.row === 'undefined' || c.row === null;
+                else
+                    return c.row === rowIndex;
+            })){
+                row.push(colContainer);
+            }
+            row.sort((c1,c2) => {
+                if(c1.col > c2.col)
+                    return 1;
+                if(c1.col < c2.col)
+                    return -1;
+                return 0;
+            })
+            rows.push(row)
+        }
+        return rows;
+    }
+
 </script>
 
 <style>
@@ -81,9 +106,21 @@
         <main class="{properties.classes}" style="{properties.style}">
             <svelte:component this="{properties.title}" title="{properties.title}"></svelte:component>
             {#if Array.isArray(properties.bodies)}
-                {#each properties.bodies as container}
-                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
-                {/each}
+                {#if properties.layout === 'grid'}
+                    {#each getRows(properties.bodies) as row}
+                        <div class="row">
+                            {#each row as container}
+                                <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
+                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                                </div>
+                            {/each }
+                        </div>
+                    {/each}
+                {:else}
+                    {#each properties.bodies as container}
+                        <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                    {/each}
+                {/if}
             {/if}
         </main>
         {#if Array.isArray(properties.header) && properties.header.length > 0}
