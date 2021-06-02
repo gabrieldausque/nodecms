@@ -288,31 +288,35 @@
                     <h5>Corps</h5>
                     <div id="document-bodies" class="{$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}">
                         {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
-                            {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
-                                if(c1.order > c2.order)
-                                    return 1;
-                                if(c1.order < c2.order)
-                                    return -1;
-                                return 0;
-                            }) as bodyComponent}
-                                <div class="drop-zone"
-                                     data-zone="bodies"
-                                     data-order="{typeof bodyComponent.order === 'number'?bodyComponent.order - 1:0}"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                ></div>
-                                <BlockEditor component={bodyComponent} zone="bodies"></BlockEditor>
-                                <div class="drop-zone"
-                                     data-zone="bodies"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                     data-order="{typeof bodyComponent.order === 'number' ? bodyComponent.order + 1:1}"
-                                ></div>
-                            {/each}
+                            {#if $EditableDocumentStore.document.content.bodies.layout === 'grid'}
+
+                            {:else}
+                                {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
+                                    if(c1.order > c2.order)
+                                        return 1;
+                                    if(c1.order < c2.order)
+                                        return -1;
+                                    return 0;
+                                }) as bodyComponent}
+                                    <div class="drop-zone"
+                                         data-zone="bodies"
+                                         data-order="{typeof bodyComponent.order === 'number'?bodyComponent.order - 1:0}"
+                                         on:dragenter={onDropZoneEnter}
+                                         on:dragleave={onDropZoneExit}
+                                         on:drop={onDropComponent}
+                                         on:dragover={(event) => { event.preventDefault(); return false;}}
+                                    ></div>
+                                    <BlockEditor component={bodyComponent} zone="bodies"></BlockEditor>
+                                    <div class="drop-zone"
+                                         data-zone="bodies"
+                                         on:dragenter={onDropZoneEnter}
+                                         on:dragleave={onDropZoneExit}
+                                         on:drop={onDropComponent}
+                                         on:dragover={(event) => { event.preventDefault(); return false;}}
+                                         data-order="{typeof bodyComponent.order === 'number' ? bodyComponent.order + 1:1}"
+                                    ></div>
+                                {/each}
+                            {/if}
                         {:else}
                             <div class="drop-zone"
                                  data-order="0"

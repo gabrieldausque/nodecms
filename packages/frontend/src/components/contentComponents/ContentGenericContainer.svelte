@@ -106,7 +106,7 @@
         <main class="{properties.classes}" style="{properties.style}">
             <svelte:component this="{properties.title}" title="{properties.title}"></svelte:component>
             {#if Array.isArray(properties.bodies)}
-                {#if properties.layout === 'grid'}
+                {#if properties.bodies.layout === 'grid'}
                     {#each getRows(properties.bodies) as row}
                         <div class="row">
                             {#each row as container}
