@@ -1,5 +1,15 @@
 # BEFORE DEV
 
+## Install docker 
+
+See [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+
+## Install docker compose
+
+## Install mongodb with docker compose
+
+cf backend docker_mongodbbackend.yaml
+
 ## Apache configuration : 
 
 ### activate modules
@@ -56,6 +66,8 @@ sudo update-ca-certificates
 
 copy certificate to a etc/ssl/certs
 sudo cp server.crt /etc/ssl/certs
+
+copy new.cert.key to /etc/ssl/private server.key
 
 ### create apache conf file
 
