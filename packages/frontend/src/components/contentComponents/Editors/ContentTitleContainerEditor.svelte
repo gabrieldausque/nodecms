@@ -10,11 +10,11 @@
     let id = uuid();
     $ComponentEditorStore;
 
+    afterUpdate(() => {
+        console.log('editor updated');
+    })
+
     onMount(() => {
-        if(!properties.uri){
-            properties.uri = '';
-            properties = properties;
-        }
         window.setTimeout(() => {
             const contentText = document.getElementById(`content-${id}`)
             console.log(contentText);
@@ -22,13 +22,13 @@
                 target: contentText,
                 props: {
                     actions: [
-                        'b', 'i', 'u', 'strike', 'ul', 'ol', 'viewHtml'
+                        'left', 'center','right','justify','b', 'i', 'u', 'strike', 'ul', 'ol', 'a','viewHtml',
                     ],
-                    html: properties.content
+                    html: properties.title
                 }
             });
             editor.$on('change', (e) => {
-                properties.content = editor.getHtml();
+                properties.title = editor.getHtml();
                 updateEds();
             })
         })
@@ -39,10 +39,6 @@
             return eds;
         })
     }
-
-    afterUpdate(() => {
-        console.log('editor updated');
-    })
 
 </script>
 
@@ -58,25 +54,28 @@
 
 </style>
 
-<div class="url">
-    <label for="uri-{id}">Url</label>
-    <input id="uri-{id}" value={properties.uri?properties.uri:''} type="url" class="form-control" placeholder="Taper l'url de l'image"
-           on:blur={() => {
-               properties.uri = document.getElementById(`uri-${id}`).value;
-               updateEds();
-           }}>
-</div>
-<div class="classes">
+<div class="">
     <label for="classes">CSS Classes :</label>
     <input id="classes" type="text" class="form-control" placeholder="Taper le nom des classes css séparées par un espace" bind:value={properties.classes}>
 </div>
 <div class="style">
-    <label for={`style-${id}`}>Style :</label>
+    <label for={`style-${id}`}>Container Style :</label>
     <HighlightedEditor
             id={`style-${id}`}
             content={properties.style?properties.style:''}
             onChange={(newStyle) => {
                 properties.style = newStyle
+                updateEds();
+            }}
+    ></HighlightedEditor>
+</div>
+<div class="style">
+    <label for={`global-style-${id}`}>Global Style :</label>
+    <HighlightedEditor
+            id={`global-style-${id}`}
+            content={properties.globalStyle?properties.innerStyle:''}
+            onChange={(newStyle) => {
+                properties.globalStyle = newStyle
                 updateEds();
             }}
     ></HighlightedEditor>

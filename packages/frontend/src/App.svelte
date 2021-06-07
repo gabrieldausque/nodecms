@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	import TopNavBar from './components/TopNavBar.svelte';
-	import ContentGenericContainer from './components/contentComponents/ContentGenericContainer.svelte';
+	import ContentDocumentContainer from './components/contentComponents/ContentDocumentContainer.svelte';
 	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
 	import ContentTextContainerEditor from './components/contentComponents/Editors/ContentTextContainerEditor.svelte';
 	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
@@ -15,6 +15,7 @@
 	import ContentMediaContainer from './components/contentComponents/ContentMediaContainer.svelte';
 	import ContentMediaContainerEditor from './components/contentComponents/Editors/ContentMediaContainerEditor.svelte';
 	import ContentImageContainerEditor from './components/contentComponents/Editors/ContentImageContainerEditor.svelte';
+	import ContentTitleContainerEditor from './components/contentComponents/Editors/ContentTitleContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {onMount} from "svelte";
 	import {getBackendClient, TempCache} from "@nodecms/backend-client";
@@ -23,7 +24,7 @@
 
 	$DocumentStore;
 
-	globalContentContainerFactory.registerContentContainer('generic', ContentGenericContainer);
+	globalContentContainerFactory.registerContentContainer('document', ContentDocumentContainer);
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
 			'Texte', 'fas fa-text', ContentTextContainerEditor);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer,
@@ -33,7 +34,7 @@
 			'Canal', 'fas fa-signal-stream')
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
 	globalContentContainerFactory.registerContentContainer('title',ContentTitle,
-			'Titre', 'fas fa-heading');
+			'Titre', 'fas fa-heading', ContentTitleContainerEditor);
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
 	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
@@ -83,7 +84,7 @@
 	<TopNavBar></TopNavBar>
 </header>
 <main>
-	<ContentGenericContainer documentKey={$DocumentStore.key}></ContentGenericContainer>
+	<ContentDocumentContainer documentKey={$DocumentStore.key}></ContentDocumentContainer>
 </main>
 <ErrorModal></ErrorModal>
 

@@ -7,6 +7,7 @@
 
     export let component;
     export let zone;
+    export let layout;
 
 </script>
 
@@ -39,6 +40,11 @@
                                        contextMenu.style.top = `${event.y}px`;
                                        contextMenu.style.left = `${event.x}px`;
                                    }
+                                   document.addEventListener('click', () => {
+                                       document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
+                                   }, {
+                                       once: true
+                                   })
                                 }}>
     <div class="contextual-menu dropdown-menu dropdown-menu-sm-left">
         <div class="dropdown-item" on:click={(event) => {
@@ -47,6 +53,7 @@
                                              document.querySelectorAll('.contextual-menu').forEach(cm => {cm.classList.remove('show')});
                                              $BlockEditorComponentStore.component = component;
                                              $BlockEditorComponentStore.zone = zone;
+                                             $BlockEditorComponentStore.layout = layout;
                                          }}>Editer</div>
     </div>
     {#if component.properties.globalStyle}

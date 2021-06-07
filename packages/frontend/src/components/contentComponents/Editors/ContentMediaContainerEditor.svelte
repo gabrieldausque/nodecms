@@ -171,6 +171,11 @@
 
     .media-container {
         margin: 15px;
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .media-container:hover {
@@ -206,7 +211,7 @@
                     </div>
                 </div>
                 {#each $AllMediaStores.media as media}
-                    <div class="media-container" class:selected={media.key === properties.key}>
+                    <div class="media-container" class:selected={media.key === properties.key} on:click={onMediaClick}>
                         <svelte:component on:click={onMediaClick} this={Helpers.getAttachmentComponent(media.mediaType)} attachment={media.key}/>
                     </div>
                 {/each}

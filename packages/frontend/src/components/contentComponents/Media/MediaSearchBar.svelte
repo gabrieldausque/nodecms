@@ -1,6 +1,8 @@
 <script>
     import {AllMediaStores} from "../../../stores/AllMediaStores";
     import {createEventDispatcher} from 'svelte';
+    import {onMount, onDestroy} from 'svelte';
+
     import _ from 'underscore';
 
     const dispatch = createEventDispatcher();
@@ -55,6 +57,17 @@
             dispatch('search-ended');
         }
     }
+
+    onMount(() => {
+        console.log('mounting search bar');
+    })
+
+    onDestroy(() => {
+        AllMediaStores.update((ams) => {
+            ams.media = [];
+            return ams;
+        })
+    })
 
     function onKeyUp() {
         dispatch('search-started');

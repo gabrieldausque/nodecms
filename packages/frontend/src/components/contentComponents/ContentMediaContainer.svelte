@@ -10,7 +10,9 @@
 </script>
 
 <style>
-
+    main {
+        width:100%;
+    }
 </style>
 
 <main style="{properties.style}">

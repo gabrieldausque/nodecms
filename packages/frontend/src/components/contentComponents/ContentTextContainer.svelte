@@ -1,7 +1,12 @@
-<script>
-    import {Helpers} from '../../helpers/Helpers'
-    import {v4 as uuid} from 'uuid';
+<!--
+    properties.globalStyle : string define global <style></style> in text container
+    properties.style: string define style attribute of text container
+    properties.content : HTML content of the text container
+-->
 
+<script>
+
+    import {Helpers} from '../../helpers/Helpers'
     export let properties;
 
 </script>
@@ -12,7 +17,8 @@
     }
 </style>
 
-<div class="default-style-text-container {properties.classes?properties.classes:''}" style="{properties.style?properties.style:''}">
+<div class="default-style-text-container {properties.classes?properties.classes:''}"
+     style="{properties.style?properties.style:''}">
     {#if properties.globalStyle}
         {@html Helpers.styleOpeningLabel + properties.innerStyle + Helpers.styleClosingLabel}
     {/if}

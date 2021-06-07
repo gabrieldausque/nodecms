@@ -294,9 +294,8 @@ function initData(){
         },
         {
           order:0,
-          type:'generic',
-          properties: {
-            globalStyle: `
+          type:'media',
+          globalStyle: `
                         @keyframes animatedBorderTop {
                             0% {
                                 left:-30px; height:3px; width:0px;
@@ -385,18 +384,13 @@ function initData(){
                         animation: 10s linear 5s infinite animatedBorderLeft;
                         }
                         `,
-            classes: "main-logo",
-            style:"",
-            headers:[],
-            bodies:[
-              {
-                order:1,
-                type:'media',
-                properties: {
-                  globalStyle: " #image-logo { height: 100%; width: 100%; max-height: 100%; }",
-                  mediaType:"image/png",
-                  key: "logo",
-                  style:`
+          classes: "main-logo",
+          style:"",
+          properties: {
+            globalStyle: " #image-logo { height: 100%; width: 100%; max-height: 100%; }",
+            mediaType:"image/png",
+            key: "logo",
+            style:`
                         width:50vh;
                         height:50vh;
                         border: red solid 1px;
@@ -409,21 +403,54 @@ function initData(){
                         justify-content: center;
                         align-items: center;
                         `,
-                  content:  `
+            content:  `
                         <div class="main-logo-border-top"></div>
                         <div class="main-logo-border-right"></div>
                         <div class="main-logo-border-bottom"></div>
                         <div class="main-logo-border-left"></div>
                         `
-                }
-              }],
-            footers:[]
           }
         }
       ],
       footers:[]
     },
     visibility: 'public',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'tests',
+    content: {
+      layout: {
+        bodies:{
+          type:"grid"
+        }
+      },
+      bodies:[
+        {
+          order:0,
+          type:'text',
+          properties:{
+            col:1,
+            row:1,
+            content:"Texte for the test"
+          }
+        },
+        {
+          order:0,
+          type:'text',
+          properties:{
+            col:0,
+            row:0,
+            content:"Second text"
+          }
+        }
+      ]
+    },
+    visibility: 'protected',
     ownerId: 0,
     creationDate: new Date(),
     updateDate: new Date()

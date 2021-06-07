@@ -50,31 +50,6 @@
         }
     }
 
-    function getRows(containers){
-        const rows = []
-        const rowIndexes = containers.map(c => typeof c.row === 'number'? c.row : 0).sort();
-        for(const rowIndex of rowIndexes){
-            const row = []
-            for(const colContainer of containers.filter(c => {
-                if(rowIndex === 0)
-                    return c.row === rowIndex || typeof c.row === 'undefined' || c.row === null;
-                else
-                    return c.row === rowIndex;
-            })){
-                row.push(colContainer);
-            }
-            row.sort((c1,c2) => {
-                if(c1.col > c2.col)
-                    return 1;
-                if(c1.col < c2.col)
-                    return -1;
-                return 0;
-            })
-            rows.push(row)
-        }
-        return rows;
-    }
-
 </script>
 
 <style>
@@ -88,6 +63,10 @@
         flex-grow: 1;
         height: 100%;
         overflow:auto;
+        scrollbar-width:none;
+    }
+    .container-content > main::-webkit-scrollbar {
+        display: none;
     }
 </style>
 
@@ -103,11 +82,15 @@
                 {/each}
             </header>
         {/if}
-        <main class="{properties.classes}" style="{properties.style}">
+        <main class="{properties.classes?properties.classes:''} {(properties.layout &&
+                     properties.layout.bodies &&
+                     properties.layout.bodies.type === 'grid')?'container':''}" style="{properties.style}">
             <svelte:component this="{properties.title}" title="{properties.title}"></svelte:component>
             {#if Array.isArray(properties.bodies)}
-                {#if properties.bodies.layout === 'grid'}
-                    {#each getRows(properties.bodies) as row}
+                {#if properties.layout &&
+                     properties.layout.bodies &&
+                     properties.layout.bodies.type === 'grid'}
+                    {#each Helpers.getRows(properties.bodies) as row}
                         <div class="row">
                             {#each row as container}
                                 <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">

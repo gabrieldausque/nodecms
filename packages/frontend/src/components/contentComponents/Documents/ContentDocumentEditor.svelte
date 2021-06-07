@@ -32,16 +32,31 @@
         if(event.target)
             event.target.classList.remove('on-hover');
         const newBlock = {
-            order: parseInt(event.target.getAttribute('data-order')),
+            order: typeof event.target.getAttribute('data-order') === 'string'?
+                parseInt(event.target.getAttribute('data-order')):0,
             type: event.dataTransfer.getData('constructorType'),
             properties:{}
         }
+        const layout = event.target.getAttribute('data-layout');
         const zone = event.target.getAttribute('data-zone');
+
+        if(layout === 'grid'){
+            let row = parseInt(event.target.getAttribute('data-row'));
+            if(event.target.classList.contains('new-row')){
+                for(const component of $EditableDocumentStore.document.content[zone]){
+                    if(component.properties.row >= row){
+                        component.properties.row++;
+                    }
+                }
+            }
+            newBlock.properties.row = row;
+            newBlock.properties.col = parseInt(event.target.getAttribute('data-col'));
+        }
         EditableDocumentStore.update(eds => {
             if(!Array.isArray(eds.document.content[zone])){
                 eds.document.content[zone] = [];
             }
-            eds.document.content[zone].push(newBlock)
+            eds.document.content[zone].push(newBlock);
             return eds;
         })
     }
@@ -86,9 +101,7 @@
     #document {
         width: calc(100vw - 120px);
         height: 100%;
-        max-height: 100%;
         min-height: 100%;
-        overflow: hidden;
     }
 
     .documentEditorContent {
@@ -174,6 +187,10 @@
         margin-right: 2px;
     }
 
+    .container.reduced {
+        transform: scale(0.4) translateX(-106%) translateY(-19%);
+    }
+
     .reduced {
         transform: scale(0.4) translateX(-72%) translateY(-72%);
     }
@@ -193,21 +210,54 @@
     #bodies {
         position: relative;
         min-height: 70%;
-        height:auto
+        height:auto;
     }
 
     #document-headers,
     #document-footers,
     #document-bodies {
         min-height: calc(100% - 41px);
+        height:100%;
+    }
+
+    #document-headers.container,
+    #document-footers.container,
+    #document-bodies.container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #document-headers.container > div.row,
+    #document-footers.container > div.row,
+    #document-bodies.container > div.row {
+        flex-grow: 1;
+        margin: 0 !important;
     }
 
     .drop-zone {
-        height:20px;
+        min-height:20px;
+        min-width:10px;
+        border: dashed 1px;
     }
 
     .drop-zone.on-hover {
         background: red;
+    }
+
+    .new-row {
+        max-height: 20px;
+        width: 100%;
+    }
+
+    .components-col {
+        padding: 0;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    :global(.components-col > div.component-container) {
+        width:100%;
     }
 
 </style>
@@ -286,10 +336,83 @@
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps</h5>
-                    <div id="document-bodies" class="{$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}">
+                    <div id="document-bodies" class="{$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}
+                    {
+                        $EditableDocumentStore.document.content.layout &&
+                        $EditableDocumentStore.document.content.layout.bodies &&
+                        $EditableDocumentStore.document.content.layout.bodies.type === 'grid'?
+                        'container':
+                        ''
+                    }">
                         {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
-                            {#if $EditableDocumentStore.document.content.bodies.layout === 'grid'}
-
+                            {#if $EditableDocumentStore.document.content.layout &&
+                            $EditableDocumentStore.document.content.layout.bodies &&
+                            $EditableDocumentStore.document.content.layout.bodies.type === 'grid'}
+                                {#each Helpers.getRows($EditableDocumentStore.document.content.bodies) as row,rowIndex}
+                                    {#if rowIndex > 0}
+                                        <div class="new-row drop-zone"
+                                             data-zone="bodies"
+                                             data-layout="grid"
+                                             data-row="{rowIndex}"
+                                             data-col="0"
+                                             on:dragenter={onDropZoneEnter}
+                                             on:dragleave={onDropZoneExit}
+                                             on:drop={onDropComponent}
+                                             on:dragover={(event) => { event.preventDefault(); return false;}}
+                                        ></div>
+                                    {/if}
+                                    <div class="row">
+                                        {#each row as bodyComponent, colIndex}
+                                            {#if bodyComponent.col !== 0 &&
+                                            bodyComponent.col !== null &&
+                                            typeof bodyComponent.col === 'number' &&
+                                            !$EditableDocumentStore.document.content.bodies.find(c => c.row === rowIndex &&
+                                                c.col === colIndex - 1)
+                                            }
+                                                <div class="drop-zone"
+                                                     data-zone="bodies"
+                                                     data-layout="grid"
+                                                     data-row="{rowIndex}"
+                                                     data-col="{colIndex - 1}"
+                                                     on:dragenter={onDropZoneEnter}
+                                                     on:dragleave={onDropZoneExit}
+                                                     on:drop={onDropComponent}
+                                                     on:dragover={(event) => { event.preventDefault(); return false;}}
+                                                ></div>
+                                            {/if}
+                                            <div class="components-col {bodyComponent.colSpan?`col-${bodyComponent.colSpan}`:'col'}">
+                                                <BlockEditor component={bodyComponent} zone="bodies" layout="grid"></BlockEditor>
+                                            </div>
+                                            {#if bodyComponent.col !== null &&
+                                            typeof bodyComponent.col === 'number' &&
+                                            bodyComponent.col + bodyComponent.span?bodyComponent.span:0 < 12 &&
+                                            !$EditableDocumentStore.document.content.bodies.find(c => c.row === rowIndex &&
+                                                c.col === bodyComponent.col + bodyComponent.span?bodyComponent.span:0)
+                                            }
+                                                <div class="drop-zone"
+                                                     data-zone="bodies"
+                                                     data-row="{rowIndex}"
+                                                     data-layout="grid"
+                                                     data-col="{bodyComponent.col + bodyComponent.span?bodyComponent.span:0 + 1}"
+                                                     on:dragenter={onDropZoneEnter}
+                                                     on:dragleave={onDropZoneExit}
+                                                     on:drop={onDropComponent}
+                                                     on:dragover={(event) => { event.preventDefault(); return false;}}
+                                                ></div>
+                                            {/if}
+                                        {/each }
+                                    </div>
+                                {/each}
+                                <div class="new-row drop-zone"
+                                     data-zone="bodies"
+                                     data-layout="grid"
+                                     data-row="{Helpers.getLastRowIndex($EditableDocumentStore.document.content.bodies) + 1}"
+                                     data-col="0"
+                                     on:dragenter={onDropZoneEnter}
+                                     on:dragleave={onDropZoneExit}
+                                     on:drop={onDropComponent}
+                                     on:dragover={(event) => { event.preventDefault(); return false;}}
+                                ></div>
                             {:else}
                                 {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
                                     if(c1.order > c2.order)
@@ -307,7 +430,7 @@
                                          on:dragover={(event) => { event.preventDefault(); return false;}}
                                     ></div>
                                     <BlockEditor component={bodyComponent} zone="bodies"></BlockEditor>
-                                    <div class="drop-zone"
+                                    <div class=" drop-zone"
                                          data-zone="bodies"
                                          on:dragenter={onDropZoneEnter}
                                          on:dragleave={onDropZoneExit}
@@ -381,8 +504,45 @@
         <div class="close" on:click={() => {
         $BlockEditorComponentStore.component = undefined;
         $BlockEditorComponentStore.zone = undefined;
+        $BlockEditorComponentStore.layout = undefined;
     }}><i class="fal fa-window-close"></i></div>
         <div class="editor-content">
+            {#if $BlockEditorComponentStore.layout}
+                <label for="grid-options">Options de grille</label>
+                <div id="grid-options">
+                    <div class="form-group">
+                        <label for="row">ligne</label>
+                        <input id="row" type="number" value="{$BlockEditorComponentStore.component.properties.row}" on:blur={(event) => {
+                            const input = event.currentTarget;
+                            $BlockEditorComponentStore.component.properties.row = input.value?parseInt(input.value):0;
+                            BlockEditorComponentStore.update(becs => becs);
+                            EditableDocumentStore.update(ecs => ecs);
+                        }}>
+                        <label for="column">Colonne</label>
+                        <select id="column" class="form-control-sm" bind:value={$BlockEditorComponentStore.component.properties.col}
+                            on:blur={(event) => {
+                            const input = event.currentTarget;
+                            $BlockEditorComponentStore.component.properties.col = input.value?parseInt(input.value):0;
+                            BlockEditorComponentStore.update(becs => becs);
+                            EditableDocumentStore.update(ecs => ecs);
+                        }} >
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                </div>
+            {/if}
             {#if $BlockEditorComponentStore.component}
                 {#if globalContentContainerFactory.registeredConstructors[$BlockEditorComponentStore.component.type].editorConstructor}
                     <svelte:component this="{globalContentContainerFactory.registeredConstructors[$BlockEditorComponentStore.component.type].editorConstructor}"

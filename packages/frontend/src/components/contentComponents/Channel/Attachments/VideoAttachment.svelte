@@ -4,9 +4,11 @@
     import {getBackendClient} from "@nodecms/backend-client";
     import {beforeUpdate, onMount} from "svelte";
     import LoadingAttachment from "./LoadingAttachment.svelte";
+    import {createEventDispatcher} from 'svelte';
 
     export let attachment;
     let media;
+    const dispatch = createEventDispatcher();
     const mediaStore = writable({});
     mediaStore.subscribe((value) => {
         if (!media || media.id !== value.id)
@@ -31,6 +33,11 @@
     })
 
     function handleVideoClick(event) {
+        try{
+            dispatch('click', event)
+        }catch(err) {
+            //do nothing
+        }
         if (event.target && event.target.play) {
             event.target.play();
         }

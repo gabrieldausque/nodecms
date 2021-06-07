@@ -12,6 +12,7 @@
         justify-content: center;
         align-items: center;
         align-self: center;
+        position: relative;
     }
 
     .spinner-loading {
