@@ -18,6 +18,7 @@
     import MediaSearchBar from "../Media/MediaSearchBar.svelte";
     import {AllMediaStores} from "../../../stores/AllMediaStores";
     import {Helpers} from "../../../helpers/Helpers";
+    import UploadMediaModal from "../Media/UploadMediaModal.svelte";
 
     $AllMediaStores;
     export let properties;
@@ -64,16 +65,16 @@
         document.querySelector('.searching').classList.remove('show');
     }
 
-    async function onMediaClick(event){
+    async function onMediaClick(event) {
         const services = await getBackendClient();
-        if(event.detail &&
-           event.detail.target &&
-           event.detail.target.getAttribute('data-media-key')
+        if (event.detail &&
+            event.detail.target &&
+            event.detail.target.getAttribute('data-media-key')
         ) {
             console.log('updating media')
             const mediaMetadata = await services.mediaService.getMediaMetadata(event.detail.target.getAttribute('data-media-key'));
             console.log(mediaMetadata);
-            if(mediaMetadata && mediaMetadata.key !== properties.key){
+            if (mediaMetadata && mediaMetadata.key !== properties.key) {
                 properties.key = mediaMetadata.key;
                 properties.mediaType = mediaMetadata.mediaType;
                 properties = properties;
@@ -202,6 +203,9 @@
                 <svelte:component this={Helpers.getAttachmentComponent(properties.mediaType)} attachment={properties.key}/>
         </div>
         <div id="media-select-zone">
+            <button type="button" on:click={(event) => {
+                jQuery('#upload-media-modal').modal('show');
+            }}><i class="fas fa-plus-circle">Ajouter un media</button>
             <MediaSearchBar on:search-started={onSearchStarted} on:search-ended={onSearchEnded}></MediaSearchBar>
             <div class="all-media-list">
                 <div class="searching">
@@ -247,4 +251,6 @@
         </div>
     </div>
 </div>
+
+<UploadMediaModal></UploadMediaModal>
 

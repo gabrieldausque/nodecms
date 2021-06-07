@@ -218,6 +218,7 @@
     #document-bodies {
         min-height: calc(100% - 41px);
         height:100%;
+        flex-grow: 1;
     }
 
     #document-headers.container,
@@ -259,6 +260,8 @@
     :global(.components-col > div.component-container) {
         width:100%;
     }
+
+
 
 </style>
 
