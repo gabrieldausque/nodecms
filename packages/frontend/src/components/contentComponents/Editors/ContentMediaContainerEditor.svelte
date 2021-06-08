@@ -19,12 +19,15 @@
     import {AllMediaStores} from "../../../stores/AllMediaStores";
     import {Helpers} from "../../../helpers/Helpers";
     import UploadMediaModal from "../Media/UploadMediaModal.svelte";
+    import {ShowUploadModalStore, ShowUploadModal} from "../../../stores/ShowUploadModalStore";
 
     $AllMediaStores;
+
     export let properties;
     let id = uuid();
 
     onMount(() => {
+        console.log(properties);
         window.setTimeout(() => {
             const contentText = document.getElementById(`content-${id}`)
             console.log(contentText);
@@ -202,10 +205,13 @@
         <div id="media" class="current-media">
                 <svelte:component this={Helpers.getAttachmentComponent(properties.mediaType)} attachment={properties.key}/>
         </div>
+        <button type="button" class="btn btn-secondary" on:click={() => {
+                const show = new ShowUploadModal();
+                show.shown = true;
+                ShowUploadModalStore.set(show);
+            }}><i class="fas fa-plus-circle">Ajouter un média</button>
         <div id="media-select-zone">
-            <button type="button" on:click={(event) => {
-                jQuery('#upload-media-modal').modal('show');
-            }}><i class="fas fa-plus-circle">Ajouter un media</button>
+
             <MediaSearchBar on:search-started={onSearchStarted} on:search-ended={onSearchEnded}></MediaSearchBar>
             <div class="all-media-list">
                 <div class="searching">
@@ -227,7 +233,7 @@
         <label for="globalStyle">Global Style :</label>
         <HighlightedEditor
                 id="globalStyle"
-                content={properties.globalStyle}
+                content={properties.globalStyle?properties.globalStyle:''}
                 onChange={(newStyle) => {
                     properties.globalStyle = newStyle
                 updateEds();
@@ -238,7 +244,7 @@
         <label for="style">Style :</label>
         <HighlightedEditor
                 id={`style-${id}`}
-                content={properties.style}
+                content={properties.style?properties.globalStyle:''}
                 onChange={(newStyle) => {
                     properties.style = newStyle
                 updateEds();

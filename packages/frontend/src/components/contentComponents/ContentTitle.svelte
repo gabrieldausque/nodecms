@@ -17,7 +17,7 @@
         {#if typeof properties.globalStyle === "string"}
             {@html Helpers.styleOpeningLabel + properties.globalStyle + Helpers.styleClosingLabel}
         {/if}
-        <h1 style="{properties.style?properties.style:''}">{properties.title?properties.title:''}</h1>
+        <h1 style="{properties.style?properties.style:''}">{@html properties.title?properties.title:''}</h1>
     {:else}
         <h1></h1>
     {/if}

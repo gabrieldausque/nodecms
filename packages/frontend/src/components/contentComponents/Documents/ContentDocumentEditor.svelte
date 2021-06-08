@@ -51,6 +51,9 @@
             }
             newBlock.properties.row = row;
             newBlock.properties.col = parseInt(event.target.getAttribute('data-col'));
+            console.log('#')
+            console.log(newBlock.properties.col);
+            console.log('#')
         }
         EditableDocumentStore.update(eds => {
             if(!Array.isArray(eds.document.content[zone])){
@@ -261,6 +264,11 @@
         width:100%;
     }
 
+    .grid-options > .form-group {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+    }
 
 
 </style>
@@ -515,34 +523,35 @@
                 <div id="grid-options">
                     <div class="form-group">
                         <label for="row">ligne</label>
-                        <input id="row" type="number" value="{$BlockEditorComponentStore.component.properties.row}" on:blur={(event) => {
+                        <input id="row" type="number" class="form-control-sm" value="{$BlockEditorComponentStore.component.properties.row}" on:blur={(event) => {
                             const input = event.currentTarget;
                             $BlockEditorComponentStore.component.properties.row = input.value?parseInt(input.value):0;
                             BlockEditorComponentStore.update(becs => becs);
                             EditableDocumentStore.update(ecs => ecs);
                         }}>
                         <label for="column">Colonne</label>
-                        <select id="column" class="form-control-sm" bind:value={$BlockEditorComponentStore.component.properties.col}
+                        <input id="column" type="number" class="form-control-sm" value={$BlockEditorComponentStore.component.properties.col}
                             on:blur={(event) => {
                             const input = event.currentTarget;
+                            const previous = $BlockEditorComponentStore.component.properties.col;
                             $BlockEditorComponentStore.component.properties.col = input.value?parseInt(input.value):0;
+                            console.log('change col');
+                            for(const component of $EditableDocumentStore.document.content[$BlockEditorComponentStore.zone]) {
+                                console.log(component);
+                                if(component !== $BlockEditorComponentStore.component){
+                                    if(previous < $BlockEditorComponentStore.component.properties.col)
+                                        if(component.properties.col <= $BlockEditorComponentStore.component.properties.col) {
+                                           component.properties.col=Math.max(component.properties.col - 1,0);
+                                        }
+                                    else if(previous > $BlockEditorComponentStore.component.properties.col)
+                                        if(component.properties.col >= $BlockEditorComponentStore.properties.col) {
+                                           component.properties.col=Math.min(component.properties.col + 1,12);
+                                        }
+                                }
+                            }
                             BlockEditorComponentStore.update(becs => becs);
                             EditableDocumentStore.update(ecs => ecs);
                         }} >
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                        </select>
                     </div>
                 </div>
             {/if}
