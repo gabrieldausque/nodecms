@@ -7,6 +7,7 @@
     import {Helpers} from "../../../helpers/Helpers";
     import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
     import BlockEditor from "../Editors/BlockEditor.svelte";
+    import ContentDocumentEditorZoneGridLayout from './ContentDocumentEditorZoneGridLayout.svelte';
 
     $EditableDocumentStore;
     $BlockEditorComponentStore;
@@ -238,28 +239,6 @@
         margin: 0 !important;
     }
 
-    .drop-zone {
-        min-height:20px;
-        min-width:10px;
-        border: dashed 1px;
-    }
-
-    .drop-zone.on-hover {
-        background: red;
-    }
-
-    .new-row {
-        max-height: 20px;
-        width: 100%;
-    }
-
-    .components-col {
-        padding: 0;
-        display:flex;
-        justify-content: center;
-        align-items: center;
-    }
-
     :global(.components-col > div.component-container) {
         width:100%;
     }
@@ -269,7 +248,6 @@
         align-items: center;
         justify-content: start;
     }
-
 
 </style>
 
@@ -359,71 +337,7 @@
                             {#if $EditableDocumentStore.document.content.layout &&
                             $EditableDocumentStore.document.content.layout.bodies &&
                             $EditableDocumentStore.document.content.layout.bodies.type === 'grid'}
-                                {#each Helpers.getRows($EditableDocumentStore.document.content.bodies) as row,rowIndex}
-                                    {#if rowIndex > 0}
-                                        <div class="new-row drop-zone"
-                                             data-zone="bodies"
-                                             data-layout="grid"
-                                             data-row="{rowIndex}"
-                                             data-col="0"
-                                             on:dragenter={onDropZoneEnter}
-                                             on:dragleave={onDropZoneExit}
-                                             on:drop={onDropComponent}
-                                             on:dragover={(event) => { event.preventDefault(); return false;}}
-                                        ></div>
-                                    {/if}
-                                    <div class="row">
-                                        {#each row as bodyComponent, colIndex}
-                                            {#if bodyComponent.col !== 0 &&
-                                            bodyComponent.col !== null &&
-                                            typeof bodyComponent.col === 'number' &&
-                                            !$EditableDocumentStore.document.content.bodies.find(c => c.row === rowIndex &&
-                                                c.col === colIndex - 1)
-                                            }
-                                                <div class="drop-zone"
-                                                     data-zone="bodies"
-                                                     data-layout="grid"
-                                                     data-row="{rowIndex}"
-                                                     data-col="{colIndex - 1}"
-                                                     on:dragenter={onDropZoneEnter}
-                                                     on:dragleave={onDropZoneExit}
-                                                     on:drop={onDropComponent}
-                                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                                ></div>
-                                            {/if}
-                                            <div class="components-col {bodyComponent.colSpan?`col-${bodyComponent.colSpan}`:'col'}">
-                                                <BlockEditor component={bodyComponent} zone="bodies" layout="grid"></BlockEditor>
-                                            </div>
-                                            {#if bodyComponent.col !== null &&
-                                            typeof bodyComponent.col === 'number' &&
-                                            bodyComponent.col + bodyComponent.span?bodyComponent.span:0 < 12 &&
-                                            !$EditableDocumentStore.document.content.bodies.find(c => c.row === rowIndex &&
-                                                c.col === bodyComponent.col + bodyComponent.span?bodyComponent.span:0)
-                                            }
-                                                <div class="drop-zone"
-                                                     data-zone="bodies"
-                                                     data-row="{rowIndex}"
-                                                     data-layout="grid"
-                                                     data-col="{bodyComponent.col + bodyComponent.span?bodyComponent.span:0 + 1}"
-                                                     on:dragenter={onDropZoneEnter}
-                                                     on:dragleave={onDropZoneExit}
-                                                     on:drop={onDropComponent}
-                                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                                ></div>
-                                            {/if}
-                                        {/each }
-                                    </div>
-                                {/each}
-                                <div class="new-row drop-zone"
-                                     data-zone="bodies"
-                                     data-layout="grid"
-                                     data-row="{Helpers.getLastRowIndex($EditableDocumentStore.document.content.bodies) + 1}"
-                                     data-col="0"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                ></div>
+                                <ContentDocumentEditorZoneGridLayout zone="bodies"></ContentDocumentEditorZoneGridLayout>
                             {:else}
                                 {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
                                     if(c1.order > c2.order)
