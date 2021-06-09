@@ -232,9 +232,9 @@
         flex-direction: column;
     }
 
-    #document-headers.container > div.row,
-    #document-footers.container > div.row,
-    #document-bodies.container > div.row {
+    #document-headers.container > :global(div.row),
+    #document-footers.container > :global(div.row),
+    #document-bodies.container > :global(div.row) {
         flex-grow: 1;
         margin: 0 !important;
     }

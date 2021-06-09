@@ -70,7 +70,7 @@
 {#each Helpers.getRows($EditableDocumentStore.document.content.bodies) as row,rowIndex}
     {#if rowIndex > 0}
         <BlockDropZone
-        zone={zone},
+        zone={zone}
         layout="grid"
         row={rowIndex}
         col={0}
