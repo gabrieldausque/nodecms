@@ -8,6 +8,7 @@
     import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
     import BlockEditor from "../Editors/BlockEditor.svelte";
     import ContentDocumentEditorZoneGridLayout from './ContentDocumentEditorZoneGridLayout.svelte';
+    import ContentDocumentEditorZoneStackLayout from './ContentDocumentEditorZoneStackLayout.svelte';
 
     $EditableDocumentStore;
     $BlockEditorComponentStore;
@@ -17,52 +18,23 @@
         await services.documentService.updateDocument($EditableDocumentStore.document);
     }
 
-    function onDropZoneEnter(event){
-        event.preventDefault();
-        if(event.target)
-            event.target.classList.add('on-hover');
+    function getZoneLayout(zone) {
+        const layout = $EditableDocumentStore.document.content.layout &&
+        $EditableDocumentStore.document.content.layout[zone] &&
+        $EditableDocumentStore.document.content.layout[zone].type?
+            $EditableDocumentStore.document.content.layout[zone].type:
+            '';
+        return layout;
     }
 
-    function onDropZoneExit(event){
-        event.preventDefault();
-        if(event.target)
-            event.target.classList.remove('on-hover');
-    }
-
-    function onDropComponent(event){
-        if(event.target)
-            event.target.classList.remove('on-hover');
-        const newBlock = {
-            order: typeof event.target.getAttribute('data-order') === 'string'?
-                parseInt(event.target.getAttribute('data-order')):0,
-            type: event.dataTransfer.getData('constructorType'),
-            properties:{}
+    function reorderRow() {
+        const row = $EditableDocumentStore.document.content[$BlockEditorComponentStore.zone].filter(
+            component => component.properties.row === $BlockEditorComponentStore.component.properties.row);
+        row.splice(row.indexOf($BlockEditorComponentStore.component),1);
+        row.splice($BlockEditorComponentStore.component.properties.col, 0, $BlockEditorComponentStore.component);
+        for(let colIndex = 0; colIndex < row.length; colIndex++) {
+            row[colIndex].properties.col = colIndex;
         }
-        const layout = event.target.getAttribute('data-layout');
-        const zone = event.target.getAttribute('data-zone');
-
-        if(layout === 'grid'){
-            let row = parseInt(event.target.getAttribute('data-row'));
-            if(event.target.classList.contains('new-row')){
-                for(const component of $EditableDocumentStore.document.content[zone]){
-                    if(component.properties.row >= row){
-                        component.properties.row++;
-                    }
-                }
-            }
-            newBlock.properties.row = row;
-            newBlock.properties.col = parseInt(event.target.getAttribute('data-col'));
-            console.log('#')
-            console.log(newBlock.properties.col);
-            console.log('#')
-        }
-        EditableDocumentStore.update(eds => {
-            if(!Array.isArray(eds.document.content[zone])){
-                eds.document.content[zone] = [];
-            }
-            eds.document.content[zone].push(newBlock);
-            return eds;
-        })
     }
 
 </script>
@@ -178,7 +150,7 @@
         border-bottom: solid 1px lightgray;
     }
 
-    :global(.editor-panel > .highlightEditor) {
+    :global( .editor-panel > .highlightEditor) {
         width: 100%;
         height: calc(100% - 45px) !important;
     }
@@ -191,11 +163,11 @@
         margin-right: 2px;
     }
 
-    .container.reduced {
+    :global(.container.reduced) {
         transform: scale(0.4) translateX(-106%) translateY(-19%);
     }
 
-    .reduced {
+    :global(.reduced) {
         transform: scale(0.4) translateX(-72%) translateY(-72%);
     }
 
@@ -283,147 +255,53 @@
             <div class="documentEditorContent">
                 <div id="headers" class="section">
                     <h5>En tête</h5>
-                    <div id="document-headers" class="{$BlockEditorComponentStore.zone === 'headers'?'reduced':''}">
-                        {#if Array.isArray($EditableDocumentStore.document.content.headers) &&
-                        $EditableDocumentStore.document.content.headers.length > 0}
-                            {#each $EditableDocumentStore.document.content.headers.sort((c1, c2) => {
-                                if(c1.order > c2.order)
-                                    return 1;
-                                if(c1.order < c2.order)
-                                    return -1;
-                                return 0;
-                            }) as headerComponent}
-                                <div class="drop-zone"
-                                     data-zone="headers"
-                                     data-order="{typeof headerComponent.order === 'number'?headerComponent.order - 1:0}"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                ></div>
-                                <BlockEditor component={headerComponent} zone="headers"></BlockEditor>
-                                <div class="drop-zone"
-                                     data-zone="headers"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                     data-order="{typeof headerComponent.order === 'number' ? headerComponent.order + 1:1}"
-                                ></div>
-                            {/each}
-                        {:else}
-                            <div class="drop-zone"
-                                 data-order="0"
-                                 data-zone="headers"
-                                 on:dragenter={onDropZoneEnter}
-                                 on:dragleave={onDropZoneExit}
-                                 on:drop={onDropComponent}
-                                 on:dragover={(event) => { event.preventDefault(); return false;}}
-                            ></div>
-                        {/if }
+                    <div id="document-headers" class="{$BlockEditorComponentStore.zone === 'headers'?'reduced':''}
+                         {
+                             getZoneLayout('headers') === 'grid'?
+                                 'container':
+                                 ''
+                                 }">
+                    {#if getZoneLayout('headers') === 'grid'}
+                        <ContentDocumentEditorZoneGridLayout zone="headers"></ContentDocumentEditorZoneGridLayout>
+                    {:else}
+                        <ContentDocumentEditorZoneStackLayout zone="headers"></ContentDocumentEditorZoneStackLayout>
+                    {/if}
                     </div>
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps</h5>
                     <div id="document-bodies" class="{$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}
                     {
-                        $EditableDocumentStore.document.content.layout &&
-                        $EditableDocumentStore.document.content.layout.bodies &&
-                        $EditableDocumentStore.document.content.layout.bodies.type === 'grid'?
+                        getZoneLayout('bodies') === 'grid'?
                         'container':
                         ''
                     }">
-                        {#if Array.isArray($EditableDocumentStore.document.content.bodies)}
-                            {#if $EditableDocumentStore.document.content.layout &&
-                            $EditableDocumentStore.document.content.layout.bodies &&
-                            $EditableDocumentStore.document.content.layout.bodies.type === 'grid'}
-                                <ContentDocumentEditorZoneGridLayout zone="bodies"></ContentDocumentEditorZoneGridLayout>
-                            {:else}
-                                {#each [...$EditableDocumentStore.document.content.bodies].sort((c1, c2) => {
-                                    if(c1.order > c2.order)
-                                        return 1;
-                                    if(c1.order < c2.order)
-                                        return -1;
-                                    return 0;
-                                }) as bodyComponent}
-                                    <div class="drop-zone"
-                                         data-zone="bodies"
-                                         data-order="{typeof bodyComponent.order === 'number'?bodyComponent.order - 1:0}"
-                                         on:dragenter={onDropZoneEnter}
-                                         on:dragleave={onDropZoneExit}
-                                         on:drop={onDropComponent}
-                                         on:dragover={(event) => { event.preventDefault(); return false;}}
-                                    ></div>
-                                    <BlockEditor component={bodyComponent} zone="bodies"></BlockEditor>
-                                    <div class=" drop-zone"
-                                         data-zone="bodies"
-                                         on:dragenter={onDropZoneEnter}
-                                         on:dragleave={onDropZoneExit}
-                                         on:drop={onDropComponent}
-                                         on:dragover={(event) => { event.preventDefault(); return false;}}
-                                         data-order="{typeof bodyComponent.order === 'number' ? bodyComponent.order + 1:1}"
-                                    ></div>
-                                {/each}
-                            {/if}
+                        {#if getZoneLayout('bodies') === 'grid'}
+                            <ContentDocumentEditorZoneGridLayout zone="bodies"></ContentDocumentEditorZoneGridLayout>
                         {:else}
-                            <div class="drop-zone"
-                                 data-order="0"
-                                 data-zone="bodies"
-                                 on:dragenter={onDropZoneEnter}
-                                 on:dragleave={onDropZoneExit}
-                                 on:drop={onDropComponent}
-                                 on:dragover={(event) => { event.preventDefault(); return false;}}
-                            ></div>
-                        {/if }
-                    </div>
+                            <ContentDocumentEditorZoneStackLayout zone="bodies"></ContentDocumentEditorZoneStackLayout>
+                        {/if}
+                </div>
                 </div>
                 <div id="footers" class="section">
                     <h5>Pied de page</h5>
-                    <div id="document-footers" class="{$BlockEditorComponentStore.zone === 'footers'?'reduced':''}">
-                        {#if Array.isArray($EditableDocumentStore.document.content.footers)}
-                            {#each $EditableDocumentStore.document.content.footers.sort((c1, c2) => {
-                                console.log(c1);
-                                console.log(c2);
-                                if(c1.order > c2.order)
-                                    return 1;
-                                if(c1.order < c2.order)
-                                    return -1;
-                                return 0;
-                            }) as footerComponent}
-                                <div class="drop-zone"
-                                     data-zone="footers"
-                                     data-order="{typeof footerComponent.order === 'number'?footerComponent.order - 1:0}"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                ></div>
-                                <BlockEditor component={footerComponent} zone="footers"></BlockEditor>
-                                <div class="drop-zone"
-                                     data-zone="footers"
-                                     on:dragenter={onDropZoneEnter}
-                                     on:dragleave={onDropZoneExit}
-                                     on:drop={onDropComponent}
-                                     on:dragover={(event) => { event.preventDefault(); return false;}}
-                                     data-order="{typeof footerComponent.order === 'number' ? footerComponent.order + 1:1}"
-                                ></div>
-                            {/each}
+                    <div id="document-footers" class="{$BlockEditorComponentStore.zone === 'footers'?'reduced':''}
+                    {
+                        getZoneLayout('footers') === 'grid'?
+                        'container':
+                        ''
+                    }">
+                        {#if getZoneLayout('footers') === 'grid'}
+                            <ContentDocumentEditorZoneGridLayout zone="footers"></ContentDocumentEditorZoneGridLayout>
                         {:else}
-                            <div class="drop-zone"
-                                 data-order="0"
-                                 data-zone="footers"
-                                 on:dragenter={onDropZoneEnter}
-                                 on:dragleave={onDropZoneExit}
-                                 on:drop={onDropComponent}
-                                 on:dragover={(event) => { event.preventDefault(); return false;}}
-                            ></div>
-                        {/if }
+                            <ContentDocumentEditorZoneStackLayout zone="footers"></ContentDocumentEditorZoneStackLayout>
+                        {/if}
                     </div>
                 </div>
             </div>
-
         {/if}
     </div>
+
     <div class="editor-panel {$BlockEditorComponentStore.component?'':'hidden'}">
         <h4> Propriétés </h4>
         <div class="close" on:click={() => {
@@ -440,6 +318,7 @@
                         <input id="row" type="number" class="form-control-sm" value="{$BlockEditorComponentStore.component.properties.row}" on:blur={(event) => {
                             const input = event.currentTarget;
                             $BlockEditorComponentStore.component.properties.row = input.value?parseInt(input.value):0;
+                            reorderRow();
                             BlockEditorComponentStore.update(becs => becs);
                             EditableDocumentStore.update(ecs => ecs);
                         }}>
@@ -447,22 +326,8 @@
                         <input id="column" type="number" class="form-control-sm" value={$BlockEditorComponentStore.component.properties.col}
                             on:blur={(event) => {
                             const input = event.currentTarget;
-                            const previous = $BlockEditorComponentStore.component.properties.col;
                             $BlockEditorComponentStore.component.properties.col = input.value?parseInt(input.value):0;
-                            console.log('change col');
-                            for(const component of $EditableDocumentStore.document.content[$BlockEditorComponentStore.zone]) {
-                                console.log(component);
-                                if(component !== $BlockEditorComponentStore.component){
-                                    if(previous < $BlockEditorComponentStore.component.properties.col)
-                                        if(component.properties.col <= $BlockEditorComponentStore.component.properties.col) {
-                                           component.properties.col=Math.max(component.properties.col - 1,0);
-                                        }
-                                    else if(previous > $BlockEditorComponentStore.component.properties.col)
-                                        if(component.properties.col >= $BlockEditorComponentStore.properties.col) {
-                                           component.properties.col=Math.min(component.properties.col + 1,12);
-                                        }
-                                }
-                            }
+                            reorderRow();
                             BlockEditorComponentStore.update(becs => becs);
                             EditableDocumentStore.update(ecs => ecs);
                         }} >

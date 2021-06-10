@@ -78,12 +78,12 @@
         </BlockDropZone>
     {/if}
     <div class="row">
-        {#each row as component, colIndex}
+        {#each row as component,colIndex}
             {#if component.col !== 0 &&
             component.col !== null &&
             typeof component.col === 'number' &&
             !$EditableDocumentStore.document.content[zone].find(c => c.row === rowIndex &&
-                c.col === colIndex - 1)
+                c.col === component.col - 1)
             }
                 <BlockDropZone
                         zone={zone}
@@ -106,7 +106,7 @@
                         zone={zone}
                         layout="grid"
                         row={rowIndex}
-                        col={component.col + (component.colSpan?component.colSpan:0) + 1}
+                        col={colIndex + (component.colSpan?component.colSpan:0) + 1}
                 on:drop={onDropComponent}>
                 </BlockDropZone>
             {/if}

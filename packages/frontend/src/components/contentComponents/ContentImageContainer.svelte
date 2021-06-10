@@ -39,13 +39,14 @@ properties.content : an html content to be added in the image div
 
 {#if isCrossDomain()}
     <div style={properties.style} class={properties.classes}>
-        <img style="max-height: 100%; max-width: 100%;" src={properties.uri} crossorigin="anonymous" alt="properties.uri">
+        <img style="max-height: 100%; max-width: 100%;" src={properties.uri?properties.uri:''} crossorigin="anonymous" alt="{properties.uri?properties.uri:''}">
         {#if properties.content}
             {@html properties.content}
         {/if}
     </div>
 {:else}
-    <div style="background-image: url('{properties.uri}'); {properties.style}" class="{properties.classes}">
+    <div style="background-image: url('{properties.uri?properties.uri:''}'); {properties.style?properties.style:''}"
+         class="{properties.classes?properties.classes:''}">
         {#if properties.content}
             {@html properties.content}
         {/if}

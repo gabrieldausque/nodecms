@@ -173,15 +173,11 @@ export class Helpers {
             })
             rows.push(row)
         }
-        console.log(rows);
         return rows;
     }
 
     static getLastRowIndex(containers) {
         const rowIndexes = containers.map(c => typeof c.properties.row === 'number'? c.properties.row : 0).sort();
-        console.log('#');
-        console.log(Math.max(...rowIndexes));
-        console.log('#');
         return Math.max(...rowIndexes);
     }
 }
