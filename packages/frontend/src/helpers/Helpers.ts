@@ -155,40 +155,45 @@ export class Helpers {
 
     static getRows(containers){
         const rows = []
-        const rowIndexes = containers.map(c => typeof c.properties.row === 'number'? c.properties.row : 0).sort();
-        const rowUniqueIndexes = [];
-        for(const ri of rowIndexes){
-            if(rowUniqueIndexes.indexOf(ri) < 0)
-                rowUniqueIndexes.push(ri);
-        }
-        for(const rowIndex of rowUniqueIndexes){
-            const row = []
-            for(const colContainer of containers.filter(c => {
-                if(rowIndex === 0)
-                    return c.properties.row === rowIndex || typeof c.properties.row === 'undefined' || c.properties.row === null;
-                else
-                    return c.properties.row === rowIndex;
-            })){
-                row.push(colContainer);
+        if(containers){
+            const rowIndexes = containers.map(c => typeof c.properties.row === 'number'? c.properties.row : 0).sort();
+            const rowUniqueIndexes = [];
+            for(const ri of rowIndexes){
+                if(rowUniqueIndexes.indexOf(ri) < 0)
+                    rowUniqueIndexes.push(ri);
             }
-            row.sort((c1,c2) => {
-                if(c1.properties.col > c2.properties.col)
-                    return 1;
-                if(c1.properties.col < c2.properties.col)
-                    return -1;
-                return 0;
-            })
-            rows.push(row)
+            for(const rowIndex of rowUniqueIndexes){
+                const row = []
+                for(const colContainer of containers.filter(c => {
+                    if(rowIndex === 0)
+                        return c.properties.row === rowIndex || typeof c.properties.row === 'undefined' || c.properties.row === null;
+                    else
+                        return c.properties.row === rowIndex;
+                })){
+                    row.push(colContainer);
+                }
+                row.sort((c1,c2) => {
+                    if(c1.properties.col > c2.properties.col)
+                        return 1;
+                    if(c1.properties.col < c2.properties.col)
+                        return -1;
+                    return 0;
+                })
+                rows.push(row)
+            }
         }
         return rows;
     }
 
     static getLastRowIndex(containers) {
-        const rowIndexes = containers.map(c => typeof c.properties.row === 'number'? c.properties.row : 0).sort();
-        return Math.max(...rowIndexes);
+        if(containers){
+            const rowIndexes = containers.map(c => typeof c.properties.row === 'number'? c.properties.row : 0).sort();
+            return Math.max(...rowIndexes);
+        }
+        return 0;
     }
 
-    static async updateEditableDocumentStore() {
+    static updateEditableDocumentStore() {
         EditableDocumentStore.update(eds => {
             return eds;
         })

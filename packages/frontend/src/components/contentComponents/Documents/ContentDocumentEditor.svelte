@@ -11,9 +11,6 @@
     import HighlightedEditor from '../HighlightedEditor.svelte';
     import {onMount, afterUpdate} from 'svelte'
 
-    $EditableDocumentStore;
-    $BlockEditorComponentStore;
-
     let editDocumentGlobalProperties;
     let refresh = new Date();
 
@@ -262,7 +259,6 @@
     </div>
     <div id="document" class="container-content">
         {#if $EditableDocumentStore.document}
-
             {#if typeof $EditableDocumentStore.document.content.globalStyle === "string"}
                 {@html Helpers.styleOpeningLabel + $EditableDocumentStore.document.content.globalStyle + Helpers.styleClosingLabel}
             {/if}
@@ -280,16 +276,16 @@
                 </button>
             </div>
             <div class="documentEditorContent">
-                <div id="headers" class="section">
+                <div id="headers" class="section" >
                     <h5>En tête <div class="section-layout">
-                        <button id="change-layout-stack" type="button" class="toolbar-button
+                        <button id="change-layout-headers-stack" type="button" class="toolbar-button
                         {getZoneLayout('headers') === 'stack' || !getZoneLayout('headers')?
                             'active-layout':
                             ''
                         }"
                         on:click={(event) => {
                             console.log('plop0')
-                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                            document.querySelector('#headers > h5 > button.active-layout').classList.remove('active-layout');
                             if(!$EditableDocumentStore.document.content.layout){
                                 $EditableDocumentStore.document.content.layout = {}
                             }
@@ -300,17 +296,13 @@
                             } else {
                                 $EditableDocumentStore.document.content.layout.headers.type = 'stack'
                             }
-                            document.getElementById('change-layout-stack').classList.add('active-layout');
-                            console.log($EditableDocumentStore);
-                            Helpers.updateEditableDocumentStore().then(() => {
-                             refresh = new Date();
-                             console.log("after updating")
-                            })
+                            document.getElementById('change-layout-headers-stack').classList.add('active-layout');
+                            Helpers.updateEditableDocumentStore();
                         }}
                         title="Mise en page colonne">
                             <i class="fas fa-layer-group"></i>
                         </button>
-                        <button id="change-layout-grid" type="button" class="toolbar-button {getZoneLayout('headers') === 'grid' || !getZoneLayout('headers')?
+                        <button id="change-layout-headers-grid" type="button" class="toolbar-button {getZoneLayout('headers') === 'grid' || !getZoneLayout('headers')?
                             'active-layout':
                             ''
                         }"
@@ -336,13 +328,17 @@
                             <i class="fas fa-th-large"></i>
                         </button>
                     </div></h5>
-                    <header id="document-headers" class="document-section document-headers {$BlockEditorComponentStore.zone === 'headers'?'reduced':''}
+                    <header id="document-headers" class="document-section document-headers {$BlockEditorComponentStore.zone === 'headers'?'reduced':'' }
                          {
-                             getZoneLayout('headers') === 'grid'?
+                            $EditableDocumentStore.document.content.layout &&
+                            $EditableDocumentStore.document.content.layout.headers &&
+                            $EditableDocumentStore.document.content.layout.headers.type === 'grid'?
                                  'container':
                                  ''
-                                 }">
-                    {#if getZoneLayout('headers') === 'grid'}
+                         }">
+                    {#if $EditableDocumentStore.document.content.layout &&
+                    $EditableDocumentStore.document.content.layout.headers &&
+                    $EditableDocumentStore.document.content.layout.headers.type === 'grid'}
                         <ContentDocumentEditorZoneGridLayout zone="headers"></ContentDocumentEditorZoneGridLayout>
                     {:else}
                         <ContentDocumentEditorZoneStackLayout zone="headers"></ContentDocumentEditorZoneStackLayout>
@@ -350,14 +346,72 @@
                     </header>
                 </div>
                 <div id="bodies" class="section">
-                    <h5>Corps</h5>
+                    <h5>Corps <div class="section-layout">
+                        <button id="change-layout-stack" type="button" class="toolbar-button
+                        {getZoneLayout('headers') === 'stack' || !getZoneLayout('headers')?
+                            'active-layout':
+                            ''
+                        }"
+                                on:click={(event) => {
+                            console.log('plop0')
+                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                            if(!$EditableDocumentStore.document.content.layout){
+                                $EditableDocumentStore.document.content.layout = {}
+                            }
+                            if(!$EditableDocumentStore.document.content.layout.headers){
+                                $EditableDocumentStore.document.content.layout.headers = {
+                                    type: 'stack'
+                                }
+                            } else {
+                                $EditableDocumentStore.document.content.layout.headers.type = 'stack'
+                            }
+                            document.getElementById('change-layout-stack').classList.add('active-layout');
+                            console.log($EditableDocumentStore);
+                            Helpers.updateEditableDocumentStore().then(() => {
+                             refresh = new Date();
+                             console.log("after updating")
+                            })
+                        }}
+                                title="Mise en page colonne">
+                            <i class="fas fa-layer-group"></i>
+                        </button>
+                        <button id="change-layout-grid" type="button" class="toolbar-button {getZoneLayout('headers') === 'grid' || !getZoneLayout('headers')?
+                            'active-layout':
+                            ''
+                        }"
+                                on:click={(event) => {
+                            console.log('plop1')
+                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                            if(!$EditableDocumentStore.document.content.layout){
+                                $EditableDocumentStore.document.content.layout = {}
+                            }
+                            if(!$EditableDocumentStore.document.content.layout.headers){
+                                $EditableDocumentStore.document.content.layout.headers = {
+                                    type: 'grid'
+                                }
+                            } else {
+                                $EditableDocumentStore.document.content.layout.headers.type = 'grid'
+                            }
+                            console.log(event);
+                            document.getElementById('change-layout-grid').classList.add('active-layout')
+                            console.log($EditableDocumentStore);
+                            refresh = new Date();
+                            Helpers.updateEditableDocumentStore().then(() => console.log("after updating"));
+                        }} title="Mise en page grille">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div></h5>
                     <main id="document-bodies" class="document-section document-main {$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}
                     {
-                        getZoneLayout('bodies') === 'grid'?
+                        $EditableDocumentStore.document.content.layout &&
+                        $EditableDocumentStore.document.content.layout.bodies &&
+                        $EditableDocumentStore.document.content.layout.bodies.type === 'grid'?
                         'container':
                         ''
-                    }">
-                        {#if getZoneLayout('bodies') === 'grid'}
+                    }" >
+                        {#if $EditableDocumentStore.document.content.layout &&
+                             $EditableDocumentStore.document.content.layout.bodies &&
+                             $EditableDocumentStore.document.content.layout.bodies.type === 'grid'}
                             <ContentDocumentEditorZoneGridLayout zone="bodies"></ContentDocumentEditorZoneGridLayout>
                         {:else}
                             <ContentDocumentEditorZoneStackLayout zone="bodies"></ContentDocumentEditorZoneStackLayout>
@@ -368,11 +422,15 @@
                     <h5>Pied de page</h5>
                     <footer id="document-footers" class="document-section document-footer {$BlockEditorComponentStore.zone === 'footers'?'reduced':''}
                     {
-                        getZoneLayout('footers') === 'grid'?
+                        $EditableDocumentStore.document.content.layout &&
+                        $EditableDocumentStore.document.content.layout.footers &&
+                        $EditableDocumentStore.document.content.layout.footers.type === 'grid'?
                         'container':
                         ''
                     }">
-                        {#if getZoneLayout('footers') === 'grid'}
+                        {#if $EditableDocumentStore.document.content.layout &&
+                        $EditableDocumentStore.document.content.layout.footers &&
+                        $EditableDocumentStore.document.content.layout.footers.type === 'grid'}
                             <ContentDocumentEditorZoneGridLayout zone="footers"></ContentDocumentEditorZoneGridLayout>
                         {:else}
                             <ContentDocumentEditorZoneStackLayout zone="footers"></ContentDocumentEditorZoneStackLayout>
