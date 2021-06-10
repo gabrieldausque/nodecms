@@ -19,8 +19,6 @@ else
 		return store;
 	})
 }
-console.log('before app');
-
 (window as any).getBackendClient = getBackendClient;
 globalFEService.registerService('TempCache',new TempCache());
 

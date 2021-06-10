@@ -6,14 +6,16 @@
     import ContentDefaultEditor from '../Editors/ContentDefaultEditor.svelte';
     import {Helpers} from "../../../helpers/Helpers";
     import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
-    import BlockEditor from "../Editors/BlockEditor.svelte";
     import ContentDocumentEditorZoneGridLayout from './ContentDocumentEditorZoneGridLayout.svelte';
     import ContentDocumentEditorZoneStackLayout from './ContentDocumentEditorZoneStackLayout.svelte';
+    import HighlightedEditor from '../HighlightedEditor.svelte';
+    import {onMount, afterUpdate} from 'svelte'
 
     $EditableDocumentStore;
     $BlockEditorComponentStore;
+    let editDocumentGlobalProperties;
 
-    async function saveDocument(e) {
+    async function saveDocument() {
         const services = await getBackendClient();
         await services.documentService.updateDocument($EditableDocumentStore.document);
     }
@@ -36,6 +38,14 @@
             row[colIndex].properties.col = colIndex;
         }
     }
+
+    onMount(() => {
+        document.querySelector('.app-viewport > div.container-content > main').classList.remove('document-section','document-main');
+    })
+
+    afterUpdate(() => {
+        document.querySelector('.app-viewport > div.container-content > main').classList.remove('document-section','document-main');
+    })
 
 </script>
 
@@ -110,7 +120,6 @@
         border-bottom: solid 1px lightgray;
         text-align: center;
         margin: 0 auto;
-        background: black;
         padding: 0;
         display: flex;
         flex-direction: column;
@@ -122,6 +131,7 @@
         padding: 4px;
         border-bottom: solid 1px lightgray;
         box-shadow: inset 0px -3px 18px -14px;
+        margin-bottom: 0;
     }
 
     .editor-panel {
@@ -239,7 +249,7 @@
             {/if}
         {/each}
     </div>
-    <div id="document">
+    <div id="document" class="container-content">
         {#if $EditableDocumentStore.document}
             {#if typeof $EditableDocumentStore.document.content.globalStyle === "string"}
                 {@html Helpers.styleOpeningLabel + $EditableDocumentStore.document.content.globalStyle + Helpers.styleClosingLabel}
@@ -248,14 +258,19 @@
                 <button on:click={saveDocument} class="toolbarButton" type="button" title="Enregistrer">
                     <i class="fas fa-save"></i>
                 </button>
-                <button type="button" class="toolbarButton" title="Paramètres du document">
+                <button on:click={() => {
+                    $BlockEditorComponentStore.component = undefined;
+                    $BlockEditorComponentStore.zone = undefined;
+                    $BlockEditorComponentStore.layout = undefined;
+                    editDocumentGlobalProperties = true;
+                }} type="button" class="toolbarButton" title="Options du document">
                     <i class="fas fa-cogs"></i>
                 </button>
             </div>
             <div class="documentEditorContent">
                 <div id="headers" class="section">
                     <h5>En tête</h5>
-                    <div id="document-headers" class="{$BlockEditorComponentStore.zone === 'headers'?'reduced':''}
+                    <header id="document-headers" class="document-section document-headers {$BlockEditorComponentStore.zone === 'headers'?'reduced':''}
                          {
                              getZoneLayout('headers') === 'grid'?
                                  'container':
@@ -266,11 +281,11 @@
                     {:else}
                         <ContentDocumentEditorZoneStackLayout zone="headers"></ContentDocumentEditorZoneStackLayout>
                     {/if}
-                    </div>
+                    </header>
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps</h5>
-                    <div id="document-bodies" class="{$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}
+                    <main id="document-bodies" class="document-section document-main {$BlockEditorComponentStore.zone === 'bodies'?'reduced':''}
                     {
                         getZoneLayout('bodies') === 'grid'?
                         'container':
@@ -281,11 +296,11 @@
                         {:else}
                             <ContentDocumentEditorZoneStackLayout zone="bodies"></ContentDocumentEditorZoneStackLayout>
                         {/if}
-                </div>
+                    </main>
                 </div>
                 <div id="footers" class="section">
                     <h5>Pied de page</h5>
-                    <div id="document-footers" class="{$BlockEditorComponentStore.zone === 'footers'?'reduced':''}
+                    <footer id="document-footers" class="document-section document-footer {$BlockEditorComponentStore.zone === 'footers'?'reduced':''}
                     {
                         getZoneLayout('footers') === 'grid'?
                         'container':
@@ -296,7 +311,7 @@
                         {:else}
                             <ContentDocumentEditorZoneStackLayout zone="footers"></ContentDocumentEditorZoneStackLayout>
                         {/if}
-                    </div>
+                    </footer>
                 </div>
             </div>
         {/if}
@@ -344,4 +359,51 @@
             {/if}
         </div>
     </div>
+
+    <div class="editor-panel {editDocumentGlobalProperties?'':'hidden'}">
+        <h4> Propriétés du Document</h4>
+        <div class="close" on:click={() => {
+        editDocumentGlobalProperties=false;
+    }}><i class="fal fa-window-close"></i></div>
+        <div class="editor-content">
+            <div class="visibility">
+                <label for="documentVisibility">Visibilité</label>
+                <select on:blur={() => {
+                            const visibility = document.getElementById('documentVisibility');
+                            visibility.title = Helpers.visibilityTooltips[visibility.value];
+                            $EditableDocumentStore.document.visibility = visibility.value;
+                        }} class="form-select"
+                        id="documentVisibility" name="documentVisibility"
+                        value="{$EditableDocumentStore.document.visibility}"
+                        required title="Un document privé n'est accessible et visible que par ses lecteurs et les administrateurs">
+                    <option value="private" >Privé</option>
+                    <option value="protected" >Protégé</option>
+                    <option value="public">Public</option>
+                </select>
+            </div>
+        </div>
+        <div class="global-style">
+            <label for="globalStyle">Global Style :</label>
+            <HighlightedEditor
+                    id="globalStyle"
+                    content={$EditableDocumentStore.document.content.globalStyle?$EditableDocumentStore.document.content.globalStyle:''}
+                    onChange={(newStyle) => {
+                    $EditableDocumentStore.document.content.globalStyle = newStyle
+                    Helpers.updateEditableDocumentStore();
+            }}
+            ></HighlightedEditor>
+        </div>
+        <div class="style">
+            <label for="style">Style :</label>
+            <HighlightedEditor
+                    id="style"
+                    content={$EditableDocumentStore.document.style?$EditableDocumentStore.document.style:''}
+                    onChange={(newStyle) => {
+                    $EditableDocumentStore.document.style = newStyle
+                    Helpers.updateEditableDocumentStore();
+            }}
+            ></HighlightedEditor>
+        </div>
+    </div>
+
 </main>

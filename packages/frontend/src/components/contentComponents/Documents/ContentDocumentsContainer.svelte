@@ -78,17 +78,6 @@
         }
     })
 
-    const visibilityTooltips = {
-        private: "Un document privé n'est accessible et visible que par ses lecteurs et les administrateurs",
-        protected: "Un document protégé n'est accessible que par les utilisateurs valides et authentifiés",
-        public: "Un document public est accessible par les utilisateurs et les non utilisateurs"
-    }
-
-    async function onVisibilityChanged(event) {
-        const visibility = document.getElementById('documentVisibility');
-        visibility.title = visibilityTooltips[visibility.value];
-    }
-
     async function validateNewDocument() {
         const services = await getBackendClient();
         const key = document.getElementById('documentKey').value;
@@ -288,7 +277,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="documentVisibility">Visibilité</label>
-                        <select on:blur={onVisibilityChanged} class="form-select"
+                        <select on:blur={() => {
+                            const visibility = document.getElementById('documentVisibility');
+                            visibility.title = Helpers.visibilityTooltips[visibility.value];
+                        }} class="form-select"
                                 id="documentVisibility" name="documentVisibility"
                                 required title="Un document privé n'est accessible et visible que par ses lecteurs et les administrateurs">
                             <option value="private" >Privé</option>

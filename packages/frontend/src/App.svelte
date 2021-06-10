@@ -78,12 +78,16 @@
 			max-width: none;
 		}
 	}
+
+	.app-viewport {
+		background: black;
+	}
 </style>
 
 <header>
 	<TopNavBar></TopNavBar>
 </header>
-<main>
+<main class="app-viewport">
 	<ContentDocumentContainer documentKey={$DocumentStore.key}></ContentDocumentContainer>
 </main>
 <ErrorModal></ErrorModal>

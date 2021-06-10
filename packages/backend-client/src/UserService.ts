@@ -35,6 +35,7 @@ export class UserService extends BaseServiceClient<User> {
         const value = await this.authenticationService.find();
         const authenticateEvent = new Event(NodeCMSFrontEndEvents.UserAuthenticatedEventName);
         document.dispatchEvent(authenticateEvent);
+        console.log(`authentication : ${value}`)
         this.isAuthenticated = true;
         return value;
     }

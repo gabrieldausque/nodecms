@@ -1,5 +1,5 @@
 import {UseCases} from "./UseCases";
-import {Authentication} from "@nodecms/backend-data";
+import {Authentication, isNumber} from "@nodecms/backend-data";
 import {User} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from '@hermes/composition';
@@ -84,8 +84,9 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     return entity.encryptedToken;
   }
 
-  async delete(id: string | number, executingUser?: User): Promise<Authentication> {
-    throw new Error('Not Implemented')
+  async delete(id: string | number, executingUser?: User): Promise<any> {
+    //TODO : trace logout
+    return 'loggedOut';
   }
 
   async find(filter: Partial<Authentication>, lastIndex?:string | number, executingUser?:User): Promise<Authentication[]> {
@@ -94,11 +95,23 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
 
   async get(id: string | number, executingUser?: User, encryptedToken?:string, clientUniqueId?:string): Promise<any> {
 
-    AuthenticationEntityRules.validate({
+    let idCard = {
       login: id.toString(),
       encryptedToken:encryptedToken,
       clientUniqueId:clientUniqueId
-    })
+    }
+
+    if(isNumber(id))
+    {
+        const idAsNumber = AuthenticationEntityRules.convertId(id);
+        const userUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+        const user = await userUseCase.get(id, executingUser);
+        if(user){
+          idCard.login = user.login;
+        }
+    }
+
+    AuthenticationEntityRules.validate(idCard);
 
     if(encryptedToken && clientUniqueId){
       const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(encryptedToken);

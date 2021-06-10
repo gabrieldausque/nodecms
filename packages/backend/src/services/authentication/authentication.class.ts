@@ -36,10 +36,12 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   async get (id: Id, params?: Params): Promise<any> {
     if(!params || !params.authenticationToken || !params.user)
       throw new NotAuthenticated();
-    if(!id && params.user as User && (params.user as User).login) {
+    if(params.user as User && (params.user as User).login) {
       id = (params.user as User).login;
     }
-    return await this.useCase.get(id,params.user as User,params.authenticationToken,params.clientId);
+    if(id)
+      return await this.useCase.get(id,params.user as User,params.authenticationToken,params.clientId);
+    throw new NotAuthenticated();
   }
 
   // Create identity token
@@ -64,6 +66,11 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
 
   async remove (id: NullableId, params?: Params): Promise<any> {
     // TODO : trace logout activity
+    if(params && params.user as User && typeof (params.user as User).id === 'number') {
+      const userId = (params.user as User).id;
+      if(typeof userId === 'number')
+        await this.useCase.delete(userId);
+    }
     return 'logged out';
   }
 

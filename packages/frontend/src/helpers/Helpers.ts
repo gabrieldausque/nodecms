@@ -8,6 +8,7 @@ import AudioAttachment from "../components/contentComponents/Channel/Attachments
 import DownloadAttachment from "../components/contentComponents/Channel/Attachments/DownloadAttachment.svelte";
 import {channelsCache, observableChannelCache} from "../stores/ChannelStore";
 import type {Channel} from "@nodecms/backend-data";
+import {EditableDocumentStore} from "../stores/EditableDocumentStore";
 
 
 export class Helpers {
@@ -15,6 +16,12 @@ export class Helpers {
     static styleClosingLabel = '</style>';
 
     static documentEventsSubscribed:string[] = []
+
+    static readonly visibilityTooltips = {
+        private: "Un document privé n'est accessible et visible que par ses lecteurs et les administrateurs",
+        protected: "Un document protégé n'est accessible que par les utilisateurs valides et authentifiés",
+        public: "Un document public est accessible par les utilisateurs et les non utilisateurs"
+    }
 
     static async preloadContentPreview(content){
         const contentElement = document.createElement('div');
@@ -179,5 +186,11 @@ export class Helpers {
     static getLastRowIndex(containers) {
         const rowIndexes = containers.map(c => typeof c.properties.row === 'number'? c.properties.row : 0).sort();
         return Math.max(...rowIndexes);
+    }
+
+    static updateEditableDocumentStore() {
+        EditableDocumentStore.update(eds => {
+            return eds;
+        })
     }
 }

@@ -10,11 +10,10 @@
     export let documentKey;
 
     async function getDocument() {
-        let rawDocument = null;
         const backendClient = await getBackendClient();
+        let rawDocument = null;
         if(documentKey){
             let doc = await backendClient.documentService.getDocument(documentKey);
-            rawDocument = doc.content;
             let sortFunction = (a,b) =>{
                 if(a.order < b.order)
                     return -1
@@ -23,16 +22,16 @@
                 else
                     return 1
             };
-            if(Array.isArray(rawDocument.headers)) {
-                rawDocument.headers = rawDocument.headers.sort(sortFunction)
+            if(Array.isArray(doc.content.headers)) {
+                doc.content.headers = doc.content.headers.sort(sortFunction)
             }
-            if(Array.isArray(rawDocument.bodies)) {
-                rawDocument.bodies = rawDocument.bodies.sort(sortFunction)
+            if(Array.isArray(doc.content.bodies)) {
+                doc.content.bodies = doc.content.bodies.sort(sortFunction)
             }
-            if(Array.isArray(rawDocument.footers)) {
-                rawDocument.footers = rawDocument.footers.sort(sortFunction)
+            if(Array.isArray(doc.content.footers)) {
+                doc.content.footers = doc.content.footers.sort(sortFunction)
             }
-
+            rawDocument = doc;
         }
         return rawDocument
     }
@@ -64,33 +63,65 @@
         height: 100%;
         overflow:auto;
         scrollbar-width:none;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
+
     .container-content > main::-webkit-scrollbar {
         display: none;
     }
+
+    .container-content > .container > div.row {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .container-content > .container > div.row > div.col {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 
-<div class="container-content">
-    {#if properties}
-        {#if typeof properties.globalStyle === "string"}
-            {@html Helpers.styleOpeningLabel + properties.globalStyle + Helpers.styleClosingLabel}
+{#if properties}
+    <div class="container-content {properties.classes?properties.classes:''}" style="{properties.style?properties.style:''}">
+    {#if properties && properties.content}
+        {#if typeof properties.content.globalStyle === "string"}
+            {@html Helpers.styleOpeningLabel + properties.content.globalStyle + Helpers.styleClosingLabel}
         {/if}
-        {#if Array.isArray(properties.headers) && properties.headers.length > 0}
-            <header>
-                {#each properties.headers as container}
+        <header class="{(properties.content.layout &&
+                     properties.content.layout.headers &&
+                     properties.content.layout.headers.type === 'grid')?'container':''} document-section document-header">
+        {#if Array.isArray(properties.content.headers) && properties.content.headers.length > 0}
+            {#if properties.content.layout &&
+            properties.content.layout.headers &&
+            properties.content.layout.headers.type === 'grid'}
+                {#each Helpers.getRows(properties.content.headers) as row}
+                    <div class="row">
+                        {#each row as container}
+                            <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
+                                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                            </div>
+                        {/each }
+                    </div>
+                {/each}
+            {:else}
+                {#each properties.content.headers as container}
                     <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
-            </header>
+            {/if}
         {/if}
-        <main class="{properties.classes?properties.classes:''} {(properties.layout &&
-                     properties.layout.bodies &&
-                     properties.layout.bodies.type === 'grid')?'container':''}" style="{properties.style}">
-            <svelte:component this="{properties.title}" title="{properties.title}"></svelte:component>
-            {#if Array.isArray(properties.bodies)}
-                {#if properties.layout &&
-                     properties.layout.bodies &&
-                     properties.layout.bodies.type === 'grid'}
-                    {#each Helpers.getRows(properties.bodies) as row}
+        </header>
+        <main class="{(properties.content.layout &&
+                     properties.content.layout.bodies &&
+                     properties.content.layout.bodies.type === 'grid')?'container':''} document-section document-main">
+            {#if Array.isArray(properties.content.bodies)}
+                {#if properties.content.layout &&
+                     properties.content.layout.bodies &&
+                     properties.content.layout.bodies.type === 'grid'}
+                    {#each Helpers.getRows(properties.content.bodies) as row}
                         <div class="row">
                             {#each row as container}
                                 <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
@@ -100,18 +131,35 @@
                         </div>
                     {/each}
                 {:else}
-                    {#each properties.bodies as container}
+                    {#each properties.content.bodies as container}
                         <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                     {/each}
                 {/if}
             {/if}
         </main>
-        {#if Array.isArray(properties.header) && properties.header.length > 0}
-            <footer>
-                {#each properties.header as container}
+        <footer class="{(properties.content.layout &&
+                     properties.content.layout.footers &&
+                     properties.content.layout.footers.type === 'grid')?'container':''} document-section document-footer">
+        {#if Array.isArray(properties.footers) && properties.footers.length > 0}
+            {#if properties.content.layout &&
+            properties.content.layout.footers &&
+            properties.content.layout.footers.type === 'grid'}
+                {#each Helpers.getRows(properties.content.footers) as row}
+                    <div class="row">
+                        {#each row as container}
+                            <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
+                                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                            </div>
+                        {/each }
+                    </div>
+                {/each}
+            {:else}
+                {#each properties.content.footers as container}
                     <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
-            </footer>
+            {/if}
         {/if}
+        </footer>
     {/if}
 </div>
+{/if}
