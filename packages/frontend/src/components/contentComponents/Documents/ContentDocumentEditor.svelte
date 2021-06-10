@@ -13,7 +13,9 @@
 
     $EditableDocumentStore;
     $BlockEditorComponentStore;
+
     let editDocumentGlobalProperties;
+    let refresh = new Date();
 
     async function saveDocument() {
         const services = await getBackendClient();
@@ -26,6 +28,7 @@
         $EditableDocumentStore.document.content.layout[zone].type?
             $EditableDocumentStore.document.content.layout[zone].type:
             '';
+        console.log(`layout for zone ${zone} : ${layout}`);
         return layout;
     }
 
@@ -45,6 +48,7 @@
 
     afterUpdate(() => {
         document.querySelector('.app-viewport > div.container-content > main').classList.remove('document-section','document-main');
+        console.log('update plop 3');
     })
 
 </script>
@@ -106,7 +110,7 @@
         height:50px;
     }
 
-    .toolbarButton {
+    .toolbar-button {
         margin: 0 5px;
         width: 30px;
         height: 30px;
@@ -132,6 +136,9 @@
         border-bottom: solid 1px lightgray;
         box-shadow: inset 0px -3px 18px -14px;
         margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .editor-panel {
@@ -231,6 +238,10 @@
         justify-content: start;
     }
 
+    .section-layout {
+        display: flex;
+    }
+
 </style>
 
 <main class="editor-main">
@@ -251,11 +262,12 @@
     </div>
     <div id="document" class="container-content">
         {#if $EditableDocumentStore.document}
+
             {#if typeof $EditableDocumentStore.document.content.globalStyle === "string"}
                 {@html Helpers.styleOpeningLabel + $EditableDocumentStore.document.content.globalStyle + Helpers.styleClosingLabel}
             {/if}
             <div class="documentEditorMenuBar">
-                <button on:click={saveDocument} class="toolbarButton" type="button" title="Enregistrer">
+                <button on:click={saveDocument} class="toolbar-button" type="button" title="Enregistrer">
                     <i class="fas fa-save"></i>
                 </button>
                 <button on:click={() => {
@@ -263,13 +275,67 @@
                     $BlockEditorComponentStore.zone = undefined;
                     $BlockEditorComponentStore.layout = undefined;
                     editDocumentGlobalProperties = true;
-                }} type="button" class="toolbarButton" title="Options du document">
+                }} type="button" class="toolbar-button" title="Options du document">
                     <i class="fas fa-cogs"></i>
                 </button>
             </div>
             <div class="documentEditorContent">
                 <div id="headers" class="section">
-                    <h5>En tête</h5>
+                    <h5>En tête <div class="section-layout">
+                        <button id="change-layout-stack" type="button" class="toolbar-button
+                        {getZoneLayout('headers') === 'stack' || !getZoneLayout('headers')?
+                            'active-layout':
+                            ''
+                        }"
+                        on:click={(event) => {
+                            console.log('plop0')
+                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                            if(!$EditableDocumentStore.document.content.layout){
+                                $EditableDocumentStore.document.content.layout = {}
+                            }
+                            if(!$EditableDocumentStore.document.content.layout.headers){
+                                $EditableDocumentStore.document.content.layout.headers = {
+                                    type: 'stack'
+                                }
+                            } else {
+                                $EditableDocumentStore.document.content.layout.headers.type = 'stack'
+                            }
+                            document.getElementById('change-layout-stack').classList.add('active-layout');
+                            console.log($EditableDocumentStore);
+                            Helpers.updateEditableDocumentStore().then(() => {
+                             refresh = new Date();
+                             console.log("after updating")
+                            })
+                        }}
+                        title="Mise en page colonne">
+                            <i class="fas fa-layer-group"></i>
+                        </button>
+                        <button id="change-layout-grid" type="button" class="toolbar-button {getZoneLayout('headers') === 'grid' || !getZoneLayout('headers')?
+                            'active-layout':
+                            ''
+                        }"
+                        on:click={(event) => {
+                            console.log('plop1')
+                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                            if(!$EditableDocumentStore.document.content.layout){
+                                $EditableDocumentStore.document.content.layout = {}
+                            }
+                            if(!$EditableDocumentStore.document.content.layout.headers){
+                                $EditableDocumentStore.document.content.layout.headers = {
+                                    type: 'grid'
+                                }
+                            } else {
+                                $EditableDocumentStore.document.content.layout.headers.type = 'grid'
+                            }
+                            console.log(event);
+                            document.getElementById('change-layout-grid').classList.add('active-layout')
+                            console.log($EditableDocumentStore);
+                            refresh = new Date();
+                            Helpers.updateEditableDocumentStore().then(() => console.log("after updating"));
+                        }} title="Mise en page grille">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div></h5>
                     <header id="document-headers" class="document-section document-headers {$BlockEditorComponentStore.zone === 'headers'?'reduced':''}
                          {
                              getZoneLayout('headers') === 'grid'?

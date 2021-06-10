@@ -188,7 +188,7 @@ export class Helpers {
         return Math.max(...rowIndexes);
     }
 
-    static updateEditableDocumentStore() {
+    static async updateEditableDocumentStore() {
         EditableDocumentStore.update(eds => {
             return eds;
         })
