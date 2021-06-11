@@ -81,6 +81,17 @@
             }}
     ></HighlightedEditor>
 </div>
+<div class="style">
+    <label for={`global-style-${id}`}>Global Style :</label>
+    <HighlightedEditor
+            id={`global-style-${id}`}
+            content={properties.globalStyle?properties.innerStyle:''}
+            onChange={(newStyle) => {
+                properties.globalStyle = newStyle
+                updateEds();
+            }}
+    ></HighlightedEditor>
+</div>
 <div class="content">
     <label for="content-{id}">Texte :</label>
     <div id="content-{id}">

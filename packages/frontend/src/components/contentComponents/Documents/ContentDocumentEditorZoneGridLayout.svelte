@@ -21,6 +21,9 @@
         const zone = event.target.getAttribute('data-zone');
         let row = parseInt(event.target.getAttribute('data-row'));
         if(event.target.classList.contains('new-row')){
+            $EditableDocumentStore.document.content[zone] = $EditableDocumentStore.document.content[zone]?
+                $EditableDocumentStore.document.content[zone]:
+                [];
             for(const component of $EditableDocumentStore.document.content[zone]){
                 if(component.properties.row >= row){
                     component.properties.row++;
@@ -74,6 +77,7 @@
         layout="grid"
         row={rowIndex}
         col={0}
+        isNewRow={true}
         on:drop={onDropComponent}>
         </BlockDropZone>
     {/if}
@@ -118,5 +122,6 @@
         layout="grid"
         row={Helpers.getLastRowIndex($EditableDocumentStore.document.content[zone]) + 1}
         col={0}
+        isNewRow={true}
         on:drop={onDropComponent}>
 </BlockDropZone>

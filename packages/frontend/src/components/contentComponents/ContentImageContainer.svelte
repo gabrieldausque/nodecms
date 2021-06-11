@@ -9,6 +9,7 @@ properties.content : an html content to be added in the image div
 
 <script>
     import {onMount, afterUpdate} from 'svelte'
+    import {Helpers} from '../../helpers/Helpers';
 
     export let properties;
 
@@ -37,8 +38,18 @@ properties.content : an html content to be added in the image div
 
 </script>
 
+<style>
+    .default-image-container {
+        width:100%;
+        height:100%;
+    }
+</style>
+
 {#if isCrossDomain()}
-    <div style={properties.style} class={properties.classes}>
+    <div style="{properties.style?properties.style:''}" class="default-image-container {properties.classes?properties.classes:''}">
+        {#if properties.globalStyle}
+            {@html Helpers.styleOpeningLabel + properties.innerStyle + Helpers.styleClosingLabel}
+        {/if}
         <img style="max-height: 100%; max-width: 100%;" src={properties.uri?properties.uri:''} crossorigin="anonymous" alt="{properties.uri?properties.uri:''}">
         {#if properties.content}
             {@html properties.content}
@@ -46,7 +57,10 @@ properties.content : an html content to be added in the image div
     </div>
 {:else}
     <div style="background-image: url('{properties.uri?properties.uri:''}'); {properties.style?properties.style:''}"
-         class="{properties.classes?properties.classes:''}">
+         class="default-image-container {properties.classes?properties.classes:''}">
+        {#if properties.globalStyle}
+            {@html Helpers.styleOpeningLabel + properties.innerStyle + Helpers.styleClosingLabel}
+        {/if}
         {#if properties.content}
             {@html properties.content}
         {/if}

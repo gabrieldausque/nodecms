@@ -8,7 +8,8 @@
     export let row;
     export let col;
     export let layout;
-    export let order
+    export let order;
+    export let isNewRow;
 
 </script>
 
@@ -32,6 +33,7 @@
      data-row="{row}"
      data-col="{col}"
      data-layout="{layout}"
+     class:new-row={isNewRow}
      on:dragenter={(event) => {
         event.preventDefault();
         if(event.target)

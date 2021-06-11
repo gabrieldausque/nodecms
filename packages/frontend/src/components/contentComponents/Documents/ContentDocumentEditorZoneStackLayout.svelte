@@ -26,10 +26,9 @@
             return eds;
         })
     }
-
 </script>
 
-{#if Array.isArray($EditableDocumentStore.document.content[zone])}
+{#if Array.isArray($EditableDocumentStore.document.content[zone]) && $EditableDocumentStore.document.content[zone] > 0}
     {#each [...$EditableDocumentStore.document.content[zone]].sort((c1, c2) => {
         if(c1.order > c2.order)
             return 1;

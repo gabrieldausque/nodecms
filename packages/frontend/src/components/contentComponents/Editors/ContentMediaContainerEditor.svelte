@@ -244,7 +244,7 @@
         <label for="style">Style :</label>
         <HighlightedEditor
                 id={`style-${id}`}
-                content={properties.style?properties.globalStyle:''}
+                content={properties.style?properties.style:''}
                 onChange={(newStyle) => {
                     properties.style = newStyle
                 updateEds();

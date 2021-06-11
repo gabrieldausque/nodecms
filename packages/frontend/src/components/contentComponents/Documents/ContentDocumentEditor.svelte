@@ -47,6 +47,12 @@
         document.querySelector('.app-viewport > div.container-content > main').classList.remove('document-section','document-main');
     })
 
+    function resetBlockEditorComponentStore() {
+        $BlockEditorComponentStore.component = undefined;
+        $BlockEditorComponentStore.zone = undefined;
+        $BlockEditorComponentStore.layout = undefined;
+    }
+
 </script>
 
 <style>
@@ -148,14 +154,16 @@
         top: 121px;
         padding: 5px;
         z-index: 3;
+        display: block;
     }
 
     .editor-panel div {
         text-align: left;
     }
 
-    .editor-panel.hidden {
-        left: 100vw;
+    :global(.editor-panel.hidden) {
+        left: 100vw !important;
+        display: none !important;
     }
 
     .editor-panel h4 {
@@ -226,6 +234,7 @@
 
     :global(.components-col > div.component-container) {
         width:100%;
+        min-height: 100%;
     }
 
     .grid-options > .form-group {
@@ -493,11 +502,7 @@
 
     <div class="editor-panel {$BlockEditorComponentStore.component?'':'hidden'}">
         <h4> Propriétés </h4>
-        <div class="close" on:click={() => {
-        $BlockEditorComponentStore.component = undefined;
-        $BlockEditorComponentStore.zone = undefined;
-        $BlockEditorComponentStore.layout = undefined;
-    }}><i class="fal fa-window-close"></i></div>
+        <div class="close" on:click={resetBlockEditorComponentStore}><i class="fal fa-window-close"></i></div>
         <div class="editor-content">
             {#if $BlockEditorComponentStore.layout}
                 <label for="grid-options">Options de grille</label>

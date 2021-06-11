@@ -61,7 +61,6 @@
     .container-content > main {
         flex-grow: 1;
         height: 100%;
-        overflow:auto;
         scrollbar-width:none;
         display: flex;
         flex-direction: column;
@@ -72,12 +71,16 @@
         display: none;
     }
 
-    .container-content > .container > div.row {
+    :global(.container-content > .container) {
+        overflow: visible;
+    }
+
+    :global(.container-content > .container > div.row) {
         display: flex;
         flex-grow: 1;
     }
 
-    .container-content > .container > div.row > div.col {
+    :global(.container-content > .container > div.row > div.col) {
         padding: 0;
         display: flex;
         justify-content: center;

@@ -7,6 +7,7 @@
     import {onMount, afterUpdate, beforeUpdate} from 'svelte';
     import {documentsEventName} from "@nodecms/backend-client";
     import { fade } from 'svelte/transition';
+    import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
 
     $DocumentsStore;
     console.log($DocumentsStore);
@@ -19,6 +20,12 @@
         const services = await getBackendClient();
         const documentKey = event.currentTarget.getAttribute("data-document-key")
         const documentContent = await services.documentService.getDocument(documentKey)
+        BlockEditorComponentStore.update(becs => {
+            becs.component = undefined;
+            becs.zone = undefined;
+            becs.layout = undefined;
+            return becs;
+        })
         EditableDocumentStore.update(eds => {
             eds.key = documentKey;
             eds.document = documentContent;

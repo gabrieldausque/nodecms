@@ -255,164 +255,56 @@ function initData(){
     id: newId('documents'),
     key: 'welcome',
     content: {
-      globalStyle:`
-            h2 {
-                font-family: Army, serif;
-                margin-top: 90px;
-            }
-
-            .documentContainer {
-                display: flex;
-                flex-direction:column;
-                align-items: center;
-                justify-content: center;
-                height:100%;
-                width:100%
-            }
-
-            .main-logo {
-                height: initial !important;
-                width: initial !important;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            `,
-      style: ``,
+      globalStyle: 'h2 {    font-family: Army, serif;    margin-top: 90px;}\n.documentContainer {    display: flex;    flex-direction:column;    align-items: center;    justify-content: center;    height:100%;    width:100%}\n.main-logo {    height: initial !important;    width: initial !important;    display: flex;    align-items: center;    justify-content: center;}\n',
+      style: '',
       classes: 'documentContainer',
-      headers:[],
-      bodies:[
+      headers: [],
+      bodies: [
         {
-          order:1,
-          type:'text',
-          properties:{
-            content:'<h2>Servir sans faillir</h2>',
-            style:`font-family: Army; color: white`,
-            classes:'myH2Class'
+          order: 1,
+          type: 'text',
+          properties: {
+            content: 'Servir sans faillir&nbsp;',
+            style: 'font-family: Army; color: white; display: flex; align-items:end; justify-content: center; font-size: 35px; height: 50px;',
+            classes: 'myH2Class',
+            row: 2,
+            col: 0
           }
         },
         {
-          order:0,
-          type:'media',
-          globalStyle: `
-                        @keyframes animatedBorderTop {
-                            0% {
-                                left:-30px; height:3px; width:0px;
-                            }
-                            50% {
-                                left:-30px; height: 3px; width: calc(100% + 60px);
-                            }
-                            100% {
-                                left: calc(100% + 27px); height:3px; width:3px;
-                            }
-                        }
-
-                        @keyframes animatedBorderRight {
-                            0% {
-                                top:-30px; left: calc(100% + 27px); height:0px; width:3px;
-                            }
-                            50% {
-                                top:-30px;left: calc(100% + 27px); height: calc(100% + 57px); width: 3px;
-                            }
-                            100% {
-                                top: calc(100% + 30px); height: 0px; width:3px;
-                            }
-                        }
-
-                        @keyframes animatedBorderBottom {
-                            0% {
-                                right: -30px; width:0px;
-                            }
-                            50% {
-                                right: -30px; width: calc(100% + 60px);
-                            }
-                            100% {
-                                right: calc(100% + 30px); width:0px;
-                            }
-                        }
-
-                        @keyframes animatedBorderLeft {
-                            0% {
-                                bottom:-30px; width:3px; height:0px;
-                            }
-                            50% {
-                                bottom: -30px; height: calc(100% + 60px)
-                            }
-                            100% {
-                                bottom: calc(100% + 30px); height: 0px;
-                            }
-                        }
-
-                        .main-logo-border-top {
-                        position:absolute;
-                        background: red;
-                        top:-30px;
-                        left:-30px;
-                        height:3px;
-                        width:0px;
-                        animation: 10s linear infinite animatedBorderTop;
-                        }
-
-                        .main-logo-border-right {
-                        position:absolute;
-                        background: red;
-                        top:-30px;
-                        left: calc(100% + 27px);
-                        height:0px;
-                        width:3px;
-                        animation: 10s linear 5s infinite animatedBorderRight;
-                        }
-
-                        .main-logo-border-bottom {
-                        position:absolute;
-                        background: red;
-                        bottom: -30px;
-                        right: -30px;
-                        height:3px;
-                        width:0px;
-                        animation: 10s linear infinite animatedBorderBottom;
-                        }
-
-                        .main-logo-border-left {
-                        position:absolute;
-                        background: red;
-                        bottom: -30px;
-                        left: -30px;
-                        height:0px;
-                        width:3px;
-                        animation: 10s linear 5s infinite animatedBorderLeft;
-                        }
-                        `,
-          classes: "main-logo",
-          style:"",
+          order: 0,
+          type: 'media',
+          globalStyle: '            @keyframes animatedBorderTop {                0% {                    left:-30px; height:3px; width:0px;                }                50% {                    left:-30px; height: 3px; width: calc(100% + 60px);                }                100% {                    left: calc(100% + 27px); height:3px; width:3px;                }            }\n            @keyframes animatedBorderRight {                0% {                    top:-30px; left: calc(100% + 27px); height:0px; width:3px;                }                50% {                    top:-30px;left: calc(100% + 27px); height: calc(100% + 57px); width: 3px;                }                100% {                    top: calc(100% + 30px); height: 0px; width:3px;                }            }\n            @keyframes animatedBorderBottom {                0% {                    right: -30px; width:0px;                }                50% {                    right: -30px; width: calc(100% + 60px);                }                100% {                    right: calc(100% + 30px); width:0px;                }            }\n            @keyframes animatedBorderLeft {                0% {                    bottom:-30px; width:3px; height:0px;                }                50% {                    bottom: -30px; height: calc(100% + 60px)                }                100% {                    bottom: calc(100% + 30px); height: 0px;                }            }\n            .main-logo-border-top {            position:absolute;            background: red;            top:-30px;            left:-30px;            height:3px;            width:0px;            animation: 10s linear infinite animatedBorderTop;            }\n            .main-logo-border-right {            position:absolute;            background: red;            top:-30px;            left: calc(100% + 27px);            height:0px;            width:3px;            animation: 10s linear 5s infinite animatedBorderRight;            }\n            .main-logo-border-bottom {            position:absolute;            background: red;            bottom: -30px;            right: -30px;            height:3px;            width:0px;            animation: 10s linear infinite animatedBorderBottom;            }\n            .main-logo-border-left {            position:absolute;            background: red;            bottom: -30px;            left: -30px;            height:0px;            width:3px;            animation: 10s linear 5s infinite animatedBorderLeft;            }            ',
+          classes: 'main-logo',
+          style: '',
           properties: {
-            globalStyle: " #image-logo { height: 100%; width: 100%; max-height: 100%; }",
-            mediaType:"image/png",
-            key: "logo",
-            style:`
-                        width:50vh;
-                        height:50vh;
-                        border: red solid 1px;
-                        background-repeat: no-repeat;
-                        background-position: center;
-                        background-size: cover;
-                        overflow: visible;
-                        position: relative;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        `,
-            content:  `
-                        <div class="main-logo-border-top"></div>
-                        <div class="main-logo-border-right"></div>
-                        <div class="main-logo-border-bottom"></div>
-                        <div class="main-logo-border-left"></div>
-                        `
+            globalStyle: ' #image-logo { height: 100%; width: 100%; max-height: 100%; }\n@keyframes animatedBorderTop {\n\t0% {\n\t\tleft: calc(50% - 210px);\n\t\theight: 3px;\n\t\twidth: 0px;\n\t}\n\t50% {\n\t\tleft: calc(50% - 210px);\n\t\theight: 3px;\n\t\twidth: 420px;\n\t}\n\t100% {\n\t\tleft: calc(50% + 207px);\n\t\theight: 3px;\n\t\twidth: 3px;\n\t}\n}\n\n@keyframes animatedBorderRight {\n\t0% {\n\t\ttop: calc(50% - 210px);\n\t\tleft: calc(50% + 207px);\n\t\theight: 0px;\n\t\twidth: 3px;\n\t}\n\t50% {\n\t\ttop: calc(50% - 210px);\n\t\tleft: calc(50% + 207px);\n\t\theight: 420px;\n\t\twidth: 3px;\t}\n\t100% {                top: calc(50% + 210px);                left: calc(50% + 207px);                height: 0px;\n\t\twidth: 3px;\t}\n}\n\n@keyframes animatedBorderBottom {\n\t0% {                top: calc(50% + 207px);\n\t\tright: calc(50% - 207px);\n\t\twidth: 0px;\n\t}\n\t50% {                top: calc(50% + 207px);\n\t\tright: calc(50% - 207px);\n\t\twidth: 420px;\t}\n\t100% {                top: calc(50% + 207px);  \t\tright: calc(50% + 207px);\n\t\twidth: 0px;                left: calc(50% - 207px); \t}\n}\n\n@keyframes animatedBorderLeft {\n\t0% {\n\t\tbottom: calc(50% - 210px);\n\t\twidth: 3px;\n\t\theight: 0px;\n\t}\n\t50% {               bottom: calc(50% - 210px);\n\t\theight: 420px;\t}\n\t100% { \t\tbottom: calc(50% + 210px);                top:  calc(50% - 210px);\n\t\theight: 0px;\n\t}\n}\n\n.main-logo-border-top {\n\tposition: absolute;\n\tbackground: red;\n\ttop: calc(50% - 210px);\n\tleft: calc(50% - 210px);\n\theight: 3px;\n\twidth: 420px;        animation: 10s linear infinite animatedBorderTop;  \n}\n\n.main-logo-border-right {\n\tposition: absolute;\n\tbackground: red;\n\ttop: calc(50% - 210px);\n\tleft: calc(50% + 207px);\n\theight: 0px;\n\twidth: 3px;         animation: 10s linear 5s infinite animatedBorderRight;\n}\n\n.main-logo-border-bottom {\n\tposition: absolute;\n\tbackground: red;\n        top: calc(50% + 207px);\n\tright: calc(50% - 210px);\n\theight: 3px;\n\twidth: 0px;         animation: 10s linear 10s infinite animatedBorderBottom;       }\n\n.main-logo-border-left {\n\tposition: absolute;\n\tbackground: red;\n\tbottom: calc(50% - 210px);\n\tleft: calc(50% - 210px);\n\theight: 0px;\n\twidth: 3px;            animation: 10s linear 15s infinite animatedBorderLeft;     }',
+            mediaType: 'image/png',
+            key: 'logo',
+            style: 'display:flex; height: 400px; align-items: center; justify-content:center;',
+            content: '            <div class="main-logo-border-top"></div>            <div class="main-logo-border-right"></div>            <div class="main-logo-border-bottom"></div>            <div class="main-logo-border-left"></div>            ',
+            row: 1,
+            col: 0
+          }
+        },
+        {
+          order: 0,
+          type: 'text',
+          properties: {
+            row: 0,
+            col: 0
           }
         }
       ],
-      footers:[]
+      footers: [],
+      layout: {
+        bodies: {
+          type: 'grid'
+        },
+        headers: {
+          type: 'grid'
+        }
+      }
     },
     visibility: 'public',
     ownerId: 0,

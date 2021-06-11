@@ -15,10 +15,9 @@
     .component-container {
         display: flex;
         align-items: center;
-        height: 100%;
+        height: auto;
         min-height: 30px;
         max-height: 100vh;
-        overflow: auto;
     }
 
     .component-container:hover {
