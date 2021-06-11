@@ -10,8 +10,6 @@
     export let layout;
     export let order
 
-    console.log(`col : ${col}`);
-
 </script>
 
 <style>

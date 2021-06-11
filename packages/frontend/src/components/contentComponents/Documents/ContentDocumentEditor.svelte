@@ -45,7 +45,6 @@
 
     afterUpdate(() => {
         document.querySelector('.app-viewport > div.container-content > main').classList.remove('document-section','document-main');
-        console.log('update plop 3');
     })
 
 </script>
@@ -279,13 +278,17 @@
                 <div id="headers" class="section" >
                     <h5>En tête <div class="section-layout">
                         <button id="change-layout-headers-stack" type="button" class="toolbar-button
-                        {getZoneLayout('headers') === 'stack' || !getZoneLayout('headers')?
+                        {
+                         $EditableDocumentStore.document.content.layout &&
+                         $EditableDocumentStore.document.content.layout.headers &&
+                         $EditableDocumentStore.document.content.layout.headers.type === 'stack' ||
+                         !$EditableDocumentStore.document.content.layout ||
+                         !$EditableDocumentStore.document.content.layout.headers ?
                             'active-layout':
                             ''
                         }"
-                        on:click={(event) => {
-                            console.log('plop0')
-                            document.querySelector('#headers > h5 > button.active-layout').classList.remove('active-layout');
+                        on:click={() => {
+                            document.querySelector('#headers > h5 > .section-layout > button.active-layout').classList.remove('active-layout');
                             if(!$EditableDocumentStore.document.content.layout){
                                 $EditableDocumentStore.document.content.layout = {}
                             }
@@ -306,9 +309,8 @@
                             'active-layout':
                             ''
                         }"
-                        on:click={(event) => {
-                            console.log('plop1')
-                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                        on:click={() => {
+                            document.querySelector('#headers > h5 > .section-layout > button.active-layout').classList.remove('active-layout');
                             if(!$EditableDocumentStore.document.content.layout){
                                 $EditableDocumentStore.document.content.layout = {}
                             }
@@ -319,11 +321,8 @@
                             } else {
                                 $EditableDocumentStore.document.content.layout.headers.type = 'grid'
                             }
-                            console.log(event);
-                            document.getElementById('change-layout-grid').classList.add('active-layout')
-                            console.log($EditableDocumentStore);
-                            refresh = new Date();
-                            Helpers.updateEditableDocumentStore().then(() => console.log("after updating"));
+                            document.getElementById('change-layout-headers-grid').classList.add('active-layout')
+                            Helpers.updateEditableDocumentStore();
                         }} title="Mise en page grille">
                             <i class="fas fa-th-large"></i>
                         </button>
@@ -347,56 +346,54 @@
                 </div>
                 <div id="bodies" class="section">
                     <h5>Corps <div class="section-layout">
-                        <button id="change-layout-stack" type="button" class="toolbar-button
-                        {getZoneLayout('headers') === 'stack' || !getZoneLayout('headers')?
+                        <button id="change-layout-bodies-stack" type="button" class="toolbar-button
+                        {
+                         $EditableDocumentStore.document.content.layout &&
+                         $EditableDocumentStore.document.content.layout.bodies &&
+                         $EditableDocumentStore.document.content.layout.bodies.type === 'stack' ||
+                         !$EditableDocumentStore.document.content.layout ||
+                         !$EditableDocumentStore.document.content.layout.bodies ?
                             'active-layout':
-                            ''
-                        }"
-                                on:click={(event) => {
-                            console.log('plop0')
-                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                            ''}"
+                          on:click={() => {
+                            document.querySelector('#bodies > h5 > .section-layout > button.active-layout').classList.remove('active-layout');
                             if(!$EditableDocumentStore.document.content.layout){
                                 $EditableDocumentStore.document.content.layout = {}
                             }
-                            if(!$EditableDocumentStore.document.content.layout.headers){
-                                $EditableDocumentStore.document.content.layout.headers = {
+                            if(!$EditableDocumentStore.document.content.layout.bodies){
+                                $EditableDocumentStore.document.content.layout.bodies = {
                                     type: 'stack'
                                 }
                             } else {
-                                $EditableDocumentStore.document.content.layout.headers.type = 'stack'
+                                $EditableDocumentStore.document.content.layout.bodies.type = 'stack'
                             }
-                            document.getElementById('change-layout-stack').classList.add('active-layout');
-                            console.log($EditableDocumentStore);
-                            Helpers.updateEditableDocumentStore().then(() => {
-                             refresh = new Date();
-                             console.log("after updating")
-                            })
+                            document.getElementById('change-layout-bodies-stack').classList.add('active-layout');
+                            Helpers.updateEditableDocumentStore();
                         }}
                                 title="Mise en page colonne">
                             <i class="fas fa-layer-group"></i>
                         </button>
-                        <button id="change-layout-grid" type="button" class="toolbar-button {getZoneLayout('headers') === 'grid' || !getZoneLayout('headers')?
+                        <button id="change-layout-bodies-grid" type="button" class="toolbar-button {
+                         $EditableDocumentStore.document.content.layout &&
+                         $EditableDocumentStore.document.content.layout.bodies &&
+                         $EditableDocumentStore.document.content.layout.bodies.type === 'grid'?
                             'active-layout':
                             ''
                         }"
-                                on:click={(event) => {
-                            console.log('plop1')
-                            document.querySelector('button.active-layout').classList.remove('active-layout');
+                                on:click={() => {
+                            document.querySelector('#bodies > h5 > .section-layout > button.active-layout').classList.remove('active-layout');
                             if(!$EditableDocumentStore.document.content.layout){
                                 $EditableDocumentStore.document.content.layout = {}
                             }
-                            if(!$EditableDocumentStore.document.content.layout.headers){
-                                $EditableDocumentStore.document.content.layout.headers = {
+                            if(!$EditableDocumentStore.document.content.layout.bodies){
+                                $EditableDocumentStore.document.content.layout.bodies = {
                                     type: 'grid'
                                 }
                             } else {
-                                $EditableDocumentStore.document.content.layout.headers.type = 'grid'
+                                $EditableDocumentStore.document.content.layout.bodies.type = 'grid'
                             }
-                            console.log(event);
-                            document.getElementById('change-layout-grid').classList.add('active-layout')
-                            console.log($EditableDocumentStore);
-                            refresh = new Date();
-                            Helpers.updateEditableDocumentStore().then(() => console.log("after updating"));
+                            document.getElementById('change-layout-bodies-grid').classList.add('active-layout')
+                            Helpers.updateEditableDocumentStore();
                         }} title="Mise en page grille">
                             <i class="fas fa-th-large"></i>
                         </button>
@@ -419,7 +416,60 @@
                     </main>
                 </div>
                 <div id="footers" class="section">
-                    <h5>Pied de page</h5>
+                    <h5>Pied de page <div class="section-layout">
+                        <button id="change-layout-footers-stack" type="button" class="toolbar-button
+                        {
+                         $EditableDocumentStore.document.content.layout &&
+                         $EditableDocumentStore.document.content.layout.footers &&
+                         $EditableDocumentStore.document.content.layout.footers.type === 'stack' ||
+                         !$EditableDocumentStore.document.content.layout ||
+                         !$EditableDocumentStore.document.content.layout.footers ?
+                            'active-layout':
+                            ''
+                        }"
+                                on:click={() => {
+                            document.querySelector('#footers > h5 > .section-layout > button.active-layout').classList.remove('active-layout');
+                            if(!$EditableDocumentStore.document.content.layout){
+                                $EditableDocumentStore.document.content.layout = {}
+                            }
+                            if(!$EditableDocumentStore.document.content.layout.footers){
+                                $EditableDocumentStore.document.content.layout.footers = {
+                                    type: 'stack'
+                                }
+                            } else {
+                                $EditableDocumentStore.document.content.layout.footers.type = 'stack'
+                            }
+                            document.getElementById('change-layout-footers-stack').classList.add('active-layout');
+                            Helpers.updateEditableDocumentStore();
+                        }}
+                                title="Mise en page colonne">
+                            <i class="fas fa-layer-group"></i>
+                        </button>
+                        <button id="change-layout-footers-grid" type="button" class="toolbar-button {
+                            $EditableDocumentStore.document.content.layout &&
+                            $EditableDocumentStore.document.content.layout.footers &&
+                            $EditableDocumentStore.document.content.layout.footers.type === 'grid' ?
+                            'active-layout':
+                            ''
+                        }"
+                                on:click={() => {
+                            document.querySelector('#footers > h5 > .section-layout > button.active-layout').classList.remove('active-layout');
+                            if(!$EditableDocumentStore.document.content.layout){
+                                $EditableDocumentStore.document.content.layout = {}
+                            }
+                            if(!$EditableDocumentStore.document.content.layout.footers){
+                                $EditableDocumentStore.document.content.layout.footers = {
+                                    type: 'grid'
+                                }
+                            } else {
+                                $EditableDocumentStore.document.content.layout.footers.type = 'grid'
+                            }
+                            document.getElementById('change-layout-footers-grid').classList.add('active-layout')
+                            Helpers.updateEditableDocumentStore();
+                        }} title="Mise en page grille">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                </div></h5>
                     <footer id="document-footers" class="document-section document-footer {$BlockEditorComponentStore.zone === 'footers'?'reduced':''}
                     {
                         $EditableDocumentStore.document.content.layout &&
