@@ -112,29 +112,26 @@ export class MediaService extends BaseServiceClient<Media> {
 
     async updateMedia(key:string, label:string, visibility:string,tags:string[]= [], readers:[] = []) {
         try {
-            const f = new FormData();
-            f.append('visibility',visibility);
-            f.append('label',label);
-            f.append('key',key);
-            for(const tag of tags){
-                f.append(`tags[${tags.indexOf(tag)}]`, tag)
-            }
-            for(const readerRoleId of readers){
-                f.append(`readers[${readers.indexOf(readerRoleId)}]`,readerRoleId);
+            const f = {
+                key,
+                visibility,
+                label,
+                tags,
+                readers
             }
             const request = new XMLHttpRequest();
-            request.open('PATCH', `${this.url}/${this.service}`, true);
+            request.open('PATCH', `${this.url}/${this.service}/${key}`, true);
             const requestPromise = new Promise<Media>((resolve, reject) => {
                 this.createHeaders(request);
                 request.onreadystatechange = () => {
                     if(request.readyState === 4){
-                        if(request.status === 201)
+                        if(request.status === 201 || request.status === 200)
                             resolve(JSON.parse(request.responseText));
                         else
                             reject(new Error(`Error ${request.status} : ${request.responseText}`))
                     }
                 }
-                request.send(f);
+                request.send(JSON.stringify(f));
             });
             return await requestPromise;
         } catch(error) {

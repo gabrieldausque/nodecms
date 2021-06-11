@@ -30,7 +30,7 @@
             if (closeAfterAction) {
                 document.getElementById('do-upload-media-text').innerText = 'Upload OK';
                 window.setTimeout(() => {
-                    ShowUploadModalStore.set(false);
+                    ShowUploadModalStore.set(new ShowUploadModal());
                 }, 2000)
             }
         }

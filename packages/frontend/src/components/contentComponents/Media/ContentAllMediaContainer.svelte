@@ -8,21 +8,12 @@
     import _ from 'underscore';
     import MediaSearchBar from "./MediaSearchBar.svelte";
     import UploadMediaModal from "./UploadMediaModal.svelte";
+    import {ShowUploadModalStore} from "../../../stores/ShowUploadModalStore";
 
     $AllMediaStores;
     let mediaToEdit;
 
     onMount(() => {
-        const modal = jQuery('#upload-media-modal');
-        modal.on('hidden.bs.modal', () => {
-            document.getElementById('mediaTags').value = '';
-            document.getElementById('mediaLabel').value = '';
-            document.getElementById('mediaKey').value = '';
-            document.getElementById('mediaVisibility').value = 'protected';
-            document.getElementById('mediaFile').value = '';
-            document.getElementById('do-upload-media-text').innerText = 'Upload Media';
-            document.getElementById('do-upload-media').setAttribute('disabled', '');
-        })
         const updateModal = jQuery('#edit-media-modal');
         updateModal.on('hidden.bs.modal', () => {
             document.getElementById('media-tags-for-update').value = '';
@@ -46,8 +37,10 @@
     })
 
     function showUploadMedia(event) {
-        document.getElementById('mediaKey').value = uuid();
-        jQuery('#upload-media-modal').modal('show');
+        ShowUploadModalStore.update(ums => {
+            ums.shown = true;
+            return ums;
+        })
     }
 
     async function onKeyOrLabelChange(event) {
@@ -109,35 +102,10 @@
     }
 
     async function doUploadMedia() {
-        document.getElementById('uploading-media-loading').classList.add('show');
-        document.getElementById('do-upload-media-text').innerText = 'Uploading ...';
-        document.getElementById('do-upload-media').setAttribute('disabled', '');
-        document.getElementById('error-uploading-media').classList.remove('show');
-        let closeAfterAction = true;
-        try {
-            const services = await getBackendClient();
-            await services.mediaService.createMedia(
-                document.getElementById('mediaFile').files[0],
-                document.getElementById('mediaKey').value,
-                document.getElementById('mediaLabel').value,
-                document.getElementById('mediaVisibility').value,
-                document.getElementById('mediaTags').value.split(' ')
-            )
-        } catch (error) {
-            document.getElementById('error-uploading-media-content').innerText = error.message;
-            document.getElementById('do-upload-media-text').innerText = 'Upload Media';
-            document.getElementById('error-uploading-media').classList.add('show');
-            await validateUploadForm()
-            closeAfterAction = false;
-        } finally {
-            document.getElementById('uploading-media-loading').classList.remove('show');
-            if (closeAfterAction) {
-                document.getElementById('do-upload-media-text').innerText = 'Upload OK';
-                window.setTimeout(() => {
-                    jQuery('#upload-media-modal').modal('hide');
-                }, 2000)
-            }
-        }
+            ShowUploadModalStore.update(ums => {
+                ums.shown = true;
+                return ums;
+            })
     }
 
     function onSearchStarted() {
@@ -321,13 +289,18 @@
         text-align: start;
     }
 
+    .media-action > span {
+        padding: 5px;
+        font-size: 0.7rem;
+    }
+
 </style>
 
 <main class="all-media-panel">
     <div class="media-menu">
         <ul class="list-group">
             <li class="media-action list-group-item list-group-item-dark list-group-item-action" on:click={showUploadMedia}>
-                <i class="fas fa-2x fa-upload"></i><span>Ajouter un media</span>
+                <i class="fas fa-2x fa-upload"></i><span>Téléverser un media</span>
             </li>
         </ul>
     </div>
