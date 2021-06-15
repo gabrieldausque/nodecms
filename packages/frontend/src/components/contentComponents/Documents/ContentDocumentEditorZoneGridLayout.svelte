@@ -66,6 +66,7 @@
         display:flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
     }
 
 </style>
@@ -120,7 +121,7 @@
 <BlockDropZone
         zone={zone}
         layout="grid"
-        row={Helpers.getLastRowIndex($EditableDocumentStore.document.content[zone]) + 1}
+        row={ !$EditableDocumentStore.document.content[zone] || $EditableDocumentStore.document.content[zone].length === 0?0:Helpers.getLastRowIndex($EditableDocumentStore.document.content[zone]) + 1}
         col={0}
         isNewRow={true}
         on:drop={onDropComponent}>

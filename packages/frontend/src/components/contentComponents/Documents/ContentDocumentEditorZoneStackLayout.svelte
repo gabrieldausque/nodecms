@@ -2,12 +2,11 @@
     import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
     import BlockDropZone from './BlockDropZone.svelte';
     import BlockEditor from '../Editors/BlockEditor.svelte';
+    import {afterUpdate} from 'svelte';
 
-    $EditableDocumentStore;
     export let zone;
 
     function onDropComponent(event){
-        console.log(event);
         event = event.detail;
         if(event.target)
             event.target.classList.remove('on-hover');
@@ -19,6 +18,7 @@
         }
         const zone = event.target.getAttribute('data-zone');
         EditableDocumentStore.update(eds => {
+            console.log('before update ')
             if(!Array.isArray(eds.document.content[zone])){
                 eds.document.content[zone] = [];
             }
@@ -26,9 +26,19 @@
             return eds;
         })
     }
+
+    afterUpdate(() => {
+        console.log(`after update in zone ${zone}`);
+        console.log($EditableDocumentStore)
+        console.log('#');
+    })
 </script>
 
-{#if Array.isArray($EditableDocumentStore.document.content[zone]) && $EditableDocumentStore.document.content[zone] > 0}
+{#if $EditableDocumentStore &&
+     $EditableDocumentStore.document &&
+     $EditableDocumentStore.document.content &&
+     $EditableDocumentStore.document.content[zone] &&
+     Array.isArray($EditableDocumentStore.document.content[zone]) && $EditableDocumentStore.document.content[zone].length > 0}
     {#each [...$EditableDocumentStore.document.content[zone]].sort((c1, c2) => {
         if(c1.order > c2.order)
             return 1;

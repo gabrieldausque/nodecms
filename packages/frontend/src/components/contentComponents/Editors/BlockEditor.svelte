@@ -15,6 +15,9 @@
     .component-container {
         display: flex;
         align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         height: auto;
         min-height: 30px;
         max-height: 100vh;

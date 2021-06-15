@@ -49,6 +49,7 @@
     .attachment-video {
         max-height: 50vh;
         max-width: 100%;
+        height:100%;
     }
 </style>
 
