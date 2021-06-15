@@ -1,8 +1,9 @@
 <script>
-    import {getBackendClient} from '../api/NodeCMSClient';
+    import {getBackendClient} from '@nodecms/backend-client';
     import { onMount } from 'svelte';
     import {UserStore} from "../stores/UserStore";
     import {DocumentStore} from "../stores/DocumentStore";
+    import {DocumentsStore} from "../stores/DocumentsStore";
 
     export let isLogin = false;
     let backendService = null;
@@ -21,11 +22,15 @@
             isLogin: isLogin,
             login
         })
-        DocumentStore.update((store) => {
-            store.key = 'welcomePrivate';
-            return store;
-        })
-        window.jQuery('#LoginModal').modal('hide');
+
+        const params = (new URL(document.location.href)).searchParams;
+        if(!params.get('documentKey')){
+            DocumentStore.update((store) => {
+                store.key = 'welcomePrivate';
+                return store;
+            })
+        }
+        window.jQuery('#LoginModal')?.modal('hide');
     }
 
     let authenticate = async () => {
@@ -36,6 +41,7 @@
                 await backendService.userService.authenticate(login, password);
                 isLogin = true;
             }catch (e) {
+                console.log(e);
                 let message;
                 if(e.response && e.response.data && e.response.data.message){
                     message = e.response.data.message;
@@ -88,8 +94,16 @@
 
     async function displayDocument(event) {
         const documentKey = event.currentTarget.getAttribute('data-document-key');
-        console.log(documentKey);
         if(documentKey){
+            if(documentKey === 'documents'){
+                const services = await getBackendClient();
+                $DocumentsStore.documents = [];
+                $DocumentsStore.documents = await services.documentService.findDocument();
+                const indexes = $DocumentsStore.documents.map(d => d.id);
+                $DocumentsStore.hasNext = (await services.documentService.findDocument({
+                    lastIndex: Math.min(...indexes)
+                })).length > 0
+            };
             DocumentStore.update((store) => {
                 store.key = documentKey;
                 return store;
@@ -121,8 +135,11 @@
             <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right ">
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="media">
+                <i class="fas fa-photo-video"></i><span>Media</span>
+            </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
-                <i class="fas fa-file-text"></i><span>Documents</span>
+                <i class="fas fa-file-alt"></i><span>Documents</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
                 <i class="fas fa-comments"></i><span>Channels</span>

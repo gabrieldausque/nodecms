@@ -1,19 +1,17 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {UserUseCases} from "../../usecases/UserUseCases";
-import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {ChannelPost as ChannelPostEntity} from '../../entities/ChannelPost'
+import {ChannelPost as ChannelPostEntity} from '@nodecms/backend-data'
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {ChannelPostUseCases} from "../../usecases/ChannelPostUseCases";
 import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {globalInstancesFactory} from "@hermes/composition";
-import {Channel, ChannelVisibility} from "../../entities/Channel";
-import {User} from "../../entities/User";
+import {Channel, ChannelVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {TopicMessage, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {Logger} from "../../plugins/Logging/Logger";
-import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
-import {isNumber} from "../../helpers";
+import {NotAuthorizedError} from "@nodecms/backend-data";
 
 type Data = ChannelPostEntity
 
@@ -55,15 +53,10 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   async find (params?: Params): Promise<Data[] | Paginated<Data>> {
     if(params && params.user && params.route && params.route.channelNameOrId) {
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
-      let lastIndex:number | string | undefined = params.query?.lastIndex;
-      if(isNumber(lastIndex) && typeof lastIndex === 'string')
-        lastIndex = parseInt(lastIndex)
-      if(params.query && params.query.hasOwnProperty('lastIndex'))
-        delete params.query.lastIndex;
+      let lastIndex:number | undefined = await this.extractLastIndex(params);
       let filter:Partial<ChannelPostEntity> = params.query as ChannelPostEntity;
       if(channel){
         if(!filter || !filter.channelKey || filter.channelKey !== channel.key){
-          console.log('default filter for post in channel')
           if(!filter)
             filter = {
               channelKey:channel.key,
@@ -79,7 +72,6 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
           console.log('the filter :');
           console.log(filter);
         }
-
         const found = await this.useCase.find(filter, lastIndex, params.user as User, channel.key);
         return found;
       }

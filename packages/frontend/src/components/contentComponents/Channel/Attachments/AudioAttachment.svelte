@@ -1,7 +1,7 @@
 <script>
-    import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
+    import {AttachmentHelpers} from "@nodecms/backend-client";
     import {writable} from "svelte/store";
-    import {getBackendClient} from "../../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import {beforeUpdate, onMount} from "svelte";
     import LoadingAttachment from "./LoadingAttachment.svelte";
 
@@ -52,6 +52,7 @@
     <LoadingAttachment attachment={attachment}></LoadingAttachment>
 {:else if typeof media.id === 'number'}
     <audio id="{`video-${media.key}`}"
+           data-media-key="{media.key}"
            on:click={handleVideoClick}
            controls
            class="postAudio"

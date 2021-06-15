@@ -1,11 +1,9 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from '../BaseService';
-import {globalInstancesFactory} from '@hermes/composition';
-import {UserStorage} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
-import {User as UserEntity} from "../../entities/User";
+import {User as UserEntity} from "@nodecms/backend-data";
 
 export type UserDTO = Partial<UserEntity>
 

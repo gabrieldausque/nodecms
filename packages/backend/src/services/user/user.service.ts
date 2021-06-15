@@ -3,11 +3,6 @@ import {ServiceAddons, ServiceMethods} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { User } from './user.class';
 import hooks from './user.hooks';
-import {isNumber} from "../../helpers";
-import {UserUseCases} from "../../usecases/UserUseCases";
-import {NotAcceptable} from "@feathersjs/errors";
-import {globalInstancesFactory} from "@hermes/composition";
-import {Metadata} from "../../entities/Metadata";
 
 // Add this service to the service type index
 declare module '../../declarations' {

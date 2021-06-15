@@ -1,13 +1,27 @@
 # BEFORE DEV
 
+## Install docker 
+
+See [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
+
+## Install docker compose
+
+## Install mongodb with docker compose
+
+cf backend docker_mongodbbackend.yaml
+
 ## Apache configuration : 
 
+### activate modules
+
+```
 a2enmod ssl
 a2enmod proxy
 a2enmod proxy_http
 a2enmod proxy_wstunnel
+```
 
-create a certificate : 
+### create a certificate : 
 
 in ~/ssl
 
@@ -53,7 +67,10 @@ sudo update-ca-certificates
 copy certificate to a etc/ssl/certs
 sudo cp server.crt /etc/ssl/certs
 
-create apache conf file
+copy new.cert.key to /etc/ssl/private server.key
+
+### create apache conf file
+
 ```
 <IfModule mod_ssl.c>
 	<VirtualHost frontend.myhost.domain:443>
@@ -70,35 +87,41 @@ create apache conf file
                     SSLCertificateFile      /etc/ssl/certs/server.crt
                     SSLCertificateKeyFile /etc/ssl/private/server.key
     
+                    RewriteEngine on
+                    
+                    <Location ~ "/api/.*">
+
+                        RewriteRule (.+)/api/(.+) $1/$2
+                        ProxyPass "http://127.0.0.1:3030"
+                        ProxyPassReverse "http://127.0.0.1:3030"
+                        ProxyPassReverseCookiePath / /api
+
+                    </Location>
+                
+                    <Location ~ "/documents/.+">
+                        RewriteRule (.+)/documents/(.+) /?documentKey=$2 [R]
+                    </Location>
+                
+                    <Location ~ "/socket.io/*>
+                        ProxyPass "ws://127.0.0.1:3030"
+                    </Location>
+                
                     ProxyPass "/" "http://127.0.0.1:5000/"
                     ProxyPassReverse "/" "http://127.0.0.1:5000/"
-                    RewriteEngine On
-    
-                    <Location ~ "/api/.*">
-                            RewriteRule (.+)/api/(.+) $1/$2
-                            ProxyPass "http://127.0.0.1:3030"
-                            ProxyPassReverse "http://127.0.0.1:3030"
-                            ProxyPassReverseCookiePath "/" "/api"
-                    </Location>
-    
-                    <Location ~ "/socket.io/*>
-                            ProxyPass "ws://127.0.0.1:3030"
-                    </Location>
-    
+            
                     <FilesMatch "\.(cgi|shtml|phtml|php)$">
-                                    SSLOptions +StdEnvVars
+                            SSLOptions +StdEnvVars
                     </FilesMatch>
+
                     <Directory /usr/lib/cgi-bin>
-                                    SSLOptions +StdEnvVars
+                            SSLOptions +StdEnvVars
                     </Directory>
     
             </VirtualHost>
 </IfModule>
-
-# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 ```
 
-restart apache 
+### restart apache 
 ```
 sudo systemctl restart apache2
 ```

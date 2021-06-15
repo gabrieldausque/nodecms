@@ -67,7 +67,10 @@ describe('Authentication service With Mongodb', () => {
   })
 
   after((done) => {
-    server.close(done);
+    if(server)
+      server.close(() => {
+        done()
+      });
   })
 
   it('registered the service', () => {
@@ -140,7 +143,7 @@ describe('Authentication service With Mongodb', () => {
         cookie: finalCookie
       }
     })
-    expect(response.data).to.be.eql('Logged Out');
+    return expect(response.data).to.be.eql('Logged Out');
   })
 
 

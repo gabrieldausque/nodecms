@@ -132,3 +132,10 @@ lib/
 /.~lock.authenticationprocess.odt#
 /packages/backend/.nyc_output/
 /packages/backend/junit.xml
+/packages/backend-data/package-lock.json
+/packages/backend-client/package-lock.json
+/packages/backend-data/dist/
+/package.json.lerna_backup
+/packages/backend-client/dist/
+/packages/backend/uploads/
+/packages/backend-data-rules/dist/

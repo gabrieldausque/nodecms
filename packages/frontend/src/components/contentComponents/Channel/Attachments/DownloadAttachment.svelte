@@ -1,7 +1,7 @@
 <script>
-    import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
+    import {AttachmentHelpers} from "@nodecms/backend-client";
     import {writable} from "svelte/store";
-    import {getBackendClient} from "../../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import {beforeUpdate, onMount} from "svelte";
     import LoadingAttachment from "./LoadingAttachment.svelte";
 
@@ -46,7 +46,7 @@
         overflow-y: hidden;
     }
 
-    .attachment-download > label {
+    .attachment-download > div.label {
         margin-bottom: 0;
         margin-left: 5px;
     }
@@ -55,10 +55,13 @@
 {#if !media || typeof media.id === 'undefined'}
     <LoadingAttachment attachment={attachment}></LoadingAttachment>
 {:else if typeof media.id === 'number'}
-    <a id="download-{media.id}" class="attachment-download" href="{AttachmentHelpers.getDownloadUrl(media)}" target="_blank">
+    <a id="download-{media.id}"
+       data-media-key="{media.key}"
+       class="attachment-download"
+       href="{AttachmentHelpers.getDownloadUrl(media)}" target="_blank">
         <div class="attachment-download">
             <i class="fas fa-2x {icons[media.mediaType]}"></i>
-            <label>{media.label}</label>
+            <div class="label">{media.label}</div>
         </div>
     </a>
 {/if}

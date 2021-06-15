@@ -1,5 +1,5 @@
 import {Storage} from '../Storage'
-import {Metadata} from "../../../entities/Metadata";
+import {Metadata} from "@nodecms/backend-data";
 
 export interface MetadataStorage extends Storage<Metadata> {
   exists(keyOrId:string | number, ownerType?:string | null, ownerId?:number | null):Promise<boolean>;

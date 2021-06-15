@@ -9,10 +9,7 @@ export default {
     update: [
       disallowMethod,
       (ctx:any) => {}],
-    patch: [
-      disallowMethod,
-      (ctx:any) => {}
-    ],
+    patch: [],
     remove: []
   },
 

@@ -1,12 +1,11 @@
 import {UseCases} from "./UseCases";
-import {Channel as ChannelEntity, Channel, ChannelVisibility} from "../entities/Channel";
-import {User} from "../entities/User";
-import {isNumber} from "../helpers";
+import {Channel as ChannelEntity, Channel, ChannelVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {isNumber} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
-import {ChannelRules} from "../entities/ChannelRules";
-import {Entity} from "../entities/Entity";
+import {ChannelRules} from "@nodecms/backend-data-rules";
 import {RoleUseCases} from "./RoleUseCases";
 
 interface ChannelUseCasesConfiguration extends UseCaseConfiguration {};
@@ -259,6 +258,7 @@ export class ChannelUseCases extends UseCases<Channel> {
     }
     //TODO : add service channel-roles !!!
     data.isContributor = await this.isUserContributor(data as ChannelEntity, u, u);
+    data.isReader = await this.isUserReader(data as ChannelEntity, u, u);
     return isAuthorized;
   }
 

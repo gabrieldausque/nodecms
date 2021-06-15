@@ -16,11 +16,17 @@ export default function (app: Application) {
     paginate: app.get('paginate'),
     storage:{
       contractName:'Default'
+    },
+    topicService:{
+      contractName: 'Default'
     }
   };
 
   const globalDocumentStorageConfiguration = app.get('storage').documents;
+  const globalTopicServiceConfiguration = app.get('topicService');
+
   options.storage = {...options.storage, ...globalDocumentStorageConfiguration};
+  options.topicService = {...options.topicService, ...globalTopicServiceConfiguration}
 
   const documentConfiguration = app.get('document');
   options = { ...options, ...documentConfiguration};

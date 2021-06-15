@@ -44,8 +44,8 @@ function initData(){
   //TripleA
   teamADb.users.insert({id:  newId('users'), login:"Amanda",password:"f0fe507b8952faed1d75ba5a093d609e:6d409f10366620:e2793c9e785d065f28d70d2de3ab2d71",isActive:true});
 
-  teamADb.roles.insert({id:  newId('roles'), key:"administrators", description:"Administrators group", members:[0], ownerId:0, creationDate: new Date()});
-  teamADb.roles.insert({id:  newId('roles'), key:"specialUsers", description:"special Users group", members:[1,2], ownerId:0, creationDate: new Date()});
+  teamADb.roles.insert({id:  newId('roles'), key:"administrators", description:"Administrators group", members:[0,1], ownerId:0, creationDate: new Date()});
+  teamADb.roles.insert({id:  newId('roles'), key:"specialUsers", description:"special Users group", members:[2], ownerId:0, creationDate: new Date()});
   teamADb.roles.insert({id:  newId('roles'), key:"users", description:"Users group", members:[3,4,5], ownerId:0, creationDate: new Date()});
 
 
@@ -65,6 +65,12 @@ function initData(){
   //rights for roles
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"role",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"role",right:"x",role:2})
+
+  //rights for users
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"user",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"user",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"user",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"user",right:"x",role:2})
 
   //rights for authorizations
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"authorizations",right:"x",role:1})
@@ -127,195 +133,84 @@ function initData(){
 
   //rights for user data access
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:0})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"r",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"user",for:"*",right:"w",role:0})
 
-  teamADb.documents.insert({
-    id: newId('documents'),
-    key: 'welcome',
-    content: {
-      globalStyle:`
-            h2 {
-                font-family: Army, serif;
-                margin-top: 90px;
-            }
-
-            .documentContainer {
-                display: flex;
-                flex-direction:column;
-                align-items: center;
-                justify-content: center;
-                height:100%;
-                width:100%
-            }
-
-            .main-logo {
-                height: initial !important;
-                width: initial !important;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            `,
-      style: ``,
-      classes: 'documentContainer',
-      headers:[],
-      bodies:[
-        {
-          order:1,
-          type:'text',
-          properties:{
-            content:'<h2>Servir sans faillir</h2>',
-            style:`font-family: Army; color: white`,
-            classes:'myH2Class'
-          }
-        },
-        {
-          order:0,
-          type:'generic',
-          properties: {
-            globalStyle: `
-                        @keyframes animatedBorderTop {
-                            0% {
-                                left:-30px; height:3px; width:0px;
-                            }
-                            50% {
-                                left:-30px; height: 3px; width: calc(100% + 60px);
-                            }
-                            100% {
-                                left: calc(100% + 27px); height:3px; width:3px;
-                            }
-                        }
-
-                        @keyframes animatedBorderRight {
-                            0% {
-                                top:-30px; left: calc(100% + 27px); height:0px; width:3px;
-                            }
-                            50% {
-                                top:-30px;left: calc(100% + 27px); height: calc(100% + 57px); width: 3px;
-                            }
-                            100% {
-                                top: calc(100% + 30px); height: 0px; width:3px;
-                            }
-                        }
-
-                        @keyframes animatedBorderBottom {
-                            0% {
-                                right: -30px; width:0px;
-                            }
-                            50% {
-                                right: -30px; width: calc(100% + 60px);
-                            }
-                            100% {
-                                right: calc(100% + 30px); width:0px;
-                            }
-                        }
-
-                        @keyframes animatedBorderLeft {
-                            0% {
-                                bottom:-30px; width:3px; height:0px;
-                            }
-                            50% {
-                                bottom: -30px; height: calc(100% + 60px)
-                            }
-                            100% {
-                                bottom: calc(100% + 30px); height: 0px;
-                            }
-                        }
-
-                        .main-logo-border-top {
-                        position:absolute;
-                        background: red;
-                        top:-30px;
-                        left:-30px;
-                        height:3px;
-                        width:0px;
-                        animation: 10s linear infinite animatedBorderTop;
-                        }
-
-                        .main-logo-border-right {
-                        position:absolute;
-                        background: red;
-                        top:-30px;
-                        left: calc(100% + 27px);
-                        height:0px;
-                        width:3px;
-                        animation: 10s linear 5s infinite animatedBorderRight;
-                        }
-
-                        .main-logo-border-bottom {
-                        position:absolute;
-                        background: red;
-                        bottom: -30px;
-                        right: -30px;
-                        height:3px;
-                        width:0px;
-                        animation: 10s linear infinite animatedBorderBottom;
-                        }
-
-                        .main-logo-border-left {
-                        position:absolute;
-                        background: red;
-                        bottom: -30px;
-                        left: -30px;
-                        height:0px;
-                        width:3px;
-                        animation: 10s linear 5s infinite animatedBorderLeft;
-                        }
-                        `,
-            classes: "main-logo",
-            style:"",
-            headers:[],
-            bodies:[
-              {
-                order:1,
-                type:'image',
-                properties: {
-                  uri:"https://frontend.myhost.domain/api/a-team_logo.png",
-                  style:`
-                        width:50vh;
-                        height:50vh;
-                        border: red solid 1px;
-                        background-repeat: no-repeat;
-                        background-position: center;
-                        background-size: cover;
-                        overflow: visible;
-                        position: relative;
-                        `,
-                  content:  `
-                        <div class="main-logo-border-top"></div>
-                        <div class="main-logo-border-right"></div>
-                        <div class="main-logo-border-bottom"></div>
-                        <div class="main-logo-border-left"></div>
-                        `
-                }
-              }],
-            footers:[]
-          }
-        }
-      ],
-      footers:[]
-    },
+  //init media
+  teamADb.media.insert({
+    id: newId('media'),
+    key: 'logo',
     visibility: 'public',
-    ownerId: 0
-  });
+    label: 'team-a logo',
+    mediaType: 'image/png',
+    ownerId: 0,
+    storagePath: 'uploads/a-team_logo.png',
+    readers: [],
+    tags: []
+  })
+
+  //init documents
+
+  //media editor
   teamADb.documents.insert({
     id: newId('documents'),
-    key: 'welcomePrivate',
+    key: 'media',
     content: {
+      headers:[ ],
       bodies:[
         {
           order:0,
-          type:'channel',
-          properties:{
-            channelKey:"news"
-          }
+          type:'all-media',
+          properties:{}
         }
       ]
     },
     visibility: 'protected',
-    ownerId: 0
-  });
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  })
+
+  // documents lists and editor
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'documents',
+    content: {
+      headers:[ ],
+      bodies:[
+        {
+          order:0,
+          type:'documents',
+          properties:{}
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  })
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'documentEditor',
+    content: {
+      headers:[ ],
+      bodies:[
+        {
+          order:0,
+          type:'documentEditor',
+          properties:{}
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  })
+
+  // channels access
   teamADb.documents.insert({
     id: newId('documents'),
     key: 'channels',
@@ -323,7 +218,7 @@ function initData(){
       bodies:[
         {
           order:0,
-          type:'channel',
+          type:'channels',
           properties:{
             channelKey:"news"
           }
@@ -331,33 +226,129 @@ function initData(){
       ]
     },
     visibility: 'protected',
-    ownerId: 0
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
   });
+
+  // welcome pages
   teamADb.documents.insert({
     id: newId('documents'),
-    key: 'projects',
+    key: 'welcomePrivate',
     content: {
-      headers:[
-        {
-          order:0,
-          type: 'title',
-          properties: {
-            title:'Les projets de la Team-A'
-          }
-        }
-      ],
       bodies:[
         {
           order:0,
-          type:'projects',
-          properties:{}
+          type:'channels',
+          properties:{
+            channelKey:"news"
+          }
         }
       ]
     },
     visibility: 'protected',
-    ownerId: 0
-  })
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'welcome',
+    content: {
+      globalStyle: 'h2 {    font-family: Army, serif;    margin-top: 90px;}\n.documentContainer {    display: flex;    flex-direction:column;    align-items: center;    justify-content: center;    height:100%;    width:100%}\n.main-logo {    height: initial !important;    width: initial !important;    display: flex;    align-items: center;    justify-content: center;}\n',
+      style: '',
+      classes: 'documentContainer',
+      headers: [],
+      bodies: [
+        {
+          order: 1,
+          type: 'text',
+          properties: {
+            content: 'Servir sans faillir&nbsp;',
+            style: 'font-family: Army; color: white; display: flex; align-items:end; justify-content: center; font-size: 35px; height: 50px;',
+            classes: 'myH2Class',
+            row: 2,
+            col: 0
+          }
+        },
+        {
+          order: 0,
+          type: 'media',
+          globalStyle: '            @keyframes animatedBorderTop {                0% {                    left:-30px; height:3px; width:0px;                }                50% {                    left:-30px; height: 3px; width: calc(100% + 60px);                }                100% {                    left: calc(100% + 27px); height:3px; width:3px;                }            }\n            @keyframes animatedBorderRight {                0% {                    top:-30px; left: calc(100% + 27px); height:0px; width:3px;                }                50% {                    top:-30px;left: calc(100% + 27px); height: calc(100% + 57px); width: 3px;                }                100% {                    top: calc(100% + 30px); height: 0px; width:3px;                }            }\n            @keyframes animatedBorderBottom {                0% {                    right: -30px; width:0px;                }                50% {                    right: -30px; width: calc(100% + 60px);                }                100% {                    right: calc(100% + 30px); width:0px;                }            }\n            @keyframes animatedBorderLeft {                0% {                    bottom:-30px; width:3px; height:0px;                }                50% {                    bottom: -30px; height: calc(100% + 60px)                }                100% {                    bottom: calc(100% + 30px); height: 0px;                }            }\n            .main-logo-border-top {            position:absolute;            background: red;            top:-30px;            left:-30px;            height:3px;            width:0px;            animation: 10s linear infinite animatedBorderTop;            }\n            .main-logo-border-right {            position:absolute;            background: red;            top:-30px;            left: calc(100% + 27px);            height:0px;            width:3px;            animation: 10s linear 5s infinite animatedBorderRight;            }\n            .main-logo-border-bottom {            position:absolute;            background: red;            bottom: -30px;            right: -30px;            height:3px;            width:0px;            animation: 10s linear infinite animatedBorderBottom;            }\n            .main-logo-border-left {            position:absolute;            background: red;            bottom: -30px;            left: -30px;            height:0px;            width:3px;            animation: 10s linear 5s infinite animatedBorderLeft;            }            ',
+          classes: 'main-logo',
+          style: '',
+          properties: {
+            globalStyle: ' #image-logo { height: 100%; width: 100%; max-height: 100%; }\n@keyframes animatedBorderTop {\n\t0% {\n\t\tleft: calc(50% - 210px);\n\t\theight: 3px;\n\t\twidth: 0px;\n\t}\n\t50% {\n\t\tleft: calc(50% - 210px);\n\t\theight: 3px;\n\t\twidth: 420px;\n\t}\n\t100% {\n\t\tleft: calc(50% + 207px);\n\t\theight: 3px;\n\t\twidth: 3px;\n\t}\n}\n\n@keyframes animatedBorderRight {\n\t0% {\n\t\ttop: calc(50% - 210px);\n\t\tleft: calc(50% + 207px);\n\t\theight: 0px;\n\t\twidth: 3px;\n\t}\n\t50% {\n\t\ttop: calc(50% - 210px);\n\t\tleft: calc(50% + 207px);\n\t\theight: 420px;\n\t\twidth: 3px;\t}\n\t100% {                top: calc(50% + 210px);                left: calc(50% + 207px);                height: 0px;\n\t\twidth: 3px;\t}\n}\n\n@keyframes animatedBorderBottom {\n\t0% {                top: calc(50% + 207px);\n\t\tright: calc(50% - 207px);\n\t\twidth: 0px;\n\t}\n\t50% {                top: calc(50% + 207px);\n\t\tright: calc(50% - 207px);\n\t\twidth: 420px;\t}\n\t100% {                top: calc(50% + 207px);  \t\tright: calc(50% + 207px);\n\t\twidth: 0px;                left: calc(50% - 207px); \t}\n}\n\n@keyframes animatedBorderLeft {\n\t0% {\n\t\tbottom: calc(50% - 210px);\n\t\twidth: 3px;\n\t\theight: 0px;\n\t}\n\t50% {               bottom: calc(50% - 210px);\n\t\theight: 420px;\t}\n\t100% { \t\tbottom: calc(50% + 210px);                top:  calc(50% - 210px);\n\t\theight: 0px;\n\t}\n}\n\n.main-logo-border-top {\n\tposition: absolute;\n\tbackground: red;\n\ttop: calc(50% - 210px);\n\tleft: calc(50% - 210px);\n\theight: 3px;\n\twidth: 420px;        animation: 10s linear infinite animatedBorderTop;  \n}\n\n.main-logo-border-right {\n\tposition: absolute;\n\tbackground: red;\n\ttop: calc(50% - 210px);\n\tleft: calc(50% + 207px);\n\theight: 0px;\n\twidth: 3px;         animation: 10s linear 5s infinite animatedBorderRight;\n}\n\n.main-logo-border-bottom {\n\tposition: absolute;\n\tbackground: red;\n        top: calc(50% + 207px);\n\tright: calc(50% - 210px);\n\theight: 3px;\n\twidth: 0px;         animation: 10s linear 10s infinite animatedBorderBottom;       }\n\n.main-logo-border-left {\n\tposition: absolute;\n\tbackground: red;\n\tbottom: calc(50% - 210px);\n\tleft: calc(50% - 210px);\n\theight: 0px;\n\twidth: 3px;            animation: 10s linear 15s infinite animatedBorderLeft;     }',
+            mediaType: 'image/png',
+            key: 'logo',
+            style: 'display:flex; height: 400px; align-items: center; justify-content:center;',
+            content: '            <div class="main-logo-border-top"></div>            <div class="main-logo-border-right"></div>            <div class="main-logo-border-bottom"></div>            <div class="main-logo-border-left"></div>            ',
+            row: 1,
+            col: 0
+          }
+        },
+        {
+          order: 0,
+          type: 'text',
+          properties: {
+            row: 0,
+            col: 0
+          }
+        }
+      ],
+      footers: [],
+      layout: {
+        bodies: {
+          type: 'grid'
+        },
+        headers: {
+          type: 'grid'
+        }
+      }
+    },
+    visibility: 'public',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
 
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'tests',
+    content: {
+      layout: {
+        bodies:{
+          type:"grid"
+        }
+      },
+      bodies:[
+        {
+          order:0,
+          type:'text',
+          properties:{
+            col:1,
+            row:1,
+            content:"Texte for the test"
+          }
+        },
+        {
+          order:0,
+          type:'text',
+          properties:{
+            col:0,
+            row:0,
+            content:"Second text"
+          }
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+
+  // channels creation
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',
     content:`<h1> Bienvenue Sur le Channel news</h1>

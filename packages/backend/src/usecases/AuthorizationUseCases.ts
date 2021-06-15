@@ -1,8 +1,8 @@
 import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
-import {AuthorizationEntityRules} from "../entities/AuthorizationEntityRules";
-import {Authorization} from "../entities/Authorization";
-import {User} from "../entities/User";
+import {AuthorizationEntityRules} from "@nodecms/backend-data-rules";
+import {Authorization} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 
 interface AuthorizationUseCasesConfiguration extends UseCaseConfiguration {
 }

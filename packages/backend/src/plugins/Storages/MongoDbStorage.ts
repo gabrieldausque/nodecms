@@ -1,9 +1,7 @@
-import {Entity} from '../../entities/Entity';
+import {Entity} from '@nodecms/backend-data';
 import {Storage, StorageConfiguration} from './Storage'
 import {Collection, Db, MongoClient, QuerySelector} from 'mongodb';
-import {globalInstancesFactory} from "@hermes/composition";
 import {Logger} from "../Logging/Logger";
-import {User} from "../../entities/User";
 
 export interface MongoDbStorageConfiguration extends StorageConfiguration {
   mongodbUser:string,
@@ -104,6 +102,13 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     let found:T[] = [];
     if(filter){
       const query:any = {...filter};
+
+      for(const propName in query){
+        if(query.hasOwnProperty(propName) && Array.isArray(query[propName])){
+          query[propName] = { $all: query[propName] }
+        }
+      }
+
       if(typeof lastIndex === "number" || typeof lastIndex === "string"){
           const firstElement = (typeof lastIndex === 'number')?
             (await this.internalGet(lastIndex, collectionName)):
@@ -134,12 +139,12 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
       } else {
         if(sortDescending){
           found = await (await this.getCollection(finalCollectionName))
-            .find(filter)
+            .find(query)
             .sort({id:-1})
             .toArray();
         }else{
           found = await (await this.getCollection(finalCollectionName))
-            .find(filter)
+            .find(query)
             .toArray();
         }
       }

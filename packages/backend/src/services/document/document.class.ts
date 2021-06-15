@@ -1,36 +1,47 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
-import {User, User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "@nodecms/backend-data";
 import {DocumentUseCases} from "../../usecases/DocumentUseCases";
-import {Document as DocumentEntity, DocumentVisibility} from "../../entities/Document";
+import {Document as DocumentEntity, DocumentVisibility} from "@nodecms/backend-data";
 import {NotAcceptable, NotAuthenticated, NotFound} from "@feathersjs/errors";
-import {isNumber} from "../../helpers";
+import {isNumber} from "@nodecms/backend-data";
+import { TopicService, TopicServiceConfiguration } from '@hermes/topicservice';
+import { globalInstancesFactory } from '@hermes/composition';
 
 type DocumentDTO = Partial<DocumentEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
-
+  topicService:{
+    contractName:string
+    configuration?:any
+  }
 }
 
 export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
 
   options: ServiceOptions;
+  private topicService: TopicService;
 
   constructor (options: ServiceOptions = {
     storage:{
       contractName:'Default'
-    }
+    },
+    topicService: { contractName: 'Default'}
   }, app: Application) {
     super(app,'document', 'Document', options);
     this.options = options;
+    this.topicService = globalInstancesFactory.getInstanceFromCatalogs('TopicService',
+      options.topicService.contractName, TopicServiceConfiguration.load(options.topicService.configuration));
   }
 
   async find (params?: Params): Promise<DocumentDTO[] | Paginated<DocumentDTO>> {
     if(params){
       const executingUser:UserEntity = params?.user as UserEntity;
-      return await this.useCase.find(params.query as Partial<DocumentEntity>,undefined,executingUser);
+      const lastIndex:number | undefined = await this.extractLastIndex(params);
+      return await this.useCase.find(params.query as Partial<DocumentEntity>,
+        lastIndex,
+        executingUser);
     }
     return [];
   }
@@ -44,8 +55,14 @@ export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
   }
 
   async create (data: DocumentDTO, params?: Params): Promise<DocumentDTO> {
-    if(params && params.user && params.user as User)
-      return await this.useCase.create(data, params.user as User)
+    if(params && params.user && params.user as User){
+      const created = await this.useCase.create(data, params.user as User);
+      await this.topicService.publish('documents.actions', {
+        action:'creation',
+        document:created.key
+      });
+      return created;
+    }
     throw new NotAuthenticated('User is not authenticated.');
   }
 

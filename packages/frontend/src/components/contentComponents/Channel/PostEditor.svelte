@@ -1,39 +1,20 @@
 <script>
 
-    import Editor from "cl-editor";
+    import Editor from "cl-editor/src/Editor.svelte";
     import {afterUpdate, onMount} from "svelte";
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import * as uuid from 'uuid';
     import AttachmentAtCreation from "./Attachment.svelte";
     import _ from 'underscore';
+    import {MediaService} from "@nodecms/backend-client";
 
     export let channelKey;
     export let parentPost;
     export let targetId;
-
-    console.log(`parent post id : ${parentPost}`);
-
     let attachments = [];
 
-    const authorizedMimeTypes = [
-        'image/gif',
-        'image/png',
-        'image/jpeg',
-        'image/bmp',
-        'image/webp',
-        'image/svg+xml',
-        'audio/mp3',
-        'audio/mpeg',
-        'audio/webm',
-        'audio/ogg',
-        'audio/aac',
-        'audio/wav',
-        'video/webm',
-        'video/ogg',
-        'video/mp4',
-        'video/x-msvideo',
-        'application/pdf'
-    ]
+    const authorizedMimeTypes = MediaService.AuthorizedMimeTypes;
+
     async function customPaste(file, label) {
         const backEndService = await getBackendClient();
         const keyAndLabel = uuid.v4()
@@ -61,11 +42,9 @@
     }, 1000, false);
 
     async function pasteEventHandler(event) {
-        console.log('pasted')
         event.preventDefault();
         event.stopPropagation();
         for (const i of event.clipboardData.items) {
-            console.log(i.kind);
             if (i.kind === 'file') {
                 const f = i.getAsFile();
                 await customPaste(f);
@@ -94,9 +73,6 @@
     
     afterUpdate(() => {
         window.setTimeout(() => {
-            //TODO get target id from property
-            console.log(`targetId : ${targetId}`);
-            console.log(`channelKey : ${channelKey}`);
             if(targetId){
                 const messageContent = document.getElementById(targetId);
                 if(messageContent.childElementCount === 0) {
@@ -146,7 +122,6 @@
                                         input.type = 'file';
                                         input.accept = authorizedMimeTypes.join(',');
                                         input.onchange = (e) => {
-                                            console.log(input.files);
                                             if (input.files) {
                                                 for (const file of input.files) {
                                                     customPaste(file, file.name);
@@ -194,14 +169,14 @@
 
 <style>
 
-    .postCreation {
+    .post-creation {
         border: solid lightgray 1px;
-        position : sticky;
-        bottom : 5px;
         margin: 5px;
         height:auto;
         width: calc(100% - 10px);
-        top: calc(100vh - 100px);
+        position: sticky;
+        bottom:5px;
+        outline: solid white 5px;
     }
 
     .attachments {
@@ -223,7 +198,7 @@
 
 </style>
 
-<div class="postCreation">
+<div class="post-creation">
 
     <div id="{targetId}">
 

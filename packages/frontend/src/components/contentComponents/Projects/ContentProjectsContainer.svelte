@@ -2,7 +2,7 @@
 
     import {ProjectStore} from "../../../stores/ProjectStore";
     import ProjectCard from "./ProjectCard.svelte";
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
 
     $ProjectStore;
 

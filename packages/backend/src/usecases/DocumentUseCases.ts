@@ -1,13 +1,13 @@
 import {UseCases} from "./UseCases";
-import {Document, DocumentVisibility} from "../entities/Document";
-import {User} from "../entities/User";
-import {DocumentRules} from "../entities/DocumentRules";
+import {Document, DocumentVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {DocumentRules} from "@nodecms/backend-data-rules";
 import {DocumentStorage} from "../plugins/Storages/Document/DocumentStorage";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
-import {Role} from "../entities/Role";
+import {Role} from "@nodecms/backend-data";
 
 export class DocumentUseCases extends UseCases<Document> {
 
@@ -28,6 +28,8 @@ export class DocumentUseCases extends UseCases<Document> {
 
   async create(entity: Partial<Document>, executingUser: User): Promise<Document> {
     await DocumentRules.validate(entity, executingUser)
+    entity.creationDate = new Date();
+    entity.updateDate = entity.creationDate;
     return await this.storage.create(entity);
   }
 
@@ -36,11 +38,20 @@ export class DocumentUseCases extends UseCases<Document> {
   }
 
   async find(filter: Partial<Document>, lastIndex?:number, executingUser?: User): Promise<Document[]> {
-    return await this.storage.find(filter, lastIndex);
+    const found = await this.storage.find(filter, lastIndex);
+    for(const document of found){
+      DocumentRules.validateForRead(document);
+      document.isReader = executingUser?await this.isUserReader(document, executingUser):document.visibility === DocumentVisibility.public;
+      document.isEditor = executingUser?await this.isUserEditor(document, executingUser):false;
+    }
+    return found;
   }
 
   async get(id: string | number, executingUser?: User): Promise<Document> {
     const entity = await this.storage.get(id);
+    DocumentRules.validateForRead(entity);
+    entity.isReader = executingUser?await this.isUserReader(entity, executingUser):entity.visibility === DocumentVisibility.public;
+    entity.isEditor = executingUser?await this.isUserEditor(entity, executingUser):false;
     if(await this.isDataAuthorized(entity,'r', executingUser))
       return entity;
     else
@@ -48,25 +59,19 @@ export class DocumentUseCases extends UseCases<Document> {
   }
 
   async update(id: string | number, entityToUpdate: Partial<Document>, executingUser: User): Promise<Document> {
-    const data = await this.get(id);
+    const data = await this.get(id, executingUser);
     if(!await this.isDataAuthorized(data, 'w', executingUser))
       throw new Error('Not Authorized');
     else {
-      return await this.storage.update(data);
+      entityToUpdate.updateDate = new Date();
+      return await this.storage.update(entityToUpdate);
     }
   }
 
   async isDataAuthorized(data: Document, right: string = 'r', user?: any): Promise<boolean> {
     const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
-    const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
     if(right === 'r'){
-      if(data.visibility === DocumentVisibility.public)
-        return true;
-      else if (data.visibility === DocumentVisibility.protected) {
-        return await userUseCases.isValidUser(user,user);
-      } else if (data.visibility === DocumentVisibility.private) {
        return await this.isUserReader(data, user);
-      }
     } else if(right === 'w') {
       return await this.isUserEditor(data, user);
     }
@@ -74,6 +79,7 @@ export class DocumentUseCases extends UseCases<Document> {
   }
 
   private async isUserReader(data: Document, user: User):Promise<boolean> {
+    const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
     if(user && typeof user.id === 'number'){
       let isExplicitReader:boolean = data.ownerId === user.id;
       if(!isExplicitReader){
@@ -85,20 +91,27 @@ export class DocumentUseCases extends UseCases<Document> {
           }
         }
       }
-      if(!isExplicitReader){
-        const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
-        const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
-        for(const readerRoleId of data.readerRoles){
-          const role:Role = await roleUseCases.get(readerRoleId, user);
-          if(await userUseCases.isMemberOf(role.key,user,user)){
-            isExplicitReader = true;
-            break;
+      if(!isExplicitReader)
+      {
+        if(data.visibility === DocumentVisibility.public) {
+          isExplicitReader = true
+        } else if(data.visibility === DocumentVisibility.protected){
+          isExplicitReader = await userUseCases.isValidUser(user);
+        } else if(data.visibility === DocumentVisibility.private){
+          const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
+          const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
+          for(const readerRoleId of data.readerRoles){
+            const role:Role = await roleUseCases.get(readerRoleId, user);
+            if(await userUseCases.isMemberOf(role.key,user,user)){
+              isExplicitReader = true;
+              break;
+            }
           }
         }
       }
       return isExplicitReader || (await this.isUserEditor(data, user))
     }
-    return false;
+    return data.visibility === DocumentVisibility.public;
   }
 
   private async isUserEditor(data: Document, user: any):Promise<boolean> {

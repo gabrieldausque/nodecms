@@ -1,8 +1,6 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {ChannelPost} from "../../../entities/ChannelPost";
+import {ChannelPost, Channel, isNumber} from "@nodecms/backend-data";
 import {ChannelPostStorage} from "./ChannelPostStorage";
-import {Channel} from "../../../entities/Channel";
-import {isNumber} from "../../../helpers";
 
 export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> implements ChannelPostStorage {
 

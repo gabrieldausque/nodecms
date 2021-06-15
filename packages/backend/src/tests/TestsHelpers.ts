@@ -12,7 +12,7 @@ import {EncryptionPlugin} from "../plugins/Encryption/EncryptionPlugin";
 import axios from "axios";
 import {MongoDbChannelStorage} from "../plugins/Storages/Channel/MongoDbChannelStorage";
 import {MongoDbChannelPostStorage} from "../plugins/Storages/Channel/MongoDbChannelPostStorage";
-import {ChannelVisibility} from "../entities/Channel";
+import {ChannelVisibility} from "@nodecms/backend-data";
 import {MongoDbDocumentStorage} from "../plugins/Storages/Document/MongoDbDocumentStorage";
 
 export function getUrl(pathname?: string, host?:string, port?:number):string {
@@ -176,7 +176,9 @@ export async function initMongoDbTestDatabase():Promise<void> {
     editorRoles: [],
     visibility: 'public',
     content: { prop: 'MyContentProp'},
-    key: 'welcome'
+    key: 'welcome',
+    creationDate: new Date(),
+    updateDate: new Date()
   })
 
   await documentStorage.create({
@@ -188,7 +190,9 @@ export async function initMongoDbTestDatabase():Promise<void> {
     editorRoles: [1],
     visibility: 'protected',
     content: { prop: 'MyContentPropProtected'},
-    key: 'welcomeProtected'
+    key: 'welcomeProtected',
+    creationDate: new Date(),
+    updateDate: new Date()
   })
 
   await documentStorage.create({
@@ -200,7 +204,9 @@ export async function initMongoDbTestDatabase():Promise<void> {
     editorRoles: [0],
     visibility: 'private',
     content: { prop: 'MyContentPropPrivate'},
-    key: 'welcomePrivate'
+    key: 'welcomePrivate',
+    creationDate: new Date(),
+    updateDate: new Date()
   })
 }
 

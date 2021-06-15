@@ -1,7 +1,6 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {Role} from "../../../entities/Role";
-import {isNumber} from "../../../helpers";
-import {Authorization} from "../../../entities/Authorization";
+import {Role} from "@nodecms/backend-data";
+import {isNumber} from "@nodecms/backend-data";
 
 export class MongoDbRoleStorage extends MongoDbStorage<Role> {
 

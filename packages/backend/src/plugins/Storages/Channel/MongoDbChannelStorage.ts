@@ -1,8 +1,6 @@
 import {MongoDbStorage} from "../MongoDbStorage";
-import {Channel} from "../../../entities/Channel";
+import {Channel, isNumber, NotFoundError} from "@nodecms/backend-data";
 import {ChannelStorage} from "./ChannelStorage";
-import {isNumber} from "../../../helpers";
-import {NotFoundError} from "../../../entities/Errors/NotFoundError";
 
 export class MongoDbChannelStorage extends MongoDbStorage<Channel> implements ChannelStorage {
 

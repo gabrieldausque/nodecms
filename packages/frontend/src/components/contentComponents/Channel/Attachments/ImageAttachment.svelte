@@ -1,13 +1,16 @@
 <script>
-    import {AttachmentHelpers} from "../../../../api/AttachmentHelpers";
-    import {beforeUpdate, onMount} from "svelte";
+    import {AttachmentHelpers} from "@nodecms/backend-client";
+    import {beforeUpdate, onMount, createEventDispatcher} from "svelte";
     import {writable} from 'svelte/store';
     import LoadingAttachment from "./LoadingAttachment.svelte";
-    import {getBackendClient} from "../../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
+
+    const dispatch = createEventDispatcher();
 
     export let attachment
     let media;
     const mediaStore = writable({});
+
     mediaStore.subscribe((value) => {
         if(!media || media.id !== value.id)
             media = value;
@@ -17,6 +20,7 @@
         if(!media || media.key !== attachment){
             const backendClient = await getBackendClient();
             const m = await backendClient.mediaService.getMedia(attachment);
+
             mediaStore.set(m);
         }
     }
@@ -46,5 +50,10 @@
 {#if !media}
     <LoadingAttachment attachment={attachment}></LoadingAttachment>
 {:else if typeof media.id === 'number'}
-    <div id="image-{attachment}" class="attachment-image" style="background-image: {AttachmentHelpers.getImageUrl(media)}"></div>
+    <div on:click={(event) => {
+        dispatch('click', event);
+    }} data-media-key="{media.key}"
+         id="image-{attachment}"
+         class="attachment-image"
+         style="background-image: {AttachmentHelpers.getImageUrl(media)}"></div>
 {/if}

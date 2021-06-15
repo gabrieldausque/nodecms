@@ -9,10 +9,10 @@
     "feathers"
   ],
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Gabriel DAUSQUE",
+    "email": "gabrieldausque.pro@gmail.com"
   },
-  "contributors": [],
+  "contributors": ["gabrieldausque.pro@gmail.com"],
   "bugs": {},
   "directories": {
     "lib": "src",
@@ -39,7 +39,7 @@
     "coverage": "nyc --reporter=cobertura ts-mocha \"test/**/*.ts\" --recursive --exit",
     "build": "node_modules/.bin/shx rm -rf dist/ && tsc ",
     "dev-backend": "npm run dev",
-    "init-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js"
+    "init-db": "shx cp ./public/a-team_logo.png ./uploads/a-team_logo.png && mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./data/initMongoDb.js"
   },
   "standard": {
     "env": [
@@ -55,8 +55,10 @@
     "@feathersjs/feathers": "^4.5.10",
     "@feathersjs/socketio": "^4.5.10",
     "@feathersjs/transport-commons": "^4.5.10",
-    "@hermes/composition": "^1.0.8",
-    "@hermes/topicservice": "^1.0.31",
+    "@hermes/composition": "^2.0.9",
+    "@hermes/topicservice": "^2.0.9",
+    "@nodecms/backend-data": "*",
+    "@nodecms/backend-data-rules": "*",
     "abstract-blob-store": "^3.3.5",
     "fs-blob-store": "^6.0.0",
     "multer": "^1.4.2",
@@ -89,7 +91,7 @@
     "@types/uuid": "^8.3.0",
     "@types/multer": "^1.4.5",
     "@types/jsdom": "^16.2.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^7.2.0",
@@ -101,7 +103,7 @@
     "ts-mocha": "^7.0.0",
     "ts-node-dev": "^1.0.0",
     "tslint": "^6.1.2",
-    "typescript": "^3.9.6",
+    "typescript": "^4.3.2",
     "config": "^3.3.2",
     "nyc": "^15.1.0"
   }

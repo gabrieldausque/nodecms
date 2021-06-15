@@ -1,14 +1,12 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
 import {MediaStorage} from "./MediaStorage";
-import {Media} from "../../../entities/Media";
+import {Media, isNumber} from "@nodecms/backend-data";
 import * as fs from "fs";
 import {promisify} from 'util';
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 import {v4} from 'uuid';
-
-import {isNumber} from "../../../helpers";
-import {MediaRules} from "../../../entities/MediaRules";
+import {MediaRules} from "@nodecms/backend-data-rules";
 
 export interface MongoDbMediaStorageConfiguration extends MongoDbStorageConfiguration {
   fsStore:string
@@ -64,7 +62,8 @@ export class MongoDbMediaStorage extends MongoDbStorage<Media> implements MediaS
         mediaType: data.mediaType,
         ownerId: data.ownerId,
         storagePath: path,
-        readers: data.readers
+        readers: data.readers,
+        tags: data.tags
       }
       await this.internalCreate(newMedia);
     } else {
@@ -157,9 +156,11 @@ export class MongoDbMediaStorage extends MongoDbStorage<Media> implements MediaS
     throw new Error(`No media with key or id ${keyOrId}.`)
   }
 
-  update(data: Media, collectionName?: string): Promise<Media> {
-    this.checkFileStore();
-    throw new Error('Not Implemented')
+  async update(data: Media, collectionName?: string): Promise<Media> {
+    await this.internalUpdate(data)
+    return (await this.find({
+      key: data.key
+    }))[0];
   }
 
 }

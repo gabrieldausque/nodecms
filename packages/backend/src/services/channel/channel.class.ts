@@ -1,15 +1,15 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {Channel as ChannelEntity, ChannelVisibility} from '../../entities/Channel'
+import {Channel as ChannelEntity, ChannelVisibility} from '@nodecms/backend-data'
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {NotAcceptable, NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {globalInstancesFactory} from "@hermes/composition";
 import {TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
-import {User as UserEntity, User} from "../../entities/User";
-import {isNumber} from "../../helpers";
-import {NotFoundError} from "../../entities/Errors/NotFoundError";
-import {AlreadyExistsError} from "../../entities/Errors/AlreadyExistsError";
+import {User as UserEntity, User} from "@nodecms/backend-data";
+import {isNumber} from "@nodecms/backend-data";
+import {NotFoundError} from "@nodecms/backend-data";
+import {AlreadyExistsError} from "@nodecms/backend-data";
 
 type ChannelDTO = Partial<ChannelEntity>;
 

@@ -1,5 +1,5 @@
 import {Storage} from "../Storage";
-import {Authorization} from "../../../entities/Authorization";
+import {Authorization} from "@nodecms/backend-data";
 
 export interface AuthorizationStorage extends Storage<Authorization> {
   exists(keyOrId:string | number | Authorization):Promise<boolean>;

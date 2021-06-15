@@ -1,16 +1,13 @@
 <script>
     import {onMount} from "svelte";
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
-    import {channelsEventNames} from "../../../api/ChannelsService";
-    import {globalFEService} from "../../../FEServices";
-    import {AttachmentHelpers} from "../../../api/AttachmentHelpers";
-    import {ChannelContent, ChannelStore} from "../../../stores/ChannelStore";
-    import {ActivePostStore} from "../../../stores/ActivePostStore";
-    import {Helpers} from "../../../helpers/Helpers";
+    import {channelsEventNames} from "@nodecms/backend-client";
 
     export let properties;
     let availableChannels = [];
+    let ActivePost;
+    let Channel;
 
     onMount(async () => {
         const backEndService = await getBackendClient();
@@ -137,67 +134,7 @@
 
     async function changeCurrentChannel(channelKey) {
         if(channelKey){
-            const backendClient = await getBackendClient();
-            const newChannelContentStore = new ChannelContent();
-            newChannelContentStore.key = channelKey;
-            newChannelContentStore.channel = await backendClient.channelsService.getChannel(channelKey);
-
-            await backendClient.channelsService.subscribeToChannel(newChannelContentStore.channel.key, (async (mc) => {
-                if(mc.content){
-                    await Helpers.preloadContentPreview(mc.content)
-                }
-                if(Array.isArray(mc.attachments) && mc.attachments.length > 0){
-                    const attachmentsMetadata = [];
-                    for(const a of mc.attachments){
-                        const m = await backendClient.mediaService.getMediaMetadata(a);
-                        attachmentsMetadata.push(m);
-                    }
-                    mc.attachments = attachmentsMetadata;
-                }
-                if(typeof mc.parentPost === 'number'){
-                    const parentPost = $ChannelStore.posts.find(p => p.id === mc.parentPost);
-                    if(parentPost){
-                        parentPost.answerCount = parentPost.answerCount?parentPost.answerCount+1:1;
-                        if($ActivePostStore && $ActivePostStore.parentPost && $ActivePostStore.parentPost.id === mc.parentPost){
-                            ActivePostStore.update(aps => {
-                                aps.parentPost = parentPost;
-                                return aps;
-                            })
-                        }
-                    }
-                }
-                mc.isNew = true;
-                ChannelStore.update(cs => {
-                    cs.posts.push(mc);
-                    return cs;
-                })
-            }))
-
-
-            newChannelContentStore.posts = await backendClient.channelsService.getChannelPosts(channelKey);
-            newChannelContentStore.posts.sort((p1, p2) => {
-                if(p1.id > p2.id)
-                    return 1;
-                if(p1.id < p2.id)
-                    return -1;
-                return 0;
-            })
-            for(const p of newChannelContentStore.posts) {
-                if(p.content){
-                    await Helpers.preloadContentPreview(p.content)
-                }
-                if(Array.isArray(p.attachments) && p.attachments.length > 0){
-                    const attachmentsMetadata = [];
-                    for(const a of p.attachments){
-                        const m = await backendClient.mediaService.getMediaMetadata(a);
-                        attachmentsMetadata.push(m);
-                    }
-                    p.attachments = attachmentsMetadata;
-                }
-
-            }
-            ActivePostStore.set(undefined);
-            ChannelStore.set(newChannelContentStore);
+            Channel = channelKey
         }
     }
 
@@ -207,6 +144,8 @@
     .channelPanel {
         display: flex;
         height: 100%;
+        width: 100%;
+        max-height: calc(100vh - 71px);
     }
     .channelsMenu {
         flex-grow: 1;
@@ -266,7 +205,9 @@
             {/each}
         </ul>
     </div>
-    <ContentChannelContainer ></ContentChannelContainer>
+    <ContentChannelContainer ActivePostStore={undefined} properties={{
+        channelKey : Channel
+    }}></ContentChannelContainer>
 </main>
 
 <div id="CreateChannelModal" class="modal fade" data-keyboard="false">
@@ -287,21 +228,21 @@
                 <form id="CreateChannelForm" class="">
                     <div class="mb-3">
                         <label for="channelLabel">Label</label>
-                        <input on:change={onLabelChanged} class="form-control" id="channelLabel" name="channelLabel" type="text" required>
+                        <input on:blur={onLabelChanged} class="form-control" id="channelLabel" name="channelLabel" type="text" required>
                         <div class="invalid-feedback">
                             Le label ne peut pas être vide.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="channelKey">Clé unique du canal</label>
-                        <input on:change={onKeyChanged} class="form-control" id="channelKey" name="channelKey" type="text" required>
+                        <input on:blur={onKeyChanged} class="form-control" id="channelKey" name="channelKey" type="text" required>
                         <div class="invalid-feedback">
                             La clé ne peut pas être vide ou un canal avec la même clé existe déjà.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="channelVisibility">Visibilité</label>
-                        <select on:change={onVisibilityChanged} class="form-select" id="channelVisibility" name="channelVisibility" required title="Un canal privé n'est accessible et visible que par ses membres">
+                        <select on:blur={onVisibilityChanged} class="form-select" id="channelVisibility" name="channelVisibility" required title="Un canal privé n'est accessible et visible que par ses membres">
                             <option value="private" >Privé</option>
                             <option value="protected" >Protégé</option>
                             <option value="public">Public</option>

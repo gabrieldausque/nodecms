@@ -1,34 +1,18 @@
 <script>
-    import {afterUpdate, beforeUpdate, onMount} from "svelte";
-    import ImageAttachment from "./Attachments/ImageAttachment.svelte";
-    import DownloadAttachment from "./Attachments/DownloadAttachment.svelte";
-    import VideoAttachment from "./Attachments/VideoAttachment.svelte";
-    import AudioAttachment from "./Attachments/AudioAttachment.svelte";
+    import {afterUpdate, createEventDispatcher} from "svelte";
     import {globalFEService} from "../../../FEServices";
-    import {ActivePostStore, PostWithChildren} from "../../../stores/ActivePostStore";
-    import {ChannelStore} from "../../../stores/ChannelStore";
+    import {PostWithChildren} from "../../../stores/ActivePostStore";
     import {Helpers} from "../../../helpers/Helpers";
     import { fade } from 'svelte/transition';
 
     export let post;
 
+    const dispatch = createEventDispatcher();
+
     function createHtmlContent(content) {
         const element = document.createElement('div');
         element.innerHTML = content;
         return element.outerHTML;
-    }
-
-    function getAttachmentComponent(attachmentMediaType) {
-        if(attachmentMediaType){
-            if(attachmentMediaType.indexOf('image') >= 0){
-                return ImageAttachment;
-            } else if (attachmentMediaType.indexOf('video') >= 0) {
-                return VideoAttachment;
-            } else if (attachmentMediaType.indexOf('audio') >= 0) {
-                return AudioAttachment;
-            }
-        }
-        return DownloadAttachment;
     }
 
     afterUpdate(() => {
@@ -58,8 +42,7 @@
     async function onAnswerClick(event){
         const postWithChildren = new PostWithChildren();
         postWithChildren.parentPost = post;
-
-        ActivePostStore.set(postWithChildren);
+        post.isNew = false;
         const backendClient = await getBackendClient();
         const children = await backendClient.channelsService.getChildrenPosts(post.channelKey, post.id);
         for(const p of children){
@@ -75,28 +58,8 @@
                 p.attachments = attachmentsMetadata;
             }
         }
-        ChannelStore.update((cs) => {
-            try{
-                if(Array.isArray(children)){
-                    for(const pc of children) {
-                        if(!cs.posts.find(p => p.id === pc.id)){
-                            cs.posts.push(pc);
-                        }
-                    }
-                    cs.posts.sort((p1,p2) => {
-                        if(p1.id > p2.id)
-                            return 1;
-                        if(p1.id < p2.id)
-                            return -1;
-                        return 0;
-                    })
-                }
-            }catch(error) {
-                console.log(error);
-            }
-
-            return cs;
-        })
+        postWithChildren.posts = children;
+        dispatch('answer-clicked', postWithChildren);
     }
 
 </script>
@@ -145,9 +108,13 @@
         max-width: calc(100% - 15px);
     }
 
+    .new-post {
+        font-weight:bold;
+    }
+
 </style>
 
-<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post" in:fade>
+<div id={ (post && typeof post.id === 'number')?`post-${post.id}`:null } class="post" class:new-post={post.isNew} in:fade>
     <div class="author">
         <i class="fas fa-user-circle fa-3x"></i>
         <span>{post.author.login}</span>
@@ -193,7 +160,7 @@
         {@html createHtmlContent(post.content)}
         {#if Array.isArray(post.attachments) && post.attachments.length > 0}
             {#each post.attachments as attachmentKey}
-                <svelte:component this={getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
+                <svelte:component this={Helpers.getAttachmentComponent(attachmentKey.mediaType)} attachment={attachmentKey.key}/>
             {/each}
         {/if}
         <div class="postMetadata">

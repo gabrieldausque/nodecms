@@ -1,6 +1,6 @@
 <script>
 
-    import {getBackendClient} from "../../../api/NodeCMSClient";
+    import {getBackendClient} from "@nodecms/backend-client";
     import {afterUpdate, getContext, onMount} from "svelte";
     import {FEServices, globalFEService} from "../../../FEServices";
 
@@ -46,7 +46,7 @@
                             mediaReaders.push(...channel.contributors)
                         if(Array.isArray(channel.readers))
                             mediaReaders.push(...channel.readers)
-                        media = await backEndService.mediaService.createMedia(file, key, label, visibility, mediaReaders);
+                        media = await backEndService.mediaService.createMedia(file, key, label, visibility,[], mediaReaders);
                     }
                     media = await backEndService.mediaService.getMediaMetadata(key);
                 } catch(error) {
@@ -68,14 +68,16 @@
                 const blob = new Blob([localBuffer], { type: media.mediaType});
                 div.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
             } else {
-                const fileIcon = document.createElement('i');
-                fileIcon.classList.add('fas');
-                fileIcon.classList.add('fa-2x');
-                fileIcon.classList.add(icons[media.mediaType]?icons[media.mediaType]:icons.default);
-                div.prepend(fileIcon);
+                if(!div.querySelector('i.fas')){
+                    const fileIcon = document.createElement('i');
+                    fileIcon.classList.add('fas');
+                    fileIcon.classList.add('fa-2x');
+                    fileIcon.classList.add(icons[media.mediaType]?icons[media.mediaType]:icons.default);
+                    div.prepend(fileIcon);
+                }
             }
         } else if(error) {
-
+            //Do nothing
         }
     })
 
