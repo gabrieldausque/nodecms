@@ -58,34 +58,49 @@
         width: 100%;
         height: 100%;
     }
-    .container-content > main {
+
+    .container-content > main,
+    .container-content > header,
+    .container-content > footer
+    {
         flex-grow: 1;
-        height: 100%;
+        height: auto;
         scrollbar-width:none;
         display: flex;
         flex-direction: column;
         width: 100%;
     }
 
-    .container-content > main::-webkit-scrollbar {
+    .container-content > main::-webkit-scrollbar,
+    .container-content > header::-webkit-scrollbar,
+    .container-content > footer::-webkit-scrollbar {
         display: none;
     }
 
     :global(.container-content > .container) {
-        overflow: visible;
+        overflow: scroll;
     }
 
     :global(.container-content > .container > div.row) {
         display: flex;
-        flex-grow: 1;
     }
 
     :global(.container-content > .container > div.row > div.col) {
         padding: 0;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
     }
+
+    .document-header {
+        min-height: 150px;
+    }
+
+    .document-footer {
+        min-height: 50px;
+    }
+
 </style>
 
 {#if properties}
@@ -94,10 +109,10 @@
         {#if typeof properties.content.globalStyle === "string"}
             {@html Helpers.styleOpeningLabel + properties.content.globalStyle + Helpers.styleClosingLabel}
         {/if}
-        <header class="{(properties.content.layout &&
+        {#if Array.isArray(properties.content.headers) && properties.content.headers.length > 0}
+            <header class="{(properties.content.layout &&
                      properties.content.layout.headers &&
                      properties.content.layout.headers.type === 'grid')?'container':''} document-section document-header">
-        {#if Array.isArray(properties.content.headers) && properties.content.headers.length > 0}
             {#if properties.content.layout &&
             properties.content.layout.headers &&
             properties.content.layout.headers.type === 'grid'}
@@ -115,8 +130,8 @@
                     <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
             {/if}
+            </header>
         {/if}
-        </header>
         <main class="{(properties.content.layout &&
                      properties.content.layout.bodies &&
                      properties.content.layout.bodies.type === 'grid')?'container':''} document-section document-main">
@@ -140,10 +155,10 @@
                 {/if}
             {/if}
         </main>
-        <footer class="{(properties.content.layout &&
+        {#if Array.isArray(properties.content.footers) && properties.content.footers.length > 0}
+            <footer class="{(properties.content.layout &&
                      properties.content.layout.footers &&
                      properties.content.layout.footers.type === 'grid')?'container':''} document-section document-footer">
-        {#if Array.isArray(properties.footers) && properties.footers.length > 0}
             {#if properties.content.layout &&
             properties.content.layout.footers &&
             properties.content.layout.footers.type === 'grid'}
@@ -161,8 +176,8 @@
                     <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
             {/if}
+            </footer>
         {/if}
-        </footer>
     {/if}
 </div>
 {/if}

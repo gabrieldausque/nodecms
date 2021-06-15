@@ -291,7 +291,7 @@
 
     .media-action > span {
         padding: 5px;
-        font-size: 0.7rem;
+        font-size: 15px;
     }
 
 </style>

@@ -92,14 +92,14 @@
 
     #document {
         width: calc(100vw - 120px);
-        height: 100%;
-        min-height: 100%;
+        height: calc(100% - 74px);
     }
 
     .documentEditorContent {
         overflow-y: auto;
         overflow-x: hidden;
-        height: calc(100% - 50px);
+        height: calc(100vh - 125px);
+        max-height: calc(100vh - 125px);
     }
 
     .documentEditorMenuBar {

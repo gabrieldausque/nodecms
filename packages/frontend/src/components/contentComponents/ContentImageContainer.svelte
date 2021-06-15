@@ -42,6 +42,10 @@ properties.content : an html content to be added in the image div
     .default-image-container {
         width:100%;
         height:100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        min-height:150px;
     }
 </style>
 

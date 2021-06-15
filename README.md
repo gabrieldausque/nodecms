@@ -6,19 +6,27 @@ See [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/eng
 
 ## Install docker compose
 
+## Install mongo client 
+
 ## Install mongodb with docker compose
 
 cf backend docker_mongodbbackend.yaml
+
+## Create uploads directory
+
+Create uploads directory under <project root>\packages\backend.
+
+## etc/host modification
+
+add/modify this line in /etc/hosts
+127.0.1.1       <your localhost name> frontend.myhost.domain:
 
 ## Apache configuration : 
 
 ### activate modules
 
 ```
-a2enmod ssl
-a2enmod proxy
-a2enmod proxy_http
-a2enmod proxy_wstunnel
+a2enmod ssl rewrite proxy proxy_http proxy_wstunnel  
 ```
 
 ### create a certificate : 
@@ -68,6 +76,7 @@ copy certificate to a etc/ssl/certs
 sudo cp server.crt /etc/ssl/certs
 
 copy new.cert.key to /etc/ssl/private server.key
+sudo cp new.cert.key /etc/ssl/private/server.key
 
 ### create apache conf file
 

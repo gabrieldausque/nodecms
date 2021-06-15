@@ -179,6 +179,18 @@ export class Helpers {
                         return -1;
                     return 0;
                 })
+                for(const c of row){
+                    if(!(typeof c.properties.row === 'number')){
+                        c.properties.row = rowIndex
+                    }
+                    if((!(typeof c.properties.col === 'number'))) {
+                        if(typeof c.properties.order === 'number') {
+                            c.properties.col = c.properties.order;
+                        }
+                    } else {
+                        c.properties.col = row.indexOf(c);
+                    }
+                }
                 rows.push(row)
             }
         }
