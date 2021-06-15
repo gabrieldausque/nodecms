@@ -11,6 +11,10 @@ teamADb.createUser({
     {
       role:"readWrite",
       db:"teama"
+    },
+    {
+      role:"readWrite",
+      db:"teama_test"
     }
   ],
   passwordDigestor:"server"

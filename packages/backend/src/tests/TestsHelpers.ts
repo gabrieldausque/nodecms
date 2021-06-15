@@ -37,7 +37,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
   const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb', config.get('storage.channelPosts').configuration);
   const documentStorage:MongoDbDocumentStorage = globalInstancesFactory.getInstanceFromCatalogs('DocumentStorage', 'MongoDb', config.get('storage.documents').configuration);
 
-  const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017", {
+  const mongoDbClient = new MongoClient("mongodb://root:Mbhj#ksf1445Mbfgqg@localhost:27017", {
     useUnifiedTopology:true
   });
   await mongoDbClient.connect();

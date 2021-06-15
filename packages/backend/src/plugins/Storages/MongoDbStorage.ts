@@ -39,7 +39,12 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected async init() {
     if(!this.mongoClient.isConnected()){
-      await this.mongoClient.connect();
+      try{
+        await this.mongoClient.connect();
+      }catch(err){
+        console.log(err);
+      }
+
     }
   }
 
