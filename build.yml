@@ -29,8 +29,8 @@ resources:
       ports:
         - 27017:27017
       env:
-        MONGO_INITDB_ROOT_USERNAME: admin_teama
-        MONGO_INITDB_ROOT_PASSWORD: admin
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: Mbhj#ksf1445Mbfgqg
 
 pool:
   vmImage: 'ubuntu-latest'
