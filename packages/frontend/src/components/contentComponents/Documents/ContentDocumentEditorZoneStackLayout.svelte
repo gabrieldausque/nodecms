@@ -18,11 +18,20 @@
         }
         const zone = event.target.getAttribute('data-zone');
         EditableDocumentStore.update(eds => {
-            console.log('before update ')
             if(!Array.isArray(eds.document.content[zone])){
                 eds.document.content[zone] = [];
             }
-            eds.document.content[zone].push(newBlock);
+            eds.document.content[zone].sort((c1, c2) => {
+                if(c1.order > c2.order)
+                    return 1;
+                if(c1.order < c2.order)
+                    return -1;
+                return 0;
+            })
+            eds.document.content[zone].splice(newBlock.order, 0, newBlock);
+            for(let index = 0; index < eds.document.content[zone].length; index++){
+                eds.document.content[zone][index].order = index;
+            }
             return eds;
         })
     }
@@ -45,12 +54,14 @@
         if(c1.order < c2.order)
             return -1;
         return 0;
-    }) as component}
-        <BlockDropZone zone={zone}
-                       isBefore={true}
-                       order={typeof component.order === 'number'?component.order - 1:0}
-                       on:drop={onDropComponent}
-        ></BlockDropZone>
+    }) as component, index}
+        {#if index === 0}
+            <BlockDropZone zone={zone}
+                           isBefore={true}
+                           order={typeof component.order === 'number'?component.order - 1:0}
+                           on:drop={onDropComponent}
+            ></BlockDropZone>
+        {/if}
         <BlockEditor component={component} zone="{zone}"></BlockEditor>
         <BlockDropZone zone={zone}
                        order={typeof component.order === 'number'?component.order + 1:1}
