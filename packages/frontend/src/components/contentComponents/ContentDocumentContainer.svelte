@@ -83,6 +83,7 @@
 
     :global(.container-content > .container > div.row) {
         display: flex;
+        flex-grow: 1;
     }
 
     :global(.container-content > .container > div.row > div.col) {

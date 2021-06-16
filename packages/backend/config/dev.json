@@ -13,7 +13,7 @@
     "authorization" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -23,7 +23,7 @@
     "users" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -34,7 +34,7 @@
     "metadata" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -44,7 +44,7 @@
     "roles" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -54,7 +54,7 @@
     "channels" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -64,7 +64,7 @@
     "channelPosts" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -74,7 +74,7 @@
     "media" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
@@ -85,7 +85,7 @@
     "documents" : {
       "contractName": "MongoDb",
       "configuration" : {
-        "mongodbUrl": "localhost:27017/teama",
+        "mongodbUrl": "localhost:27017",
         "mongodbUser": "admin_teama",
         "mongodbPassword": "jfkbqsgbEGQ#dd54qfdgb",
         "dbName": "teama",
