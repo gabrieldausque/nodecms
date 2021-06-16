@@ -114,7 +114,33 @@ steps:
     command: publish
     publishRegistry: useFeed
     publishFeed: Team A - Professional Network Tool/nodecms
+    workingDir: $(Build.Repository.LocalPath)/packages/backend-data
+
+- task: Npm@1
+  displayName: Backend npm publication
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishRegistry: useFeed
+    publishFeed: Team A - Professional Network Tool/nodecms
+    workingDir: $(Build.Repository.LocalPath)/packages/backend-data-rules
+- task: Npm@1
+  displayName: Backend npm publication
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishRegistry: useFeed
+    publishFeed: Team A - Professional Network Tool/nodecms
     workingDir: $(Build.Repository.LocalPath)/packages/backend
+
+- task: Npm@1
+  displayName: Backend npm publication
+  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
+  inputs:
+    command: publish
+    publishRegistry: useFeed
+    publishFeed: Team A - Professional Network Tool/nodecms
+    workingDir: $(Build.Repository.LocalPath)/packages/backend-client
 
 - task: Npm@1
   displayName: Frontend npm publication
@@ -124,27 +150,3 @@ steps:
     publishRegistry: useFeed
     publishFeed: Team A - Professional Network Tool/nodecms
     workingDir: $(Build.Repository.LocalPath)/packages/frontend
-
-- task: UniversalPackages@0
-  displayName: Publish backend assets to azure artifacts server
-  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
-  inputs:
-    command: publish
-    publishDirectory: $(Build.Repository.LocalPath)/packages/backend/dist
-    vstsFeedPublish: Team A - Professional Network Tool/nodecms
-    vstsFeedPackagePublish: nodecms-backend
-    versionOption: custom
-    versionPublish: $(semverPrefix).$(semanticVersion)
-    packagePublishDescription:  Node CMS backend v0.X
-
-- task: UniversalPackages@0
-  displayName: Publish frontend assets to azure artifacts server
-  condition: in(variables['Build.Reason'], 'Manual', 'Schedule')
-  inputs:
-    command: publish
-    publishDirectory: $(Build.Repository.LocalPath)/packages/frontend/public
-    vstsFeedPublish: Team A - Professional Network Tool/nodecms
-    vstsFeedPackagePublish: nodecms-frontend
-    versionOption: custom
-    versionPublish: $(semverPrefix).$(semanticVersion)
-    packagePublishDescription:  Node CMS backend v0.X
