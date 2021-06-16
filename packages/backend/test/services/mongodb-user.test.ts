@@ -89,7 +89,8 @@ describe('User service', () => {
     expect(user).to.be.eql({
       id: 0,
       isActive: true,
-      login: 'localtest'
+      login: 'localtest',
+      password: '***'
     })
   })
 
@@ -104,7 +105,8 @@ describe('User service', () => {
     expect(response.data).to.be.eql({
       id: 0,
       isActive: true,
-      login: 'localtest'
+      login: 'localtest',
+      password: '***'
     })
   })
 

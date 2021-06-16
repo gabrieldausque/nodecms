@@ -63,7 +63,6 @@ describe('Authentication service With Mongodb', () => {
   })
 
   beforeEach(async () => {
-    await initMongoDbTestDatabase();
   })
 
   after((done) => {

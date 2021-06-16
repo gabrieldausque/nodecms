@@ -28,7 +28,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected constructor(configuration:MongoDbStorageConfiguration, logger?:Logger) {
     super(configuration);
-    this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}`;
+    this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}/${configuration.dbName}`;
     this.mongoClient = new MongoClient(this.mongodbConnexionString, {
       useUnifiedTopology: true,
     })
