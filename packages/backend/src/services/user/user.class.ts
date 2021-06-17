@@ -4,13 +4,16 @@ import {BaseService, BaseServiceConfiguration} from '../BaseService';
 import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
 import {User as UserEntity} from "@nodecms/backend-data";
+import {UserEntityRules} from "@nodecms/backend-data-rules";
 
 export type UserDTO = Partial<UserEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
 }
 
-export class User extends BaseService<UserDTO, UserUseCases>  {
+export class User extends BaseService<UserDTO,
+  UserEntityRules,
+  UserUseCases>  {
 
   options: ServiceOptions;
 

@@ -8,6 +8,7 @@ import {NotAcceptable, NotAuthenticated, NotFound} from "@feathersjs/errors";
 import {isNumber} from "@nodecms/backend-data";
 import { TopicService, TopicServiceConfiguration } from '@hermes/topicservice';
 import { globalInstancesFactory } from '@hermes/composition';
+import {DocumentRules} from "@nodecms/backend-data-rules";
 
 type DocumentDTO = Partial<DocumentEntity>
 
@@ -18,7 +19,7 @@ interface ServiceOptions extends BaseServiceConfiguration {
   }
 }
 
-export class Document extends BaseService<DocumentDTO, DocumentUseCases> {
+export class Document extends BaseService<DocumentDTO, DocumentRules, DocumentUseCases> {
 
   options: ServiceOptions;
   private topicService: TopicService;

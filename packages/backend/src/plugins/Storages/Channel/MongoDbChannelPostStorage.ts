@@ -87,7 +87,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
     throw new Error(`Channel post with key or id ${keyOrId} doesn't exists`);
   }
 
-  update(data: ChannelPost, channelName?:string): Promise<ChannelPost> {
+  update(data: Partial<ChannelPost>, channelName?:string): Promise<ChannelPost> {
     throw new Error('Not implemented')
   }
 

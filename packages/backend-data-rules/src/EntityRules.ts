@@ -26,10 +26,10 @@ export abstract class EntityRules<T extends Entity> {
   public async validateForRead(entity:T):Promise<void> {
   };
 
-  public async validate(entity:T):Promise<void> {
+  public async validate(entity:Partial<T>):Promise<void> {
   };
 
-  public async validateForUpdate(entity:T):Promise<void> {
+  public async validateForUpdate(entity:Partial<T>):Promise<void> {
   };
 
 }

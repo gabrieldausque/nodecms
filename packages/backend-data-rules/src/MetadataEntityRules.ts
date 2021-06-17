@@ -4,7 +4,7 @@ import {Metadata} from "@nodecms/backend-data";
 
 export class MetadataEntityRules extends EntityRules<Metadata> {
 
-  validateKey(key:string):boolean {
+  validateKey(key:string = ''):boolean {
     const regexp = /[a-zA-Z0-9_\-]{3,}/g
     if(!regexp.test(key)) {
       throw new Error('Key must be 3 characters length minimum, using letters, numbers, "-" or "_"');
@@ -12,7 +12,7 @@ export class MetadataEntityRules extends EntityRules<Metadata> {
     return true;
   }
 
-  convertFilter(filter: Metadata):Metadata {
+  convertFilter(filter: Partial<Metadata>):Partial<Metadata> {
     const regexpIsNumber = /^[0-9]+$/g
     if(filter.id && regexpIsNumber.test(filter.id.toString())) {
       filter.id = parseInt(filter.id.toString());
@@ -24,7 +24,7 @@ export class MetadataEntityRules extends EntityRules<Metadata> {
     return filter;
   }
 
-  convert(metadata: Metadata) {
+  convert(metadata: Partial<Metadata>) {
     this.validateKey(metadata.key);
     if(metadata.ownerType) {
       metadata.ownerType = metadata.ownerType.toLowerCase();

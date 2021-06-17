@@ -1,7 +1,11 @@
 import {UseCases} from "./UseCases";
 import {UserEvent} from "@nodecms/backend-data";
+import {UserEventEntityRules} from "@nodecms/backend-data-rules/dist/UserEventEntityRules";
+import {UseCaseConfiguration} from "./UseCaseConfiguration";
 
-export class UserEventUseCases extends UseCases<UserEvent> {
+interface UserEventUseCasesConfiguration extends UseCaseConfiguration {};
+
+export class UserEventUseCases extends UseCases<UserEvent, UserEventEntityRules> {
 
   public static metadata:any[] = [
     {
@@ -11,4 +15,11 @@ export class UserEventUseCases extends UseCases<UserEvent> {
     }
   ]
 
+  constructor(configuration:UserEventUseCasesConfiguration) {
+    super('userEvent',
+      'UserEventStorage',
+      configuration,
+      false,
+      UserEventEntityRules);
+  }
 }

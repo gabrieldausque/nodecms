@@ -10,6 +10,7 @@ import {User as UserEntity, User} from "@nodecms/backend-data";
 import {isNumber} from "@nodecms/backend-data";
 import {NotFoundError} from "@nodecms/backend-data";
 import {AlreadyExistsError} from "@nodecms/backend-data";
+import {ChannelRules} from "@nodecms/backend-data-rules";
 
 type ChannelDTO = Partial<ChannelEntity>;
 
@@ -20,7 +21,7 @@ interface ServiceOptions extends BaseServiceConfiguration {
   }
 }
 
-export class Channel extends BaseService<ChannelDTO, ChannelUseCases> {
+export class Channel extends BaseService<ChannelDTO, ChannelRules, ChannelUseCases> {
 
   options: ServiceOptions;
   private topicService: TopicService;

@@ -42,7 +42,10 @@ export class AuthenticationUseCases extends UseCases<Authentication, Authenticat
   private tokenTTL: number;
 
   constructor(configuration:AuthenticationUseCasesConfiguration) {
-    super('authentication', 'Authentication', configuration, true);
+    super('authentication',
+      'Authentication',
+      configuration, true,
+      AuthenticationEntityRules);
     this.authorityKey = os.hostname();
     this.tokenTTL = 86400;
     this.encryptor = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', configuration.encryption.contractName, configuration.encryption.configuration);
@@ -103,7 +106,7 @@ export class AuthenticationUseCases extends UseCases<Authentication, Authenticat
 
     if(isNumber(id))
     {
-        const idAsNumber = AuthenticationEntityRules.convertId(id);
+        const idAsNumber = this.entityRules.convertId(id);
         const userUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
         const user = await userUseCase.get(id, executingUser);
         if(user){

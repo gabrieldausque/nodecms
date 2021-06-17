@@ -13,7 +13,8 @@ import {UserUseCases} from "./UserUseCases";
 interface ChannelPostUseCasesConfiguration extends UseCaseConfiguration {
 }
 
-export class ChannelPostUseCases extends UseCases<ChannelPost, ChannelPostRules> {
+export class ChannelPostUseCases extends UseCases<ChannelPost,
+  ChannelPostRules> {
 
   public static metadata:any[] = [
     {
@@ -26,7 +27,11 @@ export class ChannelPostUseCases extends UseCases<ChannelPost, ChannelPostRules>
   channelPostStorage:ChannelPostStorage;
 
   constructor(configuration:ChannelPostUseCasesConfiguration) {
-    super('channelPost','ChannelPostStorage', configuration);
+    super('channelPost',
+      'ChannelPostStorage',
+      configuration,
+      false,
+      ChannelPostRules);
     this.channelPostStorage = this.storage as ChannelPostStorage;
   }
 
@@ -36,7 +41,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost, ChannelPostRules>
     if(entity.channelKey !== channelKey){
       entity.channelKey = channelKey
     }
-    ChannelPostRules.validate(entity);
+    await this.entityRules.validate(entity);
     const created = await this.channelPostStorage.create(entity, entity.channelKey);
     if(isNumber(created.id) && typeof created.id === 'number')
       return await this.get(created.id, executingUser, channelKey);
@@ -48,7 +53,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost, ChannelPostRules>
   }
 
   async find(filter: Partial<ChannelPost>, lastIndex?:number | string, executingUser?: User, channelName?:string): Promise<ChannelPost[]> {
-    ChannelPostRules.validateFilter(filter);
+    this.entityRules.validateFilter(filter);
     if(filter && channelName){
       filter.channelKey = (filter.channelKey && filter.channelKey === channelName)?
         filter.channelKey:

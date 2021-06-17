@@ -21,10 +21,10 @@ export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
     storage:{
       contractName:'Default'
     }
-  }, noStorage:boolean = false) {
+  }, noStorage:boolean = false, entityRulesClass: (new() => ER)) {
     this.dataType = dataType;
     const entityRulesFactory = new EntityRulesFactory();
-    this.entityRules = entityRulesFactory.create<T, ER>();
+    this.entityRules = entityRulesFactory.create<T, ER>(entityRulesClass);
     if(!noStorage)
       this.storage = globalInstancesFactory.getInstanceFromCatalogs(contractType, configuration.storage.contractName, configuration.storage.configuration);
   }
@@ -49,7 +49,7 @@ export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
   }
 
   async create(entity:T, executingUser?:User): Promise<T> {
-    await this.entityRules.validate(entity, executingUser)
+    await this.entityRules.validate(entity)
     return await this.storage.create(entity);
   }
 

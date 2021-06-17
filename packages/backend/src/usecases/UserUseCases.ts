@@ -1,6 +1,6 @@
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserStorage} from '../plugins/Storages/User/UserStorage';
-import {UserEntityRules} from "@nodecms/backend-data-rules";
+import {EntityRules, EntityRulesFactory, MetadataEntityRules, UserEntityRules} from "@nodecms/backend-data-rules";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
 import {MetadataUseCases} from "./MetadataUseCases";
@@ -17,7 +17,7 @@ export interface UserUseCasesConfiguration extends UseCaseConfiguration {
 
 }
 
-export class UserUseCases extends UseCases<User> {
+export class UserUseCases extends UseCases<User, UserEntityRules> {
 
   public static metadata:any[] = [
     {
@@ -33,28 +33,32 @@ export class UserUseCases extends UseCases<User> {
       contractName:'Default'
     }
   }) {
-    super('user','UserStorage',configuration);
+    super('user',
+      'UserStorage',
+      configuration,
+      false,
+      UserEntityRules);
   }
 
   validate(data: any): User {
     if(data.id) {
-      data.id = UserEntityRules.convertId(data.id);
+      data.id = this.entityRules.convertId(data.id);
     }
 
     if(data.login) {
-      UserEntityRules.validateLogin(data.login)
+      this.entityRules.validateLogin(data.login)
     }
 
     if(data.password) {
-      UserEntityRules.validatePassword(data.password);
+      this.entityRules.validatePassword(data.password);
     }
 
     return data;
   }
 
   async create(user:Partial<User>, executingUser:User): Promise<User> {
-    UserEntityRules.validatePassword(user.password);
-    UserEntityRules.validateLogin(user.login);
+    this.entityRules.validatePassword(user.password);
+    this.entityRules.validateLogin(user.login);
     if(user.login && await this.storage.exists(user.login))
       throw new Error(`Login ${user.login} already exists. Please change.`)
     const created = await this.storage.create(user);
@@ -64,8 +68,8 @@ export class UserUseCases extends UseCases<User> {
   }
 
   async get(idOrLogin: string | number, executingUser?:User) : Promise<User> {
-    if(UserEntityRules.validateId(idOrLogin)) {
-      const id = UserEntityRules.convertId(idOrLogin);
+    if(this.entityRules.validateId(idOrLogin)) {
+      const id = this.entityRules.convertId(idOrLogin);
       return await this.storage.get(id);
     }
     return await this.storage.get(idOrLogin);
@@ -82,7 +86,7 @@ export class UserUseCases extends UseCases<User> {
 
   //TODO : create a usecase where only admin users can update the active state
   async update(id: number | string, usertoUpdate: User, executingUser:User) : Promise<User> {
-    const usableId = UserEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.')
 
@@ -111,13 +115,13 @@ export class UserUseCases extends UseCases<User> {
       ) {
         throw new Error('Only password can be updated for active user.')
       }
-      UserEntityRules.validatePassword(usertoUpdate.password);
+      this.entityRules.validatePassword(usertoUpdate.password);
     }
     return await this.storage.update(usertoUpdate);
   }
 
   async delete(id: number | string, executingUser:User): Promise<User> {
-    const usableId = UserEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for delete.')
     return await this.storage.delete(usableId)
@@ -152,15 +156,15 @@ export class UserUseCases extends UseCases<User> {
     throw new Error(`No metadata with key ${metadataKeyOrId} exists for user with id ${user.id}`);
   }
 
-  async createMetadata(user: Partial<User>, data: Metadata, executingUser:User) {
+  async createMetadata(user: Partial<User>, data: Partial<Metadata>, executingUser:User) {
     const metadataUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
-    UserEntityRules.validateMetadata(user, data);
+    this.entityRules.validateMetadata(user, data);
     return await metadataUseCase.create(data);
   }
 
   async updateMetadata(user: User, data: Metadata, executingUser:User) {
     const metadataUseCase:MetadataUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','Metadata');
-    UserEntityRules.validateMetadata(user, data);
+    this.entityRules.validateMetadata(user, data);
     return await metadataUseCase.update(data.key, data, executingUser);
   }
 

@@ -1,7 +1,7 @@
 import {EntityRules} from "./EntityRules";
 import {Authorization, isNumber} from "@nodecms/backend-data";
 
-export class AuthorizationEntityRules extends EntityRules<AuthorizationEntityRules> {
+export class AuthorizationEntityRules extends EntityRules<Authorization> {
 
   convert(entity:Partial<Authorization>):Authorization {
 

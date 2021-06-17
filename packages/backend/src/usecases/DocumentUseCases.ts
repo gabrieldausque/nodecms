@@ -22,7 +22,11 @@ export class DocumentUseCases extends UseCases<Document, DocumentRules> {
   private documentStorage: DocumentStorage;
 
   constructor(configuration:UseCaseConfiguration) {
-    super('document', 'DocumentStorage', configuration);
+    super('document',
+      'DocumentStorage',
+      configuration,
+      false,
+      DocumentRules);
     this.documentStorage = this.storage as DocumentStorage;
   }
 
