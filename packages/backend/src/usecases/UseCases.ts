@@ -1,11 +1,12 @@
 import {Storage} from "../plugins/Storages/Storage";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
-import {Entity} from "@nodecms/backend-data";
+import {DocumentVisibility, Entity, NotAuthorizedError} from "@nodecms/backend-data";
 import {AuthorizationUseCases} from "./AuthorizationUseCases";
 import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
 import {User} from "@nodecms/backend-data";
+import {DocumentRules} from "@nodecms/backend-data-rules";
 
 export abstract class UseCases<T extends Entity> {
   // @ts-ignore
@@ -22,11 +23,44 @@ export abstract class UseCases<T extends Entity> {
       this.storage = globalInstancesFactory.getInstanceFromCatalogs(contractType, configuration.storage.contractName, configuration.storage.configuration);
   }
 
-  abstract get(id : string | number, executingUser?:User) : Promise<T>;
-  abstract find(filter:Partial<T>, lastIndex?:number | string, executingUser?:User) : Promise<T[]>;
-  abstract create(entity:T, executingUser?:User): Promise<T>;
-  abstract update(id: string | number, entityToUpdate:T, executingUser?:User): Promise<T>;
-  abstract delete(id: string | number, executingUser?:User): Promise<T>;
+  async get(id : string | number, executingUser?:User) : Promise<T> {
+    const entity = await this.storage.get(id);
+    this.validateForRead(entity);
+    if(await this.isDataAuthorized(entity,'r', executingUser))
+      return entity;
+    else
+      throw new Error(`User ${executingUser?.login} is not authorized to access document with id ${entity.id}`);
+  }
+
+  async find(filter:Partial<T>, lastIndex?:number | string, executingUser?:User) : Promise<T[]> {
+    const found = await this.storage.find(filter, lastIndex);
+    for(const entity of found){
+      this.validateForRead(entity);
+    }
+    return found;
+  }
+
+  async create(entity:T, executingUser?:User): Promise<T> {
+    await this.validate(entity, executingUser)
+    return await this.storage.create(entity);
+  }
+
+  async update(id: string | number, entityToUpdate:T, executingUser?:User): Promise<T> {
+    const data = await this.get(id, executingUser);
+    if(!await this.isDataAuthorized(data, 'w', executingUser))
+      throw new NotAuthorizedError(`Update is not authorized for entity with id ${id} for entity with id ${id} for user ${executingUser?executingUser.login:'unknown'}`);
+    else {
+      await this.validateForUpdate(entityToUpdate)
+      return await this.storage.update(entityToUpdate);
+    }
+  }
+
+  async delete(id: string | number, executingUser?:User): Promise<T> {
+    const data = await this.get(id, executingUser);
+    if(!await this.isDataAuthorized(data, 'w', executingUser))
+      throw new NotAuthorizedError(`Delete is not authorized for entity with id ${id} for user ${executingUser?executingUser.login:'unknown'}`);
+    return await this.storage.delete(id)
+  }
 
   async isDataAuthorized(data:Entity, right:string='r', user?:any):Promise<boolean> {
     const authorizationUseCase:AuthorizationUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Authorization');

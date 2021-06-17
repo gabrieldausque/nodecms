@@ -12,4 +12,5 @@ export {Project} from './Project';
 export {Role} from './Role';
 export {User} from './User';
 export {WebThumbnail} from './WebThumbnail';
+export {UserEvent, UserAvailabilityStatus, UserEventVisibility} from './UserEvent';
 
