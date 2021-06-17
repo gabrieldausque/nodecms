@@ -417,23 +417,28 @@ describe('User service', () => {
       key: "ANewMeta",
       value: "MyNewValue"
     }, params);
-    expect(await service.get(created.key,params)).to.be.eql({
-      id:created.id,
-      key:'ANewMeta',
-      value:'MyNewValue',
-      isPublic:false,
-      ownerType:'user',
-      ownerId:0
-    });
-    await service.remove(created.key, params);
-    return expect(await service.get(created.key,params)).to.be.eql({
-      id:created.id,
-      key:'ANewMeta',
-      value:'',
-      isPublic:false,
-      ownerType:'user',
-      ownerId:0
-    });
+    if(typeof created.id === 'number' && typeof created.key === 'string'){
+      expect(await service.get(created.key.toString(),params)).to.be.eql({
+        id:created.id,
+        key:'ANewMeta',
+        value:'MyNewValue',
+        isPublic:false,
+        ownerType:'user',
+        ownerId:0
+      });
+      await service.remove(created.key, params);
+      return expect(await service.get(created.key,params)).to.be.eql({
+        id:created.id,
+        key:'ANewMeta',
+        value:'',
+        isPublic:false,
+        ownerType:'user',
+        ownerId:0
+      });
+    } else {
+      assert.fail('No created user ...')
+    }
+
   })
 
   it('should get all role for a user', async() => {
