@@ -6,26 +6,32 @@ import {AuthorizationUseCases} from "./AuthorizationUseCases";
 import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
 import {User} from "@nodecms/backend-data";
-import {DocumentRules} from "@nodecms/backend-data-rules";
+import {DocumentRules, EntityRules, EntityRulesFactory} from "@nodecms/backend-data-rules";
 
-export abstract class UseCases<T extends Entity> {
+export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
+
   // @ts-ignore
   public storage: Storage<T>;
   private readonly dataType: string;
+  protected readonly entityRules: ER;
 
-  protected constructor(dataType:string, contractType:string, configuration:UseCaseConfiguration = {
+  protected constructor(dataType:string,
+                        contractType:string,
+                        configuration:UseCaseConfiguration = {
     storage:{
       contractName:'Default'
     }
   }, noStorage:boolean = false) {
     this.dataType = dataType;
+    const entityRulesFactory = new EntityRulesFactory();
+    this.entityRules = entityRulesFactory.create<T, ER>();
     if(!noStorage)
       this.storage = globalInstancesFactory.getInstanceFromCatalogs(contractType, configuration.storage.contractName, configuration.storage.configuration);
   }
 
   async get(id : string | number, executingUser?:User) : Promise<T> {
     const entity = await this.storage.get(id);
-    this.validateForRead(entity);
+    await this.entityRules.validateForRead(entity);
     if(await this.isDataAuthorized(entity,'r', executingUser))
       return entity;
     else
@@ -33,15 +39,17 @@ export abstract class UseCases<T extends Entity> {
   }
 
   async find(filter:Partial<T>, lastIndex?:number | string, executingUser?:User) : Promise<T[]> {
-    const found = await this.storage.find(filter, lastIndex);
+    let index:number | undefined = typeof lastIndex === 'string' ?
+                       parseInt(lastIndex):lastIndex;
+    const found = await this.storage.find(filter, index);
     for(const entity of found){
-      this.validateForRead(entity);
+      await this.entityRules.validateForRead(entity);
     }
     return found;
   }
 
   async create(entity:T, executingUser?:User): Promise<T> {
-    await this.validate(entity, executingUser)
+    await this.entityRules.validate(entity, executingUser)
     return await this.storage.create(entity);
   }
 
@@ -50,7 +58,7 @@ export abstract class UseCases<T extends Entity> {
     if(!await this.isDataAuthorized(data, 'w', executingUser))
       throw new NotAuthorizedError(`Update is not authorized for entity with id ${id} for entity with id ${id} for user ${executingUser?executingUser.login:'unknown'}`);
     else {
-      await this.validateForUpdate(entityToUpdate)
+      await this.entityRules.validateForUpdate(entityToUpdate)
       return await this.storage.update(entityToUpdate);
     }
   }

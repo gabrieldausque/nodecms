@@ -1,4 +1,5 @@
 export {EntityRules} from './EntityRules'
+export {EntityRulesFactory} from './EntityRulesFactory';
 export {AuthenticationEntityRules} from './AuthenticationEntityRules';
 export {AuthorizationEntityRules} from './AuthorizationEntityRules';
 export {ChannelPostRules} from './ChannelPostRules';

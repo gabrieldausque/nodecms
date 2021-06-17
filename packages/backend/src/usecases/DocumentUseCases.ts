@@ -9,7 +9,7 @@ import {UserUseCases} from "./UserUseCases";
 import {RoleUseCases} from "./RoleUseCases";
 import {Role} from "@nodecms/backend-data";
 
-export class DocumentUseCases extends UseCases<Document> {
+export class DocumentUseCases extends UseCases<Document, DocumentRules> {
 
   public static metadata:any[] = [
     {

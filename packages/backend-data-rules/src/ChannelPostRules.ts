@@ -1,7 +1,7 @@
 import {EntityRules} from "./EntityRules";
 import {ChannelPost} from "@nodecms/backend-data";
 
-export class ChannelPostRules extends EntityRules {
+export class ChannelPostRules extends EntityRules<ChannelPostRules> {
   static validate(post:ChannelPost) {
     //TODO : sanitize content and tags
     if(!post.channelKey){

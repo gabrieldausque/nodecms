@@ -6,7 +6,6 @@ import {promisify} from 'util';
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 import {v4} from 'uuid';
-import {MediaRules} from "@nodecms/backend-data-rules";
 
 export interface MongoDbMediaStorageConfiguration extends MongoDbStorageConfiguration {
   fsStore:string
@@ -77,7 +76,7 @@ export class MongoDbMediaStorage extends MongoDbStorage<Media> implements MediaS
     if(await this.exists(keyOrIdOrMedia)){
       let usableId:number|undefined;
       if(isNumber(keyOrIdOrMedia)) {
-        usableId = MediaRules.convertId(keyOrIdOrMedia.toString())
+        usableId = parseInt(keyOrIdOrMedia.toString());
       } else if (keyOrIdOrMedia as Media){
         usableId = (keyOrIdOrMedia as Media).id
       }

@@ -8,11 +8,12 @@ import {UseCases} from "../usecases/UseCases";
 import {AuthenticationUseCases} from "../usecases/AuthenticationUseCases";
 import {
   Document as DocumentEntity,
-  DocumentVisibility,
+  DocumentVisibility, Entity,
   isNumber,
   User as UserEntity,
   User
 } from "@nodecms/backend-data";
+import {EntityRules} from "@nodecms/backend-data-rules";
 
 export interface BaseServiceConfiguration {
   paginate?:number
@@ -22,7 +23,9 @@ export interface BaseServiceConfiguration {
   }
 }
 
-export abstract class BaseService<T, U extends UseCases<T>> implements ServiceMethods<T> {
+export abstract class BaseService<T extends Entity,
+  ER extends EntityRules<T>,
+  U extends UseCases<T, ER>> implements ServiceMethods<T> {
 
   app: Application;
   serviceLabel: string;

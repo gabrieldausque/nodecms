@@ -23,7 +23,7 @@ interface AuthenticationUseCasesConfiguration extends UseCaseConfiguration {
   tokenTTLInSecond?:number
 }
 
-export class AuthenticationUseCases extends UseCases<Authentication> {
+export class AuthenticationUseCases extends UseCases<Authentication, AuthenticationEntityRules> {
 
   public static metadata:any[] = [
     {

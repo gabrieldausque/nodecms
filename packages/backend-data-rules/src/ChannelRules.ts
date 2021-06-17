@@ -1,7 +1,7 @@
 import {EntityRules} from "./EntityRules";
 import {Channel, ChannelVisibility} from "@nodecms/backend-data";
 
-export class ChannelRules extends EntityRules {
+export class ChannelRules extends EntityRules<Channel> {
 
   static validate(channel:Partial<Channel>){
     if(!channel.key){

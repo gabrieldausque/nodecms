@@ -1,7 +1,7 @@
 import {EntityRules} from "./EntityRules";
 import {InvalidDataError, UserEvent} from "@nodecms/backend-data";
 
-export class UserEventEntityRules extends EntityRules {
+export class UserEventEntityRules extends EntityRules<UserEvent> {
 
     static validateUserEvent(userEvent:UserEvent) {
         if(!userEvent.startDate ||

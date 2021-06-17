@@ -2,7 +2,7 @@ import {EntityRules} from "./EntityRules";
 import {Role} from "@nodecms/backend-data";
 import {User} from "@nodecms/backend-data";
 
-export class RoleEntityRules extends EntityRules {
+export class RoleEntityRules extends EntityRules<Role> {
 
   static validate(entity:Partial<Role>, executingUser:User) {
     if(!entity.members){

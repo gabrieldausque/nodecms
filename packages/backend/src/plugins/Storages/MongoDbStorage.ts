@@ -77,7 +77,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     }
   }
 
-  protected async internalCreate(entity:T, collectionName?:string) {
+  protected async internalCreate(entity:Partial<T>, collectionName?:string) {
     const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     await (await this.getCollection(finalCollectionName)).insertOne(
       entity

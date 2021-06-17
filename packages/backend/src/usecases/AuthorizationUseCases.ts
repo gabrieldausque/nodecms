@@ -7,7 +7,7 @@ import {User} from "@nodecms/backend-data";
 interface AuthorizationUseCasesConfiguration extends UseCaseConfiguration {
 }
 
-export class AuthorizationUseCases extends UseCases<Authorization> {
+export class AuthorizationUseCases extends UseCases<Authorization, AuthorizationEntityRules> {
 
   public static metadata:any[] = [
     {
@@ -25,7 +25,7 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
     super('authorization','AuthorizationStorage',configuration);
   }
 
-  async create(entity: Authorization, executingUser:User): Promise<Authorization> {
+  async create(entity: Partial<Authorization>, executingUser:User): Promise<Authorization> {
     AuthorizationEntityRules.convert(entity);
     return this.storage.create(entity);
   }

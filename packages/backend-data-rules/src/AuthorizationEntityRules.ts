@@ -1,14 +1,16 @@
 import {EntityRules} from "./EntityRules";
-import {Authorization} from "@nodecms/backend-data";
+import {Authorization, isNumber} from "@nodecms/backend-data";
 
-export class AuthorizationEntityRules extends EntityRules {
-  static convert(entity:Authorization):Authorization {
-    if(entity.id) {
-      if(typeof entity.id === 'string')
+export class AuthorizationEntityRules extends EntityRules<AuthorizationEntityRules> {
+
+  convert(entity:Partial<Authorization>):Authorization {
+
+    if(typeof entity.id === 'string' &&
+        isNumber(entity.id))
         entity.id = parseInt(entity.id);
-    }
 
     const mandatoryProperties = ['on','onType','right']
+
     for(const mandatoryProperty of mandatoryProperties) {
       if(!entity[mandatoryProperty]) {
         throw new Error(`Please set ${mandatoryProperty} on authorization`);
@@ -17,7 +19,9 @@ export class AuthorizationEntityRules extends EntityRules {
 
     if(entity.on === 'operation') {
       const authorizedOperations = ['create','get','find','update','patch','remove']
-      if(authorizedOperations.indexOf(entity.onType) < 0)
+
+      if(!entity.onType ||
+         authorizedOperations.indexOf(entity.onType) < 0)
         throw new Error(`Authorized operations are ${authorizedOperations.join('|')}. please correct`);
 
       if(entity.right !== 'x')
@@ -35,6 +39,6 @@ export class AuthorizationEntityRules extends EntityRules {
     if(entity.role)
       entity.role = parseInt(entity.role.toString());
 
-    return entity
+    return entity as Authorization;
   }
 }

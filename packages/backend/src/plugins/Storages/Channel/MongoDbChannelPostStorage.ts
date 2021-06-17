@@ -23,7 +23,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
     return `channel#${channelName}`
   }
 
-  async create(data: ChannelPost, channelName?:string): Promise<ChannelPost> {
+  async create(data: Partial<ChannelPost>, channelName?:string): Promise<ChannelPost> {
 
     if(!channelName){
       throw new Error('No channel name for the current post');

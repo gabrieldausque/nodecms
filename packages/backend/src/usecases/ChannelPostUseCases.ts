@@ -13,7 +13,7 @@ import {UserUseCases} from "./UserUseCases";
 interface ChannelPostUseCasesConfiguration extends UseCaseConfiguration {
 }
 
-export class ChannelPostUseCases extends UseCases<ChannelPost> {
+export class ChannelPostUseCases extends UseCases<ChannelPost, ChannelPostRules> {
 
   public static metadata:any[] = [
     {
@@ -30,7 +30,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
     this.channelPostStorage = this.storage as ChannelPostStorage;
   }
 
-  async create(entity: ChannelPost, executingUser: User, channelKey?:string): Promise<ChannelPost> {
+  async create(entity: Partial<ChannelPost>, executingUser: User, channelKey?:string): Promise<ChannelPost> {
     entity.author = executingUser.id;
     entity.creationDate = new Date();
     if(entity.channelKey !== channelKey){
@@ -66,7 +66,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
   }
 
   async get(id: string | number, executingUser: User | undefined, channelName?:string): Promise<ChannelPost> {
-    const usableId = ChannelPostRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     const p = await this.channelPostStorage.get(usableId, channelName);
     if(typeof p.author === 'number') {
       const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
@@ -79,7 +79,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost> {
     throw new Error('Not implemented');
   }
 
-  async isDataAuthorized(data: ChannelPost, right: string = 'r', user?: any): Promise<boolean> {
+  async isDataAuthorized(data: Partial<ChannelPost>, right: string = 'r', user?: any): Promise<boolean> {
     if(data.channelKey &&
       user &&
       typeof user.id === 'number'

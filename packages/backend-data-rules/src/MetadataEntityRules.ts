@@ -2,8 +2,9 @@ import {isNumber} from "@nodecms/backend-data";
 import {EntityRules} from "./EntityRules";
 import {Metadata} from "@nodecms/backend-data";
 
-export class MetadataEntityRules extends EntityRules {
-  static validateKey(key:string):boolean {
+export class MetadataEntityRules extends EntityRules<Metadata> {
+
+  validateKey(key:string):boolean {
     const regexp = /[a-zA-Z0-9_\-]{3,}/g
     if(!regexp.test(key)) {
       throw new Error('Key must be 3 characters length minimum, using letters, numbers, "-" or "_"');
@@ -11,7 +12,7 @@ export class MetadataEntityRules extends EntityRules {
     return true;
   }
 
-  static convertFilter(filter: Metadata):Metadata {
+  convertFilter(filter: Metadata):Metadata {
     const regexpIsNumber = /^[0-9]+$/g
     if(filter.id && regexpIsNumber.test(filter.id.toString())) {
       filter.id = parseInt(filter.id.toString());
@@ -23,8 +24,8 @@ export class MetadataEntityRules extends EntityRules {
     return filter;
   }
 
-  static convert(metadata: Metadata) {
-    MetadataEntityRules.validateKey(metadata.key);
+  convert(metadata: Metadata) {
+    this.validateKey(metadata.key);
     if(metadata.ownerType) {
       metadata.ownerType = metadata.ownerType.toLowerCase();
       if(!isNumber(metadata.ownerId))
@@ -32,7 +33,7 @@ export class MetadataEntityRules extends EntityRules {
     }
 
     if(metadata.ownerId) {
-      metadata.ownerId = MetadataEntityRules.convertId(metadata.ownerId);
+      metadata.ownerId = this.convertId(metadata.ownerId);
       if(!metadata.ownerType)
         throw new Error('If ownerId is set, you must have a ownerType (string, lowercase)')
     }

@@ -2,7 +2,7 @@ import {EntityRules} from "./EntityRules";
 import {Metadata} from "@nodecms/backend-data";
 import {User} from "@nodecms/backend-data";
 
-export class UserEntityRules extends EntityRules {
+export class UserEntityRules extends EntityRules<User> {
 
   static validatePassword(password: string | undefined):boolean {
     let regexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g

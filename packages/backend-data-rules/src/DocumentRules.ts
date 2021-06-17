@@ -3,7 +3,7 @@ import {User} from "@nodecms/backend-data";
 import {Document, DocumentVisibility} from "@nodecms/backend-data"
 import {isNumber} from "@nodecms/backend-data";
 
-export class DocumentRules extends EntityRules {
+export class DocumentRules extends EntityRules<Document> {
   static validate(document:Partial<Document>, executingUser?:User):void{
 
     if(!executingUser || !isNumber(executingUser.id))
