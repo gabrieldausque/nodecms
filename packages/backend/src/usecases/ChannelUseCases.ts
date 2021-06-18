@@ -86,7 +86,7 @@ export class ChannelUseCases extends UseCases<Channel, ChannelRules> {
   async find(filter: Partial<Channel>, lastIndex?:number, executingUser?: User): Promise<Channel[]> {
     const found = await this.storage.find(filter, lastIndex);
     found.map(c => {
-      ChannelRules.validate(c)
+      this.entityRules.validate(c)
     })
     return found;
   }
@@ -95,7 +95,7 @@ export class ChannelUseCases extends UseCases<Channel, ChannelRules> {
     let channel:Channel | null = null;
      channel = await this.storage.get(id);
      if(channel){
-       ChannelRules.validate(channel);
+       await this.entityRules.validate(channel);
      }
      return channel;
   }
@@ -113,7 +113,7 @@ export class ChannelUseCases extends UseCases<Channel, ChannelRules> {
       existing.label = entityToUpdate.label;
     }
 
-    if(ChannelRules.isAuthorizedVisibility(entityToUpdate.visibility) &&
+    if(this.entityRules.isAuthorizedVisibility(entityToUpdate.visibility) &&
       typeof entityToUpdate.visibility === 'string'){
       existing.visibility = entityToUpdate.visibility;
     }
