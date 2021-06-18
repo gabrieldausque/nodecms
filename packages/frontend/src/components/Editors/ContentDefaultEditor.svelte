@@ -1,6 +1,6 @@
 <script>
 
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import {v4 as uuid} from 'uuid';
     import HighlightedEditor from "../HighlightedEditor.svelte";
 

@@ -1,7 +1,7 @@
 <script>
 
     import {MediaService} from "@nodecms/backend-client";
-    import {ShowUploadModalStore, ShowUploadModal} from "../../../stores/ShowUploadModalStore";
+    import {ShowUploadModalStore, ShowUploadModal} from "../../stores/ShowUploadModalStore";
     import {fly} from 'svelte/transition';
 
     async function doUploadMedia() {

@@ -101,6 +101,16 @@
         "dbName": "teama",
         "collectionName": "authentications"
       }
+    },
+    "userEvents": {
+      "contractName": "MongoDb",
+      "configuration" : {
+        "mongodbUrl": "localhost:27017",
+        "mongodbUser": "admin_teama",
+        "mongodbPassword":"jfkbqsgbEGQ#dd54qfdgb",
+        "dbName": "teama",
+        "collectionName": "userEvents"
+      }
     }
   }
 }

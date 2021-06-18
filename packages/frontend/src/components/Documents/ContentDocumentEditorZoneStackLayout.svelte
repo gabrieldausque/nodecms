@@ -1,5 +1,5 @@
 <script>
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import BlockDropZone from './BlockDropZone.svelte';
     import BlockEditor from '../Editors/BlockEditor.svelte';
     import {afterUpdate} from 'svelte';

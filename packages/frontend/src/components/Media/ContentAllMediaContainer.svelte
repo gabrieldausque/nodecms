@@ -1,14 +1,14 @@
 <script>
 
-    import {AllMediaStores} from "../../../stores/AllMediaStores";
+    import {AllMediaStores} from "../../stores/AllMediaStores";
     import {MediaService} from "@nodecms/backend-client";
-    import {Helpers} from "../../../helpers/Helpers";
+    import {Helpers} from "../../helpers/Helpers";
     import {onMount, afterUpdate} from "svelte";
     import {v4 as uuid} from 'uuid';
     import _ from 'underscore';
     import MediaSearchBar from "./MediaSearchBar.svelte";
     import UploadMediaModal from "./UploadMediaModal.svelte";
-    import {ShowUploadModalStore} from "../../../stores/ShowUploadModalStore";
+    import {ShowUploadModalStore} from "../../stores/ShowUploadModalStore";
 
     $AllMediaStores;
     let mediaToEdit;

@@ -9,7 +9,7 @@ properties.content : an html content to be added in the image div
 
 <script>
     import {onMount, afterUpdate} from 'svelte'
-    import {Helpers} from '../../helpers/Helpers';
+    import {Helpers} from '../helpers/Helpers';
 
     export let properties;
 

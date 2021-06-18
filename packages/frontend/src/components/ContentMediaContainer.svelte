@@ -1,5 +1,5 @@
 <script>
-    import {Helpers} from "../../helpers/Helpers";
+    import {Helpers} from "../helpers/Helpers";
     import {onMount} from "svelte";
     export let properties;
 

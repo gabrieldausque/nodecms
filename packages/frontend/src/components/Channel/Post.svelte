@@ -1,8 +1,8 @@
 <script>
     import {afterUpdate, createEventDispatcher} from "svelte";
-    import {globalFEService} from "../../../FEServices";
-    import {PostWithChildren} from "../../../stores/ActivePostStore";
-    import {Helpers} from "../../../helpers/Helpers";
+    import {globalFEService} from "../../FEServices";
+    import {PostWithChildren} from "../../stores/ActivePostStore";
+    import {Helpers} from "../../helpers/Helpers";
     import { fade } from 'svelte/transition';
 
     export let post;

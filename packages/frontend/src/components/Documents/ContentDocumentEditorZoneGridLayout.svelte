@@ -1,6 +1,6 @@
 <script>
-    import {Helpers} from '../../../helpers/Helpers';
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
+    import {Helpers} from '../../helpers/Helpers';
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import BlockEditor from "../Editors/BlockEditor.svelte";
     import BlockDropZone from './BlockDropZone.svelte';
 

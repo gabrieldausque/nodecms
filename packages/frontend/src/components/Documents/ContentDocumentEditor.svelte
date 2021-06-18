@@ -1,11 +1,11 @@
 <script>
 
     import {getBackendClient} from "@nodecms/backend-client";
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
-    import {globalContentContainerFactory} from "../../../ContentContainerFactory";
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
+    import {globalContentContainerFactory} from "../../ContentContainerFactory";
     import ContentDefaultEditor from '../Editors/ContentDefaultEditor.svelte';
-    import {Helpers} from "../../../helpers/Helpers";
-    import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
+    import {Helpers} from "../../helpers/Helpers";
+    import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";
     import ContentDocumentEditorZoneGridLayout from './ContentDocumentEditorZoneGridLayout.svelte';
     import ContentDocumentEditorZoneStackLayout from './ContentDocumentEditorZoneStackLayout.svelte';
     import HighlightedEditor from '../HighlightedEditor.svelte';

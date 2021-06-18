@@ -13,13 +13,13 @@
     import Editor from "cl-editor/src/Editor.svelte";
     import {v4 as uuid} from 'uuid';
     import {onMount, onDestroy} from 'svelte';
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import HighlightedEditor from "../HighlightedEditor.svelte";
     import MediaSearchBar from "../Media/MediaSearchBar.svelte";
-    import {AllMediaStores} from "../../../stores/AllMediaStores";
-    import {Helpers} from "../../../helpers/Helpers";
+    import {AllMediaStores} from "../../stores/AllMediaStores";
+    import {Helpers} from "../../helpers/Helpers";
     import UploadMediaModal from "../Media/UploadMediaModal.svelte";
-    import {ShowUploadModalStore, ShowUploadModal} from "../../../stores/ShowUploadModalStore";
+    import {ShowUploadModalStore, ShowUploadModal} from "../../stores/ShowUploadModalStore";
 
     $AllMediaStores;
 

@@ -1,13 +1,13 @@
 <script>
 
-    import {DocumentsStore} from "../../../stores/DocumentsStore";
-    import {Helpers} from "../../../helpers/Helpers";
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
+    import {DocumentsStore} from "../../stores/DocumentsStore";
+    import {Helpers} from "../../helpers/Helpers";
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import {getBackendClient} from "@nodecms/backend-client";
     import {onMount, afterUpdate, beforeUpdate} from 'svelte';
     import {documentsEventName} from "@nodecms/backend-client";
     import { fade } from 'svelte/transition';
-    import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
+    import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";
 
     $DocumentsStore;
     console.log($DocumentsStore);

@@ -1,5 +1,5 @@
 <script>
-    import { Helpers } from '../../helpers/Helpers';
+    import { Helpers } from '../helpers/Helpers';
     export let properties;
 </script>
 

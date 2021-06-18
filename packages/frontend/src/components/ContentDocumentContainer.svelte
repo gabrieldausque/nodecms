@@ -1,10 +1,10 @@
 
 <script>
 
-    import {globalContentContainerFactory} from "../../ContentContainerFactory";
+    import {globalContentContainerFactory} from "../ContentContainerFactory";
     import {getBackendClient} from '@nodecms/backend-client';
     import {beforeUpdate, onMount} from 'svelte';
-    import {Helpers} from "../../helpers/Helpers";
+    import {Helpers} from "../helpers/Helpers";
 
     export let properties;
     export let documentKey;

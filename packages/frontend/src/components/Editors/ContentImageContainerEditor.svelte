@@ -2,8 +2,8 @@
     import Editor from "cl-editor/src/Editor.svelte";
     import {v4 as uuid} from 'uuid';
     import {onMount, afterUpdate} from 'svelte';
-    import {EditableDocumentStore} from "../../../stores/EditableDocumentStore";
-    import {ComponentEditorStore} from "../../../stores/ComponentEditorStore";
+    import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
+    import {ComponentEditorStore} from "../../stores/ComponentEditorStore";
     import HighlightedEditor from "../HighlightedEditor.svelte";
 
     export let properties;

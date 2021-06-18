@@ -1,6 +1,6 @@
 <script>
 
-    import {ProjectStore} from "../../../stores/ProjectStore";
+    import {ProjectStore} from "../../stores/ProjectStore";
     import ProjectCard from "./ProjectCard.svelte";
     import {getBackendClient} from "@nodecms/backend-client";
 

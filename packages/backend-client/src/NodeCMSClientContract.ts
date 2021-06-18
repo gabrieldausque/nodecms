@@ -4,8 +4,8 @@ import {DocumentService} from "./DocumentService";
 import {ChannelsService} from "./ChannelsService";
 import {UserService} from "./UserService";
 import {UtilsService} from "./UtilsService";
-import {ProjectsService} from "./ProjectsService";
 import {MetadataService} from "./MetadataService";
+import {BaseServiceClient} from "./BaseServiceClient";
 
 export interface NodeCMSClientContract {
 
@@ -15,8 +15,11 @@ export interface NodeCMSClientContract {
     channelsService: ChannelsService;
     userService: UserService;
     utilsService: UtilsService;
-    projectsService: ProjectsService;
     metadataService: MetadataService;
 
     getMetadata(key: string): Promise<any>;
+
+    registerNewClientService<T>(serviceLabel:string, service:BaseServiceClient<T>) : void;
+
+    getService<T>(serviceLabel:string) : BaseServiceClient<T>
 }

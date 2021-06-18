@@ -4,16 +4,17 @@
 
 <script>
     import {getBackendClient} from "@nodecms/backend-client";
-    import {Helpers} from '../../../helpers/Helpers';
+    import {Helpers} from '../../helpers/Helpers';
     import {v4 as uuid} from 'uuid';
     import { onMount, beforeUpdate, afterUpdate, onDestroy } from "svelte";
     import PostEditor from "./PostEditor.svelte";
     import Post from "./Post.svelte";
-    import {observableChannelCache} from "../../../stores/ChannelStore";
+    import {observableChannelCache} from "../../stores/ChannelStore";
 
     let editor = null;
     let tailActivated = true;
     let tailForChildrenActivated = true;
+    let Channel;
     const id = uuid();
     $observableChannelCache
 

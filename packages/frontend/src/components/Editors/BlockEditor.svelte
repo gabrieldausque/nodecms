@@ -1,7 +1,7 @@
 <script>
-    import {BlockEditorComponentStore} from "../../../stores/BlockEditorComponentStore";
-    import {globalContentContainerFactory} from "../../../ContentContainerFactory";
-    import {Helpers} from "../../../helpers/Helpers";
+    import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";
+    import {globalContentContainerFactory} from "../../ContentContainerFactory";
+    import {Helpers} from "../../helpers/Helpers";
 
     $BlockEditorComponentStore
 

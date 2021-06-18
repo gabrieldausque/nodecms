@@ -1,5 +1,5 @@
 <script>
-    import {AllMediaStores} from "../../../stores/AllMediaStores";
+    import {AllMediaStores} from "../../stores/AllMediaStores";
     import {createEventDispatcher} from 'svelte';
     import {onMount, onDestroy} from 'svelte';
 
