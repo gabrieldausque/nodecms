@@ -1,10 +1,34 @@
-<script>
+<script lang="ts">
     import {ShowCreateUserEventStore, ShowCreateUserEvent} from "../../stores/ShowCreateUserEventStore";
     import {fly} from "svelte/transition"
+    import {UserEvent, UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
+
+    let userEvent = {
+        startDate: new Date(),
+        endDate: new Date(),
+        label: '',
+        description: '',
+        location: '',
+        category: 'vacances',
+        ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+        visibility: UserEventVisibility.protected,
+    }
+    let startDate = `${userEvent.startDate.toLocaleDateString()} ${userEvent.endDate.toLocaleTimeString()}`  ;
+    let endDate = userEvent.endDate.toString();
 
     function doCreateUserEvent() {
         console.log('coucou ...');
     }
+
+    async function validateUserEvent() {
+        const startDate = (document.getElementById<HTMLInputElement>('userevent-startdate')).value;
+        const endDate = (document.getElementById<HTMLInputElement>('userevent-enddate')).value;
+        console.log(startDate);
+        console.log(endDate);
+    }
+
+    console.log(userEvent.startDate);
+    console.log(userEvent.endDate);
 
 </script>
 
@@ -63,6 +87,31 @@
                     </div>
                     <div class="modal-body">
                         <div id="create-userevent-form" class="">
+                            <div class="mb-3">
+                                <label for="userevent-startdate">Début</label>
+                                <input
+                                        class="form-control"
+                                        id="userevent-startdate" name="userevent-startdate" type="datetime-local" required
+                                        on:change={validateUserEvent}
+                                        value={startDate}
+                                >
+                                <div class="invalid-feedback">
+                                    La date de début ne peut pas être vide et doit être inférieur à la date de fin.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userevent-enddate">Fin</label>
+                                <input
+                                        class="form-control"
+                                        id="userevent-enddate" name="userevent-enddate"
+                                        type="datetime-local" required
+                                        on:change={validateUserEvent}
+                                        bind:value={endDate}
+                                >
+                                <div class="invalid-feedback">
+                                    La date de fin ne peut pas être vide et doit être supérieur à la date de début.
+                                </div>
+                            </div>
                             <div class="mb-3">
                                 <label for="userevent-label">Label</label>
                                 <input
