@@ -210,4 +210,19 @@ export class Helpers {
             return eds;
         })
     }
+
+    static readonly shortLabelsDayOfWeek = ['Dim.', 'Lun.', 'Mar.', 'Mer.','Jeu.','Ven.','Sam.']
+    static getShortDayOfWeekLabel(day: Date){
+        return Helpers.shortLabelsDayOfWeek[day.getDay()];
+    }
+
+    static readonly longLabelsDayOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi','Jeudi','Vendredi','Samedi']
+    static getLongDayOfWeekLabel(day: Date){
+        return Helpers.longLabelsDayOfWeek[day.getDay()];
+    }
+
+    static readonly longLabelsMonth = ['Janvier','Février', 'Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
+    static getLongLabelMonth(date: Date) {
+        return Helpers.longLabelsMonth[date.getMonth()]
+    }
 }

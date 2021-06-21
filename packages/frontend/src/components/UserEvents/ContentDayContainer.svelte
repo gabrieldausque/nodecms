@@ -1,7 +1,16 @@
 <script>
+
+    import {Helpers} from "../../helpers/Helpers";
+    import {ShowCreateUserEventStore} from "../../stores/ShowCreateUserEventStore";
+
     export let currentDay = new Date();
 
-    const dayOfWeek = ['Dim.', 'Lun.', 'Mar.', 'Mer.','Jeu.','Ven.','Sam.']
+    function displayCreateUserEventModal(){
+        ShowCreateUserEventStore.update(m => {
+            m.shown = true;
+            return m;
+        })
+    }
 
 </script>
 
@@ -20,9 +29,22 @@
         text-align: center;
         vertical-align: center;
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+
+    .today-mark {
+        background-color: cornflowerblue;
+        border-radius: 25px;
+        height: 15px;
+        width: 15px;
+        margin-left: 5px;
     }
 </style>
 
-<div class="day">
-    <div class="day-title">{`${dayOfWeek[currentDay.getDay()]} ${currentDay.getDate()}`}</div>
+<div class="day" on:dblclick={displayCreateUserEventModal}>
+    <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()}`} {#if currentDay.getDate() === new Date().getDate() &&
+    currentDay.getMonth() === new Date().getMonth() &&
+    currentDay.getFullYear() === new Date().getFullYear()}<div class="today-mark"></div>{/if}</div>
 </div>

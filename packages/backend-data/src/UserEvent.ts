@@ -1,7 +1,6 @@
 import {Entity} from "./Entity";
 
 export const UserEventVisibility = {
-    public:"public",
     protected:"protected",
     private:"private"
 }

@@ -205,7 +205,7 @@
                         <div id="error-uploading-media-content"></div>
                     </div>
                     <button id="do-upload-media" type="button" class="btn action btn-danger " disabled on:click={doUploadMedia}>
-                        <span id="uploading-media-loading" class="spinner-border"></span><span id="do-upload-media-text">Upload Media</span>
+                        <span id="uploading-media-loading" class="spinner-border"></span><span id="do-upload-media-text">Ajouter le Média</span>
                     </button>
                 </div>
             </div>
