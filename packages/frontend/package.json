@@ -1,12 +1,13 @@
 {
   "name": "@nodecms/frontend",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "dev-front": "npm run dev",
-    "start": "sirv public",
-    "validate": "svelte-check"
+    "start": "sirv public --no-clear",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "files": [
     "public/**/*"

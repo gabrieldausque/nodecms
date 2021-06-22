@@ -2,33 +2,76 @@
     import {ShowCreateUserEventStore, ShowCreateUserEvent} from "../../stores/ShowCreateUserEventStore";
     import {fly} from "svelte/transition"
     import {UserEvent, UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
+    import {onMount, onDestroy, afterUpdate} from 'svelte';
 
-    let userEvent = {
-        startDate: new Date(),
-        endDate: new Date(),
-        label: '',
-        description: '',
-        location: '',
-        category: 'vacances',
-        ownerAvailabilityStatus: UserAvailabilityStatus.busy,
-        visibility: UserEventVisibility.protected,
+    let startDate;
+    let startTime;
+    let endDate;
+    let endTime;
+
+    const unsubscribe = ShowCreateUserEventStore.subscribe(v => {
+        initStartAndEnd();
+    })
+
+    function fromDateToString(d:Date):string{
+        const date = d.getDate();
+        const month = d.getMonth() + 1;
+        const year = d.getFullYear();
+        return [year,(month < 10?'0' + month:month), (date < 10?'0' + date:date)].join('-');
     }
-    let startDate = `${userEvent.startDate.toLocaleDateString()} ${userEvent.endDate.toLocaleTimeString()}`  ;
-    let endDate = userEvent.endDate.toString();
 
-    function doCreateUserEvent() {
-        console.log('coucou ...');
+    function fromTimeToString(d:Date):string{
+        const hour = d.getHours();
+        const minutes = d.getMinutes();
+        return [hour<10?'0' + hour:hour, minutes<10?'0' + minutes:minutes].join(':');
+    }
+
+    function fromStringToDate(dateAsString:string, timeAsString:string):Date {
+        const splittedDate = dateAsString.split('-');
+        const splittedTime = timeAsString.split(':')
+        return new Date(parseInt(splittedDate[0]),parseInt(splittedDate[1]) - 1,
+            parseInt(splittedDate[2]), parseInt(splittedTime[0]), parseInt(splittedTime[1]));
+    }
+
+    function fromStringToTime(dateAsString:string):Date {
+        const splitted = dateAsString.split(':');
+        return new Date(parseInt(splitted[0]),parseInt(splitted[1]) - 1, parseInt(splitted[2]))
     }
 
     async function validateUserEvent() {
-        const startDate = (document.getElementById<HTMLInputElement>('userevent-startdate')).value;
-        const endDate = (document.getElementById<HTMLInputElement>('userevent-enddate')).value;
-        console.log(startDate);
-        console.log(endDate);
+        const startDateAsString = (document.getElementById<HTMLInputElement>('userevent-startdate') as HTMLInputElement).value;
+        const startTimeAsString = (document.getElementById<HTMLInputElement>('userevent-starttime') as HTMLInputElement).value;
+        const endDateAsString = (document.getElementById<HTMLInputElement>('userevent-enddate') as HTMLInputElement).value;
+        const endTimeAsString = (document.getElementById<HTMLInputElement>('userevent-endtime') as HTMLInputElement).value;
+        const startDate = fromStringToDate(startDateAsString, startTimeAsString);
+        const endDate = fromStringToDate(endDateAsString, endTimeAsString);
+        if(endDate < startDate){
+            ShowCreateUserEventStore.update((s) => {
+                s.startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 1, 0, 0);
+                s.endDate = endDate;
+                return s;
+            })
+        }
+
     }
 
-    console.log(userEvent.startDate);
-    console.log(userEvent.endDate);
+    async function doCreateUserEvent() {
+
+    }
+
+    function initStartAndEnd(){
+        startDate = fromDateToString($ShowCreateUserEventStore.startDate);
+        console.log(startDate)
+        startTime = fromTimeToString($ShowCreateUserEventStore.startDate);
+        endDate = fromDateToString($ShowCreateUserEventStore.endDate);
+        endTime = fromTimeToString($ShowCreateUserEventStore.endDate);
+    }
+
+    onMount(() => {
+        initStartAndEnd()
+    })
+
+    onDestroy(unsubscribe);
 
 </script>
 
@@ -58,6 +101,11 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
+    }
+
+    .modal-body {
+        max-height: calc(100vh - 250px);
+        overflow-y: auto;
     }
 
 </style>
@@ -91,9 +139,15 @@
                                 <label for="userevent-startdate">Début</label>
                                 <input
                                         class="form-control"
-                                        id="userevent-startdate" name="userevent-startdate" type="datetime-local" required
+                                        id="userevent-startdate" name="userevent-startdate" type="date" required
                                         on:change={validateUserEvent}
-                                        value={startDate}
+                                        bind:value={startDate}
+                                >
+                                <input
+                                        class="form-control"
+                                        id="userevent-starttime" name="userevent-starttime" type="time" required
+                                        on:change={validateUserEvent}
+                                        bind:value={startTime}
                                 >
                                 <div class="invalid-feedback">
                                     La date de début ne peut pas être vide et doit être inférieur à la date de fin.
@@ -104,9 +158,16 @@
                                 <input
                                         class="form-control"
                                         id="userevent-enddate" name="userevent-enddate"
-                                        type="datetime-local" required
+                                        type="date" required
                                         on:change={validateUserEvent}
                                         bind:value={endDate}
+                                >
+                                <input
+                                        class="form-control"
+                                        id="userevent-endtime" name="userevent-endtime"
+                                        type="time" required
+                                        on:change={validateUserEvent}
+                                        bind:value={endTime}
                                 >
                                 <div class="invalid-feedback">
                                     La date de fin ne peut pas être vide et doit être supérieur à la date de début.

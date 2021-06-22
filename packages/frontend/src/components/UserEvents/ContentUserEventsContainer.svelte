@@ -62,13 +62,19 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: white;
     }
 
     .userevents-calendar {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        width: 80vw;
+        width: calc(80vw + 1px);
+        border-left: solid 1px lightgray;
+        margin-bottom: 5px;
     }
 
     #change-display-period {
