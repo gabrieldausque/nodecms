@@ -9,6 +9,7 @@
     let endDate;
     let endTime;
 
+    //@ts-ignore
     const unsubscribe = ShowCreateUserEventStore.subscribe(v => {
         initStartAndEnd();
     })
@@ -39,20 +40,43 @@
     }
 
     async function validateUserEvent() {
-        const startDateAsString = (document.getElementById<HTMLInputElement>('userevent-startdate') as HTMLInputElement).value;
-        const startTimeAsString = (document.getElementById<HTMLInputElement>('userevent-starttime') as HTMLInputElement).value;
-        const endDateAsString = (document.getElementById<HTMLInputElement>('userevent-enddate') as HTMLInputElement).value;
-        const endTimeAsString = (document.getElementById<HTMLInputElement>('userevent-endtime') as HTMLInputElement).value;
-        const startDate = fromStringToDate(startDateAsString, startTimeAsString);
-        const endDate = fromStringToDate(endDateAsString, endTimeAsString);
-        if(endDate < startDate){
+        if(getEndDate() < getStartDate()){
+            return false;
+        }
+    }
+
+    function getEndDate():Date {
+        return fromStringToDate(endDate, endTime);
+    }
+
+    function getStartDate():Date {
+        return fromStringToDate(startDate, startTime)
+    }
+
+    function onStartDateChange() {
+        if(getEndDate() < getStartDate()){
             ShowCreateUserEventStore.update((s) => {
-                s.startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 1, 0, 0);
-                s.endDate = endDate;
+                const d = getStartDate();
+                s.startDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0,0);
+                s.endDate = new Date(s.startDate.getFullYear(), s.startDate.getMonth(), s.startDate.getDate(), 23, 59);
                 return s;
             })
         }
+    }
 
+    function onEndDateChange() {
+        console.log('#');
+        console.log(getEndDate());
+        console.log(getStartDate());
+        console.log('#');
+        if(getEndDate() < getStartDate()){
+            ShowCreateUserEventStore.update((s) => {
+                const d = getEndDate();
+                s.endDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59);
+                s.startDate = new Date(s.endDate.getFullYear(), s.endDate.getMonth(), s.endDate.getDate(), 0, 0);
+                return s;
+            })
+        }
     }
 
     async function doCreateUserEvent() {
@@ -61,7 +85,6 @@
 
     function initStartAndEnd(){
         startDate = fromDateToString($ShowCreateUserEventStore.startDate);
-        console.log(startDate)
         startTime = fromTimeToString($ShowCreateUserEventStore.startDate);
         endDate = fromDateToString($ShowCreateUserEventStore.endDate);
         endTime = fromTimeToString($ShowCreateUserEventStore.endDate);
@@ -72,6 +95,11 @@
     })
 
     onDestroy(unsubscribe);
+
+    function test() {
+            console.log('toto');
+            document.getElementById('userevent-category').value = 'Vacances';
+    }
 
 </script>
 
@@ -96,16 +124,36 @@
         display: block;
     }
 
-    #create-userevent-form div.mb-3 {
+    #create-userevent-form div.mb-3, .field {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
     }
 
+    .date-field, .fieldrow {
+        display: flex;
+        justify-content: flex-start !important;
+        flex-direction: row !important;
+    }
+
+    .datetime {
+        margin-left: 5px;
+    }
+
     .modal-body {
         max-height: calc(100vh - 250px);
         overflow-y: auto;
+    }
+
+    .input-color {
+        width: 75px;
+        margin-left: 5px;
+        padding: 1px;
+    }
+
+    #create-userevents-loading {
+        display: none;
     }
 
 </style>
@@ -122,7 +170,7 @@
                 }
             </style>
 
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 id="create-userevent-modal-title" class="modal-title">Créer un évènement</h5>
@@ -136,60 +184,82 @@
                     <div class="modal-body">
                         <div id="create-userevent-form" class="">
                             <div class="mb-3">
-                                <label for="userevent-startdate">Début</label>
-                                <input
-                                        class="form-control"
-                                        id="userevent-startdate" name="userevent-startdate" type="date" required
-                                        on:change={validateUserEvent}
-                                        bind:value={startDate}
-                                >
-                                <input
-                                        class="form-control"
-                                        id="userevent-starttime" name="userevent-starttime" type="time" required
-                                        on:change={validateUserEvent}
-                                        bind:value={startTime}
-                                >
-                                <div class="invalid-feedback">
-                                    La date de début ne peut pas être vide et doit être inférieur à la date de fin.
+                                <label for="userevent-startdate-field">Début</label>
+                                <div id="userevent-startdate-field" class="date-field">
+                                    <input
+                                            class="form-control datetime"
+                                            id="userevent-startdate" name="userevent-startdate" type="date" required
+                                            on:blur={onStartDateChange}
+                                            bind:value={startDate}
+                                    >
+                                    <input
+                                            class="form-control datetime"
+                                            id="userevent-starttime" name="userevent-starttime" type="time" required
+                                            on:blur={onStartDateChange}
+                                            bind:value={startTime}
+                                    >
+                                    <div class="invalid-feedback">
+                                        La date de début ne peut pas être vide et doit être inférieur à la date de fin.
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-enddate">Fin</label>
-                                <input
-                                        class="form-control"
-                                        id="userevent-enddate" name="userevent-enddate"
-                                        type="date" required
-                                        on:change={validateUserEvent}
-                                        bind:value={endDate}
-                                >
-                                <input
-                                        class="form-control"
-                                        id="userevent-endtime" name="userevent-endtime"
-                                        type="time" required
-                                        on:change={validateUserEvent}
-                                        bind:value={endTime}
-                                >
-                                <div class="invalid-feedback">
-                                    La date de fin ne peut pas être vide et doit être supérieur à la date de début.
+                                <label for="userevent-enddate-field">Fin</label>
+                                <div id="userevent-enddate-field" class="date-field">
+                                    <input
+                                            class="form-control datetime"
+                                            id="userevent-enddate" name="userevent-enddate"
+                                            type="date" required
+                                            on:blur={onEndDateChange}
+                                            bind:value={endDate}
+                                    >
+                                    <input
+                                            class="form-control datetime"
+                                            id="userevent-endtime" name="userevent-endtime"
+                                            type="time" required
+                                            on:blur={onEndDateChange}
+                                            bind:value={endTime}
+                                    >
+                                    <div class="invalid-feedback">
+                                        La date de fin ne peut pas être vide et doit être supérieur à la date de début.
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="userevent-label">Label</label>
-                                <input
-                                        class="form-control"
-                                        id="userevent-label" name="userevent-label" type="text" required>
-                                <div class="invalid-feedback">
-                                    Le label ne peut pas être vide.
+                            <div class="mb-3 fieldrow" >
+                                <div class="field">
+                                    <label for="userevent-label">Label</label>
+                                    <input
+                                            class="form-control"
+                                            id="userevent-label" name="userevent-label" type="text">
+                                </div>
+                                <div class="field">
+                                    <label for="userevent-color">Couleur</label>
+                                    <input  class="form-control input-color"
+                                            id="userevent-color" name="userevent-color" type="color">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="userevent-description">Description</label>
                                 <textarea
                                         class="form-control"
-                                        id="userevent-description" name="userevent-label" type="text" required>
+                                        id="userevent-description" name="userevent-label" type="text">
                                 </textarea>
-                                <div class="invalid-feedback">
-                                    Le label ne peut pas être vide.
+                            </div>
+                            <div class="mb-3">
+                                <label for="userevent-category">Catégorie</label>
+                                <div class="fieldrow">
+                                    <input  class="form-control category"
+                                            id="userevent-category" name="userevent-category" type="text">
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn btn-secondary dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-expanded="false"
+                                        ></button>
+                                        <div id="categories" class="dropdown-menu dropdown-menu-right">
+                                            <button on:click={test} type="button" class="dropdown-item">Vacances</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -214,7 +284,7 @@
                                 <label for="userevent-location">Localisation</label>
                                 <input class="form-select"
                                         id="userevent-location" name="userevent-location"
-                                        required title="Localisation">
+                                        title="Localisation">
                             </div>
                         </div>
                     </div>
@@ -222,7 +292,7 @@
                         <div id="error-creating-userevents" class="alert alert-danger fade">
                             <div id="error-creating-userevents-content"></div>
                         </div>
-                        <button id="do-create-userevents" type="button" class="btn action btn-danger " disabled on:click={doCreateUserEvent}>
+                        <button id="do-create-userevents" type="button" class="btn action btn-danger " on:click={doCreateUserEvent}>
                             <span id="create-userevents-loading" class="spinner-border"></span><span id="do-create-userevents-text">Enregistrer</span>
                         </button>
                     </div>

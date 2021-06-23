@@ -131,7 +131,8 @@
     </div>
 {:else}
     <div class="dropdown">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
+        <button type="button" class="btn btn-secondary dropdown-toggle"
+                data-toggle="dropdown" >
             <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right ">

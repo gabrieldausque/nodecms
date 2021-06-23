@@ -9,3 +9,4 @@ export {MediaRules} from './MediaRules';
 export {MetadataEntityRules} from './MetadataEntityRules';
 export {RoleEntityRules} from './RoleEntityRules';
 export {UserEntityRules} from './UserEntityRules';
+export {UserEventEntityRules} from './UserEventEntityRules';
