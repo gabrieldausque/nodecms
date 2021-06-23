@@ -60,10 +60,22 @@ export class MongoDbUserEventStorage
              lastIndex?: number): Promise<UserEvent[]> {
     if(filter){
       // TODO : manage the endDate/startDate filter
-      return await this.internalFind(filter,
-        lastIndex,
-        this.collectionName,
-        true);
+      if(filter.startDate && filter.endDate){
+        const query:any = {
+          ...filter
+        };
+        query.startDate = { $gte: new Date(filter.startDate.toISOString())}
+        query.endDate = { $lte: new Date(filter.endDate.toISOString())}
+        return await this.internalFind(query,
+          lastIndex,
+          this.collectionName,
+          false);
+      }else {
+        return await this.internalFind(filter,
+          lastIndex,
+          this.collectionName,
+          false);
+      }
     }
     return [];
   }

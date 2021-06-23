@@ -29,8 +29,8 @@ export default function (app: Application): void {
   const userEventsService = new UserEvents(options, app);
   configureSwagger(userEventsService);
 
-  app.use('/user-events', new UserEvents(options, app));
-
+  app.use('/user-events', userEventsService);
+  app.use('/user/:idOrLogin/user-events', userEventsService);
   // Get our initialized service so that we can register hooks
   const service = app.service('user-events');
 

@@ -1,18 +1,31 @@
 import {EntityRules} from "./EntityRules";
-import {InvalidDataError, UserEvent} from "@nodecms/backend-data";
+import {InvalidDataError, UserAvailabilityStatus, UserEvent, UserEventVisibility} from "@nodecms/backend-data";
 
 export class UserEventEntityRules extends EntityRules<UserEvent> {
 
-    static validateUserEvent(userEvent:UserEvent) {
-        if(!userEvent.startDate ||
-           !userEvent.endDate ||
-            userEvent.startDate > userEvent.endDate)
+    async validate(entity: Partial<UserEvent>): Promise<void> {
+
+        if(!entity.startDate ||
+            !entity.endDate ||
+            entity.startDate > entity.endDate)
         {
             throw new InvalidDataError('UserEvent must have a startDate and a endDate, with startDate > endDate. Please correct');
         }
 
-        if(!Array.isArray(userEvent.attachment)){
-            userEvent.attachments = [];
+        if(!Array.isArray(entity.attachment)){
+            entity.attachments = [];
+        }
+
+        if(!UserAvailabilityStatus.isValidAvailability(entity.ownerAvailabilityStatus)){
+            entity.ownerAvailabilityStatus = UserAvailabilityStatus.busy;
+        }
+
+        if(!UserEventVisibility.isValidVisibility(entity.visibility)){
+            entity.visibility = UserEventVisibility.private;
+        }
+
+        if(!entity.color){
+            entity.color = '#243dff';
         }
     }
 

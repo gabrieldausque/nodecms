@@ -2,6 +2,7 @@ import {BaseServiceClient} from "./BaseServiceClient";
 import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import {v4 as uuid} from 'uuid';
 import {Authentication, User} from "@nodecms/backend-data/dist";
+import {UserEvent} from "@nodecms/backend-data";
 
 export class AuthenticationService extends BaseServiceClient<Authentication> {
     constructor(url: string) {
@@ -67,5 +68,9 @@ export class UserService extends BaseServiceClient<User> {
         }catch(error) {
             throw(error);
         }
+    }
+
+    async createUserEvent(userEvent: UserEvent) {
+
     }
 }

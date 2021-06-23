@@ -1,13 +1,26 @@
 <script lang="ts">
     import {ShowCreateUserEventStore, ShowCreateUserEvent} from "../../stores/ShowCreateUserEventStore";
     import {fly} from "svelte/transition"
-    import {UserEvent, UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
     import {onMount, onDestroy, afterUpdate} from 'svelte';
+    import {UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
+    import {getBackendClient} from "@nodecms/backend-client";
 
     let startDate;
     let startTime;
     let endDate;
     let endTime;
+    let userEvent = {
+        startDate: $ShowCreateUserEventStore.startDate,
+        endDate: $ShowCreateUserEventStore.endDate,
+        category: '',
+        ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+        visibility: UserEventVisibility.protected,
+        label:'',
+        description:'',
+        location:'',
+        color:'#243dff',
+        attachments:[]
+    }
 
     //@ts-ignore
     const unsubscribe = ShowCreateUserEventStore.subscribe(v => {
@@ -80,7 +93,19 @@
     }
 
     async function doCreateUserEvent() {
-
+        const doCreateEventButton = document.getElementById('do-create-userevents');
+        const loading = document.getElementById('create-userevents-loading');
+        try {
+            const backendService = await getBackendClient();
+            loading.classList.add('show');
+            doCreateEventButton.setAttribute('disabled','disabled');
+            backendService.userService.createUserEvent(userEvent);
+        } catch (e){
+            console.error(e);
+        } finally {
+            doCreateEventButton.removeAttribute('disabled');
+            loading.classList.remove('show');
+        }
     }
 
     function initStartAndEnd(){
@@ -90,16 +115,24 @@
         endTime = fromTimeToString($ShowCreateUserEventStore.endDate);
     }
 
+    function onPredefinedCategoryClick(event) {
+        document.getElementById('userevent-category').value = event.target.getAttribute('data-category');
+        showOrHidePredefinedCategories();
+    }
+
+    function showOrHidePredefinedCategories(forceHide:boolean = false):void {
+        const menu = document.getElementById('categories');
+        if(menu.classList.contains('show'))
+            menu.classList.remove('show');
+        else
+            menu.classList.add('show');
+    }
+
     onMount(() => {
         initStartAndEnd()
     })
 
     onDestroy(unsubscribe);
-
-    function test() {
-            console.log('toto');
-            document.getElementById('userevent-category').value = 'Vacances';
-    }
 
 </script>
 
@@ -131,10 +164,11 @@
         align-items: flex-start;
     }
 
-    .date-field, .fieldrow {
+    .date-field, .field-row {
         display: flex;
         justify-content: flex-start !important;
         flex-direction: row !important;
+        position: relative;
     }
 
     .datetime {
@@ -154,6 +188,28 @@
 
     #create-userevents-loading {
         display: none;
+    }
+
+    #userevent-category {
+        margin-bottom: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    #show-predefined-categories {
+        margin-bottom: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        height: 39px;
+    }
+
+    #categories {
+        position: absolute;
+        display: none;
+    }
+
+    :global(#categories.show) {
+        display: flex !important;
     }
 
 </style>
@@ -225,48 +281,70 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3 fieldrow" >
+                            <div class="mb-3 field-row" >
                                 <div class="field">
                                     <label for="userevent-label">Label</label>
                                     <input
                                             class="form-control"
-                                            id="userevent-label" name="userevent-label" type="text">
+                                            id="userevent-label" name="userevent-label"
+                                            type="text"
+                                            bind:value={userEvent.label}
+                                    >
                                 </div>
                                 <div class="field">
                                     <label for="userevent-color">Couleur</label>
                                     <input  class="form-control input-color"
-                                            id="userevent-color" name="userevent-color" type="color">
+                                            id="userevent-color"
+                                            name="userevent-color"
+                                            type="color"
+                                            bind:value={userEvent.color}
+                                    >
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="userevent-description">Description</label>
                                 <textarea
                                         class="form-control"
-                                        id="userevent-description" name="userevent-label" type="text">
-                                </textarea>
+                                        id="userevent-description"
+                                        name="userevent-label"
+                                        type="text"
+                                        bind:value={userEvent.description}
+                                />
                             </div>
                             <div class="mb-3">
                                 <label for="userevent-category">Catégorie</label>
-                                <div class="fieldrow">
+                                <div class="field-row">
                                     <input  class="form-control category"
-                                            id="userevent-category" name="userevent-category" type="text">
-                                    <div class="dropdown">
-                                        <button type="button"
-                                                class="btn btn-secondary dropdown-toggle"
-                                                data-toggle="dropdown"
-                                                aria-expanded="false"
-                                        ></button>
-                                        <div id="categories" class="dropdown-menu dropdown-menu-right">
-                                            <button on:click={test} type="button" class="dropdown-item">Vacances</button>
-                                        </div>
+                                            id="userevent-category"
+                                            name="userevent-category"
+                                            type="text" on:blur={() => {
+                                                showOrHidePredefinedCategories(true);
+                                            }}
+                                            bind:value={userEvent.category}
+                                    >
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            id="show-predefined-categories"
+                                            on:click={() => {
+                                             showOrHidePredefinedCategories();
+                                            }}
+                                    ><i class="fas fa-chevron-down"></i></button>
+                                    <div id="categories" class="dropdown-menu">
+                                        <button on:click={onPredefinedCategoryClick}
+                                                type="button"
+                                                data-category="Vacances"
+                                                class="dropdown-item">Vacances</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="userevent-visibility">Visibilité</label>
                                 <select class="form-select"
-                                        id="userevent-visibility" name="userevent-visibility"
-                                        required title="Un évènement protégé n'est accessible et visible que par des utilisateurs identifiés">
+                                        id="userevent-visibility"
+                                        name="userevent-visibility"
+                                        title="Un évènement protégé n'est accessible et visible que par des utilisateurs identifiés"
+                                        bind:value={userEvent.visibility}
+                                >
                                     <option value="protected" >Protégé</option>
                                     <option value="public">Public</option>
                                 </select>
@@ -275,7 +353,9 @@
                                 <label for="userevent-availability">Disponibilité</label>
                                 <select class="form-select"
                                         id="userevent-availability" name="userevent-availability"
-                                        required title="Occupé">
+                                        title="Occupé"
+                                        bind:value={userEvent.ownerAvailabilityStatus}
+                                >
                                     <option value="busy" >Occupé</option>
                                     <option value="available">Disponible</option>
                                 </select>
@@ -283,8 +363,11 @@
                             <div class="mb-3">
                                 <label for="userevent-location">Localisation</label>
                                 <input class="form-select"
-                                        id="userevent-location" name="userevent-location"
-                                        title="Localisation">
+                                        id="userevent-location"
+                                        name="userevent-location"
+                                        title="Localisation"
+                                       bind:value={userEvent.location}
+                                >
                             </div>
                         </div>
                     </div>

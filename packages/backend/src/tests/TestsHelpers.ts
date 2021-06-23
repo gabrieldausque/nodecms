@@ -104,6 +104,11 @@ export async function initMongoDbTestDatabase():Promise<void> {
   }catch(err) {
     //ignoring
   }
+  try {
+    await mongoDbClient.db('teama_test').collection('userEvents').drop();
+  }catch(err) {
+    //ignoring
+  }
 
   try{
     await userStorage.create({ login:"localtest",password:"apassword",isActive:true});
@@ -169,6 +174,18 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"create",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"update",for:"document",right:"x",role:1});
+
+  //Rights for Document service
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user-events",right:"x",role:2});
 
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:1});

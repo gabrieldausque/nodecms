@@ -9,15 +9,11 @@ import * as fs from 'fs';
 import app from '../../src/app';
 import {Server} from "http";
 import axios from "axios";
-import {globalInstancesFactory} from "@hermes/composition";
 import {getAuthenticationParams, getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {User} from "../../../backend-data/src/User";
 import {User as UserService} from '../../src/services/user/user.class';
 import {UserMetadata} from "../../src/services/user-metadata/user-metadata.class";
 import {UserRoles} from "../../src/services/user-roles/user-roles.class";
-import {Role as RoleEntity} from '../../../backend-data/src/Role';
-import {MongoClient} from "mongodb";
-import {MongoDbUserStorage} from "../../src/plugins/Storages/User/MongoDbUserStorage";
 import {v4 as uuid} from "uuid";
 
 const port = app.get('port') || 3030;
