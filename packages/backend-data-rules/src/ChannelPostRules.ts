@@ -18,7 +18,7 @@ export class ChannelPostRules extends EntityRules<ChannelPost> {
     }
   }
 
-  validateFilter(post:Partial<ChannelPost>) {
+  async validateFilter(post:Partial<ChannelPost>) {
 
     if(post.parentPost && typeof post.parentPost === 'string') {
       post.parentPost = parseInt(post.parentPost);

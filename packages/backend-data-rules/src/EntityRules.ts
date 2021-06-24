@@ -32,4 +32,8 @@ export abstract class EntityRules<T extends Entity> {
   public async validateForUpdate(entity:Partial<T>):Promise<void> {
   };
 
+  public async validateFilter(entity:Partial<T>):Promise<void> {
+
+  }
+
 }

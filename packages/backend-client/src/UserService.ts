@@ -3,6 +3,7 @@ import {NodeCMSFrontEndEvents} from "./NodeCMSFrontEndEvents";
 import {v4 as uuid} from 'uuid';
 import {Authentication, User} from "@nodecms/backend-data/dist";
 import {UserEvent} from "@nodecms/backend-data";
+import {UserEventService} from "./UserEventService";
 
 export class AuthenticationService extends BaseServiceClient<Authentication> {
     constructor(url: string) {
@@ -14,11 +15,13 @@ export class UserService extends BaseServiceClient<User> {
 
     public isAuthenticated:boolean;
     private authenticationService: AuthenticationService;
+    private userEventService: UserEventService;
 
     constructor(url:string) {
         super(url, 'user');
         this.isAuthenticated = false;
         this.authenticationService = new AuthenticationService(this.url);
+        this.userEventService = new UserEventService(this.url);
     }
 
     getClientUniqueId() {
@@ -63,14 +66,15 @@ export class UserService extends BaseServiceClient<User> {
     }
 
     async getUser(ownerId: number) {
-        try{
-            return await this.get(ownerId);
-        }catch(error) {
-            throw(error);
-        }
+        return await this.get(ownerId);
     }
 
     async createUserEvent(userEvent: UserEvent) {
+        return await this.userEventService.create(userEvent);
+    }
 
+    async findUserEvents(login:string, startDate:Date, endDate:Date) {
+        const user = await this.get(login);
+        return await this.userEventService.findUserEvents(user.id as number, startDate, endDate);
     }
 }

@@ -4,6 +4,7 @@ import {UserEvent} from "@nodecms/backend-data";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {UserEventEntityRules} from "@nodecms/backend-data-rules/dist/UserEventEntityRules";
 import {UserEventUseCases} from "../../usecases/UserEventUseCases";
+import { globalInstancesFactory } from '@hermes/composition';
 
 type UserEventDTO = Partial<UserEvent>;
 
@@ -25,4 +26,34 @@ export class UserEvents extends BaseService<UserEventDTO,
     this.app = app;
   }
 
+  async create(data: UserEventDTO | UserEventDTO[], params?: Params | undefined): Promise<UserEventDTO | UserEventDTO[]>{
+    if(params &&
+      params.route &&
+      params.route.idOrLogin
+    ){
+      const userUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+      const user = await userUseCase.get(params.route.idOrLogin);
+      if(Array.isArray(data)){
+        for(const e of data){
+          e.ownerId = user.id;
+        }
+      } else {
+        data.ownerId = user.id;
+      }
+    }
+    return await super.create(data, params);
+  }
+
+  async find(params?: Params | undefined): Promise<UserEventDTO | UserEventDTO[] | Paginated<UserEventDTO>> {
+    if(params &&
+      params.query &&
+      params.route &&
+      params.route.idOrLogin
+    ) {
+      const userUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+      const user = await userUseCase.get(params.route.idOrLogin);
+      params.query.ownerId = user.id;
+    }
+    return super.find(params)
+  }
 }

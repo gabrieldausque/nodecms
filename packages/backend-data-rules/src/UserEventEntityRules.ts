@@ -3,6 +3,23 @@ import {InvalidDataError, UserAvailabilityStatus, UserEvent, UserEventVisibility
 
 export class UserEventEntityRules extends EntityRules<UserEvent> {
 
+    async validateFilter(filter:Partial<UserEvent>) {
+        console.log(filter);
+        if(typeof filter.startDate === 'string'){
+            filter.startDate = new Date(Date.parse(filter.startDate));
+        }
+
+        if(typeof filter.endDate === 'string'){
+            filter.endDate = new Date(Date.parse(filter.endDate));
+        }
+
+        if(typeof filter.ownerId === 'string'){
+            filter.ownerId = parseInt(filter.ownerId);
+        }
+
+        console.log(filter)
+    }
+
     async validate(entity: Partial<UserEvent>): Promise<void> {
 
         if(!entity.startDate ||

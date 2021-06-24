@@ -123,13 +123,16 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"user-events",right:"x",role:2})
 
   //rights for document
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:1})
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:1})
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:2})
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:1})
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:2})
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:1})
-  teamADb.userEvents.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
 
   //rights for role data access (as operations are all authorized by default)
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:0})

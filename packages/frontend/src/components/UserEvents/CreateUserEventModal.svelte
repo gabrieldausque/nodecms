@@ -4,6 +4,8 @@
     import {onMount, onDestroy, afterUpdate} from 'svelte';
     import {UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
     import {getBackendClient} from "@nodecms/backend-client";
+    import {UserEventsStore} from "../../stores/UserEventsStore";
+    import {UserStore} from "../../stores/UserStore";
 
     let startDate;
     let startTime;
@@ -26,6 +28,11 @@
     const unsubscribe = ShowCreateUserEventStore.subscribe(v => {
         initStartAndEnd();
     })
+
+    const visibilitiesDescription = {
+        protected: "Un évènement protégé n'est accessible et visible que par des utilisateurs identifiés",
+        private: "Un évènement privé ne laisse voir aux autres utilisateurs que la date de début, de fin et la disponibilité de son créateur"
+    }
 
     function fromDateToString(d:Date):string{
         const date = d.getDate();
@@ -95,16 +102,33 @@
     async function doCreateUserEvent() {
         const doCreateEventButton = document.getElementById('do-create-userevents');
         const loading = document.getElementById('create-userevents-loading');
+        let closeAfterAction = true;
         try {
             const backendService = await getBackendClient();
             loading.classList.add('show');
             doCreateEventButton.setAttribute('disabled','disabled');
-            backendService.userService.createUserEvent(userEvent);
-        } catch (e){
-            console.error(e);
+            userEvent.startDate = getStartDate();
+            userEvent.endDate = getEndDate();
+            await backendService.userService.createUserEvent(userEvent);
+            backendService.userService.findUserEvents($UserStore.login, $UserEventsStore.startDate, $UserEventsStore.startDate).then(events => {
+                UserEventsStore.update((ues) => {
+                    ues.eventsByUser[$UserStore.login] = events;
+                    return ues;
+                })
+            })
+        } catch (error){
+            document.getElementById('error-creating-userevents-content').innerText = error.message;
+            document.getElementById('error-uploading-media').classList.add('show');
+            closeAfterAction = false;
+            console.error(error);
         } finally {
             doCreateEventButton.removeAttribute('disabled');
             loading.classList.remove('show');
+            if(closeAfterAction){
+                window.setTimeout(() => {
+                    ShowCreateUserEventStore.set(new ShowCreateUserEvent())
+                }, 2000)
+            }
         }
     }
 
@@ -126,6 +150,8 @@
             menu.classList.remove('show');
         else
             menu.classList.add('show');
+        if(forceHide)
+            menu.classList.remove('show');
     }
 
     onMount(() => {
@@ -190,6 +216,10 @@
         display: none;
     }
 
+    #create-userevents-loading.show {
+        display: block;
+    }
+
     #userevent-category {
         margin-bottom: 0;
         border-top-right-radius: 0;
@@ -200,12 +230,13 @@
         margin-bottom: 0;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-        height: 39px;
+        height: 38px;
     }
 
     #categories {
         position: absolute;
         display: none;
+        right:0;
     }
 
     :global(#categories.show) {
@@ -342,11 +373,15 @@
                                 <select class="form-select"
                                         id="userevent-visibility"
                                         name="userevent-visibility"
-                                        title="Un évènement protégé n'est accessible et visible que par des utilisateurs identifiés"
+                                        title={visibilitiesDescription.protected}
                                         bind:value={userEvent.visibility}
+                                        on:blur={() => {
+                                            const visibilitySelected = document.getElementById('userevent-visibility');
+                                            visibilitySelected.title = visibilitiesDescription[visibilitySelected.value]
+                                        }}
                                 >
-                                    <option value="protected" >Protégé</option>
-                                    <option value="public">Public</option>
+                                    <option value="protected" title={visibilitiesDescription.protected}>Protégé</option>
+                                    <option value="private" title={visibilitiesDescription.private}>Privé</option>
                                 </select>
                             </div>
                             <div class="mb-3">

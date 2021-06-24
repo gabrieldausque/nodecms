@@ -53,7 +53,7 @@ export class ChannelPostUseCases extends UseCases<ChannelPost,
   }
 
   async find(filter: Partial<ChannelPost>, lastIndex?:number | string, executingUser?: User, channelName?:string): Promise<ChannelPost[]> {
-    this.entityRules.validateFilter(filter);
+    await this.entityRules.validateFilter(filter);
     if(filter && channelName){
       filter.channelKey = (filter.channelKey && filter.channelKey === channelName)?
         filter.channelKey:

@@ -10,7 +10,7 @@ export class UserEventService extends BaseServiceClient<UserEvent> {
         return await this.get(id);
     }
 
-    async findMyUserEvents(ownerId:number, startDate:Date, endDate:Date) {
+    async findUserEvents(ownerId:number, startDate:Date, endDate:Date) {
         return await this.find({
             ownerId:ownerId,
             startDate:startDate,

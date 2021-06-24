@@ -4,6 +4,7 @@
     import ContentDayContainer from "./ContentDayContainer.svelte";
     import {Helpers} from "../../helpers/Helpers";
     import CreateUserEventModal from "./CreateUserEventModal.svelte";
+    import {UserEvents, UserEventsStore} from "../../stores/UserEventsStore";
 
     let today = new Date()
     let startDate = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -21,6 +22,22 @@
         }
         newDays.push(endDate);
         days = newDays;
+        const updateEventsStore = new Promise( async (resolve) => {
+            const services = getBackendClient();
+            console.log('#');
+            console.log($UserEventsStore);
+            console.log('#');
+            for (const login in $UserEventsStore.eventsByUser){
+                if($UserEventsStore.eventsByUser.hasOwnProperty(login)){
+                    $UserEventsStore.eventsByUser[login] = await services.userService.findUserEvents(login, startDate, endDate);
+                }
+            }
+            UserEventsStore.update(ues => {
+                return ues
+            })
+            resolve();
+        })
+        updateEventsStore.then(() => {}).catch(console.error);
     }
 
     fillDays();

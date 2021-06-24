@@ -550,6 +550,14 @@ describe('User service', () => {
     return expect(isRejected).to.be.true;
   })
 
+  it('should return current authenticated user', async() => {
+    const service = app.service('user');
+    const currentUser = await service.get('#');
+    const expected:User = {
+      login:
+    }
+  })
+
 });
 
 

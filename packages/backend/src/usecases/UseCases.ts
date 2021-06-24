@@ -39,6 +39,7 @@ export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
   }
 
   async find(filter:Partial<T>, lastIndex?:number | string, executingUser?:User) : Promise<T[]> {
+    await this.entityRules.validateFilter(filter);
     let index:number | undefined = typeof lastIndex === 'string' ?
                        parseInt(lastIndex):lastIndex;
     const found = await this.storage.find(filter, index);

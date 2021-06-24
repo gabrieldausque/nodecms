@@ -5,6 +5,7 @@ export {AttachmentHelpers} from './AttachmentHelpers';
 export {BaseServiceClient} from './BaseServiceClient';
 export {ChannelsService, channelsEventNames} from './ChannelsService';
 export {DocumentService, documentsEventName} from './DocumentService';
+export {UserEventService} from './UserEventService';
 export {MediaService} from './MediaService';
 export {PostService} from './PostService';
 export {ProjectsService} from './ProjectsService';

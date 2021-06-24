@@ -2,8 +2,10 @@
 
     import {Helpers} from "../../helpers/Helpers";
     import {ShowCreateUserEventStore} from "../../stores/ShowCreateUserEventStore";
+    import {UserEventsStore} from "../../stores/UserEventsStore";
 
     export let currentDay;
+    export let login;
 
     function displayCreateUserEventModal(){
         ShowCreateUserEventStore.update(m => {
@@ -50,4 +52,11 @@
     <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()} `} {#if currentDay.getDate() === new Date().getDate() &&
     currentDay.getMonth() === new Date().getMonth() &&
     currentDay.getFullYear() === new Date().getFullYear()}<div class="today-mark"></div>{/if}</div>
+    {#if Array.isArray($UserEventsStore)}
+        {#each $UserEventsStore.eventsByUser[login] as userEvent}
+            {#if userEvent.startDate.getTime() <= currentDay.getTime() && currentDay.get() <= userEvent.endDate.getTime()}
+                <div>{userEvent.label}</div>
+            {/if}
+        {/each}
+    {/if}
 </div>
