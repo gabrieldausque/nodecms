@@ -1,6 +1,7 @@
 <script lang="ts">
 
     import {UserEvent} from "@nodecms/backend-data";
+    import {UserEventsStore} from "../../stores/UserEventsStore";
 
     export let userEvent:UserEvent;
     export let day:Date;
@@ -19,7 +20,7 @@
         width:100%;
         height: 25px;
         margin-bottom: 2px;
-        position: absolute;
+        position:absolute;
     }
 
     .user-event-container.user-event-start {

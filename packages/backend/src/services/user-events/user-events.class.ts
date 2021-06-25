@@ -58,6 +58,8 @@ export class UserEvents extends BaseService<UserEventDTO,
       const user = await userUseCase.get(params.route.idOrLogin);
       params.query.ownerId = user.id;
     }
-    return super.find(params)
+    const found = await super.find(params)
+    console.log(`found length : ${Array.isArray(found)?found.length:''}`);
+    return found
   }
 }

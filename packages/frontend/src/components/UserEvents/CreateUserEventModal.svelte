@@ -4,8 +4,6 @@
     import {onMount, onDestroy, afterUpdate} from 'svelte';
     import {UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
     import {getBackendClient} from "@nodecms/backend-client";
-    import {UserEventsStore} from "../../stores/UserEventsStore";
-    import {UserStore} from "../../stores/UserStore";
 
     let startDate;
     let startTime;
@@ -105,27 +103,17 @@
             doCreateEventButton.setAttribute('disabled','disabled');
             userEvent.startDate = getStartDate();
             userEvent.endDate = getEndDate();
-
             await backendService.userService.createUserEvent(userEvent);
-            backendService.userService.findUserEvents($UserStore.login, $UserEventsStore.startDate, $UserEventsStore.endDate).then(events => {
-                console.log('events #')
-                console.log(events);
-                console.log('events #')
-                UserEventsStore.update((ues) => {
-                    ues.eventsByUser[$UserStore.login] = events;
-                    return ues;
-                })
-            })
         } catch (error){
             document.getElementById('error-creating-userevents-content').innerText = error.message;
             document.getElementById('error-uploading-media').classList.add('show');
             closeAfterAction = false;
             console.error(error);
         } finally {
-            doCreateEventButton.removeAttribute('disabled');
-            loading.classList.remove('show');
             if(closeAfterAction){
                 window.setTimeout(() => {
+                    doCreateEventButton.removeAttribute('disabled');
+                    loading.classList.remove('show');
                     ShowCreateUserEventStore.set(new ShowCreateUserEvent())
                 }, 2000)
             }
@@ -171,6 +159,7 @@
         width: 100vw;
         background: rgba(0, 0, 0, 0.2);
         display: none;
+        z-index: 150;
     }
 
     #create-userevent-background.show {

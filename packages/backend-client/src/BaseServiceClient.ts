@@ -13,6 +13,7 @@ export abstract class BaseServiceClient<T extends Entity> {
     createHeaders(request:XMLHttpRequest) {
         request.withCredentials = true;
         request.setRequestHeader('Content-Type', 'application/json');
+        request.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
     }
 
     async create(entity:T):Promise<T> {
@@ -53,6 +54,7 @@ export abstract class BaseServiceClient<T extends Entity> {
 
     async get(entityKeyOrId:string|number):Promise<T>{
         const request = new XMLHttpRequest();
+
         const params:undefined|URLSearchParams = typeof entityKeyOrId === 'string'?
             new URLSearchParams():
             undefined;

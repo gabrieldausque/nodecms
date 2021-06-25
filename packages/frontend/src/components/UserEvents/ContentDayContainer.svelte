@@ -61,7 +61,7 @@
 
     .events-container {
         width: 100%;
-        height: calc(100% - 25px);
+        min-height: calc(100% - 25px);
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
@@ -72,10 +72,12 @@
     <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()} `} {#if currentDay.getDate() === new Date().getDate() &&
     currentDay.getMonth() === new Date().getMonth() &&
     currentDay.getFullYear() === new Date().getFullYear()}<div class="today-mark"></div>{/if}</div>
-    <div class="events-container">
+    <div class="events-container" style="{Array.isArray(userEvents)?
+        `height : ${userEvents.length * 26}px;`:
+        ''}">
         {#if Array.isArray(userEvents)}
             {#each userEvents.filter(ue => ue.startDate.getTime() <= currentDay.getTime() && currentDay.getTime() <= ue.endDate.getTime()) as userEvent}
-                <ContentUserEventContainer userEvent={userEvent} day={currentDay} index={userEvents.indexOf(userEvent)}></ContentUserEventContainer>
+                <ContentUserEventContainer userEvent={userEvent} day={currentDay} index={$UserEventsStore.eventsByUser[login].indexOf(userEvent)} ></ContentUserEventContainer>
             {/each}
         {/if}
     </div>
