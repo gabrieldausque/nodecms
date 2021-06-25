@@ -70,6 +70,11 @@ describe('User service', () => {
     await initMongoDbTestDatabase();
   })
 
+  afterEach(() => {
+    params.route = {};
+    params.query = {};
+  })
+
   after((done) => {
     server.close(done);
   })
@@ -552,10 +557,25 @@ describe('User service', () => {
 
   it('should return current authenticated user', async() => {
     const service = app.service('user');
-    const currentUser = await service.get('#');
-    const expected:User = {
-      login:
+    params.query = {
+      currentUser: true
+    };
+    const currentUser = await service.get(0, params);
+    const expectedOne:User = {
+      id: 0,
+      isActive: true,
+      login: 'localtest',
+      password: '***'
     }
+    expect(currentUser).to.be.eql(expectedOne);
+    const otherParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
+    otherParams.query = {
+      currentUser: true
+    }
+    const otherUser = await service.get(0, otherParams);
+    expectedOne.login = 'otheruser';
+    expectedOne.id = 1;
+    expect(otherUser).to.be.eql(expectedOne);
   })
 
 });

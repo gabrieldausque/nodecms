@@ -17,4 +17,14 @@ export class UserEventService extends BaseServiceClient<UserEvent> {
             endDate:endDate
         })
     }
+
+    makeReadable(entity: UserEvent): UserEvent {
+        if(typeof (entity as any).startDate === 'string'){
+            entity.startDate = new Date(entity.startDate);
+        }
+        if(typeof (entity as any).endDate === 'string'){
+            entity.endDate = new Date(entity.endDate);
+        }
+        return entity
+    }
 }

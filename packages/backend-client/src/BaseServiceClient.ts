@@ -79,7 +79,7 @@ export abstract class BaseServiceClient<T extends Entity> {
             }
             request.send();
         });
-        return await requestPromise;
+        return this.makeReadable(await requestPromise);
     }
 
     async find(entityFilter?:Partial<T>):Promise<T[]> {
@@ -90,7 +90,13 @@ export abstract class BaseServiceClient<T extends Entity> {
         if(params && entityFilter)
             for(const propName in entityFilter){
                 if(entityFilter.hasOwnProperty(propName)){
-                    params.append(propName, entityFilter[propName].toString());
+                    if(entityFilter[propName] as any instanceof Date)
+                    {
+                        const date = entityFilter[propName] as Date;
+                        params.append(propName, date.getTime().toString());
+                    } else {
+                        params.append(propName, entityFilter[propName].toString());
+                    }
                 }
             }
         const url:string = params?
@@ -109,7 +115,11 @@ export abstract class BaseServiceClient<T extends Entity> {
             }
             request.send();
         });
-        return await requestPromise;
+        const found = await requestPromise;
+        for(let e of found){
+            this.makeReadable(e);
+        }
+        return found
     }
 
     async delete(entityKeyOrId:string|number):Promise<T> {
@@ -132,5 +142,9 @@ export abstract class BaseServiceClient<T extends Entity> {
             request.send();
         });
         return await requestPromise;
+    }
+
+    public makeReadable(entity: T) : T {
+        return entity as T;
     }
 }

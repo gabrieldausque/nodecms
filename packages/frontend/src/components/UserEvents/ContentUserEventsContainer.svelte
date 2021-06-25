@@ -1,10 +1,12 @@
 <script>
 
-    import {onMount, beforeUpdate} from 'svelte';
+    import {onMount} from 'svelte';
     import ContentDayContainer from "./ContentDayContainer.svelte";
     import {Helpers} from "../../helpers/Helpers";
     import CreateUserEventModal from "./CreateUserEventModal.svelte";
-    import {UserEvents, UserEventsStore} from "../../stores/UserEventsStore";
+    import {UserEventsStore} from "../../stores/UserEventsStore";
+    import {UserStore} from "../../stores/UserStore";
+    import ContentUserEventContainer from "./ContentUserEventContainer.svelte";
 
     let today = new Date()
     let startDate = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -13,22 +15,23 @@
 
     function fillDays() {
         const newDays = [];
-        newDays.push(startDate);
-        while (newDays.length < endDate.getDate() - 1) {
-            const nextDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + newDays.length);
-            if (!newDays.find(d => d === nextDay.getTime()) && nextDay) {
-                newDays.push(nextDay);
-            }
+        let row = [];
+        newDays.push(row);
+        for (let index = 0; index < endDate.getDate() - 1; index++) {
+            row = row.length < 4 ? row : []
+            if (row.length === 0)
+                newDays.push(row);
+            const nextDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + index);
+            row.push(nextDay);
         }
-        newDays.push(endDate);
+        row.push(endDate);
         days = newDays;
-        const updateEventsStore = new Promise( async (resolve) => {
+        const updateEventsStore = new Promise(async (resolve) => {
+            $UserEventsStore.startDate = startDate;
+            $UserEventsStore.endDate = endDate;
             const services = getBackendClient();
-            console.log('#');
-            console.log($UserEventsStore);
-            console.log('#');
-            for (const login in $UserEventsStore.eventsByUser){
-                if($UserEventsStore.eventsByUser.hasOwnProperty(login)){
+            for (const login in $UserEventsStore.eventsByUser) {
+                if ($UserEventsStore.eventsByUser.hasOwnProperty(login)) {
                     $UserEventsStore.eventsByUser[login] = await services.userService.findUserEvents(login, startDate, endDate);
                 }
             }
@@ -36,14 +39,13 @@
                 return ues
             })
             resolve();
-        })
-        updateEventsStore.then(() => {}).catch(console.error);
+        });
+        updateEventsStore.then(() => {
+        }).catch(console.error);
     }
 
-    fillDays();
-
     onMount(() => {
-
+        fillDays();
     })
 
     function lookBackward() {
@@ -92,6 +94,7 @@
         width: calc(80vw + 1px);
         border-left: solid 1px lightgray;
         margin-bottom: 5px;
+        z-index: 2;
     }
 
     #change-display-period {
@@ -122,9 +125,15 @@
             <button type="button" class="btn btn-secondary change-period-btn" on:click={lookForward}><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
-    <div class="userevents-calendar">
-        {#each days as day}
-            <ContentDayContainer currentDay={day}></ContentDayContainer>
+    <div class="userevents-calendar container">
+        {#each days as row}
+            <div class="row">
+                {#each row as day}
+                    <div class="col">
+                        <ContentDayContainer currentDay={day} login={$UserStore.login}></ContentDayContainer>
+                    </div>
+                {/each}
+            </div>
         {/each}
     </div>
 </main>

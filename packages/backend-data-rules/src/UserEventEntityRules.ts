@@ -1,23 +1,26 @@
 import {EntityRules} from "./EntityRules";
-import {InvalidDataError, UserAvailabilityStatus, UserEvent, UserEventVisibility} from "@nodecms/backend-data";
+import {
+    InvalidDataError,
+    isNumber,
+    UserAvailabilityStatus,
+    UserEvent,
+    UserEventVisibility
+} from "@nodecms/backend-data";
 
 export class UserEventEntityRules extends EntityRules<UserEvent> {
 
     async validateFilter(filter:Partial<UserEvent>) {
-        console.log(filter);
-        if(typeof filter.startDate === 'string'){
-            filter.startDate = new Date(Date.parse(filter.startDate));
+        if(filter.startDate && isNumber(filter.startDate)){
+            filter.startDate = new Date(parseInt(filter.startDate.toString()));
         }
 
-        if(typeof filter.endDate === 'string'){
-            filter.endDate = new Date(Date.parse(filter.endDate));
+        if(filter.endDate && isNumber(filter.endDate)){
+            filter.endDate = new Date(parseInt(filter.endDate.toString()));
         }
 
         if(typeof filter.ownerId === 'string'){
             filter.ownerId = parseInt(filter.ownerId);
         }
-
-        console.log(filter)
     }
 
     async validate(entity: Partial<UserEvent>): Promise<void> {

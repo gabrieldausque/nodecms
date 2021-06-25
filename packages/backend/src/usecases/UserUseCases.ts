@@ -75,15 +75,6 @@ export class UserUseCases extends UseCases<User, UserEntityRules> {
     return await this.storage.get(idOrLogin);
   }
 
-  async find(filter: User, lastIndex?:number | string, executingUser?:User):Promise<User[]> {
-    let firstIndex : number | undefined = (typeof lastIndex === 'number')?
-      lastIndex:
-      (typeof lastIndex === 'string')?
-        (await this.get(lastIndex)).id:
-        lastIndex;
-    return await this.storage.find(filter, firstIndex);
-  }
-
   //TODO : create a usecase where only admin users can update the active state
   async update(id: number | string, usertoUpdate: User, executingUser:User) : Promise<User> {
     const usableId = this.entityRules.convertId(id);

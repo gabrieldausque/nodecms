@@ -30,11 +30,16 @@ export class User extends BaseService<UserDTO,
     this.options = options;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
       const executingUser:UserEntity = params?.user as UserEntity;
-      return await this.useCase.find(params.filter,undefined, executingUser);
+      if(params.query){
+        const found = await this.useCase.find(params.query as UserDTO,undefined, executingUser);
+        for(const u of found){
+          this.useCase.secureUserForExternal(u);
+        }
+        return found;
+      }
     }
     return [];
   }
@@ -42,7 +47,13 @@ export class User extends BaseService<UserDTO,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
     const executingUser:UserEntity = params?.user as UserEntity;
-    const user = await this.useCase.get(id, executingUser);
+    let user:UserEntity = await this.useCase.get(id, executingUser);
+    if(params &&
+       params.query &&
+       params.query.currentUser
+    ){
+      user = executingUser;
+    }
     return this.useCase.secureUserForExternal(user);
   }
 

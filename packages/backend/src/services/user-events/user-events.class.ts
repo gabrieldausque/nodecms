@@ -26,6 +26,10 @@ export class UserEvents extends BaseService<UserEventDTO,
     this.app = app;
   }
 
+  async get(id:Id, params?: | undefined): Promise<UserEventDTO>{
+    return await super.get(id,params)
+  }
+
   async create(data: UserEventDTO | UserEventDTO[], params?: Params | undefined): Promise<UserEventDTO | UserEventDTO[]>{
     if(params &&
       params.route &&

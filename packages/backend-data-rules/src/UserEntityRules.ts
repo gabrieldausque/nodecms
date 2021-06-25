@@ -21,4 +21,15 @@ export class UserEntityRules extends EntityRules<User> {
     data.ownerId = user.id;
     data.isPublic = false;
   }
+
+  async validateFilter(entity:Partial<User>):Promise<void> {
+    if((entity as any).key){
+      entity.login = (entity as any).key;
+      delete entity.key
+    }
+
+    if(entity.password)
+      delete entity.password;
+
+  }
 }

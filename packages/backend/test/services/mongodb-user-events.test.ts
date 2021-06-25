@@ -302,6 +302,6 @@ describe('UserEvents service', () => {
     }
     const read:any = await service.find(otherParams);
     expect(read).to.eql(expected);
-  })
+  });
 
 });

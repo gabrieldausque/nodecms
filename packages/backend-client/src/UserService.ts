@@ -77,4 +77,30 @@ export class UserService extends BaseServiceClient<User> {
         const user = await this.get(login);
         return await this.userEventService.findUserEvents(user.id as number, startDate, endDate);
     }
+
+    async getCurrentUser(){
+        const request = new XMLHttpRequest();
+        const params:URLSearchParams = new URLSearchParams();
+        params.append('currentUser','true');
+        const url = `${this.url}/${this.service}/0?${params.toString()}`;
+        request.open('GET', url, true);
+        const requestPromise = new Promise<User>((resolve, reject) => {
+            this.createHeaders(request);
+            request.onreadystatechange = () => {
+                if(request.readyState === 4) {
+                    if(request.status === 200 ){
+                        const found = JSON.parse(request.responseText);
+                        if(Array.isArray(found) && found.length > 0){
+                            resolve(found[0]);
+                        } else
+                            resolve(found);
+                    }
+                    else
+                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                }
+            }
+            request.send();
+        });
+        return await requestPromise;
+    }
 }

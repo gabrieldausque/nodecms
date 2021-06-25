@@ -13,22 +13,25 @@
 
     let showOrHideAuthenticate = () => {
         //toggle the login modal to show
-        (window as any).jQuery('#errorOnLoginContent').html('')
-        (window as any).jQuery('#errorOnLogin').removeClass('show');
-        (window as any).jQuery('#LoginModal').modal('toggle');
+        jQuery('#errorOnLoginContent').html('')
+        jQuery('#errorOnLogin').removeClass('show');
+        jQuery('#LoginModal').modal('toggle');
     }
 
     async function onLoggedIn() {
 
+        const services = await getBackendClient();
+        if(!login)
+        {
+            login = (await services.userService.getCurrentUser()).login
+        }
         console.log(`MyLogin : ${login}`);
 
         UserStore.set({
             isLogin: isLogin,
-            login
+            login: login
         })
 
-        const services = await getBackendClient();
-        const now = new Date();
         const userEvents = await services.userService.findUserEvents(login,
             $UserEventsStore.startDate,
             $UserEventsStore.endDate,
@@ -44,7 +47,7 @@
                 return store;
             })
         }
-        (window as any).jQuery('#LoginModal')?.modal('hide');
+        jQuery('#LoginModal')?.modal('hide');
     }
 
     let authenticate = async () => {
@@ -101,7 +104,7 @@
         let loginOrFalse = await backendService.userService.checkAuthentication();
         if(loginOrFalse && typeof loginOrFalse === "string"){
             isLogin = true;
-            login = await backendService;
+            login = await backendService.userService.getCurrentUser().login;
             await onLoggedIn();
         }
     })

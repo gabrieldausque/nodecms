@@ -31,7 +31,7 @@ export abstract class BaseService<T extends Entity,
   serviceLabel: string;
   useCase: U
 
-  protected constructor(app:Application, serviceLabel:string,useCaseContractName:string, options:BaseServiceConfiguration) {
+  protected constructor(app:Application, serviceLabel:string, useCaseContractName:string, options:BaseServiceConfiguration) {
     this.app = app;
     this.serviceLabel = serviceLabel;
     const f = globalInstancesFactory;

@@ -12,7 +12,7 @@ export class UserEvents {
         this.eventsByUser = {};
         const now = new Date();
         this.startDate = new Date(now.getFullYear(), now.getMonth(),1,0,0,0);
-        this.endDate = new Date(now.getFullYear(), now.getMonth(),1,23,59,59);
+        this.endDate = new Date(now.getFullYear(), now.getMonth() + 1,0,23,59,59);
     }
 
 }

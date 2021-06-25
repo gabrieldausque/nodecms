@@ -85,10 +85,6 @@
     }
 
     function onEndDateChange() {
-        console.log('#');
-        console.log(getEndDate());
-        console.log(getStartDate());
-        console.log('#');
         if(getEndDate() < getStartDate()){
             ShowCreateUserEventStore.update((s) => {
                 const d = getEndDate();
@@ -109,8 +105,12 @@
             doCreateEventButton.setAttribute('disabled','disabled');
             userEvent.startDate = getStartDate();
             userEvent.endDate = getEndDate();
+
             await backendService.userService.createUserEvent(userEvent);
-            backendService.userService.findUserEvents($UserStore.login, $UserEventsStore.startDate, $UserEventsStore.startDate).then(events => {
+            backendService.userService.findUserEvents($UserStore.login, $UserEventsStore.startDate, $UserEventsStore.endDate).then(events => {
+                console.log('events #')
+                console.log(events);
+                console.log('events #')
                 UserEventsStore.update((ues) => {
                     ues.eventsByUser[$UserStore.login] = events;
                     return ues;
