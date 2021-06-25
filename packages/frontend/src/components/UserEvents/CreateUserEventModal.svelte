@@ -94,8 +94,8 @@
     }
 
     async function doCreateUserEvent() {
-        const doCreateEventButton = document.getElementById('do-create-userevents');
-        const loading = document.getElementById('create-userevents-loading');
+        const doCreateEventButton = document.getElementById('do-create-user-events');
+        const loading = document.getElementById('create-user-events-loading');
         let closeAfterAction = true;
         try {
             const backendService = await getBackendClient();
@@ -105,8 +105,8 @@
             userEvent.endDate = getEndDate();
             await backendService.userService.createUserEvent(userEvent);
         } catch (error){
-            document.getElementById('error-creating-userevents-content').innerText = error.message;
-            document.getElementById('error-uploading-media').classList.add('show');
+            document.getElementById('error-creating-user-events-content').innerText = error.message;
+            document.getElementById('error-creating-user-events').classList.add('show');
             closeAfterAction = false;
             console.error(error);
         } finally {
@@ -128,7 +128,7 @@
     }
 
     function onPredefinedCategoryClick(event) {
-        document.getElementById('userevent-category').value = event.target.getAttribute('data-category');
+        document.getElementById('user-event-category').value = event.target.getAttribute('data-category');
         showOrHidePredefinedCategories();
     }
 
@@ -151,7 +151,7 @@
 </script>
 
 <style>
-    #create-userevent-background {
+    #create-user-event-background {
         position: fixed;
         top:0;
         left:0;
@@ -162,7 +162,7 @@
         z-index: 150;
     }
 
-    #create-userevent-background.show {
+    #create-user-event-background.show {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -172,7 +172,7 @@
         display: block;
     }
 
-    #create-userevent-form div.mb-3, .field {
+    #create-user-event-form div.mb-3, .field {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -201,15 +201,22 @@
         padding: 1px;
     }
 
-    #create-userevents-loading {
+    #do-create-user-events {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #create-user-events-loading {
         display: none;
+        margin-right: 5px;
     }
 
-    #create-userevents-loading.show {
-        display: block;
+    :global(#create-user-events-loading.show) {
+        display: block !important;
     }
 
-    #userevent-category {
+    #user-event-category {
         margin-bottom: 0;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
@@ -234,7 +241,7 @@
 
 </style>
 
-<div id="create-userevent-background" class="modal-background" class:show={$ShowCreateUserEventStore.shown}>
+<div id="create-user-event-background" class="modal-background" class:show={$ShowCreateUserEventStore.shown}>
     {#if $ShowCreateUserEventStore.shown}
         <div id="create-userevent-modal" class="modal fade"
              transition:fly="{{ y: -250, duration: 500  }}"
@@ -249,8 +256,8 @@
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="create-userevent-modal-title" class="modal-title">Créer un évènement</h5>
-                        <button id="create-userevent-close" type="button" class="close" data-dismiss="modal" aria-label="Close" on:click={
+                        <h5 id="create-user-event-modal-title" class="modal-title">Créer un évènement</h5>
+                        <button id="create-user-event-close" type="button" class="close" data-dismiss="modal" aria-label="Close" on:click={
                     () => {
                         ShowCreateUserEventStore.set(new ShowCreateUserEvent());
                     }}>
@@ -258,19 +265,19 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div id="create-userevent-form" class="">
+                        <div id="create-user-event-form" class="">
                             <div class="mb-3">
-                                <label for="userevent-startdate-field">Début</label>
-                                <div id="userevent-startdate-field" class="date-field">
+                                <label for="user-event-start-date-field">Début</label>
+                                <div id="user-event-start-date-field" class="date-field">
                                     <input
                                             class="form-control datetime"
-                                            id="userevent-startdate" name="userevent-startdate" type="date" required
+                                            id="user-event-start-date" name="user-event-start-date" type="date" required
                                             on:blur={onStartDateChange}
                                             bind:value={startDate}
                                     >
                                     <input
                                             class="form-control datetime"
-                                            id="userevent-starttime" name="userevent-starttime" type="time" required
+                                            id="user-event-start-time" name="user-event-start-time" type="time" required
                                             on:blur={onStartDateChange}
                                             bind:value={startTime}
                                     >
@@ -280,18 +287,18 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-enddate-field">Fin</label>
-                                <div id="userevent-enddate-field" class="date-field">
+                                <label for="user-event-end-date-field">Fin</label>
+                                <div id="user-event-end-date-field" class="date-field">
                                     <input
                                             class="form-control datetime"
-                                            id="userevent-enddate" name="userevent-enddate"
+                                            id="user-event-end-date" name="user-event-end-date"
                                             type="date" required
                                             on:blur={onEndDateChange}
                                             bind:value={endDate}
                                     >
                                     <input
                                             class="form-control datetime"
-                                            id="userevent-endtime" name="userevent-endtime"
+                                            id="user-event-end-time" name="user-event-end-time"
                                             type="time" required
                                             on:blur={onEndDateChange}
                                             bind:value={endTime}
@@ -303,40 +310,40 @@
                             </div>
                             <div class="mb-3 field-row" >
                                 <div class="field">
-                                    <label for="userevent-label">Label</label>
+                                    <label for="user-event-label">Label</label>
                                     <input
                                             class="form-control"
-                                            id="userevent-label" name="userevent-label"
+                                            id="user-event-label" name="user-event-label"
                                             type="text"
                                             bind:value={userEvent.label}
                                     >
                                 </div>
                                 <div class="field">
-                                    <label for="userevent-color">Couleur</label>
+                                    <label for="user-event-color">Couleur</label>
                                     <input  class="form-control input-color"
-                                            id="userevent-color"
-                                            name="userevent-color"
+                                            id="user-event-color"
+                                            name="user-event-color"
                                             type="color"
                                             bind:value={userEvent.color}
                                     >
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-description">Description</label>
+                                <label for="user-event-description">Description</label>
                                 <textarea
                                         class="form-control"
-                                        id="userevent-description"
-                                        name="userevent-label"
+                                        id="user-event-description"
+                                        name="user-event-label"
                                         type="text"
                                         bind:value={userEvent.description}
                                 />
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-category">Catégorie</label>
+                                <label for="user-event-category">Catégorie</label>
                                 <div class="field-row">
                                     <input  class="form-control category"
-                                            id="userevent-category"
-                                            name="userevent-category"
+                                            id="user-event-category"
+                                            name="user-event-category"
                                             type="text" on:blur={() => {
                                                 showOrHidePredefinedCategories(true);
                                             }}
@@ -358,14 +365,14 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-visibility">Visibilité</label>
+                                <label for="user-event-visibility">Visibilité</label>
                                 <select class="form-select"
-                                        id="userevent-visibility"
-                                        name="userevent-visibility"
+                                        id="user-event-visibility"
+                                        name="user-event-visibility"
                                         title={visibilitiesDescription.protected}
                                         bind:value={userEvent.visibility}
                                         on:blur={() => {
-                                            const visibilitySelected = document.getElementById('userevent-visibility');
+                                            const visibilitySelected = document.getElementById('user-event-visibility');
                                             visibilitySelected.title = visibilitiesDescription[visibilitySelected.value]
                                         }}
                                 >
@@ -374,9 +381,9 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-availability">Disponibilité</label>
+                                <label for="user-event-availability">Disponibilité</label>
                                 <select class="form-select"
-                                        id="userevent-availability" name="userevent-availability"
+                                        id="user-event-availability" name="user-event-availability"
                                         title="Occupé"
                                         bind:value={userEvent.ownerAvailabilityStatus}
                                 >
@@ -385,10 +392,10 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="userevent-location">Localisation</label>
+                                <label for="user-event-location">Localisation</label>
                                 <input class="form-select"
-                                        id="userevent-location"
-                                        name="userevent-location"
+                                        id="user-event-location"
+                                        name="user-event-location"
                                         title="Localisation"
                                        bind:value={userEvent.location}
                                 >
@@ -396,11 +403,11 @@
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-upload-footer">
-                        <div id="error-creating-userevents" class="alert alert-danger fade">
-                            <div id="error-creating-userevents-content"></div>
+                        <div id="error-creating-user-events" class="alert alert-danger fade">
+                            <div id="error-creating-user-events-content"></div>
                         </div>
-                        <button id="do-create-userevents" type="button" class="btn action btn-danger " on:click={doCreateUserEvent}>
-                            <span id="create-userevents-loading" class="spinner-border"></span><span id="do-create-userevents-text">Enregistrer</span>
+                        <button id="do-create-user-events" type="button" class="btn action btn-danger " on:click={doCreateUserEvent}>
+                            <span id="create-user-events-loading" class="spinner-border"></span><span id="do-create-user-events-text">Enregistrer</span>
                         </button>
                     </div>
                 </div>

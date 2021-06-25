@@ -8,6 +8,9 @@
 
     export let currentDay;
     export let login;
+
+    let startDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 0,0,0);
+    let endDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23,59,59);
     let userEvents = $UserEventsStore.eventsByUser[login];
 
     const unsubscribe = UserEventsStore.subscribe(ues => {
@@ -76,7 +79,8 @@
         `height : ${userEvents.length * 26}px;`:
         ''}">
         {#if Array.isArray(userEvents)}
-            {#each userEvents.filter(ue => ue.startDate.getTime() <= currentDay.getTime() && currentDay.getTime() <= ue.endDate.getTime()) as userEvent}
+            {#each userEvents.filter(ue =>
+                ue.startDate.getTime() <= startDate.getTime() &&  startDate.getTime() <= ue.endDate.getTime()) as userEvent}
                 <ContentUserEventContainer userEvent={userEvent} day={currentDay} index={$UserEventsStore.eventsByUser[login].indexOf(userEvent)} ></ContentUserEventContainer>
             {/each}
         {/if}

@@ -64,8 +64,8 @@ export class MongoDbUserEventStorage
         const query:any = {
           ...filter
         };
-        query.startDate = { $gte: filter.startDate.toISOString()}
-        query.endDate = { $lte: filter.endDate.toISOString()}
+        query.startDate = { $gte: filter.startDate}
+        query.endDate = { $lte: filter.endDate}
         const found = await this.internalFind(query,
           lastIndex,
           this.collectionName,

@@ -239,12 +239,13 @@ describe('UserEvents service', () => {
         color: '#243dff'
       }
     }]
-    params.query = {
-      startDate: new Date(now.getFullYear(), now.getMonth(), 1, 0,0,0,0),
-      endDate: new Date(now.getFullYear(), now.getMonth(), 26, 23,59,0,0),
-    }
     for(const c of toCreate){
       await service.create(c,params);
+    }
+    params.query = {
+      startDate: (new Date(now.getFullYear(), now.getMonth(), 1, 0,0,0,0)).getTime().toString(),
+      endDate: (new Date(now.getFullYear(), now.getMonth(), 26, 23,59,59,59)).getTime().toString(),
+      ownerId: 0
     }
     const read:any = await service.find(params);
     expect(read).to.eql(expected);
@@ -297,8 +298,9 @@ describe('UserEvents service', () => {
     otherParams.route = {}
     otherParams.route.idOrLogin = 'otheruser';
     otherParams.query = {
-      startDate: new Date(now.getFullYear(), now.getMonth(), 1, 0,0,0,0),
-      endDate: new Date(now.getFullYear(), now.getMonth(), 26, 23,59,0,0),
+      ownerId: 1,
+      startDate: new Date(now.getFullYear(), now.getMonth(), 1, 0,0,0,0).getTime().toString(),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 26, 23,59,0,0).getTime().toString(),
     }
     const read:any = await service.find(otherParams);
     expect(read).to.eql(expected);
