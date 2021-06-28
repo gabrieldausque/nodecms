@@ -306,4 +306,123 @@ describe('UserEvents service', () => {
     expect(read).to.eql(expected);
   });
 
+  it('should find all events from standard url for a specific period cross month', async() => {
+    const service:UserEvents = app.service('user-events');
+    const now = new Date();
+    const toCreate = [{
+      description: 'The description',
+      startDate: new Date(now.getFullYear(), now.getMonth() - 1, 5, 0,0,0,0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 5, 23,59,0,0),
+      category: 'Vacances',
+      label: 'The label',
+      location: 'the location',
+      ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+      visibility: UserEventVisibility.private
+    },{
+      description: 'The description 2',
+      startDate: new Date(now.getFullYear(), now.getMonth(), 7, 0,0,0,0),
+      endDate: new Date(now.getFullYear(), now.getMonth() + 1, 25, 23,59,0,0),
+      category: 'Vacances',
+      label: 'The label 2 ',
+      location: 'the location 2',
+      ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+      visibility: UserEventVisibility.protected
+    }];
+    const expected = [{
+      ...toCreate[0],
+      ...{
+        id:0,
+        ownerId:0,
+        attachments: [],
+        color: '#243dff'
+      }
+    },{
+      ...toCreate[1],
+      ...{
+        id:1,
+        ownerId:0,
+        attachments: [],
+        color: '#243dff'
+      }
+    }]
+    for(const c of toCreate){
+      await service.create(c,params);
+    }
+    params.query = {
+      startDate: (new Date(now.getFullYear(), now.getMonth() - 1 , 1, 0,0,0,0)).getTime().toString(),
+      endDate: (new Date(now.getFullYear(), now.getMonth() + 1, 26, 23,59,59,59)).getTime().toString(),
+      ownerId: 0
+    }
+    const read:any = await service.find(params);
+    expect(read).to.eql(expected);
+  })
+
+  it('should find all events from standard url for event cross month', async() => {
+    const service:UserEvents = app.service('user-events');
+    const now = new Date();
+    const toCreate = [{
+      description: 'The description',
+      startDate: new Date(now.getFullYear(), now.getMonth() - 1, 5, 0,0,0,0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 5, 23,59,0,0),
+      category: 'Vacances',
+      label: 'The label',
+      location: 'the location',
+      ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+      visibility: UserEventVisibility.private
+    },{
+      description: 'The description 1',
+      startDate: new Date(now.getFullYear(), now.getMonth(), 5, 0,0,0,0),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 5, 23,59,0,0),
+      category: 'Vacances 1',
+      label: 'The label 1 ',
+      location: 'the location 1 ',
+      ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+      visibility: UserEventVisibility.protected
+    },{
+      description: 'The description 2',
+      startDate: new Date(now.getFullYear(), now.getMonth(), 7, 0,0,0,0),
+      endDate: new Date(now.getFullYear(), now.getMonth() + 1, 25, 23,59,0,0),
+      category: 'Vacances 2',
+      label: 'The label 2 ',
+      location: 'the location 2',
+      ownerAvailabilityStatus: UserAvailabilityStatus.busy,
+      visibility: UserEventVisibility.protected
+    }];
+    const expected = [{
+      ...toCreate[0],
+      ...{
+        id:0,
+        ownerId:0,
+        attachments: [],
+        color: '#243dff'
+      }
+    },{
+      ...toCreate[1],
+      ...{
+        id:1,
+        ownerId:0,
+        attachments: [],
+        color: '#243dff'
+      }
+    },{
+      ...toCreate[2],
+      ...{
+        id:2,
+        ownerId:0,
+        attachments: [],
+        color: '#243dff'
+      }
+    }]
+    for(const c of toCreate){
+      await service.create(c,params);
+    }
+    params.query = {
+      startDate: (new Date(now.getFullYear(), now.getMonth() , 1, 0,0,0,0)).getTime().toString(),
+      endDate: (new Date(now.getFullYear(), now.getMonth(), 26, 23,59,59,59)).getTime().toString(),
+      ownerId: 0
+    }
+    const read:any = await service.find(params);
+    expect(read).to.eql(expected);
+  })
+
 });

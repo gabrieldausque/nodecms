@@ -90,6 +90,13 @@
                 window.setTimeout(() => {
                     doCreateEventButton.removeAttribute('disabled');
                     loading.classList.remove('show');
+                    userEvent.label = '';
+                    userEvent.description = '';
+                    userEvent.color = '#243dff';
+                    userEvent.ownerAvailabilityStatus = UserAvailabilityStatus.busy;
+                    userEvent.visibility = UserEventVisibility.private;
+                    userEvent.category = '';
+                    userEvent.location = '';
                     ShowCreateUserEventStore.set(new ShowModalUserEvent())
                 }, 2000)
             }
@@ -104,8 +111,13 @@
     }
 
     function onPredefinedCategoryClick(event) {
-        document.getElementById<HTMLInputElement>('user-event-category').value = event.target.getAttribute('data-category');
         showOrHidePredefinedCategories();
+        const categoryInput = document.getElementById<HTMLInputElement>('user-event-category')
+        categoryInput.value = event.target.getAttribute('data-category');
+        userEvent.category = categoryInput.value;
+        const e = document.createEvent("HTMLEvents");
+        e.initEvent('blur',true, true);
+        categoryInput.dispatchEvent(e);
     }
 
     function showOrHidePredefinedCategories(forceHide:boolean = false):void {

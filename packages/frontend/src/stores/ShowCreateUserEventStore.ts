@@ -1,9 +1,11 @@
 import {writable} from 'svelte/store'
+import {UserEvent} from "@nodecms/backend-data";
 
 export class ShowModalUserEvent {
     shown:boolean;
     startDate:Date;
     endDate:Date;
+    userEvent?:UserEvent;
 
     constructor() {
         const today = new Date();

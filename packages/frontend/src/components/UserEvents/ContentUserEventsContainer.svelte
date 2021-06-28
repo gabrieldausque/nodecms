@@ -1,44 +1,40 @@
-<script>
+<script lang="ts">
 
     import {onMount, onDestroy} from 'svelte';
     import ContentDayContainer from "./ContentDayContainer.svelte";
-    import {Helpers} from "../../helpers/Helpers";
     import CreateUserEventModal from "./CreateUserEventModal.svelte";
     import {UserEventsStore} from "../../stores/UserEventsStore";
     import {UserStore} from "../../stores/UserStore";
-    import {ShowCreateUserEventStore} from "../../stores/ShowCreateUserEventStore";
+    import {ShowCreateUserEventStore, ShowUpdateUserEventStore} from "../../stores/ShowCreateUserEventStore";
+    import UpdateUserEventModal from "./UpdateUserEventModal.svelte";
+    import CalendarNavBar from './CalendarNavBar.svelte';
+    import {getBackendClient} from "@nodecms/backend-client";
+    import {Helpers} from "../../helpers/Helpers";
 
-    let today = new Date()
-    let startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0,0,0);
-    let endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0,23,59,59);
     let days = [];
+    let today = new Date()
+    let startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+    let endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59);
 
     const unsubscribeUserEventsStore = UserEventsStore.subscribe(() => {
-        fillDays();
+        fillDays(startDate, endDate);
     })
 
     const unsubscribeShowCreateModal = ShowCreateUserEventStore.subscribe(() => {
-        loadEvents();
+        loadEvents(startDate, endDate);
     })
 
-    function fillDays() {
-        const newDays = [];
-        newDays.push(startDate);
-        while (newDays.length < endDate.getDate() - 1) {
-            const nextDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + newDays.length);
-            if (!newDays.find(d => d === nextDay.getTime()) && nextDay) {
-                newDays.push(nextDay);
-            }
-        }
-        newDays.push(endDate);
-        days = newDays;
+    const unsubscribeShowUpdateModal = ShowUpdateUserEventStore.subscribe(() => {
+        loadEvents(startDate, endDate);
+    })
+
+    function fillDays(startDate:Date, endDate:Date) {
+        days = Helpers.getAllDaysBetween(startDate, endDate);
     }
 
-    async function loadEvents() {
-        console.log('updating')
+    async function loadEvents(startDate:Date, endDate:Date) {
         $UserEventsStore.startDate = startDate;
         $UserEventsStore.endDate = endDate;
-        console.log($UserEventsStore);
         const services = await getBackendClient();
         for (const login in $UserEventsStore.eventsByUser) {
             if ($UserEventsStore.eventsByUser.hasOwnProperty(login)) {
@@ -51,27 +47,19 @@
     }
 
     onMount(async () => {
-        await loadEvents();
+        await loadEvents(startDate, endDate);
     })
 
-    async function lookBackward() {
-        startDate = new Date(startDate.getFullYear(), startDate.getMonth() - 1, 1,0,0,0);
-        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0,23,59,59);
-        fillDays();
-        await loadEvents();
-    }
-
-    async function lookForward() {
-        startDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 1,0,0,0);
-        endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0,23,59,59);
-        fillDays();
-        await loadEvents();
-    }
 
     onDestroy(() => {
         unsubscribeShowCreateModal();
         unsubscribeUserEventsStore();
     })
+
+    $: {
+        fillDays(startDate, endDate);
+        loadEvents(startDate, endDate);
+    }
 
 </script>
 
@@ -85,64 +73,18 @@
         overflow-y: auto;
     }
 
-    .userevents-navbar {
-        min-height: 60px;
-        max-height: 60px;
-        height:60px;
-        width: 100%;
-        border-bottom: solid 1px lightgray;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        left: 0;
-        background: white;
-        z-index: 3;
-    }
-
-    .userevents-calendar {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        width: calc(80vw + 1px);
-        border-left: solid 1px lightgray;
-        margin-bottom: 5px;
-        z-index: 2;
-    }
-
-    #change-display-period {
-        margin-right: 5px;
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .change-period-btn {
-        margin-left: 5px;
-        margin-bottom: 0;
-    }
-
-    .current-period {
-        margin-left:auto;
-        margin-right:0;
-
-    }
 </style>
 
 <main class="userevents-panel">
-    <div class="userevents-navbar">
-        <div class="current-period">{`${Helpers.getLongLabelMonth(startDate)} ${(startDate).getFullYear()}`}</div>
-        <div id="change-display-period">
-            <button type="button" class="btn btn-secondary change-period-btn" on:click={lookBackward}><i class="fas fa-chevron-left"></i></button>
-            <button type="button" class="btn btn-secondary change-period-btn" on:click={lookForward}><i class="fas fa-chevron-right"></i></button>
-        </div>
-    </div>
-    <div class="userevents-calendar">
+    <CalendarNavBar on:dateChanged={(event)=> {
+        startDate = event.detail.startDate;
+        endDate = event.detail.endDate;
+    }}></CalendarNavBar>
+    <<div class="userevents-calendar">
         {#each days as day}
             <ContentDayContainer currentDay={day} login={$UserStore.login}></ContentDayContainer>
         {/each}
-    </div>
+    </div>>
 </main>
 <CreateUserEventModal></CreateUserEventModal>
+<UpdateUserEventModal></UpdateUserEventModal>

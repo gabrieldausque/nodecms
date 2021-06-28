@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 
     import {Helpers} from "../../helpers/Helpers";
     import {ShowCreateUserEventStore} from "../../stores/ShowCreateUserEventStore";
-    import {UserEventsStore} from "../../stores/UserEventsStore";
+    import {UserEvents, UserEventsStore} from "../../stores/UserEventsStore";
     import {onDestroy} from 'svelte';
     import ContentUserEventContainer from "./ContentUserEventContainer.svelte";
 
@@ -11,11 +11,19 @@
 
     let startDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 0,0,0);
     let endDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23,59,59);
-    let userEvents = $UserEventsStore.eventsByUser[login];
+    let userEvents = [];
 
-    const unsubscribe = UserEventsStore.subscribe(ues => {
-        userEvents = ues.eventsByUser[login]
-    })
+    const unsubscribe = UserEventsStore.subscribe( (ues:UserEvents) => {
+        console.log('update the userevents store ...');
+        startDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 0,0,0);
+        endDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23,59,59);
+        userEvents = ues.eventsByUser[login]?ues.eventsByUser[login].filter(ue =>
+            ue.startDate.getTime() <= startDate.getTime() &&
+            startDate.getTime() <= ue.endDate.getTime()):[];
+        console.log(currentDay);
+        console.log(ues.eventsByUser[login]);
+        console.log(userEvents);
+    });
 
     function displayCreateUserEventModal() {
         ShowCreateUserEventStore.update(m => {
@@ -25,7 +33,6 @@
             return m;
         })
     }
-
 
     onDestroy(() => {
         unsubscribe()
@@ -72,15 +79,14 @@
 </style>
 
 <div class="day" on:dblclick={displayCreateUserEventModal}>
-    <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()} `} {#if currentDay.getDate() === new Date().getDate() &&
+    <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()} ${Helpers.getLongLabelMonth(currentDay)}`} {#if currentDay.getDate() === new Date().getDate() &&
     currentDay.getMonth() === new Date().getMonth() &&
     currentDay.getFullYear() === new Date().getFullYear()}<div class="today-mark"></div>{/if}</div>
     <div class="events-container" style="{Array.isArray(userEvents)?
-        `height : ${userEvents.length * 26}px;`:
+        `height : ${$UserEventsStore.eventsByUser[login]?$UserEventsStore.eventsByUser[login].length * 26:1}px;`:
         ''}">
         {#if Array.isArray(userEvents)}
-            {#each userEvents.filter(ue =>
-                ue.startDate.getTime() <= startDate.getTime() &&  startDate.getTime() <= ue.endDate.getTime()) as userEvent}
+            {#each userEvents as userEvent}
                 <ContentUserEventContainer userEvent={userEvent} day={currentDay} index={$UserEventsStore.eventsByUser[login].indexOf(userEvent)} ></ContentUserEventContainer>
             {/each}
         {/if}

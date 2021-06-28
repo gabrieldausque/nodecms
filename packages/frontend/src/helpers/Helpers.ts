@@ -251,4 +251,23 @@ export class Helpers {
         return new Date(parseInt(splitted[0]),parseInt(splitted[1]) - 1, parseInt(splitted[2]))
     }
 
+    static getAllDaysBetween(startDate: Date, endDate: Date) {
+        const newDays = [];
+        newDays.push(startDate);
+        while (newDays.length < endDate.getDate() - 1) {
+            const nextDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + newDays.length);
+            if (!newDays.find(d => d === nextDay.getTime()) && nextDay) {
+                newDays.push(nextDay);
+            }
+        }
+        newDays.push(endDate);
+        newDays.sort((d1, d2) => {
+            if(d1.getTime() > d2.getTime())
+                return 1;
+            if(d1.getTime() > d2.getTime())
+                return -1;
+            return 0
+        });
+        return newDays;
+    }
 }

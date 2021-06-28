@@ -10,10 +10,11 @@
     let startTime;
     let endDate;
     let endTime;
-    export let userEvent:UserEvent;
+    let userEvent:UserEvent;
 
     //@ts-ignore
     const unsubscribe = ShowUpdateUserEventStore.subscribe(v => {
+        console.log('update on update modal');
         initStartAndEnd();
     })
 
@@ -38,29 +39,25 @@
 
     function onStartDateChange() {
         if(getEndDate() < getStartDate()){
-            ShowUpdateUserEventStore.update((s) => {
-                const d = getStartDate();
-                s.startDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0,0);
-                s.endDate = new Date(s.startDate.getFullYear(), s.startDate.getMonth(), s.startDate.getDate(), 23, 59);
-                return s;
-            })
+            const d = getStartDate();
+            userEvent.startDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0,0);
+            userEvent.endDate = new Date(userEvent.startDate.getFullYear(), userEvent.startDate.getMonth(), userEvent.startDate.getDate(), 23, 59);
         }
+        userEvent.startDate = getStartDate();
     }
 
     function onEndDateChange() {
         if(getEndDate() < getStartDate()){
-            ShowUpdateUserEventStore.update((s) => {
-                const d = getEndDate();
-                s.endDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59);
-                s.startDate = new Date(s.endDate.getFullYear(), s.endDate.getMonth(), s.endDate.getDate(), 0, 0);
-                return s;
-            })
+            const d = getEndDate();
+            userEvent.endDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59);
+            userEvent.startDate = new Date(userEvent.endDate.getFullYear(), userEvent.endDate.getMonth(), userEvent.endDate.getDate(), 0, 0);
         }
+        userEvent.endDate = getEndDate();
     }
 
     async function doUpdateUserEvent() {
-        const doUpdateUserEventButton = document.getElementById('do-create-user-events');
-        const loading = document.getElementById('create-user-events-loading');
+        const doUpdateUserEventButton = document.getElementById('do-update-user-events');
+        const loading = document.getElementById('update-user-events-loading');
         let closeAfterAction = true;
         try {
             const backendService = await getBackendClient();
@@ -84,15 +81,23 @@
     }
 
     function initStartAndEnd(){
-        startDate = Helpers.fromDateToString(userEvent.startDate);
-        startTime = Helpers.fromTimeToString(userEvent.startDate);
-        endDate = Helpers.fromDateToString(userEvent.endDate);
-        endTime = Helpers.fromTimeToString(userEvent.endDate);
+        if($ShowUpdateUserEventStore.userEvent){
+            userEvent = $ShowUpdateUserEventStore.userEvent;
+            startDate = Helpers.fromDateToString(userEvent.startDate);
+            startTime = Helpers.fromTimeToString(userEvent.startDate);
+            endDate = Helpers.fromDateToString(userEvent.endDate);
+            endTime = Helpers.fromTimeToString(userEvent.endDate);
+        }
     }
 
     function onPredefinedCategoryClick(event) {
-        document.getElementById('user-event-category').value = event.target.getAttribute('data-category');
         showOrHidePredefinedCategories();
+        const categoryInput = document.getElementById('user-event-category');
+        categoryInput.value = event.target.getAttribute('data-category');
+        userEvent.category = categoryInput.value;
+        const e = document.createEvent("HTMLEvents");
+        e.initEvent('blur',true, true);
+        categoryInput.dispatchEvent(e);
     }
 
     function showOrHidePredefinedCategories(forceHide:boolean = false):void {
@@ -114,7 +119,7 @@
 </script>
 
 <style>
-    #create-user-event-background {
+    #update-user-event-background {
         position: fixed;
         top:0;
         left:0;
@@ -125,7 +130,7 @@
         z-index: 150;
     }
 
-    #create-user-event-background.show {
+    #update-user-event-background.show {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -135,7 +140,7 @@
         display: block;
     }
 
-    #create-user-event-form div.mb-3, .field {
+    #update-user-event-form div.mb-3, .field {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -164,18 +169,18 @@
         padding: 1px;
     }
 
-    #do-create-user-events {
+    #do-update-user-events {
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    #create-user-events-loading {
+    #update-user-events-loading {
         display: none;
         margin-right: 5px;
     }
 
-    :global(#create-user-events-loading.show) {
+    :global(#update-user-events-loading.show) {
         display: block !important;
     }
 
@@ -204,9 +209,9 @@
 
 </style>
 
-<div id="create-user-event-background" class="modal-background" class:show={$ShowUpdateUserEventStore.shown}>
+<div id="update-user-event-background" class="modal-background" class:show={$ShowUpdateUserEventStore.shown}>
     {#if $ShowUpdateUserEventStore.shown}
-        <div id="create-userevent-modal" class="modal fade"
+        <div id="update-userevent-modal" class="modal fade"
              transition:fly="{{ y: -250, duration: 500  }}"
              class:show={$ShowUpdateUserEventStore.shown}
              data-keyboard="false">
@@ -219,8 +224,8 @@
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="create-user-event-modal-title" class="modal-title">Créer un évènement</h5>
-                        <button id="create-user-event-close" type="button" class="close" data-dismiss="modal" aria-label="Close" on:click={
+                        <h5 id="update-user-event-modal-title" class="modal-title">Modifier l'évènement</h5>
+                        <button id="update-user-event-close" type="button" class="close" data-dismiss="modal" aria-label="Close" on:click={
                     () => {
                         ShowUpdateUserEventStore.set(new ShowModalUserEvent());
                     }}>
@@ -228,7 +233,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div id="create-user-event-form" class="">
+                        <div id="update-user-event-form" class="">
                             <div class="mb-3">
                                 <label for="user-event-start-date-field">Début</label>
                                 <div id="user-event-start-date-field" class="date-field">
@@ -369,8 +374,8 @@
                         <div id="error-creating-user-events" class="alert alert-danger fade">
                             <div id="error-creating-user-events-content"></div>
                         </div>
-                        <button id="do-create-user-events" type="button" class="btn action btn-danger " on:click={doUpdateUserEvent}>
-                            <span id="create-user-events-loading" class="spinner-border"></span><span id="do-create-user-events-text">Enregistrer</span>
+                        <button id="do-update-user-events" type="button" class="btn action btn-danger " on:click={doUpdateUserEvent}>
+                            <span id="update-user-events-loading" class="spinner-border"></span><span id="do-update-user-events-text">Enregistrer</span>
                         </button>
                     </div>
                 </div>

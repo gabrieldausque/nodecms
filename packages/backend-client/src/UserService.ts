@@ -78,6 +78,10 @@ export class UserService extends BaseServiceClient<User> {
         return await this.userEventService.findUserEvents(user.id as number, startDate, endDate);
     }
 
+    async updateUserEvent(userEvent: UserEvent) {
+        return await this.userEventService.updateUserEvent(userEvent);
+    }
+
     async getCurrentUser(){
         const request = new XMLHttpRequest();
         const params:URLSearchParams = new URLSearchParams();

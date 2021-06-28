@@ -147,12 +147,16 @@ export abstract class BaseService<T extends Entity,
       //TODO : replace this by a useCase (Currently not implemented)
       const userUseCase:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
       const login = (await authenticationUseCases.getLoginFromEncryptedToken(params.authenticationToken));
+
+      await authenticationUseCases.validateEncryptedToken(params.authenticationToken);
+
       if(!login && !extractUser) {
         throw new NotAuthenticated('Please authenticate before using this application');
       } else {
         params.user = await userUseCase.get(login);
         //TODO : add user role from local or other www-authenticate realm
       }
+
     }
   }
 

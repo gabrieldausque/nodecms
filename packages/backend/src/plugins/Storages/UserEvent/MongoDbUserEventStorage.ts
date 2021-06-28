@@ -70,8 +70,37 @@ export class MongoDbUserEventStorage
           lastIndex,
           this.collectionName,
           false);
+        //second request
+        query.startDate = {
+          $gte: filter.startDate,
+          $lte: filter.endDate
+        }
+        delete query.endDate;
+        for(const n of (await this.internalFind(query, lastIndex, this.collectionName, false))){
+          if(!found.find(f => f.id === n.id)){
+            found.push(n);
+          }
+        }
+        //third request
+        query.endDate = {
+          $gte: filter.startDate,
+          $lte: filter.endDate
+        }
+        delete query.startDate;
+        for(const n of (await this.internalFind(query, lastIndex, this.collectionName, false))){
+          if(!found.find(f => f.id === n.id)){
+            found.push(n);
+          }
+        }
+        found.sort((u1, u2) => {
+          if(u1.startDate > u2.startDate)
+            return 1;
+          if(u1.startDate < u2.startDate)
+            return -1;
+          return 0
+        })
         return found;
-      }else {
+      } else {
         return await this.internalFind(filter,
           lastIndex,
           this.collectionName,

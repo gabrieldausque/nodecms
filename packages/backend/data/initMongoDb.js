@@ -365,7 +365,7 @@ function initData(){
 
   teamADb.documents.insert({
     id: newId('documents'),
-    key: 'myUserEvents',
+    key: 'my-calendar',
     content: {
       layout: {},
       bodies:[

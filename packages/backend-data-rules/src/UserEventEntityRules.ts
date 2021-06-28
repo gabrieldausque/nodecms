@@ -32,21 +32,7 @@ export class UserEventEntityRules extends EntityRules<UserEvent> {
             throw new InvalidDataError('UserEvent must have a startDate and a endDate, with startDate > endDate. Please correct');
         }
 
-        if(typeof entity.startDate === 'string'){
-            if(isNumber(entity.startDate)){
-                entity.startDate = new Date(parseInt(entity.startDate));
-            } else {
-                entity.startDate = new Date(Date.parse(entity.startDate));
-            }
-        }
-
-        if(typeof entity.endDate === 'string'){
-            if(isNumber(entity.endDate)){
-                entity.endDate = new Date(parseInt(entity.endDate));
-            } else {
-                entity.endDate = new Date(Date.parse(entity.endDate));
-            }
-        }
+        this.validateDates(entity);
 
         if(!Array.isArray(entity.attachment)){
             entity.attachments = [];
@@ -65,4 +51,26 @@ export class UserEventEntityRules extends EntityRules<UserEvent> {
         }
     }
 
+    async validateForUpdate(entity:Partial<UserEvent>){
+        this.validateDates(entity);
+    }
+
+    private validateDates(entity: Partial<UserEvent>) {
+
+        if(typeof entity.startDate === 'string'){
+            if(isNumber(entity.startDate)){
+                entity.startDate = new Date(parseInt(entity.startDate));
+            } else {
+                entity.startDate = new Date(Date.parse(entity.startDate));
+            }
+        }
+
+        if(typeof entity.endDate === 'string'){
+            if(isNumber(entity.endDate)){
+                entity.endDate = new Date(parseInt(entity.endDate));
+            } else {
+                entity.endDate = new Date(Date.parse(entity.endDate));
+            }
+        }
+    }
 }

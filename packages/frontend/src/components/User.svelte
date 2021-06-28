@@ -162,6 +162,9 @@
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
                 <i class="fas fa-comments"></i><span>Channels</span>
             </button>
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="my-calendar">
+                <i class="fas fa-calendar-day"></i><span>Mon Calendrier</span>
+            </button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item" type="button" on:click={logout}>
                 Déconnexion
