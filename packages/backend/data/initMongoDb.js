@@ -382,6 +382,27 @@ function initData(){
     updateDate: new Date()
   });
 
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'user-calendars',
+    content: {
+      layout: {},
+      bodies:[
+        {
+          order:0,
+          type:'multiuser-events',
+          properties:{
+            userNames: ['Hannibal', 'Looping']
+          }
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+
   // channels creation
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',

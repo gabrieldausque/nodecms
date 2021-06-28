@@ -22,6 +22,7 @@
 	import ErrorModal from "./components/ErrorModal.svelte";
 	import {DocumentStore} from "./stores/DocumentStore";
 	import ContentUserEventsContainer from './components/UserEvents/ContentUserEventsContainer.svelte';
+	import ContentMultiUserCalendarContainer from './components/UserEvents/ContentMultiUserCalendarContainer.svelte';
 
 	$DocumentStore;
 
@@ -44,6 +45,7 @@
 			'fas fa-photo-video',
 			ContentMediaContainerEditor);
 	globalContentContainerFactory.registerContentContainer('user-events', ContentUserEventsContainer);
+	globalContentContainerFactory.registerContentContainer('multiuser-events', ContentMultiUserCalendarContainer);
 
 	onMount(async() => {
 		const backendClient = await getBackendClient();

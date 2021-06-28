@@ -10,6 +10,7 @@
     import CalendarNavBar from './CalendarNavBar.svelte';
     import {getBackendClient} from "@nodecms/backend-client";
     import {Helpers} from "../../helpers/Helpers";
+    import ContentUserCalendarContainer from "./ContentUserCalendarContainer.svelte";
 
     let days = [];
     let today = new Date()
@@ -28,11 +29,11 @@
         loadEvents(startDate, endDate);
     })
 
-    function fillDays(startDate:Date, endDate:Date) {
+    function fillDays(startDate: Date, endDate: Date) {
         days = Helpers.getAllDaysBetween(startDate, endDate);
     }
 
-    async function loadEvents(startDate:Date, endDate:Date) {
+    async function loadEvents(startDate: Date, endDate: Date) {
         $UserEventsStore.startDate = startDate;
         $UserEventsStore.endDate = endDate;
         const services = await getBackendClient();
@@ -80,11 +81,7 @@
         startDate = event.detail.startDate;
         endDate = event.detail.endDate;
     }}></CalendarNavBar>
-    <<div class="userevents-calendar">
-        {#each days as day}
-            <ContentDayContainer currentDay={day} login={$UserStore.login}></ContentDayContainer>
-        {/each}
-    </div>>
+    <ContentUserCalendarContainer login={$UserStore.login} days={days}></ContentUserCalendarContainer>
 </main>
 <CreateUserEventModal></CreateUserEventModal>
 <UpdateUserEventModal></UpdateUserEventModal>
