@@ -27,4 +27,8 @@ export class UserEventService extends BaseServiceClient<UserEvent> {
         }
         return entity
     }
+
+    async updateUserEvent(userEvent: UserEvent) {
+        return await this.update(userEvent);
+    }
 }

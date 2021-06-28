@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {ShowCreateUserEventStore, ShowModalUserEvent} from "../../stores/ShowCreateUserEventStore";
+    import {ShowUpdateUserEventStore, ShowModalUserEvent} from "../../stores/ShowCreateUserEventStore";
     import {fly} from "svelte/transition"
     import {onMount, onDestroy, afterUpdate} from 'svelte';
-    import {UserAvailabilityStatus, UserEventVisibility} from "@nodecms/backend-data";
+    import {UserAvailabilityStatus, UserEvent, UserEventVisibility} from "@nodecms/backend-data";
     import {getBackendClient} from "@nodecms/backend-client";
     import {Helpers} from "../../helpers/Helpers";
 
@@ -10,21 +10,10 @@
     let startTime;
     let endDate;
     let endTime;
-    let userEvent = {
-        startDate: $ShowCreateUserEventStore.startDate,
-        endDate: $ShowCreateUserEventStore.endDate,
-        category: '',
-        ownerAvailabilityStatus: UserAvailabilityStatus.busy,
-        visibility: UserEventVisibility.protected,
-        label:'',
-        description:'',
-        location:'',
-        color:'#243dff',
-        attachments:[]
-    }
+    export let userEvent:UserEvent;
 
     //@ts-ignore
-    const unsubscribe = ShowCreateUserEventStore.subscribe(v => {
+    const unsubscribe = ShowUpdateUserEventStore.subscribe(v => {
         initStartAndEnd();
     })
 
@@ -49,7 +38,7 @@
 
     function onStartDateChange() {
         if(getEndDate() < getStartDate()){
-            ShowCreateUserEventStore.update((s) => {
+            ShowUpdateUserEventStore.update((s) => {
                 const d = getStartDate();
                 s.startDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0,0);
                 s.endDate = new Date(s.startDate.getFullYear(), s.startDate.getMonth(), s.startDate.getDate(), 23, 59);
@@ -60,7 +49,7 @@
 
     function onEndDateChange() {
         if(getEndDate() < getStartDate()){
-            ShowCreateUserEventStore.update((s) => {
+            ShowUpdateUserEventStore.update((s) => {
                 const d = getEndDate();
                 s.endDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59);
                 s.startDate = new Date(s.endDate.getFullYear(), s.endDate.getMonth(), s.endDate.getDate(), 0, 0);
@@ -69,17 +58,15 @@
         }
     }
 
-    async function doCreateUserEvent() {
-        const doCreateEventButton = document.getElementById('do-create-user-events');
+    async function doUpdateUserEvent() {
+        const doUpdateUserEventButton = document.getElementById('do-create-user-events');
         const loading = document.getElementById('create-user-events-loading');
         let closeAfterAction = true;
         try {
             const backendService = await getBackendClient();
             loading.classList.add('show');
-            doCreateEventButton.setAttribute('disabled','disabled');
-            userEvent.startDate = getStartDate();
-            userEvent.endDate = getEndDate();
-            await backendService.userService.createUserEvent(userEvent);
+            doUpdateUserEventButton.setAttribute('disabled','disabled');
+            await backendService.userService.updateUserEvent(userEvent);
         } catch (error){
             document.getElementById('error-creating-user-events-content').innerText = error.message;
             document.getElementById('error-creating-user-events').classList.add('show');
@@ -88,23 +75,23 @@
         } finally {
             if(closeAfterAction){
                 window.setTimeout(() => {
-                    doCreateEventButton.removeAttribute('disabled');
+                    doUpdateUserEventButton.removeAttribute('disabled');
                     loading.classList.remove('show');
-                    ShowCreateUserEventStore.set(new ShowModalUserEvent())
+                    ShowUpdateUserEventStore.set(new ShowModalUserEvent())
                 }, 2000)
             }
         }
     }
 
     function initStartAndEnd(){
-        startDate = Helpers.fromDateToString($ShowCreateUserEventStore.startDate);
-        startTime = Helpers.fromTimeToString($ShowCreateUserEventStore.startDate);
-        endDate = Helpers.fromDateToString($ShowCreateUserEventStore.endDate);
-        endTime = Helpers.fromTimeToString($ShowCreateUserEventStore.endDate);
+        startDate = Helpers.fromDateToString(userEvent.startDate);
+        startTime = Helpers.fromTimeToString(userEvent.startDate);
+        endDate = Helpers.fromDateToString(userEvent.endDate);
+        endTime = Helpers.fromTimeToString(userEvent.endDate);
     }
 
     function onPredefinedCategoryClick(event) {
-        document.getElementById<HTMLInputElement>('user-event-category').value = event.target.getAttribute('data-category');
+        document.getElementById('user-event-category').value = event.target.getAttribute('data-category');
         showOrHidePredefinedCategories();
     }
 
@@ -217,11 +204,11 @@
 
 </style>
 
-<div id="create-user-event-background" class="modal-background" class:show={$ShowCreateUserEventStore.shown}>
-    {#if $ShowCreateUserEventStore.shown}
+<div id="create-user-event-background" class="modal-background" class:show={$ShowUpdateUserEventStore.shown}>
+    {#if $ShowUpdateUserEventStore.shown}
         <div id="create-userevent-modal" class="modal fade"
              transition:fly="{{ y: -250, duration: 500  }}"
-             class:show={$ShowCreateUserEventStore.shown}
+             class:show={$ShowUpdateUserEventStore.shown}
              data-keyboard="false">
             <style>
                 label {
@@ -235,7 +222,7 @@
                         <h5 id="create-user-event-modal-title" class="modal-title">Créer un évènement</h5>
                         <button id="create-user-event-close" type="button" class="close" data-dismiss="modal" aria-label="Close" on:click={
                     () => {
-                        ShowCreateUserEventStore.set(new ShowModalUserEvent());
+                        ShowUpdateUserEventStore.set(new ShowModalUserEvent());
                     }}>
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -382,7 +369,7 @@
                         <div id="error-creating-user-events" class="alert alert-danger fade">
                             <div id="error-creating-user-events-content"></div>
                         </div>
-                        <button id="do-create-user-events" type="button" class="btn action btn-danger " on:click={doCreateUserEvent}>
+                        <button id="do-create-user-events" type="button" class="btn action btn-danger " on:click={doUpdateUserEvent}>
                             <span id="create-user-events-loading" class="spinner-border"></span><span id="do-create-user-events-text">Enregistrer</span>
                         </button>
                     </div>

@@ -225,4 +225,30 @@ export class Helpers {
     static getLongLabelMonth(date: Date) {
         return Helpers.longLabelsMonth[date.getMonth()]
     }
+
+    static fromDateToString(d:Date):string{
+        const date = d.getDate();
+        const month = d.getMonth() + 1;
+        const year = d.getFullYear();
+        return [year,(month < 10?'0' + month:month), (date < 10?'0' + date:date)].join('-');
+    }
+
+    static fromTimeToString(d:Date):string{
+        const hour = d.getHours();
+        const minutes = d.getMinutes();
+        return [hour<10?'0' + hour:hour, minutes<10?'0' + minutes:minutes].join(':');
+    }
+
+    static fromStringToDate(dateAsString:string, timeAsString:string):Date {
+        const splittedDate = dateAsString.split('-');
+        const splittedTime = timeAsString.split(':')
+        return new Date(parseInt(splittedDate[0]),parseInt(splittedDate[1]) - 1,
+            parseInt(splittedDate[2]), parseInt(splittedTime[0]), parseInt(splittedTime[1]));
+    }
+
+    static fromStringToTime(dateAsString:string):Date {
+        const splitted = dateAsString.split(':');
+        return new Date(parseInt(splitted[0]),parseInt(splitted[1]) - 1, parseInt(splitted[2]))
+    }
+
 }

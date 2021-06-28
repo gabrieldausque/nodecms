@@ -1,6 +1,6 @@
 import {writable} from 'svelte/store'
 
-export class ShowCreateUserEvent {
+export class ShowModalUserEvent {
     shown:boolean;
     startDate:Date;
     endDate:Date;
@@ -13,4 +13,5 @@ export class ShowCreateUserEvent {
     }
 }
 
-export const ShowCreateUserEventStore = writable(new ShowCreateUserEvent());
+export const ShowCreateUserEventStore = writable(new ShowModalUserEvent());
+export const ShowUpdateUserEventStore = writable(new ShowModalUserEvent());
