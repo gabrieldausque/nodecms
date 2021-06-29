@@ -2,7 +2,7 @@
     properties.channelKey = will define the Channel to be displayed
 -->
 
-<script>
+<script lang="ts">
     import {getBackendClient} from "@nodecms/backend-client";
     import {Helpers} from '../../helpers/Helpers';
     import {v4 as uuid} from 'uuid';
@@ -11,24 +11,27 @@
     import Post from "./Post.svelte";
     import {observableChannelCache} from "../../stores/ChannelStore";
 
+    export let properties : {
+        channelKey:string
+    };
+    export let ActivePost;
+
     let editor = null;
     let tailActivated = true;
     let tailForChildrenActivated = true;
-    let Channel;
     const id = uuid();
 
     let posts = []
     const unsubscribe = observableChannelCache.subscribe((occ) => {
-        if(Channel && occ && occ[Channel.key]){
-            posts = occ[Channel.key].posts;
+        console.log(occ);
+        if(properties.channelKey && occ && occ[properties.channelKey]){
+            posts = occ[properties.channelKey].posts;
         }
     })
 
-    export let properties;
-    export let ActivePost;
 
     function isRightPanelVisible() {
-        const b = Channel &&
+        const b = $observableChannelCache[properties.channelKey] &&
             ActivePost &&
             ActivePost.parentPost &&
             ActivePost.parentPost.channelKey === properties.channelKey;
@@ -196,16 +199,13 @@
     }
 
     async function createChannelFromKey() {
-        if(properties && properties.channelKey &&
-            (!$observableChannelCache[properties.channelKey])
-        )  {
-           console.log(`Subscribing channel ${properties.channelKey}` )
+        if(properties && properties.channelKey) {
            await Helpers.getChannelContentAndSubscribe(properties.channelKey);
         }
     }
 
     onMount(async () => {
-        await createChannelFromKey()
+        await createChannelFromKey();
     })
 
     beforeUpdate(() => {
@@ -233,10 +233,6 @@
     })
 
     afterUpdate(async () => {
-
-        await createChannelFromKey()
-
-
 
         if(isThereNewMessage()){
             document.getElementById(`new-message-for-${properties.channelKey}`)?.classList.remove('hidden');
@@ -287,11 +283,6 @@
         }
 
     })
-
-    $: {
-        if(Channel)
-            console.log(`update for channel content ${Channel.key}`);
-    }
 
     onDestroy(() => {
         unsubscribe();
@@ -487,7 +478,6 @@
             </div>
         {/if}
     </div>
-
 {:else}
     <div style="{properties.style?properties.style:''}">
         No Channel

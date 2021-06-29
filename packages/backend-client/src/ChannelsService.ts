@@ -6,6 +6,7 @@ import io from "socket.io-client";
 import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy.js";
 import type {Channel} from "@nodecms/backend-data";
 import {ChannelPost} from "@nodecms/backend-data/dist";
+import {UserService} from "./UserService";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -17,11 +18,13 @@ export class ChannelsService extends BaseServiceClient<Channel> {
     private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
     private readonly env?:string;
+    private userService: UserService;
 
     constructor(url:string, socketIoHost:string = '/', env?:string) {
         super(url, 'channel');
         this.socketIoUrl = socketIoHost?socketIoHost:this.url;
         this.env = env;
+        this.userService = new UserService(url);
         document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, this.createTopicServiceClient.bind(this));
         document.addEventListener(NodeCMSFrontEndEvents.UserLogoutEventName, this.onLogOut.bind(this));
     }
@@ -42,6 +45,8 @@ export class ChannelsService extends BaseServiceClient<Channel> {
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             this.topicServiceClient.readyHandler = () => {
+                if(this.topicServiceClient)
+                    this.topicServiceClient.isReady = true;
                 this.topicServiceClient?.subscribe(channelsEventNames.channelsActions, async (t:any,m:any) => {
                     const channelAction = m.content
                     document.dispatchEvent(
@@ -98,10 +103,13 @@ export class ChannelsService extends BaseServiceClient<Channel> {
     }
 
     async subscribeToChannel(channelKey:string, handler:ChannelPostReceived, addNewHandler = false)  {
-        await this.createTopicServiceClient();
         const channelTopic = `channels.${channelKey}.posts`;
         const subscribe = async() => {
+            console.log('plop 1')
+            console.log(this.topicServiceClient);
+            console.log('end plop 1');
             await this.topicServiceClient?.subscribe(channelTopic, async (t:any,m:any) => {
+                console.log('handling message');
                 try{
                     await handler(m.content);
                 }catch(error) {
@@ -110,12 +118,17 @@ export class ChannelsService extends BaseServiceClient<Channel> {
             })
         }
         if(typeof handler === 'function'){
-            if(this.topicServiceClient) {
+            if(this.topicServiceClient && this.topicServiceClient.isReady) {
                 if((this.topicServiceClient.subscriptions?.indexOf(channelTopic) >= 0 && addNewHandler) ||
                     this.topicServiceClient.subscriptions?.indexOf(channelTopic) < 0
                 ){
                     await subscribe();
                 }
+            } else {
+                window.setTimeout(async () => {
+                    console.log('retrying subscribe ...');
+                    await this.subscribeToChannel(channelKey, handler, addNewHandler);
+                }, 2000)
             }
         }
     }

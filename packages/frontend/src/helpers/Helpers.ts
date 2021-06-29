@@ -90,6 +90,7 @@ export class Helpers {
 
     static async getChannelContentAndSubscribe(channelKey:string) {
         if(channelKey){
+            console.log(`subscribing to ${channelKey} ##`);
             let channel:Channel;
             const backendClient = await getBackendClient();
 
@@ -98,6 +99,8 @@ export class Helpers {
                 channelsCache.addChannel(channel);
             }
             channel = channelsCache[channelKey].channel;
+
+
             if(channel.isReader){
                 await backendClient.channelsService.subscribeToChannel(channel.key, async (mc) => {
                     console.log('receiving message from ' + channel.key);
@@ -148,6 +151,7 @@ export class Helpers {
                     }
                 }
             }
+
             observableChannelCache.update(occ => {
                 return occ;
             })

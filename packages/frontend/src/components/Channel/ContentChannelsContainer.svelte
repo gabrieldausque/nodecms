@@ -3,19 +3,17 @@
     import {getBackendClient} from "@nodecms/backend-client";
     import ContentChannelContainer from './ContentChannelContainer.svelte';
     import {channelsEventNames} from "@nodecms/backend-client";
+    import {Helpers} from "../../helpers/Helpers";
+    import {observableChannelCache} from "../../stores/ChannelStore";
 
     export let properties;
     let availableChannels = [];
     let ActivePost;
-    let Channel;
+    let Channel = properties.channelKey;
 
     onMount(async () => {
         const backEndService = await getBackendClient();
         availableChannels = await backEndService.channelsService.getAvailableChannels();
-        if(properties && properties.channelKey)
-        {
-            await changeCurrentChannel(properties.channelKey);
-        }
     });
 
     document.addEventListener(channelsEventNames.channelsActions, async() => {
@@ -134,6 +132,8 @@
 
     async function changeCurrentChannel(channelKey) {
         if(channelKey){
+            await Helpers.getChannelContentAndSubscribe(channelKey)
+            console.log($observableChannelCache);
             Channel = channelKey
         }
     }
