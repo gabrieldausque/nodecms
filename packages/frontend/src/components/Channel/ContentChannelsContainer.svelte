@@ -254,7 +254,7 @@
                 <div id="errorOnCreatingChannel" class="alert alert-danger fade">
                     <div id="errorOnCreatingChannelContent"></div>
                 </div>
-                <button on:click={createChannel} type="button" class="btn action btn-danger " ><span id="creating-channel-loading" class="spinner-border"></span>Create Channel</button>
+                <button on:click={createChannel} type="button" class="btn action btn-danger " ><span id="creating-channel-loading" class="spinner-border"></span>Créer le canal</button>
             </div>
         </div>
     </div>

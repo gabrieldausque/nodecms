@@ -100,6 +100,7 @@ export class Helpers {
             channel = channelsCache[channelKey].channel;
             if(channel.isReader){
                 await backendClient.channelsService.subscribeToChannel(channel.key, async (mc) => {
+                    console.log('receiving message from ' + channel.key);
                     if(mc.content){
                         await Helpers.preloadContentPreview(mc.content)
                     }

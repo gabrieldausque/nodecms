@@ -302,7 +302,7 @@
                     <div id="errorOnCreatingDocumentContent"></div>
                 </div>
                 <button on:click={createDocument} type="button" class="btn action btn-danger " >
-                    <span id="creating-document-loading" class="spinner-border"></span>Create Document
+                    <span id="creating-document-loading" class="spinner-border"></span>Créer le Document
                 </button>
             </div>
         </div>

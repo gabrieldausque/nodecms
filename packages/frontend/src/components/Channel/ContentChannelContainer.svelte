@@ -16,7 +16,13 @@
     let tailForChildrenActivated = true;
     let Channel;
     const id = uuid();
-    $observableChannelCache
+
+    let posts = []
+    const unsubscribe = observableChannelCache.subscribe((occ) => {
+        if(Channel && occ && occ[Channel.key]){
+            posts = occ[Channel.key].posts;
+        }
+    })
 
     export let properties;
     export let ActivePost;
@@ -193,6 +199,7 @@
         if(properties && properties.channelKey &&
             (!$observableChannelCache[properties.channelKey])
         )  {
+           console.log(`Subscribing channel ${properties.channelKey}` )
            await Helpers.getChannelContentAndSubscribe(properties.channelKey);
         }
     }
@@ -279,6 +286,15 @@
             }
         }
 
+    })
+
+    $: {
+        if(Channel)
+            console.log(`update for channel content ${Channel.key}`);
+    }
+
+    onDestroy(() => {
+        unsubscribe();
     })
 
 </script>

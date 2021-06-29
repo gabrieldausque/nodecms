@@ -56,7 +56,10 @@
 }}>
     {content}
 </div>
-<button class="btn {toUpdate?'btn-success':''}" disabled="{toUpdate?'':'disabled'}" type="button" on:click={() => {
-        highlight(document.getElementById(id));
+<button class="btn {toUpdate?'btn-success':''}" disabled="{toUpdate?'':'disabled'}"
+        type="button" on:click={() => {
+        const element = document.getElementById(id);
+        console.log(element);
+        highlight(element);
         toUpdate = false;
     }}>Mettre à jour</button>

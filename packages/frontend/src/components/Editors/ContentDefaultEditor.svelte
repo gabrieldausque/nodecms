@@ -23,7 +23,7 @@
 
 <style>
 
-    .highlightEditor {
+    :global(.highlightEditor) {
         width: 100%;
         height: calc(100% - 45px) !important;
         overflow-y: auto;
@@ -34,6 +34,7 @@
 </style>
 
 <HighlightedEditor
+        id={id}
         content={JSON.stringify(component, null, 4)}
         onChange={handleChange} ></HighlightedEditor>
 
