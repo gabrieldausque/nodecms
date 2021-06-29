@@ -28,6 +28,8 @@ export class DocumentService extends BaseServiceClient<DocumentEntity> {
             });
             this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
             this.topicServiceClient.readyHandler = () => {
+                if(this.topicServiceClient)
+                    this.topicServiceClient.isReady = true;
                 this.topicServiceClient?.subscribe(documentsEventName.documentsActions, async (t:any,m:any) => {
                     const documentAction = m.content;
                     document.dispatchEvent(new CustomEvent(documentsEventName.documentsActions, {

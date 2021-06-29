@@ -66,7 +66,7 @@ export abstract class BaseService<T extends Entity,
         {
           const creationPromises:Promise<Partial<T> | Partial<T>[]>[] = []
           for(let atomicData of data){
-            creationPromises.push(this.create(atomicData, params))
+              creationPromises.push(this.create(atomicData, params))
           }
           return (await Promise.all(creationPromises)).map((r) => r as T);
         } else {

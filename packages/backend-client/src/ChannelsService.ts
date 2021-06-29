@@ -105,11 +105,7 @@ export class ChannelsService extends BaseServiceClient<Channel> {
     async subscribeToChannel(channelKey:string, handler:ChannelPostReceived, addNewHandler = false)  {
         const channelTopic = `channels.${channelKey}.posts`;
         const subscribe = async() => {
-            console.log('plop 1')
-            console.log(this.topicServiceClient);
-            console.log('end plop 1');
             await this.topicServiceClient?.subscribe(channelTopic, async (t:any,m:any) => {
-                console.log('handling message');
                 try{
                     await handler(m.content);
                 }catch(error) {

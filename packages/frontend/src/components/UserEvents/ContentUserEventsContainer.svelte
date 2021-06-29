@@ -1,7 +1,6 @@
 <script lang="ts">
 
     import {onMount, onDestroy} from 'svelte';
-    import ContentDayContainer from "./ContentDayContainer.svelte";
     import CreateUserEventModal from "./CreateUserEventModal.svelte";
     import {UserEventsStore} from "../../stores/UserEventsStore";
     import {UserStore} from "../../stores/UserStore";
@@ -37,11 +36,7 @@
         $UserEventsStore.startDate = startDate;
         $UserEventsStore.endDate = endDate;
         const services = await getBackendClient();
-        for (const login in $UserEventsStore.eventsByUser) {
-            if ($UserEventsStore.eventsByUser.hasOwnProperty(login)) {
-                $UserEventsStore.eventsByUser[login] = await services.userService.findUserEvents(login, startDate, endDate);
-            }
-        }
+        $UserEventsStore.eventsByUser[$UserStore.login] = await services.userService.findUserEvents($UserStore.login, startDate, endDate);
         UserEventsStore.update(ues => {
             return ues
         })
@@ -49,6 +44,10 @@
 
     onMount(async () => {
         await loadEvents(startDate, endDate);
+        const services = await getBackendClient();
+        await services.userService.subscribeToUserEvents($UserStore.login, async (m:any) => {
+            await loadEvents(startDate, endDate);
+        })
     })
 
 

@@ -14,15 +14,11 @@
     let userEvents = [];
 
     const unsubscribe = UserEventsStore.subscribe( (ues:UserEvents) => {
-        console.log('update the userevents store ...');
         startDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 0,0,0);
         endDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23,59,59);
         userEvents = ues.eventsByUser[login]?ues.eventsByUser[login].filter(ue =>
             ue.startDate.getTime() <= startDate.getTime() &&
             startDate.getTime() <= ue.endDate.getTime()):[];
-        console.log(currentDay);
-        console.log(ues.eventsByUser[login]);
-        console.log(userEvents);
     });
 
     function displayCreateUserEventModal() {

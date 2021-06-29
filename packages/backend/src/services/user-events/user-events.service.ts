@@ -16,11 +16,17 @@ export default function (app: Application): void {
     paginate: app.get('paginate'),
     storage: {
       contractName: 'Default'
+    },
+    topicService:{
+      contractName: 'Default'
     }
   };
 
   const globalUserEventStorageConfiguration = app.get('storage').userEvents;
+  const globalTopicServiceConfiguration = app.get('topicService');
+
   options.storage = {...options.storage, ...globalUserEventStorageConfiguration};
+  options.topicService = {...options.topicService, ...globalTopicServiceConfiguration}
 
   const userEventConfiguration = app.get('userEvent');
   options = {...options, ...userEventConfiguration};

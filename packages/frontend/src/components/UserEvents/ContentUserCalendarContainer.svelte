@@ -1,5 +1,6 @@
 <script lang="ts">
     import ContentDayContainer from "./ContentDayContainer.svelte";
+
     export let days:Date[];
     export let login:string;
 
@@ -17,7 +18,7 @@
     }
 </style>
 
-<div class="userevents-calendar">
+<div class="userevents-calendar" >
     {#each days as day}
         <ContentDayContainer currentDay={day} login={login}></ContentDayContainer>
     {/each}

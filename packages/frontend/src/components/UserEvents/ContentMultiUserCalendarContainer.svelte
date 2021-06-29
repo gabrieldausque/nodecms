@@ -2,10 +2,9 @@
     import CalendarNavBar from "./CalendarNavBar.svelte";
     import {UserEventsStore} from "../../stores/UserEventsStore";
     import {Helpers} from "../../helpers/Helpers";
-    import CreateUserEventModal from "./CreateUserEventModal.svelte";
-    import UpdateUserEventModal from "./UpdateUserEventModal.svelte";
     import ContentUserCalendarContainer from "./ContentUserCalendarContainer.svelte";
     import {getBackendClient} from "@nodecms/backend-client";
+    import {afterUpdate, onMount} from 'svelte';
 
     export let properties: {
         userNames: string[]
@@ -28,19 +27,49 @@
         $UserEventsStore.startDate = startDate;
         $UserEventsStore.endDate = endDate;
         const services = await getBackendClient();
-        for (const login in $UserEventsStore.eventsByUser) {
-            if ($UserEventsStore.eventsByUser.hasOwnProperty(login)) {
-                $UserEventsStore.eventsByUser[login] = await services.userService.findUserEvents(login, startDate, endDate);
-            }
+        for (const login of properties.userNames) {
+            $UserEventsStore.eventsByUser[login] = await services.userService.findUserEvents(login, startDate, endDate);
         }
         UserEventsStore.update(ues => {
             return ues
         })
     }
 
+    async function loadEventsForLogin(login:string, startDate: Date, endDate: Date) {
+        $UserEventsStore.startDate = startDate;
+        $UserEventsStore.endDate = endDate;
+        const services = await getBackendClient();
+        $UserEventsStore.eventsByUser[login] = await services.userService.findUserEvents(login, startDate, endDate);
+        UserEventsStore.update(ues => {
+            return ues
+        })
+    }
+
+    onMount(async () => {
+        const services = await getBackendClient();
+        await loadEvents(startDate, endDate);
+        for(let login of properties.userNames){
+            await services.userService.subscribeToUserEvents(login, async (m:any) => {
+                await loadEventsForLogin(m.owner, startDate, endDate);
+            })
+        }
+    })
+
+    afterUpdate(() => {
+        const userCols = document.querySelectorAll('.user-col');
+        for(let u of userCols){
+            u.style.height = `${u.parentElement.clientHeight}px`;
+        }
+    })
+
 </script>
 
 <style>
+
+    .userevents-panel {
+        height: calc(100vh - 72px);
+    }
+
     .calendars {
         height: 100%;
         width: 100%;
@@ -53,46 +82,71 @@
     }
 
     .calendar-row {
+        overflow-x: hidden;
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0;
         display: flex;
         flex-direction: row;
-        min-width: 100%;
-        justify-content: space-between;
-        min-height: 124px;
-        position: relative;
-        height: 100%;
     }
 
     .calendar-col {
-        margin-right: 20vw;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-right: solid 1px lightgray;
+        border-bottom: solid 1px lightgray;
+        width: 90%;
+        margin-left: 10%;
+        overflow: hidden;
+        scrollbar-width: none;
+    }
+
+    .calendar-col::-webkit-scrollbar {
+        display: none;
+    }
+
+    .calendar-col:focus {
+        outline:none;
     }
 
     :global(.calendar-col .userevents-calendar) {
         flex-wrap: nowrap !important;
+        margin-bottom: 0 !important;
+        border-bottom: none !important;
+        border-top: none !important;
+        width:100% !important;
+        flex-grow: 1;
     }
 
     :global(.calendar-row .day) {
-        min-width: 20vw;
+        min-width: 12.5vw;
+        border-top: none !important;
+        border-bottom: none !important;
+        border-right: solid 1px lightgray !important;
+        border-left: none !important;
+
     }
 
     .user-col {
+        width: 10%;
         position: fixed;
-        left: 0;
-        display: flex;
         background: white;
-        align-items: center;
-        justify-content: center;
         min-height: 150px;
-        width: 20vw;
-        flex-grow: 1;
-        z-index: 3;
-        border-bottom: solid 1px lightgray;
+        z-index: 5;
         border-right: solid 1px lightgray;
+        border-bottom: solid 1px lightgray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-
 
 </style>
 
-<main class="userevents-panel">
+<main class="userevents-panel" on:keypress={(event) => {
+                    console.log(event)
+                }}>
     <CalendarNavBar on:dateChanged={(event)=> {
         startDate = event.detail.startDate;
         endDate = event.detail.endDate;
@@ -100,16 +154,25 @@
         loadEvents(startDate, endDate);
     }}></CalendarNavBar>
     <div class="calendars">
-
         {#each properties.userNames as login}
-            <div class="calendar-row">
+            <div class="calendar-row" >
                 <div class="user-col">
                     {login}
                 </div>
-                <div class="calendar-col">
+                <div class="calendar-col" tabindex="0" on:keydown={(event) => {
+                    const calendars = document.querySelectorAll('.calendar-col');
+                    let movement = 0;
+                    if(event.key === "ArrowRight")
+                        movement = 50;
+                    else if(event.key === "ArrowLeft")
+                        movement = -50;
+                    for(let c of calendars){
+                        c.scrollLeft = c.scrollLeft + movement;
+                    }
+                }}>
                     <ContentUserCalendarContainer days={days} login={login}></ContentUserCalendarContainer>
                 </div>
             </div>
         {/each}
     </div>
-</main>
+</main >
