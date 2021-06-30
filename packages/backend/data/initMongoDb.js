@@ -392,7 +392,7 @@ function initData(){
           order:0,
           type:'multiuser-events',
           properties:{
-            userNames: ['Hannibal', 'Looping']
+            userNames: ['Hannibal', 'Fute','Looping','Barracuda','Amanda']
           }
         }
       ]

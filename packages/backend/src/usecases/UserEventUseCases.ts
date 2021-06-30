@@ -30,6 +30,24 @@ export class UserEventUseCases extends UseCases<UserEvent, UserEventEntityRules>
       UserEventEntityRules);
   }
 
+  async find(filter:Partial<UserEvent>, lastIndex?:number | string, executingUser?:User): Promise<UserEvent[]>{
+    const found = await super.find(filter, lastIndex, executingUser);
+    for(const userEvent of found){
+      if(executingUser &&
+        typeof executingUser.id === 'number' &&
+        userEvent.ownerId !== executingUser.id &&
+        userEvent.visibility === UserEventVisibility.private
+      ) {
+        userEvent.label = 'private';
+        userEvent.description = '';
+        userEvent.location = '';
+        userEvent.category = '';
+        userEvent.attachments = [];
+      }
+    }
+    return found;
+  }
+
   async get(id : string | number, executingUser?:User) : Promise<UserEvent> {
     const userEvent = await super.get(id, executingUser);
     //in case visibility is private and user is not owner, hiding private fields, leave only availability of owner

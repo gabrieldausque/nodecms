@@ -16,7 +16,7 @@ export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
   protected readonly entityRules: ER;
 
   protected constructor(dataType:string,
-                        contractType:string,
+                        contractType: string,
                         configuration:UseCaseConfiguration = {
     storage:{
       contractName:'Default'

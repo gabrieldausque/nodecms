@@ -21,15 +21,16 @@
     async function onLoggedIn() {
 
         const services = await getBackendClient();
+        const currentUser = await services.userService.getCurrentUser();
         if(!login)
         {
-            login = (await services.userService.getCurrentUser()).login
+            login = currentUser.login
         }
-        console.log(`MyLogin : ${login}`);
 
         UserStore.set({
             isLogin: isLogin,
-            login: login
+            login: login,
+            id: currentUser.id
         })
 
         const userEvents = await services.userService.findUserEvents(login,
