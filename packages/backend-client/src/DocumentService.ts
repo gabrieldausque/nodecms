@@ -10,34 +10,20 @@ export const documentsEventName = {
 }
 
 export class DocumentService extends BaseServiceClient<DocumentEntity> {
-    private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
     private env?: string;
 
     constructor(url:string, socketIoHost:string = '/', env?:string) {
         super(url, 'document');
         this.socketIoUrl = socketIoHost?socketIoHost:this.url;
-        document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, this.createTopicServiceClient.bind(this));
-    }
-
-    async createTopicServiceClient(){
-        if(!this.topicServiceClient){
-            let socket = io(this.socketIoUrl, {
-                transports: ['websocket'],
-                rejectUnauthorized: !(this.env === 'dev')
-            });
-            this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
-            this.topicServiceClient.readyHandler = () => {
-                if(this.topicServiceClient)
-                    this.topicServiceClient.isReady = true;
-                this.topicServiceClient?.subscribe(documentsEventName.documentsActions, async (t:any,m:any) => {
-                    const documentAction = m.content;
-                    document.dispatchEvent(new CustomEvent(documentsEventName.documentsActions, {
-                        detail: documentAction
-                    }));
-                })
-            };
-        }
+        document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, async () => {
+            this.topicServiceClient = await this.getOrCreateTopicServiceClient(this.socketIoUrl, env)
+            await this.subscribeToTopic(documentsEventName.documentsActions, async (documentAction:any) => {
+                document.dispatchEvent(new CustomEvent(documentsEventName.documentsActions, {
+                    detail: documentAction
+                }));
+            })
+        });
     }
 
     async findDocument(filter?:{

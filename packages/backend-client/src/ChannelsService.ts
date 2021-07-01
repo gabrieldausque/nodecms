@@ -7,6 +7,7 @@ import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceCl
 import type {Channel} from "@nodecms/backend-data";
 import {ChannelPost} from "@nodecms/backend-data/dist";
 import {UserService} from "./UserService";
+import {MessageReceivedHandler} from "./Helpers";
 
 export type ChannelPostReceived = (messageContent:any) => Promise<void>
 
@@ -15,7 +16,6 @@ export const channelsEventNames = {
 }
 
 export class ChannelsService extends BaseServiceClient<Channel> {
-    private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private readonly socketIoUrl: string;
     private readonly env?:string;
     private userService: UserService;
@@ -25,7 +25,13 @@ export class ChannelsService extends BaseServiceClient<Channel> {
         this.socketIoUrl = socketIoHost?socketIoHost:this.url;
         this.env = env;
         this.userService = new UserService(url);
-        document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, this.createTopicServiceClient.bind(this));
+        document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, async () => {
+            await this.subscribeToTopic(channelsEventNames.channelsActions, async(channelAction) => {
+                document.dispatchEvent(
+                    new CustomEvent(channelsEventNames.channelsActions, {detail: channelAction}));
+            });
+            (window as any).cmsClient = this;
+        });
         document.addEventListener(NodeCMSFrontEndEvents.UserLogoutEventName, this.onLogOut.bind(this));
     }
 
@@ -34,26 +40,6 @@ export class ChannelsService extends BaseServiceClient<Channel> {
         if(this.topicServiceClient){
             this.topicServiceClient.socket.close();
             this.topicServiceClient = undefined;
-        }
-    }
-
-    async createTopicServiceClient(){
-        if(!this.topicServiceClient){
-            let socket = io(this.socketIoUrl, {
-                transports: ['websocket'],
-                rejectUnauthorized: !(this.env === 'dev')
-            });
-            this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
-            this.topicServiceClient.readyHandler = () => {
-                if(this.topicServiceClient)
-                    this.topicServiceClient.isReady = true;
-                this.topicServiceClient?.subscribe(channelsEventNames.channelsActions, async (t:any,m:any) => {
-                    const channelAction = m.content
-                    document.dispatchEvent(
-                        new CustomEvent(channelsEventNames.channelsActions, {detail: channelAction}));
-                })
-            };
-            (window as any).cmsClient = this;
         }
     }
 
@@ -102,31 +88,9 @@ export class ChannelsService extends BaseServiceClient<Channel> {
         return posts;
     }
 
-    async subscribeToChannel(channelKey:string, handler:ChannelPostReceived, addNewHandler = false)  {
+    async subscribeToChannel(channelKey:string, handler:MessageReceivedHandler, addNewHandler = false)  {
         const channelTopic = `channels.${channelKey}.posts`;
-        const subscribe = async() => {
-            await this.topicServiceClient?.subscribe(channelTopic, async (t:any,m:any) => {
-                try{
-                    await handler(m.content);
-                }catch(error) {
-                    console.error(error);
-                }
-            })
-        }
-        if(typeof handler === 'function'){
-            if(this.topicServiceClient && this.topicServiceClient.isReady) {
-                if((this.topicServiceClient.subscriptions?.indexOf(channelTopic) >= 0 && addNewHandler) ||
-                    this.topicServiceClient.subscriptions?.indexOf(channelTopic) < 0
-                ){
-                    await subscribe();
-                }
-            } else {
-                window.setTimeout(async () => {
-                    console.log('retrying subscribe ...');
-                    await this.subscribeToChannel(channelKey, handler, addNewHandler);
-                }, 2000)
-            }
-        }
+        await this.subscribeToTopic(channelTopic, handler, addNewHandler);
     }
 
     async getAvailableChannels() {

@@ -1,6 +1,12 @@
 import {Entity} from "@nodecms/backend-data/dist";
+import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy";
+import io from "socket.io-client";
+import {documentsEventName} from "./DocumentService";
+import {MessageReceivedHandler} from "./Helpers";
 
 export abstract class BaseServiceClient<T extends Entity> {
+
+    public static topicServiceClient?:SocketIOTopicServiceClientProxy;
 
     protected constructor(url: string, service:string) {
         this.url = url;
@@ -9,6 +15,48 @@ export abstract class BaseServiceClient<T extends Entity> {
 
     protected url: string;
     protected service: string;
+    public topicServiceClient?: SocketIOTopicServiceClientProxy;
+
+    async getOrCreateTopicServiceClient(socketIoUrl:string, env?:string){
+        if(!BaseServiceClient.topicServiceClient){
+            let socket = io(socketIoUrl, {
+                transports: ['websocket'],
+                rejectUnauthorized: !(env === 'dev')
+            });
+            BaseServiceClient.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
+            BaseServiceClient.topicServiceClient.readyHandler = () => {
+                if(BaseServiceClient.topicServiceClient)
+                    BaseServiceClient.topicServiceClient.isReady = true;
+            };
+        }
+        return BaseServiceClient.topicServiceClient;
+    }
+
+    async subscribeToTopic(topic:string, handler:MessageReceivedHandler, addNewHandler = false){
+        const subscribe = async() => {
+            await BaseServiceClient.topicServiceClient?.subscribe(topic, async (t:any,m:any) => {
+                try{
+                    await handler(m.content);
+                }catch(error) {
+                    console.error(error);
+                }
+            })
+        }
+        if(typeof handler === 'function'){
+            if(BaseServiceClient.topicServiceClient && BaseServiceClient.topicServiceClient.isReady) {
+                if((BaseServiceClient.topicServiceClient.subscriptions?.indexOf(topic) >= 0 && addNewHandler) ||
+                    BaseServiceClient.topicServiceClient.subscriptions?.indexOf(topic) < 0
+                ){
+                    await subscribe();
+                }
+            } else {
+                window.setTimeout(async () => {
+                    console.log(`retrying subscribe to ${topic} ...`);
+                    await this.subscribeToTopic(topic, handler, addNewHandler);
+                }, 2000)
+            }
+        }
+    }
 
     createHeaders(request:XMLHttpRequest) {
         request.withCredentials = true;

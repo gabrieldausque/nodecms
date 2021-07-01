@@ -25,7 +25,6 @@ export class UserService extends BaseServiceClient<User> {
     private authenticationService: AuthenticationService;
     private userEventService: UserEventService;
     private readonly socketIoUrl: string;
-    private topicServiceClient?: SocketIOTopicServiceClientProxy;
     private env?: string;
 
     constructor(url:string, socketIoHost:string = '/', env?:string) {
@@ -34,23 +33,10 @@ export class UserService extends BaseServiceClient<User> {
         this.authenticationService = new AuthenticationService(this.url);
         this.userEventService = new UserEventService(this.url);
         this.socketIoUrl = socketIoHost?socketIoHost:this.url;
-        document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, this.createTopicServiceClient.bind(this));
+        document.addEventListener(NodeCMSFrontEndEvents.UserAuthenticatedEventName, async () => {
+            this.topicServiceClient = await this.getOrCreateTopicServiceClient(this.socketIoUrl, env);
+        });
     }
-
-    async createTopicServiceClient(){
-        if(!this.topicServiceClient){
-            let socket = io(this.socketIoUrl, {
-                transports: ['websocket'],
-                rejectUnauthorized: !(this.env === 'dev')
-            });
-            this.topicServiceClient = new SocketIOTopicServiceClientProxy(socket);
-            this.topicServiceClient.readyHandler = () => {
-                if(this.topicServiceClient)
-                    this.topicServiceClient.isReady = true;
-            };
-        }
-    }
-
 
     getClientUniqueId() {
         let clientId = localStorage.getItem('clientUniqueId');
@@ -111,31 +97,7 @@ export class UserService extends BaseServiceClient<User> {
                                 addNewHandler = false)
     {
         const userEventsTopic = `${userEventsEventName.userEventActions}.${userLogin}`;
-        const subscribe = async() => {
-            console.log(`subscribing to ${userEventsTopic}`)
-            await this.topicServiceClient?.subscribe(userEventsTopic, async (t:any,m:any) => {
-                console.log(`receiving message from ${t}`);
-                try{
-                    await handler(m.content);
-                }catch(error) {
-                    console.error(error);
-                }
-            })
-        }
-        if(typeof handler === 'function'){
-            if(this.topicServiceClient && this.topicServiceClient.isReady) {
-                if((this.topicServiceClient.subscriptions?.indexOf(userEventsTopic) >= 0 && addNewHandler) ||
-                    this.topicServiceClient.subscriptions?.indexOf(userEventsTopic) < 0
-                ){
-                    await subscribe();
-                }
-            } else {
-                window.setTimeout(async () => {
-                    console.log('retrying subscribe ...');
-                    await this.subscribeToUserEvents(userLogin, handler, addNewHandler);
-                }, 2000)
-            }
-        }
+        await this.subscribeToTopic(userEventsTopic, handler, addNewHandler);
     }
 
 
