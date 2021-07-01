@@ -1,27 +1,22 @@
-import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
+import { Id, NullableId, Paginated, Params} from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
-import {NotAcceptable, NotFound} from "@feathersjs/errors";
-import {isNumber} from "../../helpers";
-import {globalInstancesFactory} from "@hermes/composition";
-import {User, User as UserEntity} from "../../entities/User";
+import {NotFound} from "@feathersjs/errors";
+import {isNumber} from "@nodecms/backend-data";
+import {User as UserEntity} from "@nodecms/backend-data";
+import {Metadata as MetadataEntity} from '@nodecms/backend-data'
+import {MetadataEntityRules} from "@nodecms/backend-data-rules";
 
-
-export interface MetadataDTO {
-  id?: number;
-  key: string;
-  value?: any;
-  isPublic?: boolean;
-  ownerType?:string | null;
-  ownerId?:number | null;
-}
+export type MetadataDTO = Partial<MetadataEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
 
 }
 
-export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
+export class Metadata extends BaseService<MetadataDTO,
+  MetadataEntityRules,
+  MetadataUseCases> {
 
   options: ServiceOptions;
 

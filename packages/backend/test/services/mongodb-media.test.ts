@@ -9,10 +9,11 @@ import {Server} from "http";
 import {globalInstancesFactory} from "@hermes/composition";
 import {expect,getAuthenticationParams, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {Media as MediaService} from "../../src/services/media/media.class";
-import {Media, MediaVisibility} from '../../src/entities/Media';
+import {Media, MediaVisibility} from '../../../backend-data/src/Media';
 import axios from "axios";
 import * as fs from 'fs';
 import {v4 as uuid} from "uuid";
+import {globalContentContainerFactory} from "../../../frontend/src/ContentContainerFactory";
 
 const readFile = promisify(fs.readFile);
 
@@ -32,7 +33,6 @@ describe('Media service', () => {
   let params:any = {};
   let finalCookie = '';
   let clientUniqueId = uuid();
-  let mediaStorage = globalInstancesFactory.getInstanceFromCatalogs('MediaStorage','Default');
 
   before(async () => {
     await initMongoDbTestDatabase();

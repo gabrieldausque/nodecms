@@ -1,11 +1,11 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import {Media as MediaEntity, MediaVisibility} from "../../entities/Media";
+import {Media as MediaEntity, MediaVisibility, User as UserEntity} from "@nodecms/backend-data";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MediaUseCases} from "../../usecases/MediaUseCases";
 import {NotAuthenticated, NotImplemented} from "@feathersjs/errors";
-import {User as UserEntity} from "../../entities/User";
-import {isNumber} from "../../helpers";
+import {isNumber, NotFoundError} from "@nodecms/backend-data";
+import {MediaRules} from "@nodecms/backend-data-rules";
 
 type MediaDTO = Partial<MediaEntity>
 
@@ -18,7 +18,7 @@ interface ServiceOptions extends BaseServiceConfiguration {
   }
 }
 
-export class Media extends BaseService<MediaDTO, MediaUseCases> {
+export class Media extends BaseService<MediaDTO, MediaRules, MediaUseCases> {
   app: Application;
   options: ServiceOptions;
 
@@ -53,7 +53,9 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
   }
 
   async patch (id: NullableId, data: MediaDTO, params?: Params): Promise<MediaDTO> {
-    throw new NotImplemented();
+    if(id && params && params.user)
+      return this.useCase.update(id, data, params.user as UserEntity);
+    throw new NotFoundError();
   }
 
   async remove (id: NullableId, params?: Params): Promise<MediaDTO> {
@@ -122,4 +124,10 @@ export class Media extends BaseService<MediaDTO, MediaUseCases> {
     }
     return true;
   }
+
+  async isAuthorized(context: any): Promise<boolean> {
+    const result = await super.isAuthorized(context);
+    return result;
+  }
+
 }

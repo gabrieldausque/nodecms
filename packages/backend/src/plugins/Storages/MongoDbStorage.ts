@@ -1,9 +1,7 @@
-import {Entity} from '../../entities/Entity';
+import {Entity} from '@nodecms/backend-data';
 import {Storage, StorageConfiguration} from './Storage'
 import {Collection, Db, MongoClient, QuerySelector} from 'mongodb';
-import {globalInstancesFactory} from "@hermes/composition";
 import {Logger} from "../Logging/Logger";
-import {User} from "../../entities/User";
 
 export interface MongoDbStorageConfiguration extends StorageConfiguration {
   mongodbUser:string,
@@ -30,7 +28,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected constructor(configuration:MongoDbStorageConfiguration, logger?:Logger) {
     super(configuration);
-    this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}`;
+    this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}/${configuration.dbName}`;
     this.mongoClient = new MongoClient(this.mongodbConnexionString, {
       useUnifiedTopology: true,
     })
@@ -41,7 +39,12 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected async init() {
     if(!this.mongoClient.isConnected()){
-      await this.mongoClient.connect();
+      try{
+        await this.mongoClient.connect();
+      }catch(err){
+        console.log(err);
+      }
+
     }
   }
 
@@ -74,7 +77,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     }
   }
 
-  protected async internalCreate(entity:T, collectionName?:string) {
+  protected async internalCreate(entity:Partial<T>, collectionName?:string) {
     const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     await (await this.getCollection(finalCollectionName)).insertOne(
       entity
@@ -104,6 +107,13 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     let found:T[] = [];
     if(filter){
       const query:any = {...filter};
+
+      for(const propName in query){
+        if(query.hasOwnProperty(propName) && Array.isArray(query[propName])){
+          query[propName] = { $all: query[propName] }
+        }
+      }
+
       if(typeof lastIndex === "number" || typeof lastIndex === "string"){
           const firstElement = (typeof lastIndex === 'number')?
             (await this.internalGet(lastIndex, collectionName)):
@@ -134,12 +144,12 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
       } else {
         if(sortDescending){
           found = await (await this.getCollection(finalCollectionName))
-            .find(filter)
+            .find(query)
             .sort({id:-1})
             .toArray();
         }else{
           found = await (await this.getCollection(finalCollectionName))
-            .find(filter)
+            .find(query)
             .toArray();
         }
       }

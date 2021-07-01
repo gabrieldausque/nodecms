@@ -1,0 +1,1 @@
+export type MessageReceivedHandler = (messageContent:any) => Promise<void>

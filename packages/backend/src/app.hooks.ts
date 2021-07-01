@@ -17,7 +17,7 @@ export default {
     all: [
       async (context:any) => {
         try{
-          const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
+          const service:BaseService<any,any, any> = app.service(context.path) as BaseService<any,any, any>;
           if(await service.needAuthentication(context)) {
             await service.validAuthentication(context.params);
             if(!(await service.isAuthorized(context))) {
@@ -44,21 +44,27 @@ export default {
     get: [],
     create: [],
     update: [async (context:any) => {
-      const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
+      const service:BaseService<any,any,any> = app.service(context.path) as BaseService<any,any,any>;
+      if(typeof context.id === "undefined" || context.id === null){
+        throw new Forbidden('No id send for update request. Please send id with updated entity');
+      }
       const entity = await service.get(context.id,context.params);
       if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
         throw new Forbidden('Data to update is not authorized for your account');
       }
     }],
     patch: [async (context:any) => {
-      const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
+      const service:BaseService<any,any,any> = app.service(context.path) as BaseService<any,any,any>;
+      if(typeof context.id === "undefined" || context.id === null){
+        throw new Forbidden('No id send for update request. Please send id with updated entity');
+      }
       const entity = await service.get(context.id,context.params);
       if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
         throw new Forbidden('Data to patch is not authorized for your account');
       }
     }],
     remove: [async (context:any) => {
-      const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
+      const service:BaseService<any,any,any> = app.service(context.path) as BaseService<any,any,any>;
       const entity = await service.get(context.id,context.params);
       if(!await service.isDataAuthorized(entity, 'w',context.params.user)) {
         throw new Forbidden('Data to remove is not authorized for your account');
@@ -69,7 +75,7 @@ export default {
   after: {
     all: [],
     find: [async (context:any) => {
-      const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
+      const service:BaseService<any,any,any> = app.service(context.path) as BaseService<any,any,any>;
       if(Array.isArray(context.result)){
         const toCheck = [...context.result]
         for(const data of toCheck) {
@@ -80,9 +86,9 @@ export default {
       }
     }],
     get: [async (context:any) => {
-      const service:BaseService<any,any> = app.service(context.path) as BaseService<any,any>;
+      const service:BaseService<any,any,any> = app.service(context.path) as BaseService<any,any,any>;
       if(!await service.isDataAuthorized(context.result, 'r',context.params.user)) {
-        throw new Forbidden('RoleDTO asked is not authorized for your account');
+        throw new Forbidden(`Data asked for service ${context.path} is not authorized for your account`);
       }
     }],
     create: [],

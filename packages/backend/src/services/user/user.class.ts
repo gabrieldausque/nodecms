@@ -1,18 +1,19 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from '../BaseService';
-import {globalInstancesFactory} from '@hermes/composition';
-import {UserStorage} from '../../plugins/Storages/User/UserStorage'
 import {NotAcceptable} from '@feathersjs/errors';
 import {UserUseCases} from '../../usecases/UserUseCases';
-import {User as UserEntity} from "../../entities/User";
+import {User as UserEntity} from "@nodecms/backend-data";
+import {UserEntityRules} from "@nodecms/backend-data-rules";
 
 export type UserDTO = Partial<UserEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
 }
 
-export class User extends BaseService<UserDTO, UserUseCases>  {
+export class User extends BaseService<UserDTO,
+  UserEntityRules,
+  UserUseCases>  {
 
   options: ServiceOptions;
 
@@ -29,11 +30,16 @@ export class User extends BaseService<UserDTO, UserUseCases>  {
     this.options = options;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async find (params?: Params): Promise<UserDTO[] | Paginated<UserDTO>> {
     if(params) {
       const executingUser:UserEntity = params?.user as UserEntity;
-      return await this.useCase.find(params.filter,undefined, executingUser);
+      if(params.query){
+        const found = await this.useCase.find(params.query as UserDTO,undefined, executingUser);
+        for(const u of found){
+          this.useCase.secureUserForExternal(u);
+        }
+        return found;
+      }
     }
     return [];
   }
@@ -41,7 +47,13 @@ export class User extends BaseService<UserDTO, UserUseCases>  {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get (id: Id, params?: Params): Promise<UserDTO> {
     const executingUser:UserEntity = params?.user as UserEntity;
-    const user = await this.useCase.get(id, executingUser);
+    let user:UserEntity = await this.useCase.get(id, executingUser);
+    if(params &&
+       params.query &&
+       params.query.currentUser
+    ){
+      user = executingUser;
+    }
     return this.useCase.secureUserForExternal(user);
   }
 

@@ -1,25 +1,21 @@
 import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/feathers';
 import {Application} from '../../declarations';
-import {globalInstancesFactory} from "@hermes/composition";
-import AuthenticationPlugin, {CustomAuthenticatedUserToken} from "../../plugins/Authentication/AuthenticationPlugin";
 import {NotAcceptable, NotAuthenticated} from "@feathersjs/errors";
-import {EncryptionPlugin} from "../../plugins/Encryption/EncryptionPlugin";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {User, User as UserEntity} from "../../entities/User";
+import {User, User as UserEntity} from "@nodecms/backend-data";
 import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
-import {UserUseCases} from "../../usecases/UserUseCases";
-import {isNumber} from "../../helpers";
-import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
-import {Authentication as AuthenticationEntity} from '../../entities/Authentication';
-import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
+import {NotAuthorizedError} from "@nodecms/backend-data";
+import {Authentication as AuthenticationEntity} from '@nodecms/backend-data';
+import {AuthenticationEntityRules} from "@nodecms/backend-data-rules";
 
-type Data = Partial<AuthenticationEntity>;
+type AuthenticationDTO = Partial<AuthenticationEntity>;
 
 interface ServiceOptions extends BaseServiceConfiguration {
 
 }
 
-export class Authentication extends BaseService<Data, AuthenticationUseCases> {
+export class Authentication extends BaseService<AuthenticationDTO,
+  AuthenticationEntityRules,  AuthenticationUseCases> {
 
   options: ServiceOptions;
 
@@ -32,7 +28,7 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     this.options = options;
   }
 
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
+  async find (params?: Params): Promise<AuthenticationDTO[] | Paginated<AuthenticationDTO>> {
     if(!params || !params.authenticationToken || !params.user)
       throw new NotAuthenticated();
     return await this.get(params.user.login, params);
@@ -42,14 +38,16 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   async get (id: Id, params?: Params): Promise<any> {
     if(!params || !params.authenticationToken || !params.user)
       throw new NotAuthenticated();
-    if(!id && params.user as User && (params.user as User).login) {
+    if(params.user as User && (params.user as User).login) {
       id = (params.user as User).login;
     }
-    return await this.useCase.get(id,params.user as User,params.authenticationToken,params.clientId);
+    if(id)
+      return await this.useCase.get(id,params.user as User,params.authenticationToken,params.clientId);
+    throw new NotAuthenticated();
   }
 
   // Create identity token
-  async create (data: Data, params?: Params): Promise<any> {
+  async create (data: AuthenticationDTO, params?: Params): Promise<any> {
     try {
       return await this.useCase.create(data, params?.user as User)
     } catch(error) {
@@ -58,18 +56,23 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   }
 
   // renew existing token if existing token still ok and period of
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async update (id: NullableId, data: AuthenticationDTO, params?: Params): Promise<AuthenticationDTO> {
     if(!id)
       throw new NotAcceptable()
     return await this.useCase.update(id,data, params?.user as User);
   }
 
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async patch (id: NullableId, data: AuthenticationDTO, params?: Params): Promise<AuthenticationDTO> {
     throw new NotAuthorizedError('Patch of authentication token not authorized')
   }
 
   async remove (id: NullableId, params?: Params): Promise<any> {
     // TODO : trace logout activity
+    if(params && params.user as User && typeof (params.user as User).id === 'number') {
+      const userId = (params.user as User).id;
+      if(typeof userId === 'number')
+        await this.useCase.delete(userId);
+    }
     return 'logged out';
   }
 

@@ -1,21 +1,20 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {UserUseCases} from "../../usecases/UserUseCases";
-import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {ChannelPost as ChannelPostEntity} from '../../entities/ChannelPost'
+import {ChannelPost as ChannelPostEntity} from '@nodecms/backend-data'
 import {ChannelUseCases} from "../../usecases/ChannelUseCases";
 import {ChannelPostUseCases} from "../../usecases/ChannelPostUseCases";
 import {NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
 import {globalInstancesFactory} from "@hermes/composition";
-import {Channel, ChannelVisibility} from "../../entities/Channel";
-import {User} from "../../entities/User";
+import {Channel, ChannelVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {TopicMessage, TopicService, TopicServiceConfiguration} from "@hermes/topicservice";
 import {Logger} from "../../plugins/Logging/Logger";
-import {NotAuthorizedError} from "../../entities/Errors/NotAuthorizedError";
-import {isNumber} from "../../helpers";
+import {NotAuthorizedError} from "@nodecms/backend-data";
+import {ChannelPostRules} from "@nodecms/backend-data-rules";
 
-type Data = ChannelPostEntity
+type ChannelPostDTO = Partial<ChannelPostEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
   paginate?:number
@@ -29,7 +28,9 @@ interface ServiceOptions extends BaseServiceConfiguration {
   }
 }
 
-export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
+export class ChannelPost extends BaseService<ChannelPostDTO,
+  ChannelPostRules,
+  ChannelPostUseCases> {
 
   app: Application;
   options: ServiceOptions;
@@ -52,18 +53,13 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
+  async find (params?: Params): Promise<ChannelPostDTO[] | Paginated<ChannelPostDTO>> {
     if(params && params.user && params.route && params.route.channelNameOrId) {
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
-      let lastIndex:number | string | undefined = params.query?.lastIndex;
-      if(isNumber(lastIndex) && typeof lastIndex === 'string')
-        lastIndex = parseInt(lastIndex)
-      if(params.query && params.query.hasOwnProperty('lastIndex'))
-        delete params.query.lastIndex;
+      let lastIndex:number | undefined = await this.extractLastIndex(params);
       let filter:Partial<ChannelPostEntity> = params.query as ChannelPostEntity;
       if(channel){
         if(!filter || !filter.channelKey || filter.channelKey !== channel.key){
-          console.log('default filter for post in channel')
           if(!filter)
             filter = {
               channelKey:channel.key,
@@ -79,7 +75,6 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
           console.log('the filter :');
           console.log(filter);
         }
-
         const found = await this.useCase.find(filter, lastIndex, params.user as User, channel.key);
         return found;
       }
@@ -88,7 +83,7 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<ChannelPostDTO> {
     const paramAsAny = params as any;
     const channelName:string = '';
     if(paramAsAny && paramAsAny.route && paramAsAny.route.channelNameOrId)
@@ -102,7 +97,7 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create (data: Data, params?: Params): Promise<Data> {
+  async create (data: ChannelPostDTO, params?: Params): Promise<ChannelPostDTO> {
     if(params && params.route && params.route.channelNameOrId){
       const channel:Channel = await this.channelUseCases.get(params.route.channelNameOrId.toString(), params.user as User);
       const post = await this.useCase.create(data, params.user as User, channel.key);
@@ -118,17 +113,17 @@ export class ChannelPost extends BaseService<Data, ChannelPostUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async update (id: NullableId, data: ChannelPostDTO, params?: Params): Promise<ChannelPostDTO> {
     throw new NotImplemented()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async patch (id: NullableId, data: ChannelPostDTO, params?: Params): Promise<ChannelPostDTO> {
     throw new NotImplemented()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async remove (id: NullableId, params?: Params): Promise<Data> {
+  async remove (id: NullableId, params?: Params): Promise<ChannelPostDTO> {
     throw new NotImplemented()
   }
 

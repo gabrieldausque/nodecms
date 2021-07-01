@@ -1,10 +1,9 @@
-import {MongoDbStorage} from "../MongoDbStorage";
-import {Document} from "../../../entities/Document";
+import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
+import {Document, Channel, isNumber} from "@nodecms/backend-data";
 import {DocumentStorage} from "./DocumentStorage";
-import {isNumber} from "../../../helpers";
-import {Channel} from "../../../entities/Channel";
 
-export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements DocumentStorage {
+export class MongoDbDocumentStorage extends MongoDbStorage<Document>
+  implements DocumentStorage {
 
   public static metadata:any[] = [
     {
@@ -62,9 +61,12 @@ export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements 
     return Array.isArray(documents) && documents.length > 0;
   }
 
-  async find(filter: Partial<Document> | undefined): Promise<Document[]> {
+  async find(filter: Partial<Document> | undefined, lastIndex?:number): Promise<Document[]> {
     if(filter){
-      return await this.internalFind(filter);
+      return await this.internalFind(filter,
+        lastIndex,
+        this.collectionName,
+        true);
     }
     return await this.internalFind({});
   }
@@ -89,6 +91,12 @@ export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements 
   async update(data: Partial<Document>): Promise<Document> {
     await this.internalUpdate(data);
     return await this.get(data.id as number);
+  }
+
+  validateConfiguration(configuration: MongoDbStorageConfiguration) {
+    configuration.pageSize = (typeof configuration.pageSize === 'number')?
+      configuration.pageSize:
+      10;
   }
 
 }

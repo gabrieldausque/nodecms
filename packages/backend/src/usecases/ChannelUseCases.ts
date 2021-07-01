@@ -1,17 +1,16 @@
 import {UseCases} from "./UseCases";
-import {Channel as ChannelEntity, Channel, ChannelVisibility} from "../entities/Channel";
-import {User} from "../entities/User";
-import {isNumber} from "../helpers";
+import {Channel as ChannelEntity, Channel, ChannelVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {isNumber} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
-import {ChannelRules} from "../entities/ChannelRules";
-import {Entity} from "../entities/Entity";
+import {ChannelRules} from "@nodecms/backend-data-rules";
 import {RoleUseCases} from "./RoleUseCases";
 
 interface ChannelUseCasesConfiguration extends UseCaseConfiguration {};
 
-export class ChannelUseCases extends UseCases<Channel> {
+export class ChannelUseCases extends UseCases<Channel, ChannelRules> {
 
   public static metadata:any[] = [
     {
@@ -22,14 +21,18 @@ export class ChannelUseCases extends UseCases<Channel> {
   ]
 
   constructor(configuration:ChannelUseCasesConfiguration) {
-    super('channel', 'ChannelStorage', configuration);
+    super('channel',
+      'ChannelStorage',
+      configuration,
+      false,
+      ChannelRules);
   }
 
   async create(entity: Partial<Channel>, executingUser: User): Promise<Channel> {
-      ChannelRules.validate(entity);
+      await this.entityRules.validate(entity);
       if(entity.key && await this.storage.exists(entity.key))
         throw new Error(`Channel with key ${entity.key} already exists`)
-      const usableId = ChannelRules.convertId(executingUser.id);
+      const usableId = this.entityRules.convertId(executingUser.id);
       const roleUseCases:RoleUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'Role');
       const userUseCases:UserUseCases = globalInstancesFactory.getInstanceFromCatalogs('UseCases','User');
       const readers = await roleUseCases.create({
@@ -83,7 +86,7 @@ export class ChannelUseCases extends UseCases<Channel> {
   async find(filter: Partial<Channel>, lastIndex?:number, executingUser?: User): Promise<Channel[]> {
     const found = await this.storage.find(filter, lastIndex);
     found.map(c => {
-      ChannelRules.validate(c)
+      this.entityRules.validate(c)
     })
     return found;
   }
@@ -92,7 +95,7 @@ export class ChannelUseCases extends UseCases<Channel> {
     let channel:Channel | null = null;
      channel = await this.storage.get(id);
      if(channel){
-       ChannelRules.validate(channel);
+       await this.entityRules.validate(channel);
      }
      return channel;
   }
@@ -110,7 +113,7 @@ export class ChannelUseCases extends UseCases<Channel> {
       existing.label = entityToUpdate.label;
     }
 
-    if(ChannelRules.isAuthorizedVisibility(entityToUpdate.visibility) &&
+    if(this.entityRules.isAuthorizedVisibility(entityToUpdate.visibility) &&
       typeof entityToUpdate.visibility === 'string'){
       existing.visibility = entityToUpdate.visibility;
     }
@@ -259,6 +262,7 @@ export class ChannelUseCases extends UseCases<Channel> {
     }
     //TODO : add service channel-roles !!!
     data.isContributor = await this.isUserContributor(data as ChannelEntity, u, u);
+    data.isReader = await this.isUserReader(data as ChannelEntity, u, u);
     return isAuthorized;
   }
 

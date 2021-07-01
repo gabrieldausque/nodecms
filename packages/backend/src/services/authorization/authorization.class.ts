@@ -1,19 +1,19 @@
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
-import {globalInstancesFactory} from "@hermes/composition";
 import {AuthorizationUseCases} from "../../usecases/AuthorizationUseCases";
-import {query} from "winston";
 import {MethodNotAllowed, NotAcceptable, NotAuthenticated, NotFound, NotImplemented} from "@feathersjs/errors";
-import {UserUseCases} from "../../usecases/UserUseCases";
-import {Authorization as AuthorizationEntity} from "../../entities/Authorization";
-import {User as UserEntity} from "../../entities/User";
+import {Authorization as AuthorizationEntity} from "@nodecms/backend-data";
+import {User as UserEntity} from "@nodecms/backend-data";
+import {AuthorizationEntityRules} from "@nodecms/backend-data-rules";
 
-type Data = AuthorizationEntity;
+type AuthorizationDTO = Partial<AuthorizationEntity>;
 
 interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class Authorization extends BaseService<Data, AuthorizationUseCases> {
+export class Authorization extends BaseService<AuthorizationDTO,
+  AuthorizationEntityRules,
+  AuthorizationUseCases> {
 
   app: Application;
   options: ServiceOptions;
@@ -29,7 +29,7 @@ export class Authorization extends BaseService<Data, AuthorizationUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
+  async find (params?: Params): Promise<AuthorizationDTO[] | Paginated<AuthorizationDTO>> {
     if(params && params.query) {
       const filter = {
         on: params.query.on,
@@ -48,7 +48,7 @@ export class Authorization extends BaseService<Data, AuthorizationUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<AuthorizationDTO> {
     if(params) {
       const executingUser:UserEntity = params.user as UserEntity;
       return await this.useCase.get(id, executingUser);
@@ -57,7 +57,7 @@ export class Authorization extends BaseService<Data, AuthorizationUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create (data: Data, params?: Params): Promise<Data> {
+  async create (data: AuthorizationDTO, params?: Params): Promise<AuthorizationDTO> {
     if(params) {
       const executingUser:UserEntity = params.user as UserEntity;
       return this.useCase.create(data, executingUser);
@@ -66,17 +66,17 @@ export class Authorization extends BaseService<Data, AuthorizationUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async update (id: NullableId, data: AuthorizationDTO, params?: Params): Promise<AuthorizationDTO> {
     throw new MethodNotAllowed();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async patch (id: NullableId, data: AuthorizationDTO, params?: Params): Promise<AuthorizationDTO> {
     throw new MethodNotAllowed();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async remove (id: NullableId, params?: Params): Promise<Data> {
+  async remove (id: NullableId, params?: Params): Promise<AuthorizationDTO> {
     if(!id)
       throw new NotAcceptable('id must be set');
     if(params) {

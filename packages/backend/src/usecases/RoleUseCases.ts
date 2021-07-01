@@ -1,14 +1,14 @@
 import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
-import {RoleEntityRules} from "../entities/RoleEntityRules";
-import {Role} from "../entities/Role";
-import {User} from "../entities/User";
-import {AlreadyExistsError} from "../entities/Errors/AlreadyExistsError";
-import {InvalidKeyError} from "../entities/Errors/InvalidKeyError";
+import {RoleEntityRules} from "@nodecms/backend-data-rules";
+import {Role} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
+import {AlreadyExistsError} from "@nodecms/backend-data";
+import {InvalidKeyError} from "@nodecms/backend-data";
 
 interface RoleUseCasesConfiguration extends UseCaseConfiguration {};
 
-export class RoleUseCases extends UseCases<Role> {
+export class RoleUseCases extends UseCases<Role, RoleEntityRules> {
 
   public static metadata:any[] = [
     {
@@ -20,7 +20,11 @@ export class RoleUseCases extends UseCases<Role> {
 
 
   constructor(configuration:RoleUseCasesConfiguration) {
-    super('role','RoleStorage', configuration);
+    super('role',
+      'RoleStorage',
+      configuration,
+      false,
+      RoleEntityRules);
   }
 
   async create(entity: Partial<Role>, executingUser:User): Promise<Role> {
@@ -33,7 +37,7 @@ export class RoleUseCases extends UseCases<Role> {
   }
 
   async delete(id: string | number, executingUser:User): Promise<Role> {
-    const usableId = RoleEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     if(!usableId || typeof usableId !== 'number')
       throw new Error('Please provide a correct id for delete.')
     return await this.storage.delete(usableId)
@@ -45,15 +49,15 @@ export class RoleUseCases extends UseCases<Role> {
   }
 
   async get(id: string | number, executingUser?:User): Promise<Role> {
-    if(RoleEntityRules.validateId(id)) {
-      const usableId = RoleEntityRules.convertId(id);
+    if(this.entityRules.validateId(id)) {
+      const usableId = this.entityRules.convertId(id);
       return await this.storage.get(usableId)
     }
     return await this.storage.get(id);
   }
 
   async update(id: string | number, entityToUpdate: Partial<Role>, executingUser?:User): Promise<Role> {
-    const usableId = RoleEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     if(!usableId && typeof usableId !== 'number')
       throw new Error('Please provide a correct id for update.');
     const existingRole = await this.get(usableId, executingUser);

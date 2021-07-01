@@ -1,19 +1,22 @@
-import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
+import { Id, NullableId, Paginated, Params } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "../../usecases/UserUseCases";
-import {MethodNotAllowed, NotAcceptable, NotFound, NotImplemented} from "@feathersjs/errors";
+import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {RoleUseCases} from "../../usecases/RoleUseCases";
-import {isNumber} from "../../helpers";
-import {Role} from "../../entities/Role";
-import {User as UserEntity} from "../../entities/User";
+import {isNumber} from "@nodecms/backend-data";
+import {Role} from "@nodecms/backend-data";
+import {User as UserEntity} from "@nodecms/backend-data";
+import {RoleEntityRules} from "@nodecms/backend-data-rules";
 
 type RoleDTO = Partial<Role>;
 
 interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
+export class UserRoles extends BaseService<RoleDTO,
+  RoleEntityRules,
+  RoleUseCases> {
 
   app: Application;
   options: ServiceOptions;

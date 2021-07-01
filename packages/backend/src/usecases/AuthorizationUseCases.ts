@@ -1,13 +1,14 @@
 import {UseCases} from "./UseCases";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
-import {AuthorizationEntityRules} from "../entities/AuthorizationEntityRules";
-import {Authorization} from "../entities/Authorization";
-import {User} from "../entities/User";
+import {AuthorizationEntityRules} from "@nodecms/backend-data-rules";
+import {Authorization} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 
 interface AuthorizationUseCasesConfiguration extends UseCaseConfiguration {
 }
 
-export class AuthorizationUseCases extends UseCases<Authorization> {
+export class AuthorizationUseCases extends UseCases<Authorization,
+  AuthorizationEntityRules> {
 
   public static metadata:any[] = [
     {
@@ -22,11 +23,15 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
       contractName:'Default'
     }
   }) {
-    super('authorization','AuthorizationStorage',configuration);
+    super('authorization',
+      'AuthorizationStorage',
+      configuration,
+      false,
+      AuthorizationEntityRules);
   }
 
-  async create(entity: Authorization, executingUser:User): Promise<Authorization> {
-    AuthorizationEntityRules.convert(entity);
+  async create(entity: Partial<Authorization>, executingUser:User): Promise<Authorization> {
+    this.entityRules.convert(entity);
     return this.storage.create(entity);
   }
 
@@ -38,7 +43,7 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
   }
 
   async find(filter: Authorization, lastIndex?:string | number, executingUser?:User): Promise<Authorization[]> {
-    AuthorizationEntityRules.convert(filter);
+    this.entityRules.convert(filter);
     let firstIndex : number | undefined = undefined
     if(typeof lastIndex != 'undefined' && lastIndex !== null)
       firstIndex = (await this.get(lastIndex, executingUser)).id
@@ -46,7 +51,7 @@ export class AuthorizationUseCases extends UseCases<Authorization> {
   }
 
   async get(id: string | number, executingUser?:User): Promise<Authorization> {
-    const usableId = AuthorizationEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     return await this.storage.get(usableId);
   }
 

@@ -14,7 +14,7 @@ import * as url from 'url';
 import * as fs from "fs";
 import {getAuthenticationParams, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {Metadata as MetaDataService} from '../../src/services/metadata/metadata.class';
-import {Metadata} from "../../src/entities/Metadata";
+import {Metadata} from "../../../backend-data/src/Metadata";
 import {v4 as uuid} from "uuid";
 
 const port = app.get('port') || 8998;

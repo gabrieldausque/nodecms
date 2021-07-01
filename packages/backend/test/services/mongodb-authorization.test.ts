@@ -8,7 +8,7 @@ import {getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 const config = require('config');
 import * as assert from "assert";
 import {Authorization} from "../../src/services/authorization/authorization.class";
-import {Authorization as AuthorizationEntity} from "../../src/entities/Authorization";
+import {Authorization as AuthorizationEntity} from "../../../backend-data/src/Authorization";
 import {v4 as uuid} from "uuid";
 chai.use(require('chai-as-promised'));
 

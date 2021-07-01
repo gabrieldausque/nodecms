@@ -1,8 +1,10 @@
-<script>
-    import {getBackendClient} from '../api/NodeCMSClient';
+<script lang="ts">
+    import {getBackendClient, NodeCMSClient, NodeCMSClientContract, UserService, UserEventService} from '@nodecms/backend-client';
     import { onMount } from 'svelte';
     import {UserStore} from "../stores/UserStore";
     import {DocumentStore} from "../stores/DocumentStore";
+    import {DocumentsStore} from "../stores/DocumentsStore";
+    import {UserEventsStore, UserEvents} from "../stores/UserEventsStore";
 
     export let isLogin = false;
     let backendService = null;
@@ -11,43 +13,65 @@
 
     let showOrHideAuthenticate = () => {
         //toggle the login modal to show
-        window.jQuery('#errorOnLoginContent').html('')
-        window.jQuery('#errorOnLogin').removeClass('show');
-        window.jQuery('#LoginModal').modal('toggle');
+        jQuery('#errorOnLoginContent').html('')
+        jQuery('#errorOnLogin').removeClass('show');
+        jQuery('#LoginModal').modal('toggle');
     }
 
-    function onLoggedIn() {
+    async function onLoggedIn() {
+
+        const services = await getBackendClient();
+        const currentUser = await services.userService.getCurrentUser();
+        if(!login)
+        {
+            login = currentUser.login
+        }
+
         UserStore.set({
             isLogin: isLogin,
-            login
+            login: login,
+            id: currentUser.id
         })
-        DocumentStore.update((store) => {
-            store.key = 'welcomePrivate';
-            return store;
+
+        const userEvents = await services.userService.findUserEvents(login,
+            $UserEventsStore.startDate,
+            $UserEventsStore.endDate,
+        );
+        UserEventsStore.update((ues:UserEvents) => {
+            ues.eventsByUser[login] = userEvents
+            return ues
         })
-        window.jQuery('#LoginModal').modal('hide');
+        const params = (new URL(document.location.href)).searchParams;
+        if(!params.get('documentKey')){
+            DocumentStore.update((store) => {
+                store.key = 'welcomePrivate';
+                return store;
+            })
+        }
+        jQuery('#LoginModal')?.modal('hide');
     }
 
     let authenticate = async () => {
         if(login && password){
-            const alertBox = window.jQuery('#errorOnLogin')
+            const alertBox = (window as any).jQuery('#errorOnLogin')
             alertBox.removeClass('show');
             try{
                 await backendService.userService.authenticate(login, password);
                 isLogin = true;
             }catch (e) {
+                console.log(e);
                 let message;
                 if(e.response && e.response.data && e.response.data.message){
                     message = e.response.data.message;
                 } else {
                     message = e.message;
                 }
-                window.jQuery('#errorOnLoginContent').html(`${message}`);
+                (window as any).jQuery('#errorOnLoginContent').html(`${message}`);
                 alertBox.alert();
                 alertBox.addClass('show')
             }
             if(isLogin){
-                onLoggedIn();
+                await onLoggedIn();
             }
         }
     }
@@ -73,7 +97,7 @@
     }
 
     onMount(async () => {
-        window.jQuery('#LoginModal').on('hidden.bs.modal', (e) => {
+        (window as any).jQuery('#LoginModal').on('hidden.bs.modal', (e) => {
             login = '';
             password = '';
         })
@@ -81,15 +105,23 @@
         let loginOrFalse = await backendService.userService.checkAuthentication();
         if(loginOrFalse && typeof loginOrFalse === "string"){
             isLogin = true;
-            login = loginOrFalse;
-            onLoggedIn();
+            login = await backendService.userService.getCurrentUser().login;
+            await onLoggedIn();
         }
     })
 
     async function displayDocument(event) {
         const documentKey = event.currentTarget.getAttribute('data-document-key');
-        console.log(documentKey);
         if(documentKey){
+            if(documentKey === 'documents'){
+                const services = await getBackendClient();
+                $DocumentsStore.documents = [];
+                $DocumentsStore.documents = await services.documentService.findDocument();
+                const indexes = $DocumentsStore.documents.map(d => d.id);
+                $DocumentsStore.hasNext = (await services.documentService.findDocument({
+                    lastIndex: Math.min(...indexes)
+                })).length > 0
+            };
             DocumentStore.update((store) => {
                 store.key = documentKey;
                 return store;
@@ -117,15 +149,25 @@
     </div>
 {:else}
     <div class="dropdown">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
+        <button type="button" class="btn btn-secondary dropdown-toggle"
+                data-toggle="dropdown" >
             <i class="fas fa-bars"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right ">
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="media">
+                <i class="fas fa-photo-video"></i><span>Media</span>
+            </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
-                <i class="fas fa-file-text"></i><span>Documents</span>
+                <i class="fas fa-file-alt"></i><span>Documents</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
                 <i class="fas fa-comments"></i><span>Channels</span>
+            </button>
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="my-calendar">
+                <i class="fa fa-calendar-alt"></i><span>Mon Calendrier</span>
+            </button>
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="user-calendars">
+                <i class="fas fa-calendar-alt"></i><span>Calendrier TeamA</span>
             </button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item" type="button" on:click={logout}>

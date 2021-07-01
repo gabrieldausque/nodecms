@@ -51,7 +51,7 @@ export default function (app: Application) {
   configureSwagger(authenticationService);
   // Initialize our service with any options it requires
   app.use('/authentication',
-    authenticationService, (req, res, next) => {
+    authenticationService, (req:any, res:any, next:any) => {
     if(req.method.toLowerCase() === 'post' || req.method.toLowerCase() === 'update') {
       const token = res.data;
       const realm = app.get('authentication').realm;

@@ -1,14 +1,14 @@
 import {UseCases} from "./UseCases";
-import {Media, MediaVisibility} from "../entities/Media";
-import {User} from "../entities/User";
+import {Media, MediaVisibility} from "@nodecms/backend-data";
+import {User} from "@nodecms/backend-data";
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
-import {MediaRules} from "../entities/MediaRules";
+import {MediaRules} from "@nodecms/backend-data-rules";
 import {MediaStorage} from "../plugins/Storages/Media/MediaStorage";
 import {globalInstancesFactory} from "@hermes/composition";
 import {UserUseCases} from "./UserUseCases";
-import {AlreadyExistsError} from "../entities/Errors/AlreadyExistsError";
-import {NotFoundError} from "../entities/Errors/NotFoundError";
-import {NotAuthorizedError} from "../entities/Errors/NotAuthorizedError";
+import {AlreadyExistsError} from "@nodecms/backend-data";
+import {NotFoundError} from "@nodecms/backend-data";
+import {NotAuthorizedError} from "@nodecms/backend-data";
 import {RoleUseCases} from "./RoleUseCases";
 
 export interface MediaUseCasesConfiguration extends UseCaseConfiguration {
@@ -18,7 +18,7 @@ export interface MediaUseCasesConfiguration extends UseCaseConfiguration {
   }
 }
 
-export class MediaUseCases extends UseCases<Media> {
+export class MediaUseCases extends UseCases<Media, MediaRules> {
 
   public static metadata:any[] = [
     {
@@ -37,7 +37,11 @@ export class MediaUseCases extends UseCases<Media> {
       fsStore:'uploads'
     }
   }) {
-    super('media','MediaStorage',configuration);
+    super('media',
+      'MediaStorage',
+      configuration,
+      false,
+      MediaRules);
     this.mediaStorage = this.storage as MediaStorage;
   }
 
@@ -75,8 +79,14 @@ export class MediaUseCases extends UseCases<Media> {
     else throw new NotAuthorizedError(`User ${executingUser?.login} is not authorized to access media with id ${entity.id}`)
   }
 
-  async update(id: string | number, entityToUpdate: Media, executingUser: User): Promise<Media> {
-    throw new NotAuthorizedError(`Update not authorized for Media Service`);
+  async update(id: string | number, entityToUpdate: Partial<Media>, executingUser: User): Promise<Media> {
+    const existing = await this.get(id, executingUser);
+    if(existing){
+      const updated = {...existing, ...entityToUpdate}
+      delete updated.blob;
+      await this.storage.update(updated);
+    }
+    return existing;
   }
 
   async isDataAuthorized(data: Media, right: string = 'r', user?: any): Promise<boolean> {

@@ -1,6 +1,5 @@
-import {ChannelPost} from "../../../entities/ChannelPost";
+import {ChannelPost} from "@nodecms/backend-data";
 import {Storage} from '../Storage';
-import {Metadata} from "../../../entities/Metadata";
 
 export interface ChannelPostStorage extends Storage<ChannelPost> {
   exists(keyOrId:string | number, channelName?:string):Promise<boolean>;
@@ -9,9 +8,9 @@ export interface ChannelPostStorage extends Storage<ChannelPost> {
 
   find(filter? : Partial<ChannelPost>, lastIndex?:string | number, channelName?:string): Promise<ChannelPost[]>
 
-  create(data: ChannelPost,channelName?:string): Promise<ChannelPost>;
+  create(data: Partial<ChannelPost>,channelName?:string): Promise<ChannelPost>;
 
-  update(data: ChannelPost,channelName?:string): Promise<ChannelPost>;
+  update(data: Partial<ChannelPost>,channelName?:string): Promise<ChannelPost>;
 
   delete(keyOrId:string, channelName?:string):Promise<ChannelPost>;
 

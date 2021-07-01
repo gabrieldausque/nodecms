@@ -1,0 +1,25 @@
+{
+  "name": "@nodecms/backend-data-rules",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "dependencies": {
+    "mmmagic": "^0.5.3",
+    "@nodecms/backend-data": "*"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2",
+    "shx": "^0.3.3"
+  },
+  "author": {
+    "name": "Gabriel DAUSQUE",
+    "email": "gabrieldausque.pro@gmail.com"
+  },
+  "contributors": ["gabrieldausque.pro@gmail.com"],
+  "bugs": {},
+  "directories": {
+    "lib": "src"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/shx rm -rf dist/ && tsc "
+  }
+}

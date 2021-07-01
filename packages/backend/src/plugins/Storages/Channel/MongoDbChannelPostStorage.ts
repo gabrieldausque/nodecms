@@ -1,8 +1,6 @@
 import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
-import {ChannelPost} from "../../../entities/ChannelPost";
+import {ChannelPost, Channel, isNumber} from "@nodecms/backend-data";
 import {ChannelPostStorage} from "./ChannelPostStorage";
-import {Channel} from "../../../entities/Channel";
-import {isNumber} from "../../../helpers";
 
 export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> implements ChannelPostStorage {
 
@@ -25,7 +23,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
     return `channel#${channelName}`
   }
 
-  async create(data: ChannelPost, channelName?:string): Promise<ChannelPost> {
+  async create(data: Partial<ChannelPost>, channelName?:string): Promise<ChannelPost> {
 
     if(!channelName){
       throw new Error('No channel name for the current post');
@@ -89,7 +87,7 @@ export class MongoDbChannelPostStorage extends MongoDbStorage<ChannelPost> imple
     throw new Error(`Channel post with key or id ${keyOrId} doesn't exists`);
   }
 
-  update(data: ChannelPost, channelName?:string): Promise<ChannelPost> {
+  update(data: Partial<ChannelPost>, channelName?:string): Promise<ChannelPost> {
     throw new Error('Not implemented')
   }
 

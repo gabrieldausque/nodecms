@@ -7,12 +7,16 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import nodeGlobals from "rollup-plugin-node-globals";
 import builtins from 'rollup-plugin-node-builtins';
-import * as fs from 'fs';
+import babel from '@rollup/plugin-babel';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 const production = !process.env.ROLLUP_WATCH;
+import css from 'rollup-plugin-css-only';
+
+
 
 function serve() {
 	let server;
-	
+
 	function toExit() {
 		if (server) server.kill(0);
 	}
@@ -41,15 +45,15 @@ export default {
 	},
 	plugins: [
 		svelte({
-			// enable run-time checks when not in production
-			dev: !production,
-			// we'll extract any component CSS out into
-			// a separate file - better for performance
-			css: css => {
-				css.write('bundle.css');
-			},
-			preprocess: sveltePreprocess(),
+			preprocess: sveltePreprocess({ sourceMap: !production }),
+			compilerOptions: {
+				// enable run-time checks when not in production
+				dev: !production
+			}
 		}),
+		// we'll extract any component CSS out into
+		// a separate file - better for performance
+		css({ output: 'bundle.css' }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
@@ -58,12 +62,15 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte',
+				'@nodecms/backend-data',
+				'@nodecms/backend-client']
 		}),
 		commonjs(),
-		typescript({ sourceMap: !production }),
-		nodeGlobals(),
-		builtins(),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production
+		}),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated

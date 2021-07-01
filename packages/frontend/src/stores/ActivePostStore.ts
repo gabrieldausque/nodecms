@@ -8,5 +8,3 @@ export class PostWithChildren  {
         this.posts = []
     }
 }
-
-export const ActivePostStore = writable(new PostWithChildren());

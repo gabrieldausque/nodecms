@@ -1,5 +1,5 @@
 import {Storage} from '../Storage';
-import {Document} from "../../../entities/Document";
+import {Document} from "@nodecms/backend-data";
 
 export interface DocumentStorage extends Storage<Document>
 {
