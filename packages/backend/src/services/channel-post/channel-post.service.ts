@@ -35,6 +35,7 @@ export default function (app: Application): void {
 
   //@ts-ignore
   app.use('/channel/:channelNameOrId/posts', channelPostService);
+
   //@ts-ignore
   app.use('/channel/:channelNameOrId/posts/:id/posts', channelPostService);
 
