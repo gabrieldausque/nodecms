@@ -16,6 +16,9 @@
         userEvent.endDate.getMonth() === day.getMonth() &&
         userEvent.endDate.getDate() === day.getDate();
 
+    let isEndAfter = isEndingNextMonth();
+    let isStartBefore = isStartingPreviousMonth();
+
     $: {
         isStart = userEvent.startDate.getFullYear() === day.getFullYear() &&
             userEvent.startDate.getMonth() === day.getMonth() &&
@@ -23,6 +26,26 @@
         isEnd = userEvent.endDate.getFullYear() === day.getFullYear() &&
             userEvent.endDate.getMonth() === day.getMonth() &&
             userEvent.endDate.getDate() === day.getDate();
+        isEndAfter = isEndingNextMonth();
+        isStartBefore = isStartingPreviousMonth();
+    }
+
+    function isStartingPreviousMonth() {
+        return day.getMonth() !== userEvent.startDate.getMonth() && day.getDate() === 1
+    }
+
+    function isEndingNextMonth() {
+        const d = new Date(2021,6,31);
+        if(day.getFullYear() === d.getFullYear() &&
+        day.getMonth() === d.getMonth() &&
+        day.getDate() === d.getDate()){
+            console.log('#')
+            console.log(`${day.getMonth()} < ${userEvent.endDate.getMonth()}`);
+            console.log(`${day.getDate()} === ${(new Date(day.getFullYear(), day.getMonth() + 1, 0)).getDate()}`);
+            console.log('#')
+        }
+        return day.getMonth() < userEvent.endDate.getMonth() &&
+            day.getDate() === (new Date(day.getFullYear(), day.getMonth() + 1, 0)).getDate()
     }
 
 </script>
@@ -97,16 +120,26 @@ userEvent.ownerAvailabilityStatus === UserAvailabilityStatus.busy?
 `border : solid 1px ${userEvent.color}`
 }; top: {(index * 25) + (index * 1)}px; left:8px;"></div>
 {/if}
-<div class="user-event-container" style="{
+<div class="user-event-container {isEndingNextMonth()?'user-event-end-after':''}" style="{
 userEvent.ownerAvailabilityStatus === UserAvailabilityStatus.busy?
 `background: ${userEvent.color}`:
-`border : solid 1px ${userEvent.color}; color: ${userEvent.color}`
+`color: ${userEvent.color};
+border-top : solid 1px ${userEvent.color};
+border-bottom: solid 1px ${userEvent.color}; ${
+    isStart || isStartBefore?
+    `border-left: solid 1px ${userEvent.color}`:
+    'border-left: none'
+}; ${
+    isEnd || isEndAfter?
+    `border-right: solid 1px ${userEvent.color}`:
+    'border-right: none'
+}`
 }; top: {(index * 25) + (index * 1)}px;"
      class:user-event-end={isEnd}
      class:user-event-start={isStart}
      class:user-event-one-day={isStart && isEnd}
-     class:user-event-start-before={day.getMonth() !== userEvent.startDate.getMonth() && day.getDate() === 1}
-     class:user-event-end-after={day.getMonth() !== userEvent.endDate.getMonth() && day.getDate() >= (new Date(day.getFullYear(), day.getMonth() + 1, 0)).getDate()}
+     class:user-event-start-before={isStartBefore}
+     class:user-event-end-after={isEndAfter}
      on:dblclick={(event) => {
          event.stopPropagation();
          ShowUpdateUserEventStore.update(sues => {
@@ -121,7 +154,7 @@ userEvent.ownerAvailabilityStatus === UserAvailabilityStatus.busy?
         {#if userEvent.ownerId !== $UserStore.id && userEvent.visibility === UserEventVisibility.private}
             <span><i class="fas fa-eye-slash"></i></span>
         {:else}
-            <span style="font-size: 1vw">{userEvent.label}</span>
+            <span style="font-size: 0.7rem; white-space: pre">{userEvent.label}</span>
         {/if}
     {/if}
 </div>

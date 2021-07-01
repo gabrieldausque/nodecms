@@ -164,7 +164,10 @@
                 <i class="fas fa-comments"></i><span>Channels</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="my-calendar">
-                <i class="fas fa-calendar-day"></i><span>Mon Calendrier</span>
+                <i class="fa fa-calendar-alt"></i><span>Mon Calendrier</span>
+            </button>
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="user-calendars">
+                <i class="fas fa-calendar-alt"></i><span>Calendrier TeamA</span>
             </button>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item" type="button" on:click={logout}>

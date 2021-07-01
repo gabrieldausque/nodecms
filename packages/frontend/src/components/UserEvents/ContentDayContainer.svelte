@@ -75,7 +75,7 @@
 </style>
 
 <div class="day" on:dblclick={displayCreateUserEventModal}>
-    <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()} ${Helpers.getLongLabelMonth(currentDay)}`} {#if currentDay.getDate() === new Date().getDate() &&
+    <div class="day-title">{`${Helpers.getShortDayOfWeekLabel(currentDay)} ${currentDay.getDate()}`} {#if currentDay.getDate() === new Date().getDate() &&
     currentDay.getMonth() === new Date().getMonth() &&
     currentDay.getFullYear() === new Date().getFullYear()}<div class="today-mark"></div>{/if}</div>
     <div class="events-container" style="{Array.isArray(userEvents)?
