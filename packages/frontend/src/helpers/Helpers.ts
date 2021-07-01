@@ -1,6 +1,6 @@
 import {getBackendClient, AttachmentHelpers} from '@nodecms/backend-client';
 import {globalFEService} from "../FEServices";
-import {DocumentsStore} from "../stores/DocumentsStore";
+import {observableGenericDataStore} from "../stores/ObservableGenericDataStore";
 import {DocumentStore} from "../stores/DocumentStore";
 import ImageAttachment from "../components/Attachments/ImageAttachment.svelte";
 import VideoAttachment from "../components/Attachments/VideoAttachment.svelte";
@@ -56,8 +56,8 @@ export class Helpers {
                 for(const doc of newDocuments){
                     doc.author = await services.userService.getUser(doc.ownerId);
                 }
-                DocumentsStore.update(s => {
-                    s.documents = newDocuments
+                observableGenericDataStore.update(s => {
+                    s.data = newDocuments
                     return s;
                 })
             };

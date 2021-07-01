@@ -3,7 +3,7 @@
     import { onMount } from 'svelte';
     import {UserStore} from "../stores/UserStore";
     import {DocumentStore} from "../stores/DocumentStore";
-    import {DocumentsStore} from "../stores/DocumentsStore";
+    import {observableGenericDataStore} from "../stores/ObservableGenericDataStore";
     import {UserEventsStore, UserEvents} from "../stores/UserEventsStore";
 
     export let isLogin = false;
@@ -115,10 +115,10 @@
         if(documentKey){
             if(documentKey === 'documents'){
                 const services = await getBackendClient();
-                $DocumentsStore.documents = [];
-                $DocumentsStore.documents = await services.documentService.findDocument();
-                const indexes = $DocumentsStore.documents.map(d => d.id);
-                $DocumentsStore.hasNext = (await services.documentService.findDocument({
+                $observableGenericDataStore.documents = [];
+                $observableGenericDataStore.documents = await services.documentService.findDocument();
+                const indexes = $observableGenericDataStore.documents.map(d => d.id);
+                $observableGenericDataStore.hasNext = (await services.documentService.findDocument({
                     lastIndex: Math.min(...indexes)
                 })).length > 0
             };
@@ -157,7 +157,7 @@
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="media">
                 <i class="fas fa-photo-video"></i><span>Media</span>
             </button>
-            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="data">
                 <i class="fas fa-file-alt"></i><span>Documents</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">

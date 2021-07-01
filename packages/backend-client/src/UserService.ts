@@ -4,9 +4,6 @@ import {v4 as uuid} from 'uuid';
 import {Authentication, User} from "@nodecms/backend-data/dist";
 import {UserEvent} from "@nodecms/backend-data";
 import {UserEventService} from "./UserEventService";
-import io from "socket.io-client";
-import {SocketIOTopicServiceClientProxy} from "./includes/SocketIOTopicServiceClientProxy";
-import {ChannelPostReceived} from "./ChannelsService";
 import {MessageReceivedHandler} from "./Helpers";
 
 export class AuthenticationService extends BaseServiceClient<Authentication> {

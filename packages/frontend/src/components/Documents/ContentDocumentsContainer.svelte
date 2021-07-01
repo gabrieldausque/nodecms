@@ -1,6 +1,6 @@
 <script>
 
-    import {DocumentsStore} from "../../stores/DocumentsStore";
+    import {observableGenericDataStore} from "../../stores/ObservableGenericDataStore";
     import {Helpers} from "../../helpers/Helpers";
     import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import {getBackendClient} from "@nodecms/backend-client";
@@ -9,8 +9,8 @@
     import { fade } from 'svelte/transition';
     import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";
 
-    $DocumentsStore;
-    console.log($DocumentsStore);
+    $observableGenericDataStore;
+    console.log($observableGenericDataStore);
 
     async function displayDocument(event){
         await Helpers.displayDocument(event.currentTarget.getAttribute("data-document-key"))
@@ -59,16 +59,16 @@
             async(documentActionEvent) =>{
                 const services = await getBackendClient();
                 const document = await services.documentService.getDocument(documentActionEvent.detail.document);
-                DocumentsStore.update(ds => {
+                observableGenericDataStore.update(ds => {
                     console.log("pushing to store");
-                    ds.documents.push(document);
+                    ds.data.push(document);
                     return ds
                 })
         })
     })
 
     afterUpdate(() => {
-        const rows = Array.from(document.querySelectorAll('#documents-table tbody > tr'));;
+        const rows = Array.from(document.querySelectorAll('#data-table tbody > tr'));;
         rows.sort((r1,r2) => {
             const r1Id = parseInt(r1.getAttribute('data-document-id'));
             const r2Id = parseInt(r2.getAttribute('data-document-id'));
@@ -78,7 +78,7 @@
                 return -1;
             return 0;
         })
-        const tableBody = document.querySelector('#documents-table tbody');
+        const tableBody = document.querySelector('#data-table tbody');
         for(const row of rows){
             row.remove();
             tableBody.append(row);
@@ -119,7 +119,7 @@
 
     async function displayNextDocuments() {
         const services = await getBackendClient();
-        const indexes = $DocumentsStore.documents.map(d => d.id);
+        const indexes = $observableGenericDataStore.data.map(d => d.id);
         const minIndexes = Math.min(...indexes);
         const nextDocuments = await services.documentService.findDocument({
             lastIndex: minIndexes
@@ -128,10 +128,10 @@
         const hasNext = (await services.documentService.findDocument({
             lastIndex
         })).length > 0;
-        DocumentsStore.update( ds => {
+        observableGenericDataStore.update(ds => {
             for(const nd of nextDocuments){
-                if(!ds.documents.find(d => d.key === nd.key)){
-                    ds.documents.push(nd)
+                if(!ds.data.find(d => d.key === nd.key)){
+                    ds.data.push(nd)
                 }
             }
             ds.hasNext = hasNext;
@@ -227,8 +227,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                {#if Array.isArray($DocumentsStore.documents)}
-                    {#each $DocumentsStore.documents as document}
+                {#if Array.isArray($observableGenericDataStore.data)}
+                    {#each $observableGenericDataStore.data as document}
                         <tr data-document-id="{document.id}" transition:fade>
                             <th scope="row">{document.id}</th>
                             <th scope="row">{document.key}</th>
@@ -247,9 +247,9 @@
                 {/if}
                 </tbody>
             </table>
-            {#if $DocumentsStore.hasNext}
+            {#if $observableGenericDataStore.hasNext}
             <div class="next-documents-wrapper">
-                <button type="button" class="btn btn-danger" on:click={displayNextDocuments}>Afficher les documents suivants</button>
+                <button type="button" class="btn btn-danger" on:click={displayNextDocuments}>Afficher les data suivants</button>
             </div>
             {/if}
         </div>
