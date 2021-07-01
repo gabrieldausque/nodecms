@@ -33,7 +33,10 @@ export default function (app: Application): void {
   // Initialize our service with any options it requires
   const channelPostService = new ChannelPost(options, app);
 
+  //@ts-ignore
   app.use('/channel/:channelNameOrId/posts', channelPostService);
+
+  //@ts-ignore
   app.use('/channel/:channelNameOrId/posts/:id/posts', channelPostService);
 
   // Get our initialized service so that we can register hooks
