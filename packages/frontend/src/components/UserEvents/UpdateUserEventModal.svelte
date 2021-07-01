@@ -65,17 +65,45 @@
             doUpdateUserEventButton.setAttribute('disabled','disabled');
             await backendService.userService.updateUserEvent(userEvent);
         } catch (error){
-            document.getElementById('error-creating-user-events-content').innerText = error.message;
-            document.getElementById('error-creating-user-events').classList.add('show');
+            document.getElementById('error-updating-user-events-content').innerText = error.message;
+            document.getElementById('error-updating-user-events').classList.add('show');
             closeAfterAction = false;
             console.error(error);
         } finally {
+            doUpdateUserEventButton.removeAttribute('disabled');
+            loading.classList.remove('show');
             if(closeAfterAction){
                 window.setTimeout(() => {
-                    doUpdateUserEventButton.removeAttribute('disabled');
-                    loading.classList.remove('show');
                     ShowUpdateUserEventStore.set(new ShowModalUserEvent())
                 }, 2000)
+            }
+        }
+    }
+
+    async function doRemoveUserEvent() {
+        const okToRemove = confirm('Êtes vous sûr de vouloir supprimer cet évènement ?');
+        if(okToRemove) {
+            const doRemoveUserEventButton = document.getElementById('do-remove-user-events');
+            const loading = document.getElementById('remove-user-events-loading');
+            let closeAfterAction = true;
+            try {
+                const backendService = await getBackendClient();
+                loading.classList.add('show');
+                doRemoveUserEventButton.setAttribute('disabled','disabled');
+                await backendService.userService.removeUserEvent(userEvent);
+            } catch (error){
+                document.getElementById('error-updating-user-events-content').innerText = error.message;
+                document.getElementById('error-updating-user-events').classList.add('show');
+                closeAfterAction = false;
+                console.error(error);
+            } finally {
+                doRemoveUserEventButton.removeAttribute('disabled');
+                loading.classList.remove('show');
+                if(closeAfterAction){
+                    window.setTimeout(() => {
+                        ShowUpdateUserEventStore.set(new ShowModalUserEvent())
+                    }, 2000)
+                }
             }
         }
     }
@@ -169,18 +197,19 @@
         padding: 1px;
     }
 
-    #do-update-user-events {
+    #do-update-user-events, #do-remove-user-events {
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    #update-user-events-loading {
+    #update-user-events-loading, #remove-user-events-loading {
         display: none;
         margin-right: 5px;
     }
 
-    :global(#update-user-events-loading.show) {
+    :global(#update-user-events-loading.show),
+    :global(#remove-user-events-loading.show) {
         display: block !important;
     }
 
@@ -205,6 +234,22 @@
 
     :global(#categories.show) {
         display: flex !important;
+    }
+
+    #error-updating-user-events-content {
+        text-align: justify;
+        flex-wrap: wrap;
+        overflow-y: auto;
+        max-height: 50px;
+    }
+
+    #error-updating-user-events {
+        width: 44%;
+        margin-left: 0;
+        margin-right: auto;
+        display: flex;
+        justify-content: flex-start;
+        text-align: justify;
     }
 
 </style>
@@ -371,10 +416,14 @@
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-upload-footer">
-                        <div id="error-creating-user-events" class="alert alert-danger fade">
-                            <div id="error-creating-user-events-content"></div>
+                        <div id="error-updating-user-events" class="alert alert-danger fade">
+                            <div id="error-updating-user-events-content"></div>
                         </div>
-                        <button id="do-update-user-events" type="button" class="btn action btn-danger " on:click={doUpdateUserEvent}>
+                        <button id="do-remove-user-events" type="button" class="btn action btn-danger " on:click={doRemoveUserEvent}>
+                            <span id="remove-user-events-loading" class="spinner-border"></span>
+                            <span id="do-remove-user-events-text">Supprimer</span>
+                        </button>
+                        <button id="do-update-user-events" type="button" class="btn action btn-secondary " on:click={doUpdateUserEvent}>
                             <span id="update-user-events-loading" class="spinner-border"></span><span id="do-update-user-events-text">Enregistrer</span>
                         </button>
                     </div>

@@ -130,4 +130,10 @@ export class UserService extends BaseServiceClient<User> {
         });
         return await requestPromise;
     }
+
+    async removeUserEvent(userEvent: UserEvent) {
+        if(typeof userEvent.id === 'number' || typeof userEvent.id === 'string')
+            return await this.userEventService.delete(userEvent.id);
+        throw new Error('Wrong Id for removing user event : must be of type number or string');
+    }
 }

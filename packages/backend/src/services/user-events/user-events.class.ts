@@ -101,4 +101,15 @@ export class UserEvents extends BaseService<UserEventDTO,
     const found = await super.find(params)
     return found
   }
+
+  async remove(id:NullableId, params?: Params | undefined):Promise<UserEventDTO>{
+    const removed = await super.remove(id, params);
+    const userUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
+    const user = await userUseCase.get((removed as UserEvent).ownerId);
+    await this.topicService.publish(`user-events.actions.${user.login}`, {
+      action:'delete',
+      owner: user.login
+    })
+    return removed
+  }
 }

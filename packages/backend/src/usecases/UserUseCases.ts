@@ -113,7 +113,7 @@ export class UserUseCases extends UseCases<User, UserEntityRules> {
 
   async delete(id: number | string, executingUser:User): Promise<User> {
     const usableId = this.entityRules.convertId(id);
-    if(!usableId || typeof usableId !== 'number')
+    if(typeof usableId !== 'number')
       throw new Error('Please provide a correct id for delete.')
     return await this.storage.delete(usableId)
   }

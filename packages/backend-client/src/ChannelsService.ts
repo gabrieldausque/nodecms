@@ -36,7 +36,6 @@ export class ChannelsService extends BaseServiceClient<Channel> {
     }
 
     async onLogOut(){
-        console.log('disconnected');
         if(this.topicServiceClient){
             this.topicServiceClient.socket.close();
             this.topicServiceClient = undefined;
