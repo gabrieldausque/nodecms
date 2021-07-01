@@ -32,7 +32,9 @@ export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
   async get(id : string | number, executingUser?:User) : Promise<T> {
     const entity = await this.storage.get(id);
     await this.entityRules.validateForRead(entity);
-    if(await this.isDataAuthorized(entity,'r', executingUser))
+    entity.isReader = await this.isDataAuthorized(entity, 'r', executingUser);
+    entity.isEditor = await this.isDataAuthorized(entity, 'w', executingUser);
+    if(entity.isReader)
       return entity;
     else
       throw new Error(`User ${executingUser?.login} is not authorized to access document with id ${entity.id}`);
@@ -45,6 +47,8 @@ export abstract class UseCases<T extends Entity, ER extends EntityRules<T>> {
     const found = await this.storage.find(filter, index);
     for(const entity of found){
       await this.entityRules.validateForRead(entity);
+      entity.isReader = await this.isDataAuthorized(entity, 'r', executingUser);
+      entity.isEditor = await this.isDataAuthorized(entity, 'w', executingUser);
     }
     return found;
   }

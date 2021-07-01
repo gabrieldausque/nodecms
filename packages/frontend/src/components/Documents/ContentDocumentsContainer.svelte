@@ -4,13 +4,15 @@
     import {Helpers} from "../../helpers/Helpers";
     import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
     import {getBackendClient} from "@nodecms/backend-client";
-    import {onMount, afterUpdate, beforeUpdate} from 'svelte';
+    import {onMount, afterUpdate, onDestroy} from 'svelte';
     import {documentsEventName} from "@nodecms/backend-client";
     import { fade } from 'svelte/transition';
     import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";
 
-    $observableGenericDataStore;
-    console.log($observableGenericDataStore);
+    let documents = $observableGenericDataStore.data;
+    const unsubscribe = observableGenericDataStore.subscribe((ogd) => {
+        documents = ogd.data;
+    })
 
     async function displayDocument(event){
         await Helpers.displayDocument(event.currentTarget.getAttribute("data-document-key"))
@@ -68,7 +70,7 @@
     })
 
     afterUpdate(() => {
-        const rows = Array.from(document.querySelectorAll('#data-table tbody > tr'));;
+        const rows = Array.from(document.querySelectorAll('#documents-table tbody > tr'));;
         rows.sort((r1,r2) => {
             const r1Id = parseInt(r1.getAttribute('data-document-id'));
             const r2Id = parseInt(r2.getAttribute('data-document-id'));
@@ -78,11 +80,15 @@
                 return -1;
             return 0;
         })
-        const tableBody = document.querySelector('#data-table tbody');
+        const tableBody = document.querySelector('#documents-table tbody');
         for(const row of rows){
             row.remove();
             tableBody.append(row);
         }
+    })
+
+    onDestroy(() => {
+        unsubscribe();
     })
 
     async function validateNewDocument() {

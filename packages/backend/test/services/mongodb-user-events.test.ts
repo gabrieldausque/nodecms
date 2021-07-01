@@ -157,7 +157,9 @@ describe('UserEvents service', () => {
         id:0,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     }
 
@@ -191,7 +193,9 @@ describe('UserEvents service', () => {
       id:0,
       ownerId:0,
       attachments: [],
-      color: '#243dff'
+      color: '#243dff',
+      isEditor:false,
+      isReader:true
     }
 
     await service.create(toCreate, params);
@@ -228,7 +232,10 @@ describe('UserEvents service', () => {
         id:0,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
+
       }
     },{
       ...toCreate[1],
@@ -236,7 +243,9 @@ describe('UserEvents service', () => {
         id:1,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     }]
     for(const c of toCreate){
@@ -279,7 +288,9 @@ describe('UserEvents service', () => {
         id:1,
         ownerId:1,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     },{
       ...toCreate[1],
@@ -287,7 +298,9 @@ describe('UserEvents service', () => {
         id:3,
         ownerId:1,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     }]
     const otherParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
@@ -334,7 +347,9 @@ describe('UserEvents service', () => {
         id:0,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     },{
       ...toCreate[1],
@@ -342,7 +357,9 @@ describe('UserEvents service', () => {
         id:1,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     }]
     for(const c of toCreate){
@@ -394,7 +411,9 @@ describe('UserEvents service', () => {
         id:0,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     },{
       ...toCreate[1],
@@ -402,7 +421,9 @@ describe('UserEvents service', () => {
         id:1,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     },{
       ...toCreate[2],
@@ -410,7 +431,9 @@ describe('UserEvents service', () => {
         id:2,
         ownerId:0,
         attachments: [],
-        color: '#243dff'
+        color: '#243dff',
+        isEditor:true,
+        isReader:true
       }
     }]
     for(const c of toCreate){

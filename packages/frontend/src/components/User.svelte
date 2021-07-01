@@ -115,9 +115,9 @@
         if(documentKey){
             if(documentKey === 'documents'){
                 const services = await getBackendClient();
-                $observableGenericDataStore.documents = [];
-                $observableGenericDataStore.documents = await services.documentService.findDocument();
-                const indexes = $observableGenericDataStore.documents.map(d => d.id);
+                $observableGenericDataStore.data = [];
+                $observableGenericDataStore.data = await services.documentService.findDocument();
+                const indexes = $observableGenericDataStore.data.map(d => d.id);
                 $observableGenericDataStore.hasNext = (await services.documentService.findDocument({
                     lastIndex: Math.min(...indexes)
                 })).length > 0
@@ -157,7 +157,7 @@
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="media">
                 <i class="fas fa-photo-video"></i><span>Media</span>
             </button>
-            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="data">
+            <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="documents">
                 <i class="fas fa-file-alt"></i><span>Documents</span>
             </button>
             <button class="dropdown-item" type="button" on:click={displayDocument} data-document-key="channels">
