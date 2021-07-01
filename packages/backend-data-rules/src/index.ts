@@ -1,4 +1,5 @@
 export {EntityRules} from './EntityRules'
+export {EntityRulesFactory} from './EntityRulesFactory';
 export {AuthenticationEntityRules} from './AuthenticationEntityRules';
 export {AuthorizationEntityRules} from './AuthorizationEntityRules';
 export {ChannelPostRules} from './ChannelPostRules';
@@ -8,3 +9,4 @@ export {MediaRules} from './MediaRules';
 export {MetadataEntityRules} from './MetadataEntityRules';
 export {RoleEntityRules} from './RoleEntityRules';
 export {UserEntityRules} from './UserEntityRules';
+export {UserEventEntityRules} from './UserEventEntityRules';

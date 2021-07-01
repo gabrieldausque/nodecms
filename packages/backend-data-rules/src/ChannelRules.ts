@@ -1,14 +1,14 @@
 import {EntityRules} from "./EntityRules";
 import {Channel, ChannelVisibility} from "@nodecms/backend-data";
 
-export class ChannelRules extends EntityRules {
+export class ChannelRules extends EntityRules<Channel> {
 
-  static validate(channel:Partial<Channel>){
+  async validate(channel:Partial<Channel>){
     if(!channel.key){
       throw new Error('Channel must have a key. Please correct.')
     }
 
-    if(!ChannelRules.isAuthorizedVisibility(channel.visibility)) {
+    if(!this.isAuthorizedVisibility(channel.visibility)) {
       channel.visibility = ChannelVisibility.private;
     }
     channel.readers = channel.readers ?? [];
@@ -17,7 +17,7 @@ export class ChannelRules extends EntityRules {
     channel.administrators = channel.administrators ?? [];
   }
 
-  static isAuthorizedVisibility(visibility: string | undefined) {
+  isAuthorizedVisibility(visibility: string | undefined) {
     return (visibility === ChannelVisibility.private ||
       visibility === ChannelVisibility.protected ||
       visibility === ChannelVisibility.public);

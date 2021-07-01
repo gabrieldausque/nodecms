@@ -9,7 +9,7 @@ import {isNumber} from "@nodecms/backend-data";
 export interface MetadataUseCasesConfiguration extends UseCaseConfiguration {
 }
 
-export class MetadataUseCases extends UseCases<Metadata>  {
+export class MetadataUseCases extends UseCases<Metadata, MetadataEntityRules>  {
 
   public static metadata:any[] = [
     {
@@ -24,31 +24,36 @@ export class MetadataUseCases extends UseCases<Metadata>  {
       contractName:'Default',
     }
   }) {
-   super('metadata','MetadataStorage',configuration);
+   super(
+     'metadata',
+     'MetadataStorage',
+     configuration,
+     false,
+     MetadataEntityRules);
   }
 
   async get(id:string | number, executingUser?:User):Promise<Metadata> {
-    const usableId = MetadataEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     return await this.storage.get(usableId);
   }
 
-  async find(filter: Metadata, lastIndex?:number, executingUser?:User):Promise<Metadata[]> {
-    MetadataEntityRules.convertFilter(filter);
+  async find(filter: Partial<Metadata>, lastIndex?:number, executingUser?:User):Promise<Metadata[]> {
+    this.entityRules.convertFilter(filter);
     return await this.storage.find(filter, lastIndex);
   }
 
-  async create(data: Metadata, executingUser:User):Promise<Metadata> {
+  async create(data: Partial<Metadata>, executingUser:User):Promise<Metadata> {
     //based on the data.key, a specific algorithm can be used to modify the way to store the value
 
     //default algo is here :
-    MetadataEntityRules.convert(data);
+    this.entityRules.convert(data);
     return this.storage.create(data);
   }
 
-  async update(id: string | number, metadataToUpdate: Metadata, executingUser:User):Promise<Metadata> {
+  async update(id: string | number, metadataToUpdate: Partial<Metadata>, executingUser:User):Promise<Metadata> {
     let found:Metadata | null = null;
     if(isNumber(id)){
-      const usableId = MetadataEntityRules.convertId(id);
+      const usableId = this.entityRules.convertId(id);
       found = await this.get(usableId, executingUser)
     } else if(typeof id === 'string'){
       const filter = {  ...{key:id},...{
@@ -68,7 +73,7 @@ export class MetadataUseCases extends UseCases<Metadata>  {
   }
 
   async delete(id: string | number, executingUser:User) {
-    const usableId = MetadataEntityRules.convertId(id);
+    const usableId = this.entityRules.convertId(id);
     const existing = await this.get(id,executingUser);
     existing.value = '';
     return await this.update(usableId, existing, executingUser);

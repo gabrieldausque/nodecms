@@ -110,14 +110,29 @@ function initData(){
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
 
+  //rights for user-events
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"user-events",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"user-events",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"user-events",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"user-events",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"user-events",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"user-events",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"user-events",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"user-events",right:"x",role:2})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"user-events",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"user-events",right:"x",role:2})
+
   //rights for document
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"create",for:"document",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"get",for:"document",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:1})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"find",for:"document",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"update",for:"document",right:"x",role:2})
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:1})
+  teamADb.authorizations.insert({id:  newId('authorizations'), on:"operation",onType:"delete",for:"media",right:"x",role:2})
 
   //rights for role data access (as operations are all authorized by default)
   teamADb.authorizations.insert({id:  newId('authorizations'), on:"data",onType:"role",for:"*",right:"r",role:0})
@@ -338,6 +353,46 @@ function initData(){
             col:0,
             row:0,
             content:"Second text"
+          }
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'my-calendar',
+    content: {
+      layout: {},
+      bodies:[
+        {
+          order:0,
+          type:'user-events',
+          properties:{}
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'user-calendars',
+    content: {
+      layout: {},
+      bodies:[
+        {
+          order:0,
+          type:'multiuser-events',
+          properties:{
+            userNames: ['Hannibal', 'Fute','Looping','Barracuda','Amanda']
           }
         }
       ]

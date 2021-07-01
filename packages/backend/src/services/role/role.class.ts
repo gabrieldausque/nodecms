@@ -5,6 +5,7 @@ import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {NotAcceptable, NotFound} from "@feathersjs/errors";
 import {User as UserEntity} from "@nodecms/backend-data";
 import {Role as RoleEntity} from '@nodecms/backend-data';
+import {RoleEntityRules} from "@nodecms/backend-data-rules";
 
 type RoleDTO = Partial<RoleEntity>
 
@@ -16,7 +17,7 @@ interface ServiceOptions {
   }
 }
 
-export class Role extends BaseService<RoleDTO, RoleUseCases> {
+export class Role extends BaseService<RoleDTO, RoleEntityRules, RoleUseCases> {
 
   options: ServiceOptions;
 

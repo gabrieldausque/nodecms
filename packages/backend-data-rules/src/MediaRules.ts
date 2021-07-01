@@ -7,7 +7,7 @@ import {Magic, MAGIC_CONTINUE, MAGIC_MIME_TYPE} from "mmmagic";
 const magic = new Magic(MAGIC_MIME_TYPE);
 const magicForContent = new Magic(MAGIC_CONTINUE);
 
-export class MediaRules extends EntityRules{
+export class MediaRules extends EntityRules<Media>{
 
   static getAuthorizedMimeTypes():string[]{
     return [

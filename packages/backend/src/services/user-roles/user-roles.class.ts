@@ -8,12 +8,15 @@ import {RoleUseCases} from "../../usecases/RoleUseCases";
 import {isNumber} from "@nodecms/backend-data";
 import {Role} from "@nodecms/backend-data";
 import {User as UserEntity} from "@nodecms/backend-data";
+import {RoleEntityRules} from "@nodecms/backend-data-rules";
 
 type RoleDTO = Partial<Role>;
 
 interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class UserRoles extends BaseService<RoleDTO, RoleUseCases> {
+export class UserRoles extends BaseService<RoleDTO,
+  RoleEntityRules,
+  RoleUseCases> {
 
   app: Application;
   options: ServiceOptions;

@@ -5,22 +5,18 @@ import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {NotFound} from "@feathersjs/errors";
 import {isNumber} from "@nodecms/backend-data";
 import {User as UserEntity} from "@nodecms/backend-data";
+import {Metadata as MetadataEntity} from '@nodecms/backend-data'
+import {MetadataEntityRules} from "@nodecms/backend-data-rules";
 
-
-export interface MetadataDTO {
-  id?: number;
-  key: string;
-  value?: any;
-  isPublic?: boolean;
-  ownerType?:string | null;
-  ownerId?:number | null;
-}
+export type MetadataDTO = Partial<MetadataEntity>
 
 interface ServiceOptions extends BaseServiceConfiguration {
 
 }
 
-export class Metadata extends BaseService<MetadataDTO, MetadataUseCases> {
+export class Metadata extends BaseService<MetadataDTO,
+  MetadataEntityRules,
+  MetadataUseCases> {
 
   options: ServiceOptions;
 

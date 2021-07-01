@@ -9,15 +9,11 @@ import * as fs from 'fs';
 import app from '../../src/app';
 import {Server} from "http";
 import axios from "axios";
-import {globalInstancesFactory} from "@hermes/composition";
 import {getAuthenticationParams, getUrl, initMongoDbTestDatabase} from "../../src/tests/TestsHelpers";
 import {User} from "../../../backend-data/src/User";
 import {User as UserService} from '../../src/services/user/user.class';
 import {UserMetadata} from "../../src/services/user-metadata/user-metadata.class";
 import {UserRoles} from "../../src/services/user-roles/user-roles.class";
-import {Role as RoleEntity} from '../../../backend-data/src/Role';
-import {MongoClient} from "mongodb";
-import {MongoDbUserStorage} from "../../src/plugins/Storages/User/MongoDbUserStorage";
 import {v4 as uuid} from "uuid";
 
 const port = app.get('port') || 3030;
@@ -72,6 +68,11 @@ describe('User service', () => {
 
   beforeEach(async () => {
     await initMongoDbTestDatabase();
+  })
+
+  afterEach(() => {
+    params.route = {};
+    params.query = {};
   })
 
   after((done) => {
@@ -417,23 +418,28 @@ describe('User service', () => {
       key: "ANewMeta",
       value: "MyNewValue"
     }, params);
-    expect(await service.get(created.key,params)).to.be.eql({
-      id:created.id,
-      key:'ANewMeta',
-      value:'MyNewValue',
-      isPublic:false,
-      ownerType:'user',
-      ownerId:0
-    });
-    await service.remove(created.key, params);
-    return expect(await service.get(created.key,params)).to.be.eql({
-      id:created.id,
-      key:'ANewMeta',
-      value:'',
-      isPublic:false,
-      ownerType:'user',
-      ownerId:0
-    });
+    if(typeof created.id === 'number' && typeof created.key === 'string'){
+      expect(await service.get(created.key.toString(),params)).to.be.eql({
+        id:created.id,
+        key:'ANewMeta',
+        value:'MyNewValue',
+        isPublic:false,
+        ownerType:'user',
+        ownerId:0
+      });
+      await service.remove(created.key, params);
+      return expect(await service.get(created.key,params)).to.be.eql({
+        id:created.id,
+        key:'ANewMeta',
+        value:'',
+        isPublic:false,
+        ownerType:'user',
+        ownerId:0
+      });
+    } else {
+      assert.fail('No created user ...')
+    }
+
   })
 
   it('should get all role for a user', async() => {
@@ -547,6 +553,29 @@ describe('User service', () => {
         isRejected = true
     }
     return expect(isRejected).to.be.true;
+  })
+
+  it('should return current authenticated user', async() => {
+    const service = app.service('user');
+    params.query = {
+      currentUser: true
+    };
+    const currentUser = await service.get(0, params);
+    const expectedOne:User = {
+      id: 0,
+      isActive: true,
+      login: 'localtest',
+      password: '***'
+    }
+    expect(currentUser).to.be.eql(expectedOne);
+    const otherParams = await getAuthenticationParams('otheruser', 'anotherpassword', port, clientUniqueId);
+    otherParams.query = {
+      currentUser: true
+    }
+    const otherUser = await service.get(0, otherParams);
+    expectedOne.login = 'otheruser';
+    expectedOne.id = 1;
+    expect(otherUser).to.be.eql(expectedOne);
   })
 
 });
