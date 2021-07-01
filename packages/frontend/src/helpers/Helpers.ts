@@ -279,9 +279,7 @@ export class Helpers {
 
     static getDefaultFields(typeName:string):string[] {
         console.log('types #')
-        for(let t in BackendData){
-            console.log(t)
-        }
+       
         console.log('types #')
         return [];
     }

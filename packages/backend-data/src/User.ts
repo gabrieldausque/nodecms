@@ -6,3 +6,6 @@ export interface User extends Entity{
     password: string;
     isActive?: boolean;
 }
+
+
+
