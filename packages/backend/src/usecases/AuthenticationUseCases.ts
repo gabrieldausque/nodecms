@@ -23,7 +23,7 @@ interface AuthenticationUseCasesConfiguration extends UseCaseConfiguration {
   tokenTTLInSecond?:number
 }
 
-export class AuthenticationUseCases extends UseCases<Authentication> {
+export class AuthenticationUseCases extends UseCases<Authentication, AuthenticationEntityRules> {
 
   public static metadata:any[] = [
     {
@@ -42,7 +42,10 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
   private tokenTTL: number;
 
   constructor(configuration:AuthenticationUseCasesConfiguration) {
-    super('authentication', 'Authentication', configuration, true);
+    super('authentication',
+      'Authentication',
+      configuration, true,
+      AuthenticationEntityRules);
     this.authorityKey = os.hostname();
     this.tokenTTL = 86400;
     this.encryptor = globalInstancesFactory.getInstanceFromCatalogs('EncryptionPlugin', configuration.encryption.contractName, configuration.encryption.configuration);
@@ -103,7 +106,7 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
 
     if(isNumber(id))
     {
-        const idAsNumber = AuthenticationEntityRules.convertId(id);
+        const idAsNumber = this.entityRules.convertId(id);
         const userUseCase = globalInstancesFactory.getInstanceFromCatalogs('UseCases', 'User');
         const user = await userUseCase.get(id, executingUser);
         if(user){
@@ -132,6 +135,11 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     const user:User = await userUseCases.get(login, executingUser);
     const ca = (await userUseCases.isValidUser(user, executingUser));
     return ca;
+  }
+
+  public async validateEncryptedToken(token:string){
+    const decrypted = await this.encryptor.decryptCustomToken(token);
+    await this.validateToken(decrypted, decrypted.login, decrypted.clientUniqueId);
   }
 
   private async validateToken(decryptedToken: CustomAuthenticatedUserToken, userLogin: string, clientUniqueId?: string, executingUser?: User) {
@@ -179,32 +187,11 @@ export class AuthenticationUseCases extends UseCases<Authentication> {
     return decryptedToken.login;
   }
 
-  /**
-   isAuthenticated(login:string, decryptedToken:CustomAuthenticatedUserToken): boolean {
-    return login === decryptedToken.login &&
-      this.validAuthorityKey(decryptedToken.authorityKey) &&
-      this.userExists(decryptedToken.login) &&
-      this.userIsActive(decryptedToken.login) &&
-      this.tokenNotExpired(decryptedToken);
+  async getClientIdFromEncryptedToken(encryptedToken:string):Promise<string> {
+    const decryptedToken:CustomAuthenticatedUserToken = await this.encryptor.decryptCustomToken(encryptedToken);
+    if(decryptedToken.clientUniqueId)
+      return decryptedToken.clientUniqueId;
+    throw new InvalidAuthenticationError('Client unique id is invalid');
   }
 
-   async userExists(login: string):Promise<boolean> {
-    return await this.userStorage.exists(login);
-  }
-
-   async userIsActive(login: string):Promise<boolean> {
-    if(await this.userExists(login)) {
-      const user = await this.userStorage.get(login);
-      return (user && user.isActive)?user.isActive:false;
-    }
-    return  false;
-  }
-
-
-   canAuthenticate(login: string, context: { clientUniqueId:string }): boolean {
-    // TODO : test if login tries < 3
-    // TODO : if login tries > 3, calculate login period and that you are in login period (increasing for each newest login tries
-    return true;
-  }
-   */
 }

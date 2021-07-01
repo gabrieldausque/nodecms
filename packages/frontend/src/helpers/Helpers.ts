@@ -2,10 +2,10 @@ import {getBackendClient, AttachmentHelpers} from '@nodecms/backend-client';
 import {globalFEService} from "../FEServices";
 import {DocumentsStore} from "../stores/DocumentsStore";
 import {DocumentStore} from "../stores/DocumentStore";
-import ImageAttachment from "../components/contentComponents/Channel/Attachments/ImageAttachment.svelte";
-import VideoAttachment from "../components/contentComponents/Channel/Attachments/VideoAttachment.svelte";
-import AudioAttachment from "../components/contentComponents/Channel/Attachments/AudioAttachment.svelte";
-import DownloadAttachment from "../components/contentComponents/Channel/Attachments/DownloadAttachment.svelte";
+import ImageAttachment from "../components/Attachments/ImageAttachment.svelte";
+import VideoAttachment from "../components/Attachments/VideoAttachment.svelte";
+import AudioAttachment from "../components/Attachments/AudioAttachment.svelte";
+import DownloadAttachment from "../components/Attachments/DownloadAttachment.svelte";
 import {channelsCache, observableChannelCache} from "../stores/ChannelStore";
 import type {Channel} from "@nodecms/backend-data";
 import {EditableDocumentStore} from "../stores/EditableDocumentStore";
@@ -90,6 +90,7 @@ export class Helpers {
 
     static async getChannelContentAndSubscribe(channelKey:string) {
         if(channelKey){
+            console.log(`subscribing to ${channelKey} ##`);
             let channel:Channel;
             const backendClient = await getBackendClient();
 
@@ -98,8 +99,11 @@ export class Helpers {
                 channelsCache.addChannel(channel);
             }
             channel = channelsCache[channelKey].channel;
+
+
             if(channel.isReader){
                 await backendClient.channelsService.subscribeToChannel(channel.key, async (mc) => {
+                    console.log('receiving message from ' + channel.key);
                     if(mc.content){
                         await Helpers.preloadContentPreview(mc.content)
                     }
@@ -147,6 +151,7 @@ export class Helpers {
                     }
                 }
             }
+
             observableChannelCache.update(occ => {
                 return occ;
             })
@@ -209,5 +214,65 @@ export class Helpers {
         EditableDocumentStore.update(eds => {
             return eds;
         })
+    }
+
+    static readonly shortLabelsDayOfWeek = ['Dim.', 'Lun.', 'Mar.', 'Mer.','Jeu.','Ven.','Sam.']
+    static getShortDayOfWeekLabel(day: Date){
+        return Helpers.shortLabelsDayOfWeek[day.getDay()];
+    }
+
+    static readonly longLabelsDayOfWeek = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi','Jeudi','Vendredi','Samedi']
+    static getLongDayOfWeekLabel(day: Date){
+        return Helpers.longLabelsDayOfWeek[day.getDay()];
+    }
+
+    static readonly longLabelsMonth = ['Janvier','Février', 'Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
+    static getLongLabelMonth(date: Date) {
+        return Helpers.longLabelsMonth[date.getMonth()]
+    }
+
+    static fromDateToString(d:Date):string{
+        const date = d.getDate();
+        const month = d.getMonth() + 1;
+        const year = d.getFullYear();
+        return [year,(month < 10?'0' + month:month), (date < 10?'0' + date:date)].join('-');
+    }
+
+    static fromTimeToString(d:Date):string{
+        const hour = d.getHours();
+        const minutes = d.getMinutes();
+        return [hour<10?'0' + hour:hour, minutes<10?'0' + minutes:minutes].join(':');
+    }
+
+    static fromStringToDate(dateAsString:string, timeAsString:string):Date {
+        const splittedDate = dateAsString.split('-');
+        const splittedTime = timeAsString.split(':')
+        return new Date(parseInt(splittedDate[0]),parseInt(splittedDate[1]) - 1,
+            parseInt(splittedDate[2]), parseInt(splittedTime[0]), parseInt(splittedTime[1]));
+    }
+
+    static fromStringToTime(dateAsString:string):Date {
+        const splitted = dateAsString.split(':');
+        return new Date(parseInt(splitted[0]),parseInt(splitted[1]) - 1, parseInt(splitted[2]))
+    }
+
+    static getAllDaysBetween(startDate: Date, endDate: Date) {
+        const newDays = [];
+        newDays.push(startDate);
+        while (newDays.length < endDate.getDate() - 1) {
+            const nextDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + newDays.length);
+            if (!newDays.find(d => d === nextDay.getTime()) && nextDay) {
+                newDays.push(nextDay);
+            }
+        }
+        newDays.push(endDate);
+        newDays.sort((d1, d2) => {
+            if(d1.getTime() > d2.getTime())
+                return 1;
+            if(d1.getTime() > d2.getTime())
+                return -1;
+            return 0
+        });
+        return newDays;
     }
 }

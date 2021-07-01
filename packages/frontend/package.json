@@ -1,12 +1,13 @@
 {
   "name": "@nodecms/frontend",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "dev-front": "npm run dev",
-    "start": "sirv public",
-    "validate": "svelte-check"
+    "start": "sirv public --no-clear",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "files": [
     "public/**/*"
@@ -46,8 +47,8 @@
     "jquery": "^3.5.1",
     "underscore": "^1.12.0",
     "highlight.js": "^10.7.2",
-    "@nodecms/backend-data": "^0.0.0",
-    "@nodecms/backend-client": "^0.0.0",
+    "@nodecms/backend-data": "*",
+    "@nodecms/backend-client": "*",
     "@types/underscore": "^1.11.2",
     "svelte-ace": "^1.0.21"
   }

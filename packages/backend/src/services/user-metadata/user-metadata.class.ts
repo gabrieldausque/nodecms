@@ -8,12 +8,15 @@ import {isNumber} from "@nodecms/backend-data";
 import {MetadataUseCases} from "../../usecases/MetadataUseCases";
 import {Metadata} from "@nodecms/backend-data";
 import {User as UserEntity} from "@nodecms/backend-data";
+import {MetadataEntityRules} from "@nodecms/backend-data-rules";
 
-type Data = Metadata
+type MetadataDTO = Partial<Metadata>
 
 interface ServiceOptions extends BaseServiceConfiguration {}
 
-export class UserMetadata extends BaseService<Data, MetadataUseCases> {
+export class UserMetadata extends BaseService<MetadataDTO,
+  MetadataEntityRules,
+  MetadataUseCases> {
 
   app: Application;
   options: ServiceOptions;
@@ -33,12 +36,12 @@ export class UserMetadata extends BaseService<Data, MetadataUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
+  async find (params?: Params): Promise<MetadataDTO[] | Paginated<MetadataDTO>> {
     throw new MethodNotAllowed();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<MetadataDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id`);
     const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
@@ -52,7 +55,7 @@ export class UserMetadata extends BaseService<Data, MetadataUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create (data: Data, params?: Params): Promise<Data> {
+  async create (data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id indicated`);
     const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
@@ -61,7 +64,7 @@ export class UserMetadata extends BaseService<Data, MetadataUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async update (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
 
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id indicated`);
@@ -89,12 +92,12 @@ export class UserMetadata extends BaseService<Data, MetadataUseCases> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async patch (id: NullableId, data: MetadataDTO, params?: Params): Promise<MetadataDTO> {
     return await this.update(id, data, params);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async remove (id: NullableId, params?: Params): Promise<Data> {
+  async remove (id: NullableId, params?: Params): Promise<MetadataDTO> {
     if(!params || !params.route || !params.route.idOrLogin)
       throw new NotAcceptable(`No user id indicated`);
     if(!id)

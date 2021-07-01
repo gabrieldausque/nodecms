@@ -2,7 +2,8 @@ import {MongoDbStorage, MongoDbStorageConfiguration} from "../MongoDbStorage";
 import {Document, Channel, isNumber} from "@nodecms/backend-data";
 import {DocumentStorage} from "./DocumentStorage";
 
-export class MongoDbDocumentStorage extends MongoDbStorage<Document> implements DocumentStorage {
+export class MongoDbDocumentStorage extends MongoDbStorage<Document>
+  implements DocumentStorage {
 
   public static metadata:any[] = [
     {

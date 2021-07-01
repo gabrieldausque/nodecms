@@ -34,18 +34,35 @@ export async function initMongoDbTestDatabase():Promise<void> {
   const metadataStorage:MongoDbMetadataStorage = globalInstancesFactory.getInstanceFromCatalogs('MetadataStorage', 'MongoDb', config.get('storage.metadata').configuration);
   const roleStorage:MongoDbRoleStorage = globalInstancesFactory.getInstanceFromCatalogs('RoleStorage', 'MongoDb',config.get('storage.roles').configuration);
   const channelStorage:MongoDbChannelStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelStorage', 'MongoDb', config.get('storage.channels').configuration);
-  const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb', config.get('storage.channelPosts').configuration);
-  const documentStorage:MongoDbDocumentStorage = globalInstancesFactory.getInstanceFromCatalogs('DocumentStorage', 'MongoDb', config.get('storage.documents').configuration);
+  const channelPostStorage:MongoDbChannelPostStorage = globalInstancesFactory.getInstanceFromCatalogs('ChannelPostStorage', 'MongoDb', {...(config.get('storage.channelPosts').configuration)});
+  const documentStorage:MongoDbDocumentStorage = globalInstancesFactory.getInstanceFromCatalogs('DocumentStorage', 'MongoDb', {...(config.get('storage.documents').configuration)});
 
-  const mongoDbClient = new MongoClient("mongodb://admin_teama:admin@localhost:27017", {
+  const mongoDbClient = new MongoClient("mongodb://root:Mbhj#ksf1445Mbfgqg@localhost:27017", {
     useUnifiedTopology:true
   });
   await mongoDbClient.connect();
+  try {
+    const teamATestDb = mongoDbClient.db('teama_test');
+    try {
+      await teamATestDb.addUser('admin_teama',
+        'jfkbqsgbEGQ#dd54qfdgb',{
+          roles: [{
+            role: "readWrite",
+            db: "teama_test"
+          }]
+        });
+    }catch(err){
+      //ignoring
+    }
+  }catch(err) {
+    //ignoring
+  }
   try {
     await mongoDbClient.db('teama_test').collection('users').drop();
   }catch(err) {
     //ignoring
   }
+
   try {
     await mongoDbClient.db('teama_test').collection('metadata').drop();
   }catch(err) {
@@ -87,8 +104,17 @@ export async function initMongoDbTestDatabase():Promise<void> {
   }catch(err) {
     //ignoring
   }
+  try {
+    await mongoDbClient.db('teama_test').collection('userEvents').drop();
+  }catch(err) {
+    //ignoring
+  }
 
-  await userStorage.create({ login:"localtest",password:"apassword",isActive:true});
+  try{
+    await userStorage.create({ login:"localtest",password:"apassword",isActive:true});
+  }catch(err){
+    console.log('err during creation of user');
+  }
   await userStorage.create({ login:"otheruser",password:"anotherpassword",isActive:true});
   await userStorage.create({ login:"standarduser", password:"standard", isActive:true})
   await userStorage.create({ login:"inactiveuser",password:"anything",isActive:false});
@@ -148,6 +174,18 @@ export async function initMongoDbTestDatabase():Promise<void> {
   await authorizationStorage.create({on:"operation",onType:"create",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"remove",for:"document",right:"x",role:1});
   await authorizationStorage.create({on:"operation",onType:"update",for:"document",right:"x",role:1});
+
+  //Rights for Document service
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"get",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"find",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"create",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"remove",for:"user-events",right:"x",role:2});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user-events",right:"x",role:1});
+  await authorizationStorage.create({on:"operation",onType:"update",for:"user-events",right:"x",role:2});
 
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:0});
   await authorizationStorage.create({on:"data",onType:"role",for:"*",right:"r",role:1});

@@ -18,7 +18,7 @@ export interface MediaUseCasesConfiguration extends UseCaseConfiguration {
   }
 }
 
-export class MediaUseCases extends UseCases<Media> {
+export class MediaUseCases extends UseCases<Media, MediaRules> {
 
   public static metadata:any[] = [
     {
@@ -37,7 +37,11 @@ export class MediaUseCases extends UseCases<Media> {
       fsStore:'uploads'
     }
   }) {
-    super('media','MediaStorage',configuration);
+    super('media',
+      'MediaStorage',
+      configuration,
+      false,
+      MediaRules);
     this.mediaStorage = this.storage as MediaStorage;
   }
 

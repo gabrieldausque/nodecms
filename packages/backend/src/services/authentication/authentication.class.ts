@@ -6,14 +6,16 @@ import {User, User as UserEntity} from "@nodecms/backend-data";
 import {AuthenticationUseCases} from "../../usecases/AuthenticationUseCases";
 import {NotAuthorizedError} from "@nodecms/backend-data";
 import {Authentication as AuthenticationEntity} from '@nodecms/backend-data';
+import {AuthenticationEntityRules} from "@nodecms/backend-data-rules";
 
-type Data = Partial<AuthenticationEntity>;
+type AuthenticationDTO = Partial<AuthenticationEntity>;
 
 interface ServiceOptions extends BaseServiceConfiguration {
 
 }
 
-export class Authentication extends BaseService<Data, AuthenticationUseCases> {
+export class Authentication extends BaseService<AuthenticationDTO,
+  AuthenticationEntityRules,  AuthenticationUseCases> {
 
   options: ServiceOptions;
 
@@ -26,7 +28,7 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
     this.options = options;
   }
 
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
+  async find (params?: Params): Promise<AuthenticationDTO[] | Paginated<AuthenticationDTO>> {
     if(!params || !params.authenticationToken || !params.user)
       throw new NotAuthenticated();
     return await this.get(params.user.login, params);
@@ -45,7 +47,7 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   }
 
   // Create identity token
-  async create (data: Data, params?: Params): Promise<any> {
+  async create (data: AuthenticationDTO, params?: Params): Promise<any> {
     try {
       return await this.useCase.create(data, params?.user as User)
     } catch(error) {
@@ -54,13 +56,13 @@ export class Authentication extends BaseService<Data, AuthenticationUseCases> {
   }
 
   // renew existing token if existing token still ok and period of
-  async update (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async update (id: NullableId, data: AuthenticationDTO, params?: Params): Promise<AuthenticationDTO> {
     if(!id)
       throw new NotAcceptable()
     return await this.useCase.update(id,data, params?.user as User);
   }
 
-  async patch (id: NullableId, data: Data, params?: Params): Promise<Data> {
+  async patch (id: NullableId, data: AuthenticationDTO, params?: Params): Promise<AuthenticationDTO> {
     throw new NotAuthorizedError('Patch of authentication token not authorized')
   }
 

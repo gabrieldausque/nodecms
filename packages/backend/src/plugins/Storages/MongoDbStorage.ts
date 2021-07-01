@@ -28,7 +28,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected constructor(configuration:MongoDbStorageConfiguration, logger?:Logger) {
     super(configuration);
-    this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}`;
+    this.mongodbConnexionString = `mongodb://${configuration.mongodbUser}:${configuration.mongodbPassword}@${configuration.mongodbUrl}/${configuration.dbName}`;
     this.mongoClient = new MongoClient(this.mongodbConnexionString, {
       useUnifiedTopology: true,
     })
@@ -39,7 +39,12 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
 
   protected async init() {
     if(!this.mongoClient.isConnected()){
-      await this.mongoClient.connect();
+      try{
+        await this.mongoClient.connect();
+      }catch(err){
+        console.log(err);
+      }
+
     }
   }
 
@@ -72,7 +77,7 @@ export abstract class MongoDbStorage<T extends Entity> extends Storage<T> {
     }
   }
 
-  protected async internalCreate(entity:T, collectionName?:string) {
+  protected async internalCreate(entity:Partial<T>, collectionName?:string) {
     const finalCollectionName:string = collectionName?collectionName:this.collectionName;
     await (await this.getCollection(finalCollectionName)).insertOne(
       entity

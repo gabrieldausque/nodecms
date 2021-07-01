@@ -1,26 +1,28 @@
 <script lang="ts">
 
 	import TopNavBar from './components/TopNavBar.svelte';
-	import ContentDocumentContainer from './components/contentComponents/ContentDocumentContainer.svelte';
-	import ContentTextContainer from './components/contentComponents/ContentTextContainer.svelte';
-	import ContentTextContainerEditor from './components/contentComponents/Editors/ContentTextContainerEditor.svelte';
-	import ContentImageContainer from './components/contentComponents/ContentImageContainer.svelte';
-	import ContentChannelsContainer from './components/contentComponents/Channel/ContentChannelsContainer.svelte';
-	import ContentChannelContainer from './components/contentComponents/Channel/ContentChannelContainer.svelte';
-	import ContentProjectsContainer from './components/contentComponents/Projects/ContentProjectsContainer.svelte';
-	import ContentDocumentsContainer from './components/contentComponents/Documents/ContentDocumentsContainer.svelte';
-	import ContentDocumentEditor from './components/contentComponents/Documents/ContentDocumentEditor.svelte';
-	import ContentTitle from './components/contentComponents/ContentTitle.svelte';
-	import ContentAllMediaContainer from './components/contentComponents/Media/ContentAllMediaContainer.svelte';
-	import ContentMediaContainer from './components/contentComponents/ContentMediaContainer.svelte';
-	import ContentMediaContainerEditor from './components/contentComponents/Editors/ContentMediaContainerEditor.svelte';
-	import ContentImageContainerEditor from './components/contentComponents/Editors/ContentImageContainerEditor.svelte';
-	import ContentTitleContainerEditor from './components/contentComponents/Editors/ContentTitleContainerEditor.svelte';
+	import ContentDocumentContainer from './components/ContentDocumentContainer.svelte';
+	import ContentTextContainer from './components/ContentTextContainer.svelte';
+	import ContentTextContainerEditor from './components/Editors/ContentTextContainerEditor.svelte';
+	import ContentImageContainer from './components/ContentImageContainer.svelte';
+	import ContentChannelsContainer from './components/Channel/ContentChannelsContainer.svelte';
+	import ContentChannelContainer from './components/Channel/ContentChannelContainer.svelte';
+	import ContentProjectsContainer from './components/Projects/ContentProjectsContainer.svelte';
+	import ContentDocumentsContainer from './components/Documents/ContentDocumentsContainer.svelte';
+	import ContentDocumentEditor from './components/Documents/ContentDocumentEditor.svelte';
+	import ContentTitle from './components/ContentTitle.svelte';
+	import ContentAllMediaContainer from './components/Media/ContentAllMediaContainer.svelte';
+	import ContentMediaContainer from './components/ContentMediaContainer.svelte';
+	import ContentMediaContainerEditor from './components/Editors/ContentMediaContainerEditor.svelte';
+	import ContentImageContainerEditor from './components/Editors/ContentImageContainerEditor.svelte';
+	import ContentTitleContainerEditor from './components/Editors/ContentTitleContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./ContentContainerFactory";
 	import {onMount} from "svelte";
 	import {getBackendClient, TempCache} from "@nodecms/backend-client";
 	import ErrorModal from "./components/ErrorModal.svelte";
 	import {DocumentStore} from "./stores/DocumentStore";
+	import ContentUserEventsContainer from './components/UserEvents/ContentUserEventsContainer.svelte';
+	import ContentMultiUserCalendarContainer from './components/UserEvents/ContentMultiUserCalendarContainer.svelte';
 
 	$DocumentStore;
 
@@ -42,7 +44,8 @@
 			'Media',
 			'fas fa-photo-video',
 			ContentMediaContainerEditor);
-
+	globalContentContainerFactory.registerContentContainer('user-events', ContentUserEventsContainer);
+	globalContentContainerFactory.registerContentContainer('multiuser-events', ContentMultiUserCalendarContainer);
 
 	onMount(async() => {
 		const backendClient = await getBackendClient();

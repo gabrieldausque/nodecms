@@ -2,7 +2,7 @@ import {EntityRules} from "./EntityRules";
 import {Authentication} from "@nodecms/backend-data";
 import {InvalidAuthenticationError} from "@nodecms/backend-data";
 
-export class AuthenticationEntityRules extends EntityRules {
+export class AuthenticationEntityRules extends EntityRules<Authentication> {
 
     public static validate(entity:Authentication):void{
       if(!(entity.login && entity.password) &&

@@ -5,6 +5,7 @@ import {BaseService, BaseServiceConfiguration} from "../BaseService";
 import {MediaUseCases} from "../../usecases/MediaUseCases";
 import {NotAuthenticated, NotImplemented} from "@feathersjs/errors";
 import {isNumber, NotFoundError} from "@nodecms/backend-data";
+import {MediaRules} from "@nodecms/backend-data-rules";
 
 type MediaDTO = Partial<MediaEntity>
 
@@ -17,7 +18,7 @@ interface ServiceOptions extends BaseServiceConfiguration {
   }
 }
 
-export class Media extends BaseService<MediaDTO, MediaUseCases> {
+export class Media extends BaseService<MediaDTO, MediaRules, MediaUseCases> {
   app: Application;
   options: ServiceOptions;
 
