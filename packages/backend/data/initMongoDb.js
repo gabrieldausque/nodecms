@@ -403,6 +403,27 @@ function initData(){
     updateDate: new Date()
   });
 
+  teamADb.documents.insert({
+    id: newId('documents'),
+    key: 'test-generic-data',
+    content: {
+      layout: {},
+      bodies:[
+        {
+          order:0,
+          type:'generic-data',
+          properties:{
+            dataType: 'user'
+          }
+        }
+      ]
+    },
+    visibility: 'protected',
+    ownerId: 0,
+    creationDate: new Date(),
+    updateDate: new Date()
+  });
+
   // channels creation
   teamADb.channels.insert({id:  newId('channels'),key:'news', label:'Actualités', visibility:'protected', administrators:[0], editors:[],contributors:[1], readers:[2]});
   teamADb['channel#news'].insert({id:  newId('channel#news'), channelKey:'news',

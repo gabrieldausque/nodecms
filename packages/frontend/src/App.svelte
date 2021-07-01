@@ -23,6 +23,7 @@
 	import {DocumentStore} from "./stores/DocumentStore";
 	import ContentUserEventsContainer from './components/UserEvents/ContentUserEventsContainer.svelte';
 	import ContentMultiUserCalendarContainer from './components/UserEvents/ContentMultiUserCalendarContainer.svelte';
+	import GenericDataTables from './components/GenericDataTables.svelte';
 
 	$DocumentStore;
 
@@ -46,6 +47,7 @@
 			ContentMediaContainerEditor);
 	globalContentContainerFactory.registerContentContainer('user-events', ContentUserEventsContainer);
 	globalContentContainerFactory.registerContentContainer('multiuser-events', ContentMultiUserCalendarContainer);
+	globalContentContainerFactory.registerContentContainer('generic-data', GenericDataTables);
 
 	onMount(async() => {
 		const backendClient = await getBackendClient();

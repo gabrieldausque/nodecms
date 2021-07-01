@@ -7,7 +7,8 @@ import VideoAttachment from "../components/Attachments/VideoAttachment.svelte";
 import AudioAttachment from "../components/Attachments/AudioAttachment.svelte";
 import DownloadAttachment from "../components/Attachments/DownloadAttachment.svelte";
 import {channelsCache, observableChannelCache} from "../stores/ChannelStore";
-import type {Channel} from "@nodecms/backend-data";
+import type {Channel, Entity} from "@nodecms/backend-data";
+import * as BackendData from "@nodecms/backend-data";
 import {EditableDocumentStore} from "../stores/EditableDocumentStore";
 
 
@@ -274,5 +275,14 @@ export class Helpers {
             return 0
         });
         return newDays;
+    }
+
+    static getDefaultFields(typeName:string):string[] {
+        console.log('types #')
+        for(let t in BackendData){
+            console.log(t)
+        }
+        console.log('types #')
+        return [];
     }
 }
