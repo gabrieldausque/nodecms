@@ -7,10 +7,9 @@ import VideoAttachment from "../components/Attachments/VideoAttachment.svelte";
 import AudioAttachment from "../components/Attachments/AudioAttachment.svelte";
 import DownloadAttachment from "../components/Attachments/DownloadAttachment.svelte";
 import {channelsCache, observableChannelCache} from "../stores/ChannelStore";
-import type {Channel, Entity} from "@nodecms/backend-data";
-import * as BackendData from "@nodecms/backend-data";
+import type {Field, Channel, Entity} from "@nodecms/backend-data";
+import {InterfaceMetadata} from '@nodecms/backend-data';
 import {EditableDocumentStore} from "../stores/EditableDocumentStore";
-
 
 export class Helpers {
     static styleOpeningLabel = '<style>';
@@ -61,7 +60,12 @@ export class Helpers {
                     s.data = newDocuments
                     return s;
                 })
-            };
+            } else {
+                observableGenericDataStore.update( s => {
+                    s.data = [];
+                    return s;
+                })
+            }
             DocumentStore.update((store) => {
                 store.key = documentKey;
                 return store;
@@ -277,10 +281,17 @@ export class Helpers {
         return newDays;
     }
 
-    static getDefaultFields(typeName:string):string[] {
-        console.log('types #')
-       
-        console.log('types #')
-        return [];
+    static getDefaultFields(typeName:string):Field[] {
+        if(InterfaceMetadata.hasOwnProperty(typeName)){
+            return InterfaceMetadata[typeName].fields;
+        }
+        return []
+    }
+
+    static getInterfaceLabel(dataType: string):string {
+        if(InterfaceMetadata.hasOwnProperty(dataType)){
+            return InterfaceMetadata[dataType].label;
+        }
+        return 'unknown'
     }
 }

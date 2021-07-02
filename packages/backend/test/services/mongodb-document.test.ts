@@ -74,7 +74,7 @@ describe('Document service', () => {
     const created = await service.create({
       key: 'NewDocument',
       content: {
-        aProperty: "this is a property of the document"
+        style: "color: red;"
       }
     }, params);
     params.query = {
@@ -94,7 +94,7 @@ describe('Document service', () => {
     const created = await service.create({
       key: 'NewDocument',
       content: {
-        aProperty: "this is a property of the document"
+        style: "color: red;"
       }
     }, params);
     params.query = {
@@ -132,7 +132,7 @@ describe('Document service', () => {
       editors: [],
       editorRoles: [],
       visibility: 'public',
-      content: { prop: 'MyContentProp'},
+      content: { style: 'color: red;'},
       key: 'welcome',
       "isEditor": false,
       "isReader": true
@@ -160,7 +160,7 @@ describe('Document service', () => {
       editors: [],
       editorRoles: [1],
       visibility: 'protected',
-      content: { prop: 'MyContentPropProtected'},
+      content: { style: 'color: white;'},
       key: 'welcomeProtected',
       isEditor: false,
       isReader: true
@@ -195,7 +195,7 @@ describe('Document service', () => {
       editors: [],
       editorRoles: [0],
       visibility: 'private',
-      content: { prop: 'MyContentPropPrivate'},
+      content: { style: 'color: green;'},
       key: 'welcomePrivate',
       "isEditor": false,
       "isReader": true
@@ -216,7 +216,7 @@ describe('Document service', () => {
       editors: [],
       editorRoles: [0],
       visibility: 'private',
-      content: { prop: 'MyContentPropPrivate'},
+      content: { style: 'color: green;'},
       key: 'welcomePrivate',
       "isEditor": true,
       "isReader": true
@@ -246,7 +246,7 @@ describe('Document service', () => {
         editors: [],
         editorRoles: [],
         visibility: 'public',
-        content: { prop: 'MyContentProp'},
+        content: { style: 'color: red;'},
         key: 'welcome',
         isReader: true,
         isEditor: false
@@ -276,7 +276,7 @@ describe('Document service', () => {
         editors: [],
         editorRoles: [1],
         visibility: 'protected',
-        content: { prop: 'MyContentPropProtected'},
+        content: { style: 'color: white;'},
         key: 'welcomeProtected',
         isReader:true,
         isEditor: false
@@ -289,7 +289,7 @@ describe('Document service', () => {
         editors: [],
         editorRoles: [],
         visibility: 'public',
-        content: { prop: 'MyContentProp'},
+        content: { style: 'color: red;'},
         key: 'welcome',
         isReader: true,
         isEditor:false
@@ -319,7 +319,7 @@ describe('Document service', () => {
         editors: [],
         editorRoles: [0],
         visibility: 'private',
-        content: { prop: 'MyContentPropPrivate'},
+        content: { style: 'color: green;'},
         key: 'welcomePrivate',
         isReader: true,
         isEditor: false
@@ -332,7 +332,7 @@ describe('Document service', () => {
         editors: [],
         editorRoles: [1],
         visibility: 'protected',
-        content: { prop: 'MyContentPropProtected'},
+        content: { style:'color: white;'},
         key: 'welcomeProtected',
         isReader: true,
         isEditor:true
@@ -345,7 +345,7 @@ describe('Document service', () => {
         editors: [],
         editorRoles: [],
         visibility: 'public',
-        content: { prop: 'MyContentProp'},
+        content: { style: 'color: red;'},
         key: 'welcome',
         isReader:true,
         isEditor:false
@@ -364,7 +364,7 @@ describe('Document service', () => {
     const service:Document = app.service('document');
     return expect(service.create({
       visibility:'private',
-      content: {aProp: 'A property'},
+      content: {style: 'color: white;'},
       key:'a doc'
     })).to.be.rejectedWith('You are missing your unique clientId. Please correct and retry.');
   })
@@ -374,7 +374,7 @@ describe('Document service', () => {
     const standardUserParams = await getAuthenticationParams('standarduser','standard',port, clientUniqueId);
     return expect(service.create({
       visibility:'private',
-      content: {aProp: 'A property'},
+      content: {style: 'color: green;'},
       key:'a doc'
     }, standardUserParams)).to.be.rejectedWith('Method create for service document is not authorized for user standarduser');
   })
@@ -384,7 +384,7 @@ describe('Document service', () => {
     const elevatedParams = await getAuthenticationParams('otheruser','anotherpassword',port, clientUniqueId);
     const createdDoc = await service.create({
       content: {
-        aProp: "A property"
+        style: 'color: yellow'
       },
       key: "a doc",
       visibility: "private"
@@ -393,7 +393,7 @@ describe('Document service', () => {
     delete createdDoc.updateDate;
     return expect(createdDoc).to.be.eql({
       content: {
-        aProp: "A property"
+        style: 'color: yellow'
       },
       documentType: "default",
       editorRoles: [],

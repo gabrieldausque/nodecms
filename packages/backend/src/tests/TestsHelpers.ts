@@ -213,7 +213,9 @@ export async function initMongoDbTestDatabase():Promise<void> {
     editors: [],
     editorRoles: [],
     visibility: 'public',
-    content: { prop: 'MyContentProp'},
+    content: {
+      style: 'color: red;'
+    },
     key: 'welcome',
     creationDate: new Date(),
     updateDate: new Date()
@@ -227,7 +229,9 @@ export async function initMongoDbTestDatabase():Promise<void> {
     editors: [],
     editorRoles: [1],
     visibility: 'protected',
-    content: { prop: 'MyContentPropProtected'},
+    content: {
+      style: 'color: white;'
+    },
     key: 'welcomeProtected',
     creationDate: new Date(),
     updateDate: new Date()
@@ -241,7 +245,7 @@ export async function initMongoDbTestDatabase():Promise<void> {
     editors: [],
     editorRoles: [0],
     visibility: 'private',
-    content: { prop: 'MyContentPropPrivate'},
+    content: { style: 'color: green;' },
     key: 'welcomePrivate',
     creationDate: new Date(),
     updateDate: new Date()

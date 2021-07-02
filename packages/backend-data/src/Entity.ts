@@ -7,7 +7,7 @@ export interface Entity {
   [key: string]: any
 }
 
-export const Meta:Field[] = [
+export const EntityFields:Field[] = [
   {
     name:'id',
     label:'Id',

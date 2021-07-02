@@ -88,6 +88,7 @@
     })
 
     onDestroy(() => {
+        console.log('Destroying documents container');
         unsubscribe();
     })
 
@@ -238,9 +239,9 @@
                         <tr data-document-id="{document.id}" transition:fade>
                             <th scope="row">{document.id}</th>
                             <th scope="row">{document.key}</th>
-                            <th>{document.author.login}</th>
-                            <th>{new Date(document.creationDate).toLocaleString()}</th>
-                            <th>{new Date(document.updateDate).toLocaleString()}</th>
+                            <th>{document.author?document.author.login:''}</th>
+                            <th>{document.creationDate?new Date(document.creationDate).toLocaleString():''}</th>
+                            <th>{document.updateDate?new Date(document.updateDate).toLocaleString():''}</th>
                             <th>
                                 {#if document.isReader}
                                     <button data-document-key="{document.key}" type="button" class="btn btn-secondary" title="Voir le document" on:click={displayDocument}><i class="fas fa-book-reader"></i></button>

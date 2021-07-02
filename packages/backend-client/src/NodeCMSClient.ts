@@ -32,21 +32,21 @@ export class NodeCMSClient implements NodeCMSClientContract {
         this.env = env;
         this.services = {}
         this.mediaService = new MediaService(this.url);
-        this.registerNewClientService<Media>('mediaService',this.mediaService);
+        this.registerNewClientService<Media>('media',this.mediaService);
         this.postService = new PostService(this.url);
-        this.registerNewClientService<ChannelPost>('postService', this.postService);
+        this.registerNewClientService<ChannelPost>('channel-post', this.postService);
         this.documentService = new DocumentService(this.url, socketIoHost, this.env);
-        this.registerNewClientService<Document>('documentService', this.documentService);
+        this.registerNewClientService<Document>('document', this.documentService);
         this.channelsService = new ChannelsService(this.url, socketIoHost, this.env);
-        this.registerNewClientService<Channel>('channelsService', this.channelsService);
+        this.registerNewClientService<Channel>('channel', this.channelsService);
         this.userService = new UserService(this.url);
-        this.registerNewClientService<User>('userService', this.userService);
+        this.registerNewClientService<User>('user', this.userService);
         this.utilsService = new UtilsService(this.url);
-        this.registerNewClientService<WebThumbnail>('utilsService', this.utilsService);
+        this.registerNewClientService<WebThumbnail>('utils', this.utilsService);
         this.metadataService = new MetadataService(this.url);
-        this.registerNewClientService<Metadata>('metadataService', this.metadataService);
+        this.registerNewClientService<Metadata>('metadata', this.metadataService);
         this.userEventService = new UserEventService(this.url);
-        this.registerNewClientService<UserEvent>('userEvent', this.userEventService);
+        this.registerNewClientService<UserEvent>('user-event', this.userEventService);
     }
 
     async getMetadata(key: string) {
@@ -60,4 +60,9 @@ export class NodeCMSClient implements NodeCMSClientContract {
     getService<T>(serviceLabel:string) : BaseServiceClient<T> {
         return this.services[serviceLabel];
     }
+
+    getDataService(serviceLabel: string) {
+        return this.services[serviceLabel];
+    }
+
 }

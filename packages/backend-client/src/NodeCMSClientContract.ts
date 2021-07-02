@@ -21,5 +21,7 @@ export interface NodeCMSClientContract {
 
     registerNewClientService<T>(serviceLabel:string, service:BaseServiceClient<T>) : void;
 
-    getService<T>(serviceLabel:string) : BaseServiceClient<T>
+    getService<T>(serviceLabel:string) : BaseServiceClient<T>;
+
+    getDataService(serviceLabel:string) : any;
 }

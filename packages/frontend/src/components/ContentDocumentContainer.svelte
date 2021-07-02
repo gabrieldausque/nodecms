@@ -6,48 +6,7 @@
     import {beforeUpdate, onMount} from 'svelte';
     import {Helpers} from "../helpers/Helpers";
 
-    export let properties;
-    export let documentKey;
-
-    async function getDocument() {
-        const backendClient = await getBackendClient();
-        let rawDocument = null;
-        if(documentKey){
-            let doc = await backendClient.documentService.getDocument(documentKey);
-            let sortFunction = (a,b) =>{
-                if(a.order < b.order)
-                    return -1
-                else if (a.order === b.order)
-                    return 0
-                else
-                    return 1
-            };
-            if(Array.isArray(doc.content.headers)) {
-                doc.content.headers = doc.content.headers.sort(sortFunction)
-            }
-            if(Array.isArray(doc.content.bodies)) {
-                doc.content.bodies = doc.content.bodies.sort(sortFunction)
-            }
-            if(Array.isArray(doc.content.footers)) {
-                doc.content.footers = doc.content.footers.sort(sortFunction)
-            }
-            rawDocument = doc;
-        }
-        return rawDocument
-    }
-
-    onMount(async () => {
-        if(documentKey)
-            properties = await getDocument();
-    })
-
-    $:{
-        if(documentKey) {
-            getDocument().then((content) => {
-                properties = content;
-            })
-        }
-    }
+    export let doc;
 
 </script>
 
@@ -104,20 +63,20 @@
 
 </style>
 
-{#if properties}
-    <div class="container-content {properties.classes?properties.classes:''}" style="{properties.style?properties.style:''}">
-    {#if properties && properties.content}
-        {#if typeof properties.content.globalStyle === "string"}
-            {@html Helpers.styleOpeningLabel + properties.content.globalStyle + Helpers.styleClosingLabel}
+{#if doc}
+    <div class="container-content {doc.classes?doc.classes:''}" style="{doc.style?doc.style:''}">
+    {#if doc && doc.content}
+        {#if typeof doc.content.globalStyle === "string"}
+            {@html Helpers.styleOpeningLabel + doc.content.globalStyle + Helpers.styleClosingLabel}
         {/if}
-        {#if Array.isArray(properties.content.headers) && properties.content.headers.length > 0}
-            <header class="{(properties.content.layout &&
-                     properties.content.layout.headers &&
-                     properties.content.layout.headers.type === 'grid')?'container':''} document-section document-header">
-            {#if properties.content.layout &&
-            properties.content.layout.headers &&
-            properties.content.layout.headers.type === 'grid'}
-                {#each Helpers.getRows(properties.content.headers) as row}
+        {#if Array.isArray(doc.content.headers) && doc.content.headers.length > 0}
+            <header class="{(doc.content.layout &&
+                     doc.content.layout.headers &&
+                     doc.content.layout.headers.type === 'grid')?'container':''} document-section document-header">
+            {#if doc.content.layout &&
+            doc.content.layout.headers &&
+            doc.content.layout.headers.type === 'grid'}
+                {#each Helpers.getRows(doc.content.headers) as row}
                     <div class="row">
                         {#each row as container}
                             <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
@@ -127,20 +86,20 @@
                     </div>
                 {/each}
             {:else}
-                {#each properties.content.headers as container}
+                {#each doc.content.headers as container}
                     <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
             {/if}
             </header>
         {/if}
-        <main class="{(properties.content.layout &&
-                     properties.content.layout.bodies &&
-                     properties.content.layout.bodies.type === 'grid')?'container':''} document-section document-main">
-            {#if Array.isArray(properties.content.bodies)}
-                {#if properties.content.layout &&
-                     properties.content.layout.bodies &&
-                     properties.content.layout.bodies.type === 'grid'}
-                    {#each Helpers.getRows(properties.content.bodies) as row}
+        <main class="{(doc.content.layout &&
+                     doc.content.layout.bodies &&
+                     doc.content.layout.bodies.type === 'grid')?'container':''} document-section document-main">
+            {#if Array.isArray(doc.content.bodies)}
+                {#if doc.content.layout &&
+                     doc.content.layout.bodies &&
+                     doc.content.layout.bodies.type === 'grid'}
+                    {#each Helpers.getRows(doc.content.bodies) as row}
                         <div class="row">
                             {#each row as container}
                                 <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
@@ -150,20 +109,20 @@
                         </div>
                     {/each}
                 {:else}
-                    {#each properties.content.bodies as container}
+                    {#each doc.content.bodies as container}
                         <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                     {/each}
                 {/if}
             {/if}
         </main>
-        {#if Array.isArray(properties.content.footers) && properties.content.footers.length > 0}
-            <footer class="{(properties.content.layout &&
-                     properties.content.layout.footers &&
-                     properties.content.layout.footers.type === 'grid')?'container':''} document-section document-footer">
-            {#if properties.content.layout &&
-            properties.content.layout.footers &&
-            properties.content.layout.footers.type === 'grid'}
-                {#each Helpers.getRows(properties.content.footers) as row}
+        {#if Array.isArray(doc.content.footers) && doc.content.footers.length > 0}
+            <footer class="{(doc.content.layout &&
+                     doc.content.layout.footers &&
+                     doc.content.layout.footers.type === 'grid')?'container':''} document-section document-footer">
+            {#if doc.content.layout &&
+            doc.content.layout.footers &&
+            doc.content.layout.footers.type === 'grid'}
+                {#each Helpers.getRows(doc.content.footers) as row}
                     <div class="row">
                         {#each row as container}
                             <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
@@ -173,7 +132,7 @@
                     </div>
                 {/each}
             {:else}
-                {#each properties.content.footers as container}
+                {#each doc.content.footers as container}
                     <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
             {/if}

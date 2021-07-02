@@ -25,7 +25,10 @@
 	import ContentMultiUserCalendarContainer from './components/UserEvents/ContentMultiUserCalendarContainer.svelte';
 	import GenericDataTables from './components/GenericDataTables.svelte';
 
-	$DocumentStore;
+	let doc;
+	const unsubscribe = DocumentStore.subscribe(async (ds) => {
+		doc = await getDocument(ds.key);
+	})
 
 	globalContentContainerFactory.registerContentContainer('document', ContentDocumentContainer);
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
@@ -55,6 +58,33 @@
 		document.querySelector('head title').innerHTML = title.value;
 
 	})
+
+	async function getDocument(documentKey) {
+		const backendClient = await getBackendClient();
+		let rawDocument = undefined;
+		if(documentKey){
+			let doc = await backendClient.documentService.getDocument(documentKey);
+			let sortFunction = (a,b) =>{
+				if(a.order < b.order)
+					return -1
+				else if (a.order === b.order)
+					return 0
+				else
+					return 1
+			};
+			if(Array.isArray(doc.content.headers)) {
+				doc.content.headers = doc.content.headers.sort(sortFunction)
+			}
+			if(Array.isArray(doc.content.bodies)) {
+				doc.content.bodies = doc.content.bodies.sort(sortFunction)
+			}
+			if(Array.isArray(doc.content.footers)) {
+				doc.content.footers = doc.content.footers.sort(sortFunction)
+			}
+			rawDocument = doc;
+		}
+		return rawDocument
+	}
 
 </script>
 
@@ -93,7 +123,7 @@
 	<TopNavBar></TopNavBar>
 </header>
 <main class="app-viewport">
-	<ContentDocumentContainer documentKey={$DocumentStore.key}></ContentDocumentContainer>
+	<ContentDocumentContainer doc={doc}></ContentDocumentContainer>
 </main>
 <ErrorModal></ErrorModal>
 

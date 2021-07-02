@@ -9,14 +9,30 @@
 
     let dataType = properties.dataType;
     let columns = [];
-    let data = $observableGenericDataStore.data;
+    let data = [];
+    let title = properties.title?properties.title:Helpers.getInterfaceLabel(dataType);
 
     const unsubscribe = observableGenericDataStore.subscribe((ogd) => {
         data = ogd.data;
     })
 
-    onMount(async () => {
+    onMount(() => {
+        console.log('Mounting ...');
         columns = Helpers.getDefaultFields(dataType);
+        const p = new Promise(async(resolve) => {
+            console.log('executing promise ....')
+            const services = await getBackendClient();
+            const dataService = services.getDataService(dataType);
+            console.log(dataService);
+            const initialData = await dataService.find()
+            console.log(initialData);
+            observableGenericDataStore.update(ogds => {
+                ogds.data = initialData;
+                return ogds;
+            })
+            resolve(undefined);
+        })
+        p.catch(console.error);
     })
 
 </script>
@@ -64,19 +80,35 @@
 </style>
 
 <div class="data-list">
-    <h1>Documents</h1>
+    <h1>{title}</h1>
     <div class="table-wrapper">
         <table id="data-table" class="data table table-striped table-fixed">
             <thead>
             <tr>
-                <th scope="col">Id</th>
+                {#each columns as column}
+                    {#if column.visible}
+                        <th scope="col">{column.label}</th>
+                    {/if}
+                {/each}
             </tr>
             </thead>
             <tbody>
             {#if Array.isArray(data)}
                 {#each data as entity}
                     <tr data-document-id="{entity.id}" transition:fade>
-
+                        {#each columns as column}
+                            {#if column.visible}
+                                <th scope="row">{entity[column.name]}</th>
+                            {/if}
+                        {/each}
+                        <th scope="row">
+                            {#if entity.isReader}
+                                <button data-id="{entity.id}" type="button" class="btn btn-secondary" title="Visualiser"><i class="fas fa-book-reader"></i></button>
+                            {/if}
+                            {#if entity.isEditor}
+                                <button data-id="{entity.id}" type="button" class="btn btn-secondary" title="Editer"><i class="fas fa-edit"></i></button>
+                            {/if}
+                        </th>
                     </tr>
                 {/each}
             {/if}
