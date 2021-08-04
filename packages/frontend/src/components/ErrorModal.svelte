@@ -1,5 +1,4 @@
 <script>
-    import {getContext, setContext} from "svelte";
     import {globalFEService} from "../FEServices";
 
     export let errorTitle;

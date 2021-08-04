@@ -4,6 +4,7 @@
     import {fade} from "svelte/transition";
     import {observableGenericDataStore} from "../stores/ObservableGenericDataStore";
     import {Helpers} from "../helpers/Helpers";
+    import {ModalStore, FooterAction} from "../stores/ModalStore";
 
     export let properties;
 
@@ -90,6 +91,7 @@
                         <th scope="col">{column.label}</th>
                     {/if}
                 {/each}
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -102,11 +104,49 @@
                             {/if}
                         {/each}
                         <th scope="row">
-                            {#if entity.isReader}
-                                <button data-id="{entity.id}" type="button" class="btn btn-secondary" title="Visualiser"><i class="fas fa-book-reader"></i></button>
-                            {/if}
                             {#if entity.isEditor}
-                                <button data-id="{entity.id}" type="button" class="btn btn-secondary" title="Editer"><i class="fas fa-edit"></i></button>
+                                <button data-id="{entity.id}"
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        title="Editer"
+                                        on:click={
+                                        () => {
+                                            ModalStore.update(ms => {
+
+                                                ms.title = 'Edition'
+                                                ms.close = false;
+                                                ms.bodyControlProperties = entity;
+
+                                                const saveAction = new FooterAction();
+                                                saveAction.label = 'Enregistrer';
+                                                saveAction.cssClasses = ['btn-secondary'];
+                                                saveAction.action = async (event) => {
+                                                    const services = await getBackendClient();
+                                                    const dataService = services.getDataService(dataType);
+                                                    await dataService.update(entity);
+                                                    ModalStore.update(ms => {
+                                                        ms.close = true;
+                                                        return ms;
+                                                    })
+                                                }
+                                                const cancelAction = new FooterAction();
+                                                cancelAction.label = 'Annuler';
+                                                cancelAction.cssClasses = ['btn-danger'];
+                                                cancelAction.action = async (event) => {
+                                                    ModalStore.update(ms => {
+                                                        ms.close = true;
+                                                        return ms;
+                                                    })
+                                                }
+                                                ms.actions = [
+                                                    saveAction,
+                                                    cancelAction
+                                                ]
+
+                                                return ms;
+                                            })
+                                        }}
+                                ><i class="fas fa-edit"></i></button>
                             {/if}
                         </th>
                     </tr>

@@ -24,6 +24,7 @@
 	import ContentUserEventsContainer from './components/UserEvents/ContentUserEventsContainer.svelte';
 	import ContentMultiUserCalendarContainer from './components/UserEvents/ContentMultiUserCalendarContainer.svelte';
 	import GenericDataTables from './components/GenericDataTables.svelte';
+	import GlobalModal from "./components/GlobalModal.svelte";
 
 	let doc;
 	const unsubscribe = DocumentStore.subscribe(async (ds) => {
@@ -34,12 +35,12 @@
 	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
 			'Texte', 'fas fa-text', ContentTextContainerEditor);
 	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer,
-			'Image','fas fa-image', ContentImageContainerEditor);
+			'Image', 'fas fa-image', ContentImageContainerEditor);
 	globalContentContainerFactory.registerContentContainer('channels', ContentChannelsContainer)
 	globalContentContainerFactory.registerContentContainer('channel', ContentChannelContainer,
 			'Canal', 'fas fa-signal-stream')
 	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
-	globalContentContainerFactory.registerContentContainer('title',ContentTitle,
+	globalContentContainerFactory.registerContentContainer('title', ContentTitle,
 			'Titre', 'fas fa-heading', ContentTitleContainerEditor);
 	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
 	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
@@ -52,7 +53,7 @@
 	globalContentContainerFactory.registerContentContainer('multiuser-events', ContentMultiUserCalendarContainer);
 	globalContentContainerFactory.registerContentContainer('generic-data', GenericDataTables);
 
-	onMount(async() => {
+	onMount(async () => {
 		const backendClient = await getBackendClient();
 		const title = await backendClient.getMetadata('title');
 		document.querySelector('head title').innerHTML = title.value;
@@ -62,23 +63,23 @@
 	async function getDocument(documentKey) {
 		const backendClient = await getBackendClient();
 		let rawDocument = undefined;
-		if(documentKey){
+		if (documentKey) {
 			let doc = await backendClient.documentService.getDocument(documentKey);
-			let sortFunction = (a,b) =>{
-				if(a.order < b.order)
+			let sortFunction = (a, b) => {
+				if (a.order < b.order)
 					return -1
 				else if (a.order === b.order)
 					return 0
 				else
 					return 1
 			};
-			if(Array.isArray(doc.content.headers)) {
+			if (Array.isArray(doc.content.headers)) {
 				doc.content.headers = doc.content.headers.sort(sortFunction)
 			}
-			if(Array.isArray(doc.content.bodies)) {
+			if (Array.isArray(doc.content.bodies)) {
 				doc.content.bodies = doc.content.bodies.sort(sortFunction)
 			}
-			if(Array.isArray(doc.content.footers)) {
+			if (Array.isArray(doc.content.footers)) {
 				doc.content.footers = doc.content.footers.sort(sortFunction)
 			}
 			rawDocument = doc;
@@ -125,5 +126,5 @@
 <main class="app-viewport">
 	<ContentDocumentContainer doc={doc}></ContentDocumentContainer>
 </main>
-<ErrorModal></ErrorModal>
+<GlobalModal></GlobalModal>
 
