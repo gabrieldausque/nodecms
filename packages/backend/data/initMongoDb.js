@@ -3,7 +3,12 @@ var adminDb = conn.getDB('admin');
 adminDb.auth('root', 'Mbhj#ksf1445Mbfgqg');
 var teamADb = conn.getDB('teama');
 teamADb.dropDatabase();
-teamADb.dropUser('admin_teama')
+try {
+  teamADb.dropUser('admin_teama')
+} catch(e) {
+
+}
+
 teamADb.createUser({
   user:'admin_teama',
   pwd:'jfkbqsgbEGQ#dd54qfdgb',
