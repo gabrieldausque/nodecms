@@ -33,8 +33,10 @@ a2enmod ssl rewrite proxy proxy_http proxy_wstunnel
 
 in ~/ssl
 
-create private key 
+create private key  : 
 sudo openssl genrsa -out privkey.pem 4096
+
+
 sudo openssl rsa -in privkey.pem -out new.cert.key
 
 create conf file cert-request.conf for csr

@@ -5,6 +5,7 @@ services:
     image: mongo
     restart: always
     container_name: mongo_teama
+    command: mongod --auth
     ports:
       - 27017:27017
     environment:
@@ -19,3 +20,5 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: Mbhj#ksf1445Mbfgqg
+      ME_CONFIG_MONGODB_URL: mongodb://root:Mbhj#ksf1445Mbfgqg@mongo:27017/admin
+
