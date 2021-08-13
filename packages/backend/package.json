@@ -32,8 +32,8 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "test": "NODE_ENV=testmongodb npm run mocha && NODE_ENV=testmongodb npm run coverage",
-    "dev": "NODE_ENV=dev ts-node-dev --no-notify src/",
+    "test": "cross-env NODE_ENV=testmongodb npm run mocha && NODE_ENV=testmongodb npm run coverage",
+    "dev": "cross-env NODE_ENV=dev ts-node-dev --no-notify src/",
     "start": "npm run build && node dist/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --reporter mocha-multi-reporters --reporter-options configFile=mocha-config.json --exit",
     "coverage": "nyc --reporter=cobertura ts-mocha \"test/**/*.ts\" --recursive --exit",
@@ -105,6 +105,7 @@
     "tslint": "^6.1.2",
     "typescript": "^4.3.2",
     "config": "^3.3.2",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "cross-env": "^7.0.3"
   }
 }
