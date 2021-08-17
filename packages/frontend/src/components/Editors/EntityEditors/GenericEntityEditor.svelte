@@ -29,8 +29,13 @@
                         {/if}
                     {:else if fieldMetadata.type == 'boolean'}
                         <input type="checkbox" bind:checked={properties[fieldMetadata.name]}>
+                    {:else if fieldMetadata.type == 'number'}
+                        <input type="number" bind:value={properties[fieldMetadata.name]}>
+                    {:else if fieldMetadata.type == 'date'}
+                        <input type="date" bind:value={properties[fieldMetadata.name]}>
+                    {:else if fieldMetadata.type == 'array:string'}
+                        <div contenteditable="true"><>
                     {/if}
-
                 {:else}
                     <div class="non-editable">{properties[fieldMetadata.name]}</div>
                 {/if}
