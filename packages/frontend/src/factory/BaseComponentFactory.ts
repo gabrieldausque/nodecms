@@ -1,4 +1,4 @@
-export class ContentContainerFactory {
+export abstract class BaseComponentFactory {
     public registeredConstructors: {
         [constructorKey:string ] : {
             type:string,
@@ -10,16 +10,16 @@ export class ContentContainerFactory {
         }
     }
 
-    constructor() {
+    protected constructor() {
         this.registeredConstructors = {}
     }
 
-    registerContentContainer(key:string,
-                             contentContainerConstructor:any,
-                             titleForEdition?:string,
-                             cssClassesForEdition?:string,
-                             editorConstructor?:any,
-                             canDisplayInEditMode:boolean = true){
+    registerComponent(key:string,
+                      contentContainerConstructor:any,
+                      titleForEdition?:string,
+                      cssClassesForEdition?:string,
+                      editorConstructor?:any,
+                      canDisplayInEditMode:boolean = true){
         this.registeredConstructors[key] = {
             type: key,
             constructor: contentContainerConstructor,
@@ -30,23 +30,9 @@ export class ContentContainerFactory {
         };
     }
 
-    getContentContainer(key:string) {
+    getComponent(key:string) {
         if(this.registeredConstructors.hasOwnProperty(key)){
             return this.registeredConstructors[key].constructor;
-        }
-        throw new Error(`No ctor registered with key ${key}`);
-    }
-
-    getContentContainerTitle(key:string){
-        if(this.registeredConstructors.hasOwnProperty(key)){
-            return this.registeredConstructors[key].title;
-        }
-        throw new Error(`No ctor registered with key ${key}`);
-    }
-
-    getContentContainerCssClasses(key:string){
-        if(this.registeredConstructors.hasOwnProperty(key)){
-            return this.registeredConstructors[key].cssClasses;
         }
         throw new Error(`No ctor registered with key ${key}`);
     }
@@ -61,7 +47,3 @@ export class ContentContainerFactory {
         return constructors;
     }
 }
-
-export const globalContentContainerFactory = new ContentContainerFactory();
-
-(window as any).globalContainerFactory = globalContentContainerFactory;

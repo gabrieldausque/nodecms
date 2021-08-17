@@ -2,15 +2,17 @@
 
     import {onDestroy} from 'svelte';
     import {ModalContext, ModalStore} from "../stores/ModalStore";
+    import {globalModalBodyComponentFactory} from "../factory/ModalBodyComponentFactory";
 
     let currentContext:ModalContext
 
+    //@ts-ignore
     const unsubscribe = ModalStore.subscribe(ms => {
         if(!ms.close){
-            window.jQuery('#global-modal').modal('show');
+            (window as any).jQuery('#global-modal').modal('show');
             currentContext = ms;
         } else {
-            window.jQuery('#global-modal').modal('hide');
+            (window as any).jQuery('#global-modal').modal('hide');
         }
 
     })
@@ -29,7 +31,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                TODO : kdghsdghks
+                {#if currentContext.bodyControlType}
+                    <svelte:component this={globalModalBodyComponentFactory.getComponent(currentContext.bodyControlType)}
+                                      properties={currentContext.bodyControlProperties}
+                                      dataType={currentContext.bodyControlType}
+                    ></svelte:component>
+                {/if}
             </div>
             <div class="modal-footer">
                 {#each currentContext.actions as action}

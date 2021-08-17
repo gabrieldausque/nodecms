@@ -29,7 +29,8 @@ export const Meta:InterfaceMeta = {
       type:'string',
       visible:true,
       editable:true,
-      description:'Clé unique du Canal'
+      description:'Clé unique du Canal',
+      masked:false
     },
     {
       name:'visibility',
@@ -37,7 +38,8 @@ export const Meta:InterfaceMeta = {
       type:'string',
       visible:true,
       editable:true,
-      description:'Visibilité du canal'
+      description:'Visibilité du canal',
+      masked:false
     },
     {
       name:'label',
@@ -45,7 +47,8 @@ export const Meta:InterfaceMeta = {
       type:'string',
       visible:true,
       editable:true,
-      description:'Label du Canal'
+      description:'Label du Canal',
+      masked:false
     },
     {
       name:'readers',
@@ -53,7 +56,8 @@ export const Meta:InterfaceMeta = {
       type:'array:role',
       visible:true,
       editable:true,
-      description:'Liste des identifiants de roles lecteurs du canal'
+      description:'Liste des identifiants de roles lecteurs du canal',
+      masked:false
     },
     {
       name:'contributors',
@@ -61,7 +65,8 @@ export const Meta:InterfaceMeta = {
       type:'array:role',
       visible:true,
       editable:true,
-      description:'Liste des identifiants de roles contributeurs du canal'
+      description:'Liste des identifiants de roles contributeurs du canal',
+      masked:false
     },
     {
       name:'editors',
@@ -69,7 +74,8 @@ export const Meta:InterfaceMeta = {
       type:'array:role',
       visible:true,
       editable:true,
-      description:'Liste des identifiants de roles Editeurs du canal'
+      description:'Liste des identifiants de roles Editeurs du canal',
+      masked:false
     },
     {
       name:'administrators',
@@ -77,7 +83,8 @@ export const Meta:InterfaceMeta = {
       type:'array:role',
       visible:true,
       editable:true,
-      description:'Liste des identifiants de roles Administrateurs du canal'
+      description:'Liste des identifiants de roles Administrateurs du canal',
+      masked:false
     }
   ]
 }

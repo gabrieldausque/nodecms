@@ -20,7 +20,8 @@ export const Meta:InterfaceMeta ={
       type:'string',
       visible:true,
       description: 'Login',
-      editable: false
+      editable: false,
+      masked:false
     },
     {
       name:'encryptedToken',
@@ -28,7 +29,8 @@ export const Meta:InterfaceMeta ={
       type:'string',
       visible:true,
       description: 'Token d\'authentification crypté',
-      editable: false
+      editable: false,
+      masked:false
     },
     {
       name:'clientUniqueId',
@@ -36,7 +38,8 @@ export const Meta:InterfaceMeta ={
       type:'string',
       visible:true,
       description: 'Identifiant du client',
-      editable: false
+      editable: false,
+      masked:false
     }
   ]
 }

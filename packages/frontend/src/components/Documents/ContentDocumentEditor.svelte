@@ -2,7 +2,7 @@
 
     import {getBackendClient} from "@nodecms/backend-client";
     import {EditableDocumentStore} from "../../stores/EditableDocumentStore";
-    import {globalContentContainerFactory} from "../../ContentContainerFactory";
+    import {globalContentContainerFactory} from "../../factory/ContentContainerFactory";
     import ContentDefaultEditor from '../Editors/ContentDefaultEditor.svelte';
     import {Helpers} from "../../helpers/Helpers";
     import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";

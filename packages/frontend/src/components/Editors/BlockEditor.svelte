@@ -1,6 +1,6 @@
 <script>
     import {BlockEditorComponentStore} from "../../stores/BlockEditorComponentStore";
-    import {globalContentContainerFactory} from "../../ContentContainerFactory";
+    import {globalContentContainerFactory} from "../../factory/ContentContainerFactory";
     import {Helpers} from "../../helpers/Helpers";
 
     $BlockEditorComponentStore
@@ -78,7 +78,7 @@
             {/each}
         {/if}
     {:else if globalContentContainerFactory.registeredConstructors[component.type].canDisplayInEditMode}
-        <svelte:component this="{globalContentContainerFactory.getContentContainer(component.type)}" properties="{component.properties}"></svelte:component>
+        <svelte:component this="{globalContentContainerFactory.getComponent(component.type)}" properties="{component.properties}"></svelte:component>
     {:else}
         <div>
             Ce bloc n'est pas affichable en mode édition du document

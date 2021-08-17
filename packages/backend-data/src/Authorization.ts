@@ -22,7 +22,8 @@ export const Meta:InterfaceMeta = {
           type:'string',
           visible:true,
           description: 'Opération ou Données',
-          editable: true
+          editable: true,
+          masked:false
       },
       {
           name:'onType',
@@ -30,7 +31,8 @@ export const Meta:InterfaceMeta = {
           type:'string',
           visible:true,
           description:'Type d\'opération REST ou type de donnée',
-          editable: true
+          editable: true,
+          masked:false
       },
       {
           name:'for',
@@ -38,7 +40,8 @@ export const Meta:InterfaceMeta = {
           type:'string',
           visible:true,
           description:'Identifiant de service ou de donnée',
-          editable: true
+          editable: true,
+          masked:false
       },
       {
           name:'right',
@@ -46,8 +49,8 @@ export const Meta:InterfaceMeta = {
           type:'string',
           visible:true,
           description:'Type de droit : x pour execution, r pour lecture, et w pour écriture',
-          editable: true
-
+          editable: true,
+          masked:false
       },
       {
           name:'role',
@@ -55,7 +58,8 @@ export const Meta:InterfaceMeta = {
           type:'number',
           visible:true,
           description:'Identifiant du role pour lequel ce droit s\'applique',
-          editable: true
+          editable: true,
+          masked:false
       },
   ]
 }

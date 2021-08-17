@@ -31,7 +31,8 @@ export const Meta:InterfaceMeta = {
       visible: true,
       editable: true,
       description: 'Visibilité du media',
-      label: 'Visibilité'
+      label: 'Visibilité',
+      masked:false
     },
     {
       name: 'key',
@@ -39,7 +40,8 @@ export const Meta:InterfaceMeta = {
       type: 'string',
       visible: true,
       editable: true,
-      description: 'Clé unique du media'
+      description: 'Clé unique du media',
+      masked:false
     },
     {
       name: 'label',
@@ -47,7 +49,8 @@ export const Meta:InterfaceMeta = {
       type: 'string',
       visible: true,
       editable: true,
-      description: 'Label du media'
+      description: 'Label du media',
+      masked:false
     },
     {
       name: 'mediaType',
@@ -55,7 +58,8 @@ export const Meta:InterfaceMeta = {
       visible: true,
       editable: true,
       description: 'Mime type du Média',
-      label: 'MimeType'
+      label: 'MimeType',
+      masked:false
     },
     {
       name: 'storagePath',
@@ -63,7 +67,8 @@ export const Meta:InterfaceMeta = {
       type: 'string',
       visible: true,
       editable: false,
-      description: 'Chemin de stockage local du media'
+      description: 'Chemin de stockage local du media',
+      masked:false
     },
     {
       name:'ownerId',
@@ -71,7 +76,8 @@ export const Meta:InterfaceMeta = {
       visible: true,
       editable: false,
       description: 'Identifiant du propriétaire du media',
-      label:'Propriétaire'
+      label:'Propriétaire',
+      masked:false
     },
     {
       name:'readers',
@@ -79,7 +85,8 @@ export const Meta:InterfaceMeta = {
       visible:true,
       editable: true,
       description:'Identifiants des roles lecteurs du media',
-      label: 'Roles lecteurs'
+      label: 'Roles lecteurs',
+      masked:false
     },
     {
       name:'blob',
@@ -87,7 +94,8 @@ export const Meta:InterfaceMeta = {
       visible:false,
       editable:false,
       label: 'Contenu',
-      description: 'Contenu du media'
+      description: 'Contenu du media',
+      masked:false
     },
     {
       name:'tags',
@@ -95,7 +103,8 @@ export const Meta:InterfaceMeta = {
       visible:true,
       editable: true,
       description: 'List des étiquettes associés au média',
-      label:'Etiquettes'
+      label:'Etiquettes',
+      masked:false
     }
   ]
 }

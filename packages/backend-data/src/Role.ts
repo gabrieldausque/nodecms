@@ -21,7 +21,8 @@ export const Meta:InterfaceMeta = {
             visible: true,
             editable: true,
             description: 'Clé unique du role',
-            label: 'Clé'
+            label: 'Clé',
+            masked:false
         },
         {
             name: 'description',
@@ -29,7 +30,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Description du role'
+            description: 'Description du role',
+            masked:false
         },
         {
             name:'members',
@@ -37,7 +39,8 @@ export const Meta:InterfaceMeta = {
             type: 'array:user',
             description: 'Membres du role',
             visible: true,
-            editable: true
+            editable: true,
+            masked:false
         },
         {
             name: 'ownerId',
@@ -45,7 +48,8 @@ export const Meta:InterfaceMeta = {
             type:'user',
             description: 'Identifiant unique du propriétaire',
             visible:true,
-            editable:true
+            editable:true,
+            masked:false
         },
         {
             name: 'ownerRoles',
@@ -53,7 +57,8 @@ export const Meta:InterfaceMeta = {
             type:'array:role',
             description: 'Identifiants unique des roles éditeurs de ce rôle',
             visible:true,
-            editable:true
+            editable:true,
+            masked:false
         },
         {
             name: 'creationDate',
@@ -61,7 +66,8 @@ export const Meta:InterfaceMeta = {
             visible: true,
             editable: false,
             label: 'Date de création',
-            description: 'Date de création'
+            description: 'Date de création',
+            masked:false
         }
     ]
 }

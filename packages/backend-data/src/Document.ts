@@ -48,7 +48,8 @@ export const Meta:InterfaceMeta = {
       visible: true,
       editable: true,
       description: 'Clé unique du document',
-      label: 'Clé'
+      label: 'Clé',
+      masked:false
     },
     {
       name: 'content',
@@ -56,7 +57,8 @@ export const Meta:InterfaceMeta = {
       visible: false,
       editable: false,
       description: 'Contenu et structure du document',
-      label: 'Contenu'
+      label: 'Contenu',
+      masked:false
     },
     {
       name:'visibility',
@@ -64,7 +66,8 @@ export const Meta:InterfaceMeta = {
       visible: true,
       editable: true,
       label: 'Visibilité',
-      description: 'Visibilité du document'
+      description: 'Visibilité du document',
+      masked:false
     },
     {
       name:'ownerId',
@@ -72,7 +75,8 @@ export const Meta:InterfaceMeta = {
       description:'Identifiant du créateur/propriétaire du document',
       visible: true,
       editable: false,
-      type:'user'
+      type:'user',
+      masked:false
     },
     {
       name:'documentType',
@@ -80,7 +84,8 @@ export const Meta:InterfaceMeta = {
       editable: true,
       description:'Type du document',
       type: 'string',
-      label: 'Type'
+      label: 'Type',
+      masked:false
     },
     {
       name:'editorRoles',
@@ -88,7 +93,8 @@ export const Meta:InterfaceMeta = {
       label: 'Roles d\'édition',
       description: 'Roles pouvant éditer le document',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name:'editor',
@@ -96,7 +102,8 @@ export const Meta:InterfaceMeta = {
       label: 'Editeurs',
       description: 'Identifiants des utilisateurs pouvant éditer le document',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name:'readerRoles',
@@ -104,7 +111,8 @@ export const Meta:InterfaceMeta = {
       label: 'Roles lecteurs',
       description: 'Roles pouvant lire le document',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name:'readers',
@@ -112,7 +120,8 @@ export const Meta:InterfaceMeta = {
       label: 'Lecteurs',
       description: 'Identifiants des utilisateurs pouvant lire le document',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name:'creationDate',
@@ -120,7 +129,8 @@ export const Meta:InterfaceMeta = {
       label: 'Date de création',
       description: 'Date de création du document',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name:'updateDate',
@@ -128,7 +138,8 @@ export const Meta:InterfaceMeta = {
       label: 'Date de Mise à jour',
       description: 'Date de mise à jour du document',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     }
   ]
 }

@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
 
     import {onMount} from "svelte";
     import {fade} from "svelte/transition";
     import {observableGenericDataStore} from "../stores/ObservableGenericDataStore";
     import {Helpers} from "../helpers/Helpers";
     import {ModalStore, FooterAction} from "../stores/ModalStore";
+    import {getBackendClient} from "@nodecms/backend-client";
 
     export let properties;
 
@@ -115,8 +116,8 @@
 
                                                 ms.title = 'Edition'
                                                 ms.close = false;
-                                                ms.bodyControlProperties = entity;
-
+                                                ms.bodyControlType = dataType;
+                                                ms.bodyControlProperties = entity
                                                 const saveAction = new FooterAction();
                                                 saveAction.label = 'Enregistrer';
                                                 saveAction.cssClasses = ['btn-secondary'];
@@ -125,6 +126,10 @@
                                                     const dataService = services.getDataService(dataType);
                                                     await dataService.update(entity);
                                                     ModalStore.update(ms => {
+                                                        ms.title = '';
+                                                        ms.bodyControlType = '';
+                                                        ms.actions = [];
+                                                        ms.bodyControlProperties = undefined
                                                         ms.close = true;
                                                         return ms;
                                                     })
@@ -134,6 +139,10 @@
                                                 cancelAction.cssClasses = ['btn-danger'];
                                                 cancelAction.action = async (event) => {
                                                     ModalStore.update(ms => {
+                                                        ms.title = '';
+                                                        ms.bodyControlType = '';
+                                                        ms.actions = [];
+                                                        ms.bodyControlProperties = undefined
                                                         ms.close = true;
                                                         return ms;
                                                     })

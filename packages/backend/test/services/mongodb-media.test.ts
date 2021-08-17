@@ -13,7 +13,7 @@ import {Media, MediaVisibility} from '../../../backend-data/src/Media';
 import axios from "axios";
 import * as fs from 'fs';
 import {v4 as uuid} from "uuid";
-import {globalContentContainerFactory} from "../../../frontend/src/ContentContainerFactory";
+import {globalContentContainerFactory} from "../../../frontend/src/factory/ContentContainerFactory";
 
 const readFile = promisify(fs.readFile);
 

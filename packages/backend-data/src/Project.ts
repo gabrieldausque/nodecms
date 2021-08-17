@@ -18,7 +18,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Clé unique du projet'
+            description: 'Clé unique du projet',
+            masked:false
         },
         {
             name: 'label',
@@ -26,7 +27,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Label du projet'
+            description: 'Label du projet',
+            masked:false
         },
         {
             name: 'description',
@@ -34,7 +36,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Description du projet'
+            description: 'Description du projet',
+            masked:false
         }
     ]
 }

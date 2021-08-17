@@ -20,7 +20,8 @@ export const Meta:InterfaceMeta = {
             label:'Clé',
             description:'Clé unique de la metadonnée',
             visible:true,
-            editable:true
+            editable:true,
+            masked:false
         },
         {
             name:'value',
@@ -28,7 +29,8 @@ export const Meta:InterfaceMeta = {
             visible:true,
             editable:true,
             label:'Valeur',
-            description:'Valeur de la metadonnée'
+            description:'Valeur de la metadonnée',
+            masked:false
         },
         {
             name:'isPublic',
@@ -36,7 +38,8 @@ export const Meta:InterfaceMeta = {
             type:'boolean',
             description:'Visibilité de la métadonnée. Vrai si public, sinon privé',
             visible: true,
-            editable: true
+            editable: true,
+            masked:false
         },
         {
             name:'ownerType',
@@ -44,7 +47,8 @@ export const Meta:InterfaceMeta = {
             type:'string',
             visible:true,
             editable:true,
-            description:'Type de propriétaire (user, document, etc ...)'
+            description:'Type de propriétaire (user, document, etc ...)',
+            masked:false
         },
         {
             name: 'ownerId',
@@ -52,7 +56,8 @@ export const Meta:InterfaceMeta = {
             type:'user',
             description: 'Identifiant unique du propriétaire',
             visible:true,
-            editable:true
+            editable:true,
+            masked:false
         }
     ]
 }

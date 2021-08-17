@@ -16,7 +16,7 @@
 	import ContentMediaContainerEditor from './components/Editors/ContentMediaContainerEditor.svelte';
 	import ContentImageContainerEditor from './components/Editors/ContentImageContainerEditor.svelte';
 	import ContentTitleContainerEditor from './components/Editors/ContentTitleContainerEditor.svelte';
-	import {globalContentContainerFactory} from "./ContentContainerFactory";
+	import {globalContentContainerFactory} from "./factory/ContentContainerFactory";
 	import {onMount} from "svelte";
 	import {getBackendClient, TempCache} from "@nodecms/backend-client";
 	import ErrorModal from "./components/ErrorModal.svelte";
@@ -31,27 +31,32 @@
 		doc = await getDocument(ds.key);
 	})
 
-	globalContentContainerFactory.registerContentContainer('document', ContentDocumentContainer);
-	globalContentContainerFactory.registerContentContainer('text', ContentTextContainer,
+	//Document ContentContainer Factory
+
+	globalContentContainerFactory.registerComponent('document', ContentDocumentContainer);
+	globalContentContainerFactory.registerComponent('text', ContentTextContainer,
 			'Texte', 'fas fa-text', ContentTextContainerEditor);
-	globalContentContainerFactory.registerContentContainer('image', ContentImageContainer,
+	globalContentContainerFactory.registerComponent('image', ContentImageContainer,
 			'Image', 'fas fa-image', ContentImageContainerEditor);
-	globalContentContainerFactory.registerContentContainer('channels', ContentChannelsContainer)
-	globalContentContainerFactory.registerContentContainer('channel', ContentChannelContainer,
+	globalContentContainerFactory.registerComponent('channels', ContentChannelsContainer)
+	globalContentContainerFactory.registerComponent('channel', ContentChannelContainer,
 			'Canal', 'fas fa-signal-stream')
-	globalContentContainerFactory.registerContentContainer('projects', ContentProjectsContainer);
-	globalContentContainerFactory.registerContentContainer('title', ContentTitle,
+	globalContentContainerFactory.registerComponent('projects', ContentProjectsContainer);
+	globalContentContainerFactory.registerComponent('title', ContentTitle,
 			'Titre', 'fas fa-heading', ContentTitleContainerEditor);
-	globalContentContainerFactory.registerContentContainer('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
-	globalContentContainerFactory.registerContentContainer('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
-	globalContentContainerFactory.registerContentContainer('all-media', ContentAllMediaContainer);
-	globalContentContainerFactory.registerContentContainer('media', ContentMediaContainer,
+	globalContentContainerFactory.registerComponent('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
+	globalContentContainerFactory.registerComponent('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
+	globalContentContainerFactory.registerComponent('all-media', ContentAllMediaContainer);
+	globalContentContainerFactory.registerComponent('media', ContentMediaContainer,
 			'Media',
 			'fas fa-photo-video',
 			ContentMediaContainerEditor);
-	globalContentContainerFactory.registerContentContainer('user-events', ContentUserEventsContainer);
-	globalContentContainerFactory.registerContentContainer('multiuser-events', ContentMultiUserCalendarContainer);
-	globalContentContainerFactory.registerContentContainer('generic-data', GenericDataTables);
+	globalContentContainerFactory.registerComponent('user-events', ContentUserEventsContainer);
+	globalContentContainerFactory.registerComponent('multiuser-events', ContentMultiUserCalendarContainer);
+	globalContentContainerFactory.registerComponent('generic-data', GenericDataTables);
+
+	//Modal Body component factory
+
 
 	onMount(async () => {
 		const backendClient = await getBackendClient();

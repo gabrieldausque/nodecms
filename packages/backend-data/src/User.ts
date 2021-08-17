@@ -18,7 +18,8 @@ export const Meta:InterfaceMeta = {
             editable:false,
             visible:true,
             description: 'Login de l\'utilisateur',
-            type:'string'
+            type:'string',
+            masked:false
         },
         {
             name:'password',
@@ -26,7 +27,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Mot de passe'
+            description: 'Mot de passe',
+            masked:true
         },
         {
             name:'isActive',
@@ -34,7 +36,8 @@ export const Meta:InterfaceMeta = {
             visible:true,
             editable:true,
             type: 'boolean',
-            label: 'Actif ?'
+            label: 'Actif ?',
+            masked:false
         }
     ]
 }

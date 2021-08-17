@@ -1,7 +1,7 @@
 
 <script>
 
-    import {globalContentContainerFactory} from "../ContentContainerFactory";
+    import {globalContentContainerFactory} from "../factory/ContentContainerFactory";
     import {getBackendClient} from '@nodecms/backend-client';
     import {beforeUpdate, onMount} from 'svelte';
     import {Helpers} from "../helpers/Helpers";
@@ -80,14 +80,14 @@
                     <div class="row">
                         {#each row as container}
                             <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
-                                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                                <svelte:component this="{globalContentContainerFactory.getComponent(container.type)}" properties="{container.properties}"></svelte:component>
                             </div>
                         {/each }
                     </div>
                 {/each}
             {:else}
                 {#each doc.content.headers as container}
-                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                    <svelte:component this="{globalContentContainerFactory.getComponent(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
             {/if}
             </header>
@@ -103,14 +103,14 @@
                         <div class="row">
                             {#each row as container}
                                 <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
-                                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                                    <svelte:component this="{globalContentContainerFactory.getComponent(container.type)}" properties="{container.properties}"></svelte:component>
                                 </div>
                             {/each }
                         </div>
                     {/each}
                 {:else}
                     {#each doc.content.bodies as container}
-                        <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                        <svelte:component this="{globalContentContainerFactory.getComponent(container.type)}" properties="{container.properties}"></svelte:component>
                     {/each}
                 {/if}
             {/if}
@@ -126,14 +126,14 @@
                     <div class="row">
                         {#each row as container}
                             <div class="{container.colSpan?`col-${container.colSpan}`:'col'}">
-                                <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                                <svelte:component this="{globalContentContainerFactory.getComponent(container.type)}" properties="{container.properties}"></svelte:component>
                             </div>
                         {/each }
                     </div>
                 {/each}
             {:else}
                 {#each doc.content.footers as container}
-                    <svelte:component this="{globalContentContainerFactory.getContentContainer(container.type)}" properties="{container.properties}"></svelte:component>
+                    <svelte:component this="{globalContentContainerFactory.getComponent(container.type)}" properties="{container.properties}"></svelte:component>
                 {/each}
             {/if}
             </footer>

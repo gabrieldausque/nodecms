@@ -4,7 +4,6 @@ export class FooterAction {
     label:string
     cssClasses: string[]
     action: (...args:any) => Promise<void>
-
 }
 
 export class ModalContext {

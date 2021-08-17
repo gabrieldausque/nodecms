@@ -43,7 +43,8 @@ export const Meta:InterfaceMeta = {
             visible:true,
             editable:true,
             description: 'Date de début de l\'évènement',
-            label: 'Début'
+            label: 'Début',
+            masked:false
         },
         {
             name: 'endDate',
@@ -51,7 +52,8 @@ export const Meta:InterfaceMeta = {
             visible:true,
             editable:true,
             description: 'Date de fin de l\'évènement',
-            label: 'Fin'
+            label: 'Fin',
+            masked:false
         },
         {
             name: 'ownerId',
@@ -59,7 +61,8 @@ export const Meta:InterfaceMeta = {
             type:'user',
             description: 'Identifiant unique du propriétaire',
             visible:true,
-            editable:false
+            editable:false,
+            masked:false
         },
         {
             name: 'category',
@@ -67,7 +70,8 @@ export const Meta:InterfaceMeta = {
             type:'string',
             description: 'Catégorie de l\'évènement',
             visible:true,
-            editable:true
+            editable:true,
+            masked:false
         },
         {
             name: 'ownerAvailabilityStatus',
@@ -75,7 +79,8 @@ export const Meta:InterfaceMeta = {
             type:'string',
             description: 'Disponibilité du propriétaire de l\'évènement',
             visible:true,
-            editable:true
+            editable:true,
+            masked:false
         },
         {
             name: 'description',
@@ -83,7 +88,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Description de l\'évènement'
+            description: 'Description de l\'évènement',
+            masked:false
         },
         {
             name: 'label',
@@ -91,7 +97,8 @@ export const Meta:InterfaceMeta = {
             type: 'string',
             visible: true,
             editable: true,
-            description: 'Label du media'
+            description: 'Label du media',
+            masked:false
         },
         {
             name:'visibility',
@@ -99,7 +106,8 @@ export const Meta:InterfaceMeta = {
             visible: true,
             editable: true,
             label: 'Visibilité',
-            description: 'Visibilité de l\'évènement'
+            description: 'Visibilité de l\'évènement',
+            masked:false
         },
         {
             name:'location',
@@ -107,7 +115,8 @@ export const Meta:InterfaceMeta = {
             visible: true,
             editable: true,
             label: 'Localisation',
-            description: 'Localisation'
+            description: 'Localisation',
+            masked:false
         },
         {
             name:'color',
@@ -115,7 +124,8 @@ export const Meta:InterfaceMeta = {
             visible: true,
             editable: true,
             label: 'Couleur',
-            description: 'Couleur de l\'évènement'
+            description: 'Couleur de l\'évènement',
+            masked:false
         }
     ]
 }

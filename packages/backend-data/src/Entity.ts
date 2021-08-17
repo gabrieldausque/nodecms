@@ -14,7 +14,8 @@ export const EntityFields:Field[] = [
     type:'number',
     visible:true,
     description: 'Identifiant unique',
-    editable:false
+    editable:false,
+    masked:false
   },
   {
     name:'isReader',
@@ -22,7 +23,8 @@ export const EntityFields:Field[] = [
     type:'boolean',
     visible:false,
     description: 'Indique si l\'utilisateur courant est lecteur de la donnée',
-    editable: false
+    editable: false,
+    masked:false
   },
   {
     name:'isEditor',
@@ -30,6 +32,7 @@ export const EntityFields:Field[] = [
     type:'boolean',
     visible:false,
     description: 'Indique si l\'utilisateur courant est Editeur de la donnée',
-    editable:false
+    editable:false,
+    masked:false
   }
 ]

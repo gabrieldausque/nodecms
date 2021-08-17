@@ -25,7 +25,8 @@ export const Meta:InterfaceMeta = {
       description: 'Auteur du post ou identifiant de l\'auteur du post',
       type: 'user',
       visible: true,
-      editable: false
+      editable: false,
+      masked:false
     },
     {
       name: 'creationDate',
@@ -33,7 +34,8 @@ export const Meta:InterfaceMeta = {
       description: 'Date de création',
       type: 'date',
       visible: true,
-      editable: false
+      editable: false,
+      masked:false
     },
     {
       name: 'channelKey',
@@ -41,7 +43,8 @@ export const Meta:InterfaceMeta = {
       description: 'Clé du canal du post',
       type: 'string',
       visible: true,
-      editable: false
+      editable: false,
+      masked:false
     },
     {
       name: 'parentPost',
@@ -49,7 +52,8 @@ export const Meta:InterfaceMeta = {
       description: 'Identifiant du post parent',
       type: 'number',
       visible: true,
-      editable: false
+      editable: false,
+      masked:false
     },
     {
       name: 'content',
@@ -57,7 +61,8 @@ export const Meta:InterfaceMeta = {
       description: 'Contenu du post',
       type: 'string',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name: 'attachments',
@@ -65,7 +70,8 @@ export const Meta:InterfaceMeta = {
       description: 'Listes des clés uniques des média liés aux posts',
       type: 'array:string',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     },
     {
       name: 'tags',
@@ -73,7 +79,8 @@ export const Meta:InterfaceMeta = {
       description: 'Etiquettes du post',
       type: 'array:string',
       visible: true,
-      editable: true
+      editable: true,
+      masked:false
     }
   ]
 }
