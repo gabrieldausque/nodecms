@@ -34,7 +34,7 @@
                     {:else if fieldMetadata.type == 'date'}
                         <input type="date" bind:value={properties[fieldMetadata.name]}>
                     {:else if fieldMetadata.type == 'array:string'}
-                        <div contenteditable="true"><>
+                        <div contenteditable="true"></div>
                     {/if}
                 {:else}
                     <div class="non-editable">{properties[fieldMetadata.name]}</div>
