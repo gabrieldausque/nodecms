@@ -91,8 +91,13 @@ export abstract class BaseServiceClient<T extends Entity> {
                 if(request.readyState === 4){
                     if(request.status === 200 || request.status === 201)
                         resolve(JSON.parse(request.responseText));
-                    else
-                        reject(new Error(`Error ${request.status} : ${request.responseText}`))
+                    else{
+                        try{
+                            reject(JSON.parse(request.responseText));
+                        }catch (error){
+                            reject(new Error(`${request.status} : ${request.responseText}`))
+                        }
+                    }
                 }
             }
             request.send(JSON.stringify(entity));

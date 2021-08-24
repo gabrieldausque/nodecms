@@ -39,6 +39,11 @@
                 {/if}
             </div>
             <div class="modal-footer">
+                {#if currentContext.lastActionError}
+                    <div id="last-action-error" class="alert alert-danger fade show">
+                        <div id="last-action-error-content">{currentContext.lastActionError.message}</div>
+                    </div>
+                {/if}
                 {#each currentContext.actions as action}
                     <button type="button" class="btn {action.cssClasses.join(' ')}" on:click={action.action}>{action.label}</button>
                 {/each}

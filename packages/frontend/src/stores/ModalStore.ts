@@ -11,6 +11,7 @@ export class ModalContext {
     bodyControlType:string;
     bodyControlProperties: any;
     actions: FooterAction[];
+    lastActionError?: Error;
     close: boolean;
 
     constructor() {

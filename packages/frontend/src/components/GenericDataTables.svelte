@@ -124,15 +124,24 @@
                                                 saveAction.action = async (event) => {
                                                     const services = await getBackendClient();
                                                     const dataService = services.getDataService(dataType);
-                                                    await dataService.update(entity);
-                                                    ModalStore.update(ms => {
-                                                        ms.title = '';
-                                                        ms.bodyControlType = '';
-                                                        ms.actions = [];
-                                                        ms.bodyControlProperties = undefined
-                                                        ms.close = true;
-                                                        return ms;
-                                                    })
+                                                    try{
+                                                        await dataService.update(entity);
+                                                        ModalStore.update(ms => {
+                                                            ms.title = '';
+                                                            ms.bodyControlType = '';
+                                                            ms.actions = [];
+                                                            ms.bodyControlProperties = undefined
+                                                            ms.close = true;
+                                                            ms.lastActionError = undefined;
+                                                            return ms;
+                                                        })
+                                                    }catch(error){
+                                                        console.log(error);
+                                                        ModalStore.update(ms => {
+                                                            ms.lastActionError = error;
+                                                            return ms;
+                                                        })
+                                                    }
                                                 }
                                                 const cancelAction = new FooterAction();
                                                 cancelAction.label = 'Annuler';
@@ -144,6 +153,7 @@
                                                         ms.actions = [];
                                                         ms.bodyControlProperties = undefined
                                                         ms.close = true;
+                                                        ms.lastActionError = undefined;
                                                         return ms;
                                                     })
                                                 }

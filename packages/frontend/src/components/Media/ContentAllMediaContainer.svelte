@@ -9,6 +9,7 @@
     import MediaSearchBar from "./MediaSearchBar.svelte";
     import UploadMediaModal from "./UploadMediaModal.svelte";
     import {ShowUploadModalStore} from "../../stores/ShowUploadModalStore";
+    import MultiStringEditor from "../Editors/EntityEditors/MultiStringEditor.svelte";
 
     $AllMediaStores;
     let mediaToEdit;
@@ -16,7 +17,6 @@
     onMount(() => {
         const updateModal = jQuery('#edit-media-modal');
         updateModal.on('hidden.bs.modal', () => {
-            document.getElementById('media-tags-for-update').value = '';
             document.getElementById('media-label-for-update').value = '';
             document.getElementById('media-key-for-update').value = '';
             document.getElementById('media-visibility-for-update').value = 'protected';
@@ -30,7 +30,6 @@
         if (mediaToEdit) {
             document.getElementById('media-key-for-update').innerText = mediaToEdit.key;
             document.getElementById('media-label-for-update').value = mediaToEdit.label;
-            document.getElementById('media-tags-for-update').value = mediaToEdit.tags.join(' ');
             document.getElementById('media-visibility-for-update').value = mediaToEdit.visibility;
             jQuery('#edit-media-modal').modal('show');
         }
@@ -102,10 +101,10 @@
     }
 
     async function doUploadMedia() {
-            ShowUploadModalStore.update(ums => {
-                ums.shown = true;
-                return ums;
-            })
+        ShowUploadModalStore.update(ums => {
+            ums.shown = true;
+            return ums;
+        })
     }
 
     function onSearchStarted() {
@@ -153,7 +152,7 @@
                 document.getElementById('media-key-for-update').innerText,
                 document.getElementById('media-label-for-update').value,
                 document.getElementById('media-visibility-for-update').value,
-                document.getElementById('media-tags-for-update').value.split(' ')
+                mediaToEdit.tags
             )
         } catch (error) {
             document.getElementById('error-updating-media-content').innerText = error.message;
@@ -358,12 +357,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="media-label-for-update">Label</label>
+                        {#if mediaToEdit}
                         <input
+                                bind:value={mediaToEdit.label}
                                 on:change={validateUpdateForm}
                                 class="form-control"
                                 id="media-label-for-update"
                                 name="media-label-for-update" type="text" required
                         >
+                        {/if}
                         <div class="invalid-feedback">
                             Le label ne peut pas être vide.
                         </div>
@@ -379,10 +381,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="mediaTags">Tags</label>
-                        <input type="text"
-                               class="form-control"
-                               on:change={validateUpdateForm}
-                               id="media-tags-for-update" name="media-tags-for-update">
+                        {#if mediaToEdit}
+                            <MultiStringEditor bind:stringArray={mediaToEdit.tags} on:blur={() => {
+                                mediaToEdit = mediaToEdit;
+                             }}></MultiStringEditor>
+                        {/if}
                     </div>
                 </div>
             </div>

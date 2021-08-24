@@ -4,7 +4,7 @@ import {EntityRules, EntityRulesFactory, MetadataEntityRules, UserEntityRules} f
 import {UseCaseConfiguration} from "./UseCaseConfiguration";
 import {UseCases} from "./UseCases";
 import {MetadataUseCases} from "./MetadataUseCases";
-import {isNumber} from "@nodecms/backend-data";
+import {InvalidDataError, isNumber} from "@nodecms/backend-data";
 import {RoleUseCases} from "./RoleUseCases";
 import {AuthorizationUseCases} from "./AuthorizationUseCases";
 import {Metadata} from "@nodecms/backend-data";
@@ -106,8 +106,18 @@ export class UserUseCases extends UseCases<User, UserEntityRules> {
       ) {
         throw new Error('Only password can be updated for active user.')
       }
-      this.entityRules.validatePassword(usertoUpdate.password);
     }
+
+    if(!this.entityRules.validatePassword(usertoUpdate.password))
+    {
+      if(usertoUpdate.password === '***')
+      {
+        usertoUpdate.password = existingUser.password;
+      }
+      else
+        throw new InvalidDataError('Password is invalid. must be 8 characters, with uppercase,lowercase, and special characters in @$!%*?&.');
+    }
+
     return await this.storage.update(usertoUpdate);
   }
 
