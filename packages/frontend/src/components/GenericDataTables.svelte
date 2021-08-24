@@ -6,6 +6,9 @@
     import {Helpers} from "../helpers/Helpers";
     import {ModalStore, FooterAction} from "../stores/ModalStore";
     import {getBackendClient} from "@nodecms/backend-client";
+    import {leftPanelContext, PanelContext} from "../stores/PanelStores";
+    import {ComponentMetadata} from "../helpers/ComponentMetadata";
+    import {MenuAction} from "../helpers/MenuAction";
 
     export let properties;
 
@@ -22,19 +25,92 @@
         console.log('Mounting ...');
         columns = Helpers.getDefaultFields(dataType);
         const p = new Promise(async(resolve) => {
-            console.log('executing promise ....')
             const services = await getBackendClient();
             const dataService = services.getDataService(dataType);
-            console.log(dataService);
             const initialData = await dataService.find()
-            console.log(initialData);
+            let hasNext = false;
+            if(Array.isArray(initialData) && initialData.length > 0){
+                if(Helpers.isDescending(dataType)){
+                    const nextData = await dataService.find({
+                        lastIndex: initialData[0].id
+                    });
+                    hasNext = Array.isArray(nextData) && nextData.length > 0;
+                } else {
+                    const nextData = await dataService.find({
+                        lastIndex: initialData[initialData.length - 1].id
+                    });
+                    hasNext = Array.isArray(nextData) && nextData.length > 0;
+                }
+            }
             observableGenericDataStore.update(ogds => {
                 ogds.data = initialData;
+                ogds.hasNext = hasNext;
                 return ogds;
             })
             resolve(undefined);
         })
         p.catch(console.error);
+        leftPanelContext.update((pc:PanelContext) => {
+            pc.clearComponents();
+            const menuComponentMetadata = new ComponentMetadata('action-menu', {
+                actions: [
+                    new MenuAction(`Créer ${dataType}`, async() => {
+                        ModalStore.update(ms => {
+                            ms.title = 'Creation'
+                            ms.close = false;
+                            ms.bodyControlType = dataType;
+                            ms.bodyControlProperties = {}
+                            const saveAction = new FooterAction();
+                            saveAction.label = 'Enregistrer';
+                            saveAction.cssClasses = ['btn-secondary'];
+                            saveAction.action = async (event) => {
+                                const services = await getBackendClient();
+                                const dataService = services.getDataService(dataType);
+                                try{
+                                    await dataService.create(ms.bodyControlProperties);
+                                    ModalStore.update(ms => {
+                                        ms.title = '';
+                                        ms.bodyControlType = '';
+                                        ms.actions = [];
+                                        ms.bodyControlProperties = undefined
+                                        ms.close = true;
+                                        ms.lastActionError = undefined;
+                                        return ms;
+                                    })
+                                }catch(error){
+                                    console.log(error);
+                                    ModalStore.update(ms => {
+                                        ms.lastActionError = error;
+                                        return ms;
+                                    })
+                                }
+                            }
+                            const cancelAction = new FooterAction();
+                            cancelAction.label = 'Annuler';
+                            cancelAction.cssClasses = ['btn-danger'];
+                            cancelAction.action = async (event) => {
+                                ModalStore.update(ms => {
+                                    ms.title = '';
+                                    ms.bodyControlType = '';
+                                    ms.actions = [];
+                                    ms.bodyControlProperties = undefined
+                                    ms.close = true;
+                                    ms.lastActionError = undefined;
+                                    return ms;
+                                })
+                            }
+                            ms.actions = [
+                                saveAction,
+                                cancelAction
+                            ]
+                            return ms;
+                        })
+                    })
+                ]
+            });
+            pc.addComponent(menuComponentMetadata)
+            return pc;
+        })
     })
 
 </script>
@@ -175,7 +251,7 @@
         </table>
         {#if $observableGenericDataStore.hasNext}
             <div class="next-documents-wrapper">
-                <button type="button" class="btn btn-danger">Afficher les data suivants</button>
+                <button type="button" class="btn btn-danger">Afficher les {Helpers.getInterfaceLabel(dataType)} suivants</button>
             </div>
         {/if}
     </div>

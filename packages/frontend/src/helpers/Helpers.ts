@@ -288,6 +288,13 @@ export class Helpers {
         return []
     }
 
+    static isDescending(typeName:string):boolean {
+        if(InterfaceMetadata.hasOwnProperty(typeName)){
+            return InterfaceMetadata[typeName].isDescending ? true: false;
+        }
+        return false;
+    }
+
     static getInterfaceLabel(dataType: string):string {
         if(InterfaceMetadata.hasOwnProperty(dataType)){
             return InterfaceMetadata[dataType].label;

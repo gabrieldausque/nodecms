@@ -17,6 +17,7 @@ export interface ChannelPost extends Entity  {
 export const Meta:InterfaceMeta = {
   label:'Publications',
   name:'channel-post',
+  isDescending: true,
   fields: [
     ...EntityMeta,
     {

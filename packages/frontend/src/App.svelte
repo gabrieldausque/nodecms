@@ -17,18 +17,27 @@
 	import ContentImageContainerEditor from './components/Editors/ContentImageContainerEditor.svelte';
 	import ContentTitleContainerEditor from './components/Editors/ContentTitleContainerEditor.svelte';
 	import {globalContentContainerFactory} from "./factory/ContentContainerFactory";
-	import {onMount} from "svelte";
+	import {onMount, onDestroy} from "svelte";
 	import {getBackendClient, TempCache} from "@nodecms/backend-client";
-	import ErrorModal from "./components/ErrorModal.svelte";
+
 	import {DocumentStore} from "./stores/DocumentStore";
 	import ContentUserEventsContainer from './components/UserEvents/ContentUserEventsContainer.svelte';
 	import ContentMultiUserCalendarContainer from './components/UserEvents/ContentMultiUserCalendarContainer.svelte';
+
 	import GenericDataTables from './components/GenericDataTables.svelte';
+
 	import GlobalModal from "./components/GlobalModal.svelte";
+	import GlobalPanel from "./components/GlobalPanel.svelte";
+	import {PanelContext, leftPanelContext} from "./stores/PanelStores";
 
 	let doc;
 	const unsubscribe = DocumentStore.subscribe(async (ds) => {
 		doc = await getDocument(ds.key);
+	})
+
+	let leftPanelShown:boolean;
+	const unsubscribeLeftPanelShown = leftPanelContext.subscribe(async (pc) => {
+		leftPanelShown = pc.isShown;
 	})
 
 	//Document ContentContainer Factory
@@ -56,7 +65,6 @@
 	globalContentContainerFactory.registerComponent('generic-data', GenericDataTables);
 
 	//Modal Body component factory
-
 
 	onMount(async () => {
 		const backendClient = await getBackendClient();
@@ -92,6 +100,10 @@
 		return rawDocument
 	}
 
+	onDestroy(() => {
+		unsubscribe();
+		unsubscribeLeftPanelShown();
+	})
 </script>
 
 <style>
@@ -129,6 +141,9 @@
 	<TopNavBar></TopNavBar>
 </header>
 <main class="app-viewport">
+	{#if leftPanelShown}
+		<GlobalPanel finalWidthInPercent="25" context={leftPanelContext}></GlobalPanel>
+	{/if}
 	<ContentDocumentContainer doc={doc}></ContentDocumentContainer>
 </main>
 <GlobalModal></GlobalModal>
