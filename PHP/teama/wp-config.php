@@ -23,7 +23,7 @@
 define( 'DB_NAME', 'teama' );
 
 /** MySQL database username */
-define( 'DB_USER', 'teama_server' );
+define( 'DB_USER', 'admin_teama' );
 
 /** MySQL database password */
 define( 'DB_PASSWORD', 'ipaQSzkOXdo99BNInyiq' );
@@ -79,7 +79,8 @@ $table_prefix = 'ta_';
  *
  * @link https://wordpress.org/support/article/debugging-in-wordpress/
  */
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', true );
+define('WP_DEBUG_LOG', true);
 
 /* Add any custom values between this line and the "stop editing" line. */
 

@@ -1,1 +1,17 @@
 .idea
+/package-lock.json
+/PHP/teama/wp-content/debug.log
+/packages/frontend/node_modules/
+/packages/backend-data/dist/
+/packages/backend-data/node_modules/.bin/
+/packages/backend-data-rules/dist/
+/packages/backend-data-rules/node_modules/
+/packages/backend-client/node_modules/
+/packages/backend-client/dist/
+/packages/backend/uploads/
+/packages/backend/test/uploads/
+/packages/backend/node_modules/
+/packages/backend/dist/
+/node_modules/
+/packages/backend/data/metadata-copy.csv
+/packages/backend/data/users-copy.csv
