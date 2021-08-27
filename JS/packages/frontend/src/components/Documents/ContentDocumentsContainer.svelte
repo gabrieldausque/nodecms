@@ -187,7 +187,7 @@
         display: none;
     }
 
-    .btn.action span.spinner-border.show {
+    :global(.btn.action span.spinner-border.show) {
         margin-right:5px;
         display: block;
     }

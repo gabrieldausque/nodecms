@@ -187,8 +187,8 @@
         max-height: 60px;
     }
 
-    .cl-content,
-    .cl-actionbar {
+    :global(.cl-content),
+    :global(.cl-actionbar) {
         text-align: start;
     }
 

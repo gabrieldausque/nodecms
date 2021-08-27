@@ -1,7 +1,7 @@
 import {DocumentStore} from "./stores/DocumentStore";
 import App from './App.svelte';
 import {globalFEService} from "./FEServices";
-import {getBackendClient, TempCache} from '@nodecms/backend-client';
+import {getBackendClient, TempCache} from '@nodecms/backend-client/dist';
 
 (window as any).getBackendClient = getBackendClient;
 globalFEService.registerService('TempCache',new TempCache());

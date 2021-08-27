@@ -1,9 +1,5 @@
 <script>
-    import { fade, slide } from 'svelte/transition'
-
     export let finalWidthInPercent;
-    export let startPosition;
-    export let finalPosition;
 
     function slideHorizontal(node, {
         delay = 0,

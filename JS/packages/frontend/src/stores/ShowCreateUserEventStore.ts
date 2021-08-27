@@ -1,5 +1,5 @@
 import {writable} from 'svelte/store'
-import {UserEvent} from "@nodecms/backend-data";
+import type {UserEvent} from "@nodecms/backend-data";
 
 export class ShowModalUserEvent {
     shown:boolean;

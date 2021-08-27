@@ -321,7 +321,7 @@
         margin-left: 15px;
     }
 
-    .channelHeader > h6 {
+    :global(.channelHeader > h6) {
         margin-bottom: 0px;
     }
 
@@ -369,7 +369,7 @@
     }
 
     .channel-right-panel > .header > div > h6,
-    .channel-right-panel > .header > div >p {
+    :global(.channel-right-panel > .header > div > p) {
         margin-bottom: 0;
     }
 

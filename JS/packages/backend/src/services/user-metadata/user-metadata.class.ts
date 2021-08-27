@@ -49,7 +49,7 @@ export class UserMetadata extends BaseService<MetadataDTO,
     const executingUser:UserEntity = params?.user as UserEntity;
     try {
       return await this.userUseCases.getMetadata(user, metadataKeyOrId, executingUser);
-    } catch(err) {
+    } catch(err:any) {
       throw new NotFound(err.message);
     }
   }

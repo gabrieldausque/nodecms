@@ -201,7 +201,7 @@
         background: white;
     }
 
-    #upload-media-form div.mb-3,
+    :global(#upload-media-form div.mb-3),
     #edit-media-form div.mb-3 {
         display:flex;
         flex-direction: column;
@@ -209,14 +209,14 @@
         align-items: flex-start;
     }
 
-    #uploading-media-loading,
+    :global(#uploading-media-loading),
     #update-media-loading
     {
         display: none;
     }
 
-    #uploading-media-loading.show,
-    #update-media-loading.show
+    :global(#uploading-media-loading.show),
+    :global(#update-media-loading.show)
     {
         display: block;
     }

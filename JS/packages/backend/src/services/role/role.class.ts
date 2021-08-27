@@ -44,7 +44,7 @@ export class Role extends BaseService<RoleDTO, RoleEntityRules, RoleUseCases> {
     try {
       const executingUser:UserEntity = params?.user as UserEntity;
       return await this.useCase.get(id, executingUser);
-    }catch(error) {
+    }catch(error:any) {
       throw new NotFound(error.message);
     }
     throw new NotFound(`No role with id ${id}`);

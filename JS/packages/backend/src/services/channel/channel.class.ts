@@ -51,7 +51,7 @@ export class Channel extends BaseService<ChannelDTO, ChannelRules, ChannelUseCas
       if(params && params.user){
         return await this.useCase.get(id, params.user as User);
       }
-    }catch(err){
+    }catch(err:any){
       if(err as NotFoundError){
         console.log(err.message);
         throw new NotFound(err.message);
@@ -72,11 +72,11 @@ export class Channel extends BaseService<ChannelDTO, ChannelRules, ChannelUseCas
             action:'creation',
             channel:newChannel.id
           })
-        } catch(error) {
+        } catch(error:any) {
           console.warn(error.message);
         }
         return newChannel;
-      } catch(err) {
+      } catch(err:any) {
         if(err as AlreadyExistsError){
           console.log(err.message)
           throw new NotAcceptable(err.message);

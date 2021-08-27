@@ -4,6 +4,13 @@
 </script>
 
 <style>
+    h1 {
+        color: #ff0033;
+        text-transform: uppercase;
+        font-size: 4em;
+        font-weight: 100;
+    }
+
     .nodecms-title {
         text-align:center;
         color: white;
@@ -18,7 +25,5 @@
             {@html Helpers.styleOpeningLabel + properties.globalStyle + Helpers.styleClosingLabel}
         {/if}
         <h1 style="{properties.style?properties.style:''}">{@html properties.title?properties.title:''}</h1>
-    {:else}
-        <h1></h1>
     {/if}
 </div>

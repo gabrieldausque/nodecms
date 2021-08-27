@@ -104,7 +104,7 @@
         opacity: 1;
     }
 
-    .channel-right-panel > .post {
+    :global(.channel-right-panel > .post) {
         max-width: calc(100% - 15px);
     }
 

@@ -38,7 +38,7 @@ export class Metadata extends BaseService<MetadataDTO,
         ownerType: params.query.ownerType,
         ownerId: params.query.ownerId
       },undefined, executingUser)
-    };
+    }
     return []
   }
 
@@ -50,7 +50,7 @@ export class Metadata extends BaseService<MetadataDTO,
         try {
 
           return await this.useCase.get(id.toString(), executingUser);
-        } catch(err) {
+        } catch(err:any) {
           throw new NotFound(err.message);
         }
       } else {

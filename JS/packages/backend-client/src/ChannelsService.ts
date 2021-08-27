@@ -108,7 +108,7 @@ export class ChannelsService extends BaseServiceClient<Channel> {
     async createChannel(channel:Channel) {
         try {
             return this.create(channel);
-        }catch(error){
+        }catch(error:any){
             console.error(error);
             console.log(error.response);
             if(error.response){

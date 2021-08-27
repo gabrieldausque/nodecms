@@ -119,13 +119,6 @@
 		display: flex;
 	}
 
-	h1 {
-		color: #ff0033;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
 	@media (min-width: 640px) {
 		main {
 			max-width: none;

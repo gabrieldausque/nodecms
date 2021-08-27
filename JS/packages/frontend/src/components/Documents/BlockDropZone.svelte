@@ -3,7 +3,7 @@
 
     const dispatch = createEventDispatcher();
 
-    export let isBefore = false;
+    export const isBefore = false;
     export let zone;
     export let row;
     export let col;

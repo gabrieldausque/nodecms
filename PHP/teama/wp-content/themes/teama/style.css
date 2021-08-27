@@ -58,7 +58,7 @@ body {
 }
 
 .teama-panel {
-    width: 10vw;
+    width: 25vw;
     height: 100%;
     box-shadow: 2px 0px 4px lightgrey;
     transition: width 300ms ease;

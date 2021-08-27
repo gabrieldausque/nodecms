@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "^4.3.2",
+    "typescript": "^4.4.2",
     "shx": "^0.3.3"
   },
   "author": {

@@ -50,7 +50,7 @@ export class Authentication extends BaseService<AuthenticationDTO,
   async create (data: AuthenticationDTO, params?: Params): Promise<any> {
     try {
       return await this.useCase.create(data, params?.user as User)
-    } catch(error) {
+    } catch(error:any) {
       throw new NotAuthenticated(error);
     }
   }

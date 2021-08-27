@@ -2,7 +2,9 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^4.0.0",
+    "eslint": "^7.32.0",
+    "@types/estree": "^0.0.50"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
@@ -10,7 +12,8 @@
     "dev": "lerna run init-db && lerna run --stream dev",
     "dev-backend": "lerna run --stream dev-backend",
     "dev-front": "lerna run --stream dev-front",
-    "build": "lerna run build",
+    "build-front": "lerna run --stream build-front",
+    "build": "lerna run --stream build",
     "init-dev-db": "mongo \"mongodb://localhost:27017/admin\" -u \"root\" -p \"Mbhj#ksf1445Mbfgqg\" ./packages/backend/data/initMongoDb.js",
     "ver": "lerna version --no-commit-hooks --no-git-tag-version --no-push --yes"
   }

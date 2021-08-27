@@ -12,7 +12,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 const production = !process.env.ROLLUP_WATCH;
 import css from 'rollup-plugin-css-only';
 
-
+console.log(`Production is : ${production} `);
 
 function serve() {
 	let server;

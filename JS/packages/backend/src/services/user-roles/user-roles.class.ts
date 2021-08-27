@@ -43,7 +43,7 @@ export class UserRoles extends BaseService<RoleDTO,
       const user:UserEntity = await this.userUseCases.get(params.route.idOrLogin);
       const executingUser:UserEntity = params?.user as UserEntity;
       return await this.userUseCases.getRoles(user, executingUser);
-    } catch(err) {
+    } catch(err:any) {
       throw new NotFound(err.message);
     }
   }
@@ -58,7 +58,7 @@ export class UserRoles extends BaseService<RoleDTO,
       const role:Role = await this.roleUseCases.get(id, executingUser);
       if(await this.userUseCases.hasRole(user, role, executingUser))
         return role;
-    } catch(err) {
+    } catch(err:any) {
       throw new NotFound(err.message);
     }
     throw new NotFound(`User ${params.route.idOrLogin} has no role ${id}`);
@@ -79,7 +79,7 @@ export class UserRoles extends BaseService<RoleDTO,
       }
       await this.userUseCases.addRole(user, role, executingUser);
       return role;
-    } catch(err) {
+    } catch(err:any) {
       throw new Error(err.message);
     }
   }
@@ -101,7 +101,7 @@ export class UserRoles extends BaseService<RoleDTO,
       }
       await this.userUseCases.addRole(user, role, executingUser);
       return role;
-    } catch(err) {
+    } catch(err:any) {
       throw new Error(err.message);
     }
   }
@@ -128,7 +128,7 @@ export class UserRoles extends BaseService<RoleDTO,
       }
       await this.userUseCases.removeRole(user, role, executingUser);
       return role;
-    } catch(err) {
+    } catch(err:any) {
       throw new Error(err.message);
     }
   }

@@ -237,7 +237,7 @@
         min-height: 100%;
     }
 
-    .grid-options > .form-group {
+    :global(.grid-options > .form-group) {
         display: flex;
         align-items: center;
         justify-content: start;

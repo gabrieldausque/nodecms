@@ -27,6 +27,6 @@ require_once('functions.php');
 </header>
 
 <div class="teama-viewport">
-<?php left_panel(); ?>
+
 
 

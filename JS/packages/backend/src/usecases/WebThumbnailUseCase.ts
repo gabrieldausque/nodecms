@@ -33,7 +33,7 @@ export class WebThumbnailUseCase {
         htmlFromUrl = (await axios.get(URL, {
           headers: { 'User-Agent': 'Mozilla/5.0' }
         })).data
-      }catch(error){
+      }catch(error:any){
         console.error(error);
         throw new Error(error.response.message)
       }

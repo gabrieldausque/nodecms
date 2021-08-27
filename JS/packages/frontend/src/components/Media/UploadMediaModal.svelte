@@ -122,7 +122,7 @@
         display: none;
     }
 
-    #uploading-media-loading.show
+   :global(#uploading-media-loading.show)
     {
         display: block;
     }
