@@ -5,6 +5,7 @@
     import {DocumentStore} from "../stores/DocumentStore";
     import {observableGenericDataStore} from "../stores/ObservableGenericDataStore";
     import {UserEventsStore, UserEvents} from "../stores/UserEventsStore";
+    import {rightPanelContext} from "../stores";
 
     export let isLogin = false;
     let backendService = null;
@@ -129,6 +130,13 @@
         }
     }
 
+    async function showRightPanel() {
+        rightPanelContext.update(pc => {
+            pc.isShown = !pc.isShown;
+            return pc;
+        })
+    }
+
 </script>
 
 <style>
@@ -170,6 +178,7 @@
                 <i class="fas fa-calendar-alt"></i><span>Calendrier TeamA</span>
             </button>
             <div class="dropdown-divider"></div>
+            <button class="dropdown-item" type="button" on:click={showRightPanel}>Afficher widgets</button>
             <button class="dropdown-item" type="button" on:click={logout}>
                 Déconnexion
             </button>

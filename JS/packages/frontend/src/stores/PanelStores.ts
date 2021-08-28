@@ -20,5 +20,8 @@ export class PanelContext {
     }
 }
 
+export const allPanelsContext: { [panelName:string] : any} = [];
 export const leftPanelContext = writable(new PanelContext());
 export const rightPanelContext = writable(new PanelContext());
+allPanelsContext.left = leftPanelContext;
+allPanelsContext.right = rightPanelContext;

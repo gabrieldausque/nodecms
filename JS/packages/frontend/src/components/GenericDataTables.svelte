@@ -52,7 +52,7 @@
         p.catch(console.error);
         leftPanelContext.update((pc:PanelContext) => {
             pc.clearComponents();
-            const menuComponentMetadata = new ComponentMetadata('action-menu', {
+            const menuComponentMetadata = new ComponentMetadata('actions-menu', {
                 actions: [
                     new MenuAction(`Créer ${dataType}`, async() => {
                         ModalStore.update(ms => {

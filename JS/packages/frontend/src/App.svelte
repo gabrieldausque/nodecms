@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {PanelContext, leftPanelContext, rightPanelContext} from "./stores/PanelStores";
+	import {globalContentContainerFactory, panelFactory} from "./factory";
 
 	import TopNavBar from './components/TopNavBar.svelte';
 	import ContentDocumentContainer from './components/ContentDocumentContainer.svelte';
@@ -16,7 +18,6 @@
 	import ContentMediaContainerEditor from './components/Editors/ContentMediaContainerEditor.svelte';
 	import ContentImageContainerEditor from './components/Editors/ContentImageContainerEditor.svelte';
 	import ContentTitleContainerEditor from './components/Editors/ContentTitleContainerEditor.svelte';
-	import {globalContentContainerFactory} from "./factory/ContentContainerFactory";
 	import {onMount, onDestroy} from "svelte";
 	import {getBackendClient, TempCache} from "@nodecms/backend-client";
 
@@ -28,7 +29,9 @@
 
 	import GlobalModal from "./components/GlobalModal.svelte";
 	import GlobalPanel from "./components/GlobalPanel.svelte";
-	import {PanelContext, leftPanelContext} from "./stores/PanelStores";
+	import ActionsMenu from "./components/ActionsMenu.svelte";
+
+
 
 	let doc;
 	const unsubscribe = DocumentStore.subscribe(async (ds) => {
@@ -36,41 +39,50 @@
 	})
 
 	let leftPanelShown:boolean;
+	let rightPanelShown:boolean;
 	const unsubscribeLeftPanelShown = leftPanelContext.subscribe(async (pc) => {
 		leftPanelShown = pc.isShown;
 	})
 
-	//Document ContentContainer Factory
+	const unsubscribeRightPanelShown = rightPanelContext.subscribe(async(pc) => {
+		rightPanelShown = pc.isShown;
+	})
 
-	globalContentContainerFactory.registerComponent('document', ContentDocumentContainer);
-	globalContentContainerFactory.registerComponent('text', ContentTextContainer,
-			'Texte', 'fas fa-text', ContentTextContainerEditor);
-	globalContentContainerFactory.registerComponent('image', ContentImageContainer,
-			'Image', 'fas fa-image', ContentImageContainerEditor);
-	globalContentContainerFactory.registerComponent('channels', ContentChannelsContainer)
-	globalContentContainerFactory.registerComponent('channel', ContentChannelContainer,
-			'Canal', 'fas fa-signal-stream')
-	globalContentContainerFactory.registerComponent('projects', ContentProjectsContainer);
-	globalContentContainerFactory.registerComponent('title', ContentTitle,
-			'Titre', 'fas fa-heading', ContentTitleContainerEditor);
-	globalContentContainerFactory.registerComponent('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
-	globalContentContainerFactory.registerComponent('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
-	globalContentContainerFactory.registerComponent('all-media', ContentAllMediaContainer);
-	globalContentContainerFactory.registerComponent('media', ContentMediaContainer,
-			'Media',
-			'fas fa-photo-video',
-			ContentMediaContainerEditor);
-	globalContentContainerFactory.registerComponent('user-events', ContentUserEventsContainer);
-	globalContentContainerFactory.registerComponent('multiuser-events', ContentMultiUserCalendarContainer);
-	globalContentContainerFactory.registerComponent('generic-data', GenericDataTables);
+	function registerDocumentFactoryComponents() {
+		globalContentContainerFactory.registerComponent('document', ContentDocumentContainer);
+		globalContentContainerFactory.registerComponent('text', ContentTextContainer,
+				'Texte', 'fas fa-text', ContentTextContainerEditor);
+		globalContentContainerFactory.registerComponent('image', ContentImageContainer,
+				'Image', 'fas fa-image', ContentImageContainerEditor);
+		globalContentContainerFactory.registerComponent('channels', ContentChannelsContainer)
+		globalContentContainerFactory.registerComponent('channel', ContentChannelContainer,
+				'Canal', 'fas fa-signal-stream')
+		globalContentContainerFactory.registerComponent('projects', ContentProjectsContainer);
+		globalContentContainerFactory.registerComponent('title', ContentTitle,
+				'Titre', 'fas fa-heading', ContentTitleContainerEditor);
+		globalContentContainerFactory.registerComponent('documents', ContentDocumentsContainer, undefined, undefined, undefined, false);
+		globalContentContainerFactory.registerComponent('documentEditor', ContentDocumentEditor, undefined, undefined, undefined, false);
+		globalContentContainerFactory.registerComponent('all-media', ContentAllMediaContainer);
+		globalContentContainerFactory.registerComponent('media', ContentMediaContainer,
+				'Media',
+				'fas fa-photo-video',
+				ContentMediaContainerEditor);
+		globalContentContainerFactory.registerComponent('user-events', ContentUserEventsContainer);
+		globalContentContainerFactory.registerComponent('multiuser-events', ContentMultiUserCalendarContainer);
+		globalContentContainerFactory.registerComponent('generic-data', GenericDataTables);
+	}
 
-	//Modal Body component factory
+	function registerPanelFactoryComponents() {
+		panelFactory.registerComponent('actions-menu', ActionsMenu);
+	}
+
+	registerDocumentFactoryComponents();
+	registerPanelFactoryComponents();
 
 	onMount(async () => {
 		const backendClient = await getBackendClient();
 		const title = await backendClient.getMetadata('title');
 		document.querySelector('head title').innerHTML = title.value;
-
 	})
 
 	async function getDocument(documentKey) {
@@ -103,6 +115,7 @@
 	onDestroy(() => {
 		unsubscribe();
 		unsubscribeLeftPanelShown();
+		unsubscribeRightPanelShown();
 	})
 </script>
 
@@ -135,9 +148,17 @@
 </header>
 <main class="app-viewport">
 	{#if leftPanelShown}
-		<GlobalPanel finalWidthInPercent="25" context={leftPanelContext}></GlobalPanel>
+		<GlobalPanel finalWidthInPercent="25"
+					 context="left"></GlobalPanel>
 	{/if}
 	<ContentDocumentContainer doc={doc}></ContentDocumentContainer>
+	{#if rightPanelShown}
+		<GlobalPanel finalWidthInPercent="25"
+					 context="right"></GlobalPanel>
+	{/if}
 </main>
+<footer>
+	<!-- TODO : add a menu zone -->
+</footer>
 <GlobalModal></GlobalModal>
 

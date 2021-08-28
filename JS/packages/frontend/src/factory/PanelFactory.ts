@@ -6,4 +6,4 @@ export class PanelFactory extends BaseComponentFactory {
     }
 }
 
-export const panelFactory = new PanelFactory()
+export const panelFactory = new PanelFactory();

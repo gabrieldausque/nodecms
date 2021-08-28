@@ -27,7 +27,7 @@ export class Helpers {
         const contentElement = document.createElement('div');
         contentElement.innerHTML = content;
         const backendService = await getBackendClient();
-        const webThumbnails = contentElement.querySelectorAll('a[data-link=true]')
+        const webThumbnails = Array.from(contentElement.querySelectorAll('a[data-link=true]'));
         const tempCache = globalFEService.getService('TempCache');
         for(const link of webThumbnails){
             const URL = link.getAttribute('href');
