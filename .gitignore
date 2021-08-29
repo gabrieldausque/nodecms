@@ -15,3 +15,4 @@
 /node_modules/
 /packages/backend/data/metadata-copy.csv
 /packages/backend/data/users-copy.csv
+/PHP/drupal-teama/vendor/
