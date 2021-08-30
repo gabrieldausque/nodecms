@@ -1,0 +1,5 @@
+name: teama
+description: Team A Core module for Drupal
+type: module
+core_version_requirement: ^8 || ^9
+package: TEAM-A
