@@ -1,0 +1,8 @@
+name: Team A
+type: theme
+description: This is the theme for the team a application
+package: teama
+core_version_requirement: ^9
+base theme: false
+libraries:
+  - teama_theme/teama

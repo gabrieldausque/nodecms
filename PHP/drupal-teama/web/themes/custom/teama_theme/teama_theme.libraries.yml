@@ -1,0 +1,9 @@
+teama:
+  version: 1.0
+  js:
+    js/bootstrap.bundle.min.js : { minified: true }
+    js/main.js: {}
+  css:
+    theme:
+      css/bootstrap.min.css: {}
+      css/styles.css: {}
