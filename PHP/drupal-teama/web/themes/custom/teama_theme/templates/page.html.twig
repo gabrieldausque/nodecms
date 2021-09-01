@@ -1,0 +1,33 @@
+<div id="page-wrapper" class="teama-page-viewport">
+  <header id="teama-header" class="bg-dark text-white">
+      <nav id="teama-navbar" class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div id="teama-branding" class="d-inline-flex align-items-center justify-content-start">
+          {{ page.header_left }}
+        </div>
+        <div class="text-center">
+          {{ page.header_center }}
+        </div>
+        <div class="text-end">
+          {{ page.header_right }}
+        </div>
+      </nav>
+  </header>
+  <div id="page-content">
+      {%  if logged_in %}
+      <aside id="teama-left-side" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark teama-aside-expandable">
+        {{ page.sidebar_left }}
+      </aside>
+      {%  endif %}
+      <main class="teama-page-content">
+        {{ page.content_top }}
+        {{ page.content_middle }}
+        {{ page.content_bottom }}
+      </main>
+      {%  if logged_in %}
+      <aside id="teama-right-side" class="teama-aside-expandable">
+        {{ page.sidebar_right }}
+      </aside>
+      {%  endif %}
+  </div>
+</div>
+
