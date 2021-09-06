@@ -5,7 +5,7 @@
           {{ page.header_left }}
         </div>
         <div class="text-center">
-          {{ page.header_center }}
+          {{ page.header }}
         </div>
         <div class="text-end">
           {{ page.header_right }}
@@ -19,9 +19,7 @@
       </aside>
       {%  endif %}
       <main class="teama-page-content">
-        {{ page.content_top }}
-        {{ page.content_middle }}
-        {{ page.content_bottom }}
+        {{ page.content }}
       </main>
       {%  if logged_in %}
       <aside id="teama-right-side" class="teama-aside-expandable">
