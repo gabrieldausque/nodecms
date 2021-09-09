@@ -16,3 +16,5 @@
 /packages/backend/data/metadata-copy.csv
 /packages/backend/data/users-copy.csv
 /PHP/drupal-teama/vendor/
+/PHP/joomla-teama/vendor/
+/PHP/joomla-teama/composer.lock
