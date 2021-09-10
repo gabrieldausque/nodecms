@@ -18,3 +18,5 @@
 /PHP/drupal-teama/vendor/
 /PHP/joomla-teama/vendor/
 /PHP/joomla-teama/composer.lock
+/composer.lock
+/vendor/
