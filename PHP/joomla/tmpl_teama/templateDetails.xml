@@ -7,7 +7,7 @@
     <authorUrl>https://theloneblacksheep.fr</authorUrl>
     <copyright>Gabriel DAUSQUE-JOUAN 2021</copyright>
     <license>GNU/GPL</license>
-    <version>0.0.10</version>
+    <version>0.0.20</version>
     <description>The Team A Theme</description>
     <files>
         <filename>index.php</filename>
@@ -16,8 +16,11 @@
         <folder>css</folder>
         <folder>js</folder>
         <folder>fonts</folder>
+        <folder>html</folder>
     </files>
     <positions>
+        <position>header</position>
+        <position>login</position>
         <position>breadcrumb</position>
         <position>left</position>
         <position>right</position>
