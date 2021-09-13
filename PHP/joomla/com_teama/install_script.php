@@ -23,5 +23,6 @@ class com_teamaInstallerScript
 	public function postflight($type, $parent)
 	{
 		$app = Factory::getApplication();
+
 	}
 }

@@ -11,6 +11,7 @@
     <license>MIT</license>
     <version>0.0.3</version>
     <description>The Team A core component</description>
+
     <scriptfile>install_script.php</scriptfile>
 
     <update>
