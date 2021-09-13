@@ -57,7 +57,7 @@ if ($this->params->get('logoFile'))
     <nav class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <?php if (!$isAuthenticate) { ?>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+                <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
             <?php } ?>
         </div>
     </nav>
@@ -71,9 +71,13 @@ if ($this->params->get('logoFile'))
 <?php } else  {  ?>
         <div class="teama-viewport container-fluid d-flex flex-column align-self-center justify-content-evenly">
             <h4 class="teama-tagline-landing-page"><?php echo $this->params->get('siteDescription') ?></h4>
-            <div class="teama-logo-landing-page"
-                 style="background-image: url('<?php echo $logoUrl ?>')" >
-            </div>
+                <div class="teama-logo-landing-page"
+                     style="background-image: url('<?php echo $logoUrl ?>')" >
+                    <div id="teama-top-border"></div>
+                    <div id="teama-right-border"></div>
+                    <div id="teama-bottom-border"></div>
+                    <div id="teama-left-border"></div>
+                </div>
             <h1 class="teama-title-landing-page"><?php echo $siteName ?></h1>
         </div>
     <div class="modal fade" id="login-modal" tabindex="-1">

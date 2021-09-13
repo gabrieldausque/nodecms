@@ -41,3 +41,27 @@
 2021-09-11T07:18:35+00:00	INFO 127.0.0.1	controller	Checking edit ID com_templates.edit.style.15: 1 Array (     [0] => 15 ) 
 2021-09-11T07:18:51+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_templates.edit.style.15 Array ( ) 
 2021-09-11T07:47:05+00:00	DEBUG 127.0.0.1	webauthn.system	Injecting WebAuthn Passwordless Login fields in user profile edit page
+2021-09-12T06:28:46+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.10 seconds
+2021-09-13T05:10:11+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.18 seconds
+2021-09-13T05:11:46+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-13T05:11:46+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-13T05:12:27+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.29 seconds
+2021-09-13T05:12:27+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.06 seconds
+2021-09-13T05:12:45+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-13T05:12:45+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-13T05:26:25+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-13T05:26:25+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-13T06:11:27+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-13T06:11:27+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-13T06:37:07+00:00	INFO 127.0.0.1	controller	Holding edit ID com_categories.edit.category.2 Array (     [0] => 2 ) 
+2021-09-13T06:37:07+00:00	INFO 127.0.0.1	controller	Checking edit ID com_categories.edit.category.2: 1 Array (     [0] => 2 ) 
+2021-09-13T06:37:25+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_categories.edit.category.2 Array ( ) 
+2021-09-13T06:37:38+00:00	INFO 127.0.0.1	controller	Holding edit ID com_categories.edit.category.2 Array (     [0] => 2 ) 
+2021-09-13T06:37:39+00:00	INFO 127.0.0.1	controller	Checking edit ID com_categories.edit.category.2: 1 Array (     [0] => 2 ) 
+2021-09-13T06:37:51+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_categories.edit.category.2 Array ( ) 
+2021-09-13T06:40:07+00:00	INFO 127.0.0.1	controller	Holding edit ID com_templates.edit.style.15 Array (     [0] => 15 ) 
+2021-09-13T06:40:07+00:00	INFO 127.0.0.1	controller	Checking edit ID com_templates.edit.style.15: 1 Array (     [0] => 15 ) 
+2021-09-13T06:40:34+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_templates.edit.style.15 Array ( ) 
+2021-09-13T06:40:47+00:00	INFO 127.0.0.1	controller	Holding edit ID com_templates.edit.style.15 Array (     [0] => 15 ) 
+2021-09-13T06:40:47+00:00	INFO 127.0.0.1	controller	Checking edit ID com_templates.edit.style.15: 1 Array (     [0] => 15 ) 
+2021-09-13T06:40:54+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_templates.edit.style.15 Array ( ) 
