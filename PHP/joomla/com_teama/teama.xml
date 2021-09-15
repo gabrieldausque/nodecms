@@ -22,12 +22,16 @@
         </submenu>
         <files folder="administrator">
             <filename>index.html</filename>
-            <filename>teama.xml</filename>
             <folder>services</folder>
             <folder>src</folder>
             <folder>tmpl</folder>
             <folder>sql</folder>
         </files>
     </administration>
+
+    <files folder="components/com_teama">
+        <folder>src</folder>
+        <folder>tmpl</folder>
+    </files>
 
 </extension>

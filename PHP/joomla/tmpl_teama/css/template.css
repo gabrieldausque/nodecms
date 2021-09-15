@@ -17,7 +17,38 @@ body {
 .teama-viewport {
     height: 100%;
     width: 100%;
-    align-items: center;
+    padding:0
+}
+
+.teama-left-panel {
+    width:25vw;
+    height:100%;
+    color: white;
+    transition: width 1s ease;
+    background: black;
+}
+
+.teama-left-panel.shrink {
+    width: 60px;
+}
+
+.teama-middle-panel {
+    padding:0;
+    height:100%;
+    width: 100%;
+}
+
+.teama-content-panel {
+    height:100%;
+}
+
+.teama-main-panel {
+    flex-grow: 1;
+    height:100%;
+}
+
+.teama-landingpage-main {
+    height:100%;
 }
 
 .bg-darklight {
@@ -25,10 +56,14 @@ body {
 }
 
 .teama-navbar {
-    background: rgb(20, 21, 24);
+    background: black;
     color: white;
+    width: 100%;
+    margin-bottom: 10px;
+    min-height: 61px;
 }
 
+#teama-brand-logo,
 .teama-logo-landing-page {
     height: 50vh;
     width: 50vh;
@@ -86,6 +121,28 @@ body {
     width:2px;
     background:red;
     animation: 4s linear 2s infinite teama-left-border;
+}
+
+.teama-brand-container {
+    border-bottom: solid 1px lightgrey;
+    width: 100%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-family: Army;
+}
+
+#teama-brand-logo {
+    height: 40px;
+    width: 40px;
+}
+
+.teama-brand-container > h5 {
+    margin-bottom: 0;
+}
+
+.teama-widget-panel {
+    width:25vw;
+    height: 100%;
 }
 
 @keyframes teama-top-border {

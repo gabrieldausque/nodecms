@@ -19,6 +19,7 @@
         <folder>html</folder>
     </files>
     <positions>
+        <position>content</position>
         <position>header</position>
         <position>login</position>
         <position>breadcrumb</position>

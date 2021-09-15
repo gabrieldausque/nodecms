@@ -53,54 +53,81 @@ if ($this->params->get('logoFile'))
     $bodyClass = $isAuthenticate ? 'teama-connected' : 'teama-notconnected';
     echo $bodyClass;
 ?>">
-<header class="p-3 teama-navbar text-white">
-    <nav class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <?php if (!$isAuthenticate) { ?>
-                <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+<div class="teama-viewport container-fluid d-flex flex-row align-items-start justify-content-start">
+    <?php if ($isAuthenticate)
+    { ?>
+    <div class="teama-left-panel d-flex flex-column justify-content-start align-items-center">
+        <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
+            <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
+            <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
+        </div>
+        <ul class="nav nav-pills flex-column mb-auto">
+
+        </ul>
+        <jdoc:include type="module" name="left"/>
+    </div>
+    <?php } ?>
+    <div class="teama-middle-panel container-fluid d-flex flex-column justify-content-start align-items-start">
+        <header class="p-3 teama-navbar text-white">
+            <nav class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+				    <?php if (!$isAuthenticate) { ?>
+                        <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+				    <?php } else { ?>
+                        <jdoc:include type="module" name="header"/>
+				    <?php } ?>
+                </div>
+            </nav>
+        </header>
+        <div class="teama-content-panel container-fluid d-flex flex-row justify-content-start align-items-start">
+            <div class="teama-main-panel d-flex flex-column justify-content-start align-items-center">
+	            <?php if ($isAuthenticate)
+	            {
+	            ?>
+                <jdoc:include type="modules" name="top" />
+                <jdoc:include type="component"/>
+                <jdoc:include type="modules" name="bottom" />
+	        <?php } else  {  ?>
+                <div class="teama-landingpage-main d-flex flex-column align-items-center justify-content-between">
+                    <h4 class="teama-tagline-landing-page"><?php echo $this->params->get('siteDescription') ?></h4>
+                    <div class="teama-logo-landing-page"
+                         style="background-image: url('<?php echo $logoUrl ?>')" >
+                        <div id="teama-top-border"></div>
+                        <div id="teama-right-border"></div>
+                        <div id="teama-bottom-border"></div>
+                        <div id="teama-left-border"></div>
+                    </div>
+                    <h1 class="teama-title-landing-page"><?php echo $siteName ?></h1>
+                </div>
+                <div class="modal fade" id="login-modal" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered" >
+                        <div class="modal-content">
+                            <div class="modal-header bg-darklight">
+                                <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+						        <?php
+						        $loginModule = ModuleHelper::getModule('mod_login');
+						        echo ModuleHelper::renderModule($loginModule);
+						        ?>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="teama-login-button" type="button" class="btn btn-primary">Login</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+	        <?php } ?>
+            </div>
+            <?php if ($isAuthenticate) { ?>
+            <div class="teama-widget-panel">
+                <jdoc:include type="module" name="right"/>
+            </div>
             <?php } ?>
         </div>
-    </nav>
-</header>
-<?php if ($isAuthenticate)
-{   
-    ?>
-    <jdoc:include type="modules" name="top" />
-    <jdoc:include type="component" />
-    <jdoc:include type="modules" name="bottom" />
-<?php } else  {  ?>
-        <div class="teama-viewport container-fluid d-flex flex-column align-self-center justify-content-evenly">
-            <h4 class="teama-tagline-landing-page"><?php echo $this->params->get('siteDescription') ?></h4>
-                <div class="teama-logo-landing-page"
-                     style="background-image: url('<?php echo $logoUrl ?>')" >
-                    <div id="teama-top-border"></div>
-                    <div id="teama-right-border"></div>
-                    <div id="teama-bottom-border"></div>
-                    <div id="teama-left-border"></div>
-                </div>
-            <h1 class="teama-title-landing-page"><?php echo $siteName ?></h1>
-        </div>
-    <div class="modal fade" id="login-modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered" >
-            <div class="modal-content">
-                <div class="modal-header bg-darklight">
-                    <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-					<?php
-                        $loginModule = ModuleHelper::getModule('mod_login');
-                        echo ModuleHelper::renderModule($loginModule);
-                    ?>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="teama-login-button" type="button" class="btn btn-primary">Login</button>
-                </div>
-            </div>
-        </div>
     </div>
-<?php } ?>
-
+</div>
 </body>
 </html>
