@@ -61,9 +61,6 @@ if ($this->params->get('logoFile'))
             <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
             <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
         </div>
-        <ul class="nav nav-pills flex-column mb-auto">
-
-        </ul>
         <jdoc:include type="module" name="left"/>
     </div>
     <?php } ?>

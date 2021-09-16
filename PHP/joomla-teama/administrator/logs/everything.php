@@ -877,3 +877,51 @@ Content-Transfer-Encoding: 8bit
 2021-09-15T19:17:48+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-09-15T19:56:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-09-15T19:56:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-16T04:47:35+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.12 seconds
+2021-09-16T04:48:25+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-16T04:48:25+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-16T04:48:39+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.29 seconds
+2021-09-16T04:48:40+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.05 seconds
+2021-09-16T04:52:59+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.menu.1 Array (     [0] => 1 ) 
+2021-09-16T04:53:07+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.menu.1 Array ( ) 
+2021-09-16T04:53:17+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T04:53:32+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T04:53:37+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.1 Array ( ) 
+2021-09-16T04:55:15+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Unable to load renderer class menu". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Document.php(1154): Joomla\CMS\Document\Factory->createRenderer()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(557): Joomla\CMS\Document\Document->loadRenderer()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(895): Joomla\CMS\Document\HtmlDocument->getBuffer()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(660): Joomla\CMS\Document\HtmlDocument->_renderTemplate()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1036): Joomla\CMS\Document\HtmlDocument->render()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(804): Joomla\CMS\Application\CMSApplication->render()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(284): Joomla\CMS\Application\SiteApplication->render()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#9 {main}
+2021-09-16T04:55:37+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Unable to load renderer class menu". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Document.php(1154): Joomla\CMS\Document\Factory->createRenderer()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(557): Joomla\CMS\Document\Document->loadRenderer()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(895): Joomla\CMS\Document\HtmlDocument->getBuffer()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(660): Joomla\CMS\Document\HtmlDocument->_renderTemplate()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1036): Joomla\CMS\Document\HtmlDocument->render()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(804): Joomla\CMS\Application\CMSApplication->render()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(284): Joomla\CMS\Application\SiteApplication->render()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#9 {main}
+2021-09-16T05:08:08+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T05:08:27+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T05:08:30+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.1 Array ( ) 
+2021-09-16T05:18:26+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.109 Array (     [0] => 109 ) 
+2021-09-16T05:18:41+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.109 Array (     [0] => 109 ) 
+2021-09-16T05:18:52+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.109 Array (     [0] => 109 ) 
+2021-09-16T05:18:54+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.109 Array ( ) 
+2021-09-16T05:20:05+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.menu.1 Array (     [0] => 1 ) 
+2021-09-16T05:21:06+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.menu.1 Array ( ) 
+2021-09-16T05:21:28+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T05:30:43+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.1 Array ( ) 
+2021-09-16T05:31:22+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T05:31:38+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.1 Array ( ) 
+2021-09-16T05:35:58+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-16T05:36:53+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.1 Array ( ) 
+2021-09-16T05:38:09+00:00	INFO 127.0.0.1	controller	Holding edit ID com_templates.edit.style.15 Array (     [0] => 15 ) 
+2021-09-16T05:38:09+00:00	INFO 127.0.0.1	controller	Checking edit ID com_templates.edit.style.15: 1 Array (     [0] => 15 ) 
+2021-09-16T05:38:26+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_templates.edit.style.15 Array ( ) 
