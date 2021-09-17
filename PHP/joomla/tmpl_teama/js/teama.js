@@ -26,16 +26,32 @@ document.addEventListener('DOMContentLoaded', async() => {
     const leftPanel = document.querySelector('.teama-left-panel');
     if(leftPanel){
         leftPanel.addEventListener('transitionstart', async() => {
-            const title = document.querySelector('.teama-brand-container > h5');
             if(leftPanel.classList.contains('shrink')){
-                title.style.display = 'none';
+                const title = document.querySelector('.teama-brand-container > h5');
+                if(leftPanel.classList.contains('shrink')){
+                    title.style.display = 'none';
+                }
+
+                const navItems = [].slice.call(leftPanel.querySelectorAll('.OtherLetters'));
+                navItems.map(ol => {
+                    ol.style.display = 'none';
+                })
             }
         });
         leftPanel.addEventListener('transitionend', async() => {
             const title = document.querySelector('.teama-brand-container > h5');
             if(!leftPanel.classList.contains('shrink')){
                 title.style.display = 'block';
+                const navItems = [].slice.call(leftPanel.querySelectorAll('.OtherLetters'));
+                navItems.map(ol => {
+                    ol.style.display = 'block';
+                })
             }
         });
     }
+
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map((tooltipTriggerEl) => {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
 })

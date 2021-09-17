@@ -16,6 +16,7 @@ $templatePath = 'templates/' . $this->template;
 $webAssetManager->registerAndUseStyle('teama-bootstrap-styles', $templatePath . '/css/bootstrap/bootstrap.css');
 $webAssetManager->registerAndUseStyle('teama-main-styles', $templatePath . '/css/template.css');
 $webAssetManager->registerAndUseStyle('teama-fonts', $templatePath . '/css/fonts.css');
+$webAssetManager->registerAndUseStyle('fontawesome', $templatePath . '/css/fontawesome/css/all.css');
 $webAssetManager->registerAndUseScript('teama-bootstrap', $templatePath . '/js/bootstrap/bootstrap.bundle.js');
 $webAssetManager->registerAndUseScript('teama-main', $templatePath . '/js/teama.js');
 
@@ -61,7 +62,7 @@ if ($this->params->get('logoFile'))
             <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
             <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
         </div>
-        <jdoc:include type="module" name="left"/>
+        <jdoc:include type="modules" name="left"/>
     </div>
     <?php } ?>
     <div class="teama-middle-panel container-fluid d-flex flex-column justify-content-start align-items-start">
@@ -71,7 +72,7 @@ if ($this->params->get('logoFile'))
 				    <?php if (!$isAuthenticate) { ?>
                         <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
 				    <?php } else { ?>
-                        <jdoc:include type="module" name="header"/>
+                        <jdoc:include type="modules" name="header"/>
 				    <?php } ?>
                 </div>
             </nav>
@@ -120,7 +121,7 @@ if ($this->params->get('logoFile'))
             </div>
             <?php if ($isAuthenticate) { ?>
             <div class="teama-widget-panel">
-                <jdoc:include type="module" name="right"/>
+                <jdoc:include type="modules" name="right"/>
             </div>
             <?php } ?>
         </div>

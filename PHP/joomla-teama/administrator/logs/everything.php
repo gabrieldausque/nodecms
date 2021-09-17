@@ -925,3 +925,84 @@ Content-Transfer-Encoding: 8bit
 2021-09-16T05:38:09+00:00	INFO 127.0.0.1	controller	Holding edit ID com_templates.edit.style.15 Array (     [0] => 15 ) 
 2021-09-16T05:38:09+00:00	INFO 127.0.0.1	controller	Checking edit ID com_templates.edit.style.15: 1 Array (     [0] => 15 ) 
 2021-09-16T05:38:26+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_templates.edit.style.15 Array ( ) 
+2021-09-16T10:47:37+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.10 seconds
+2021-09-16T18:37:06+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-16T18:37:06+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-16T18:37:06+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.18 seconds
+2021-09-16T18:51:08+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-16T18:51:08+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T01:15:36+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T01:15:36+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T01:15:37+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.05 seconds
+2021-09-17T01:19:02+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T01:19:02+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T01:19:51+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.29 seconds
+2021-09-17T01:19:52+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.05 seconds
+2021-09-17T01:19:55+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.07 seconds
+2021-09-17T01:19:55+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.05 seconds
+2021-09-17T01:19:56+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.06 seconds
+2021-09-17T01:29:15+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.145 Array (     [0] => 145 ) 
+2021-09-17T01:30:28+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.145 Array ( ) 
+2021-09-17T01:31:00+00:00	INFO 127.0.0.1	controller	Holding edit ID com_modules.edit.module.1 Array (     [0] => 1 ) 
+2021-09-17T01:31:22+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_modules.edit.module.1 Array ( ) 
+2021-09-17T01:32:49+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Unable to load renderer class components". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Document.php(1154): Joomla\CMS\Document\Factory->createRenderer()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(557): Joomla\CMS\Document\Document->loadRenderer()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(895): Joomla\CMS\Document\HtmlDocument->getBuffer()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(660): Joomla\CMS\Document\HtmlDocument->_renderTemplate()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1036): Joomla\CMS\Document\HtmlDocument->render()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(804): Joomla\CMS\Application\CMSApplication->render()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(284): Joomla\CMS\Application\SiteApplication->render()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#9 {main}
+2021-09-17T01:33:06+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Unable to load renderer class components". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Document.php(1154): Joomla\CMS\Document\Factory->createRenderer()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(557): Joomla\CMS\Document\Document->loadRenderer()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(895): Joomla\CMS\Document\HtmlDocument->getBuffer()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(660): Joomla\CMS\Document\HtmlDocument->_renderTemplate()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1036): Joomla\CMS\Document\HtmlDocument->render()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(804): Joomla\CMS\Application\CMSApplication->render()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(284): Joomla\CMS\Application\SiteApplication->render()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#9 {main}
+2021-09-17T01:33:14+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Unable to load renderer class components". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Document.php(1154): Joomla\CMS\Document\Factory->createRenderer()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(557): Joomla\CMS\Document\Document->loadRenderer()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(895): Joomla\CMS\Document\HtmlDocument->getBuffer()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(660): Joomla\CMS\Document\HtmlDocument->_renderTemplate()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1036): Joomla\CMS\Document\HtmlDocument->render()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(804): Joomla\CMS\Application\CMSApplication->render()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(284): Joomla\CMS\Application\SiteApplication->render()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#9 {main}
+2021-09-17T01:53:25+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T01:53:25+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T02:21:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T02:21:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T02:51:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T02:51:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T03:02:45+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.101 Array (     [0] => 101 ) 
+2021-09-17T03:04:11+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.101 Array ( ) 
+2021-09-17T03:04:23+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.101 Array (     [0] => 101 ) 
+2021-09-17T03:06:38+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.101 Array ( ) 
+2021-09-17T03:10:14+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-17T03:10:14+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-17T03:25:48+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.101 Array (     [0] => 101 ) 
+2021-09-17T03:28:47+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.101 Array ( ) 
+2021-09-17T03:35:17+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.101 Array (     [0] => 101 ) 
+2021-09-17T03:35:31+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.101 Array ( ) 
+2021-09-17T03:42:40+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.101 Array (     [0] => 101 ) 
+2021-09-17T03:42:58+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.101 Array ( ) 
+2021-09-17T04:32:43+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-17T04:32:43+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-09-17T04:55:19+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#6 {main}
+2021-09-17T05:00:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T05:00:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-17T05:10:47+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.145 Array (     [0] => 145 ) 
+2021-09-17T05:11:12+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.145 Array ( ) 
