@@ -4,4 +4,8 @@
 
 ?>
 
-Hello from frontend
+- Hello from frontend default view :
+<br>
++
+<br>
++ Hello TeamA member from news : <?php echo $this->news; ?>

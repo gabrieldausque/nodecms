@@ -5,4 +5,8 @@
             <![CDATA[COM_TEAMA_TEAMA_VIEW_DEFAULT_DESC]]>
         </message>
     </layout>
+
+    <fields name="request">
+        <field name="show_text" type="text" label="COM_TEAMA_FIELD_TEXT_SHOW_LABEL" default="Default News"></field>
+    </fields>
 </metadata>

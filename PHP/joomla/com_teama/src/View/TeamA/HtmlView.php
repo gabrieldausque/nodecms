@@ -9,6 +9,8 @@ class HtmlView extends BaseHtmlView
 {
 	public function display($tpl = null)
 	{
+		$this->news = $this->get('News');
+
 		parent::display( $tpl );
 	}
 }
