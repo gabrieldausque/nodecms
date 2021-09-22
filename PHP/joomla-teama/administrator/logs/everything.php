@@ -1012,3 +1012,42 @@ Content-Transfer-Encoding: 8bit
 2021-09-20T16:28:37+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.46 seconds
 2021-09-20T16:28:56+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.90 seconds
 2021-09-20T16:29:02+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 5.53 seconds
+2021-09-22T12:40:58+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.29 seconds
+2021-09-22T12:41:05+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T12:41:05+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T12:41:14+00:00	INFO 127.0.0.1	joomlafailure	Le nom d'utilisateur ne correspond pas au mot de passe, ou vous n'avez pas encore de compte.
+2021-09-22T12:41:14+00:00	WARNING 127.0.0.1	jerror	Le nom d'utilisateur ne correspond pas au mot de passe, ou vous n'avez pas encore de compte.
+2021-09-22T12:41:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T12:41:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T12:41:32+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.45 seconds
+2021-09-22T12:41:34+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.39 seconds
+2021-09-22T12:42:48+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.145 Array (     [0] => 145 ) 
+2021-09-22T12:43:11+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.145 Array ( ) 
+2021-09-22T12:44:30+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.145 Array (     [0] => 145 ) 
+2021-09-22T12:44:37+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.145 Array ( ) 
+2021-09-22T18:38:45+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T18:38:45+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T18:43:18+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.14 seconds
+2021-09-22T19:05:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T19:05:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T19:06:22+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Config\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#7 {main}
+2021-09-22T19:06:27+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Config\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#7 {main}
+2021-09-22T19:44:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T19:44:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-22T19:45:08+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.09 seconds
+2021-09-22T19:45:08+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.30 seconds
+2021-09-22T19:45:09+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.08 seconds

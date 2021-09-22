@@ -4,6 +4,16 @@
 
 ?>
 
+<section id="teama-news">
+    <div class="teama-section-title">Actualités</div>
+
+</section>
+
+<section id="teama-newspaper">
+    <div class="teama-section-title">Dans les médias</div>
+
+</section>
+
 - Hello from frontend default view :
 <br>
 +

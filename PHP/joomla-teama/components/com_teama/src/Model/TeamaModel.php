@@ -3,6 +3,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 
 \defined('_JEXEC') or die('Restricted Access');
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class TeamaModel
@@ -12,9 +13,8 @@ class TeamaModel
 
 	public function getNews()
 	{
-		if(!isset($this->news)){
-			$this->news = 'Hello News !';
-		}
+		$app = Factory::getApplication();
+		$this->news = $app->input->get('show_text', "My First News");
 
 		return $this->news;
 	}

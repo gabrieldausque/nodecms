@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata>
+
     <layout title="COM_TEAMA_TEAMA_VIEW_DEFAULT">
         <message>
             <![CDATA[COM_TEAMA_TEAMA_VIEW_DEFAULT_DESC]]>
         </message>
     </layout>
+    <layout title="COM_TEAMA_TEAMA_VIEW_DEFAULT">
+        <message>
+            <![CDATA[COM_TEAMA_TEAMA_VIEW_DEFAULT_DESC]]>
+        </message>
+    </layout>
+    <fields name="request">
+        <fieldset name="request">
+            <field name="show_text" type="text" label="COM_TEAMA_FIELD_TEXT_SHOW_LABEL" default="Default News"></field>
+        </fieldset>
+    </fields>
 </metadata>
