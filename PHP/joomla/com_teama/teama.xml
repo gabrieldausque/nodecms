@@ -28,7 +28,8 @@
     <administration>
         <menu>Team A</menu>
         <submenu>
-            <menu link='option=com_teama'>Team A</menu>
+            <menu link='option=com_teama'>General</menu>
+            <menu link='option=com_teama&amp;task=news.display'>News</menu>
         </submenu>
         <files folder="administrator">
             <filename>index.html</filename>
