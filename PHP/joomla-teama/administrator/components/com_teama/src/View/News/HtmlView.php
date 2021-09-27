@@ -2,6 +2,8 @@
 
 namespace TheLoneBlackSheep\Component\TeamA\Administrator\View\News;
 
+\defined('_JEXEC') or die;
+
 class HtmlView
 	extends \Joomla\CMS\MVC\View\HtmlView
 {
