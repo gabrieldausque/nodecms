@@ -13,6 +13,7 @@ use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
 use Joomla\CMS\Extension\Service\Provider\ComponentDispatcherFactory;
 use Joomla\CMS\Extension\Service\Provider\MVCFactory;
 use Joomla\CMS\HTML\Registry;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Extension\TeamAComponent;
@@ -37,6 +38,7 @@ class TeamAServiceProvider implements ServiceProviderInterface
 			ComponentInterface::class,
 			function (Container $container) {
 				$component = new TeamAComponent($container->get(ComponentDispatcherFactoryInterface::class));
+				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
 				$component->setRegistry($container->get(Registry::class));
 
 				return $component;

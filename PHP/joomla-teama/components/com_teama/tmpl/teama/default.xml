@@ -13,7 +13,7 @@
     </layout>
     <fields name="request">
         <fieldset name="request">
-            <field name="show_text" type="text" label="COM_TEAMA_FIELD_TEXT_SHOW_LABEL" default="Default News"></field>
+            <field name="show_text" type="text" label="COM_TEAMA_FIELD_TEXT_SHOW_LABEL" default="Default News"/>
         </fieldset>
     </fields>
 </metadata>

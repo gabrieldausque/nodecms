@@ -8,6 +8,7 @@ class HtmlView
 	extends BaseHtmlView
 {
 
+  protected $teamaNews;
 
 	public function display( $tpl = null )
 	{

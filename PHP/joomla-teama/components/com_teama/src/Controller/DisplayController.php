@@ -12,6 +12,8 @@ class DisplayController
 	extends BaseController
 {
 
+  protected $default_view = "Main";
+
 	public function __construct( $config = array(), MVCFactoryInterface $factory = null, ?CMSApplication $app = null,
 		?Input $input = null ) {
 		parent::__construct( $config, $factory, $app, $input );

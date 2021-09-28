@@ -1,5 +1,5 @@
 <?php
-namespace TheLoneBlackSheep\Component\TeamA\Site\View\TeamA;
+namespace TheLoneBlackSheep\Component\TeamA\Site\View\Teama;
 
 \defined('_JEXEC') or die('Restricted Access');
 
