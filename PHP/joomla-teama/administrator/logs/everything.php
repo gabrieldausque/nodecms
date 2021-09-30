@@ -2473,6 +2473,13 @@ Content-Transfer-Encoding: 8bit
 #15 {main}
 2021-09-29T14:24:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-09-29T14:24:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-29T16:34:05+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-29T16:34:05+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T15:17:06+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.09 seconds
+2021-09-30T15:17:15+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T15:17:15+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T15:17:36+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.30 seconds
+2021-09-30T15:17:37+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.06 seconds
 2021-09-30T08:15:08+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds
 2021-09-30T08:21:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-09-30T08:21:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
@@ -2544,3 +2551,30 @@ Content-Transfer-Encoding: 8bit
 #9 /data/workspaces/nodecms/PHP/joomla-teama/administrator/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
 #10 /data/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/data/workspace...')
 #11 {main}
+2021-09-30T15:37:53+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T15:37:53+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T15:44:21+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T15:44:21+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T20:03:40+00:00	WARNING 127.0.0.1	jerror	Field 'name' doesn't have a default value
+2021-09-30T20:06:22+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
+2021-09-30T20:07:58+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
+2021-09-30T20:16:57+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
+2021-09-30T20:19:45+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type ArgumentCountError thrown with message "Too few arguments to function Joomla\Component\Config\Administrator\Model\ComponentModel::save(), 0 passed in /mnt/c/workspaces/nodecms/PHP/joomla/com_teama/install_script.php on line 120 and exactly 1 expected". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla/com_teama/install_script.php(120): Joomla\Component\Config\Administrator\Model\ComponentModel->save()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla/com_teama/install_script.php(128): Com_TeamAInstallerScript->createTeamAGroups()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Installer/InstallerAdapter.php(1104): Com_TeamAInstallerScript->update()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Installer/InstallerAdapter.php(839): Joomla\CMS\Installer\InstallerAdapter->triggerManifestScript()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Installer/Installer.php(520): Joomla\CMS\Installer\InstallerAdapter->install()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_installer/src/Model/InstallModel.php(206): Joomla\CMS\Installer\Installer->install()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_installer/src/Controller/InstallController.php(50): Joomla\Component\Installer\Administrator\Model\InstallModel->install()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): Joomla\Component\Installer\Administrator\Controller\InstallController->install()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(143): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(186): Joomla\CMS\Application\AdministratorApplication->dispatch()
+#12 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\AdministratorApplication->doExecute()
+#13 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/mnt/c/workspac...')
+#15 {main}
+2021-09-30T20:21:24+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
+2021-09-30T20:23:40+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
+2021-09-30T21:17:30+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.08 seconds

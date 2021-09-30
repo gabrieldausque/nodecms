@@ -11,6 +11,9 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Installer;
 use Joomla\CMS\MVC\Factory\MVCFactory;
+use Joomla\CMS\Access;
+use Joomla\CMS\Table\Table;
+use \Joomla\Component\Config\Administrator\Model\ComponentModel;
 
 /**
  * @since 0.0.1
@@ -91,16 +94,26 @@ class Com_TeamAInstallerScript
 
     $teamAMembers = $this->foundGroupByName('TeamA_Members');
 
-    $app = Factory::getApplication();
-
-
     if(!$this->foundGroupByName('TeamA_Administrators')){
       $groupModel->save([
         'id' =>0,
         'parent_id'=> $teamAMembers->id,
         'title' => 'TeamA_Administrators'
       ]);
-
+	    $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
+	    $asset = Table::getInstance('asset');
+	    $asset->loadByName('com_teama');
+	    $newRule = [
+		    'rules' => json_encode([
+			    'core.create' => [$teamaAdminGroup->id => [1]],
+			    'core.edit' => [$teamaAdminGroup->id => [1]],
+			    'core.delete' => [$teamaAdminGroup->id => [1]]
+		    ]),
+		    'name'=> 'com_teama',
+		    'title'=>'Team-A'
+	    ];
+	    var_dump($newRule);
+	    $asset->save($newRule);
     }
 
     return true;
@@ -146,8 +159,6 @@ class Com_TeamAInstallerScript
 
 	public function postflight($type, $parent) : bool
 	{
-		$app = Factory::getApplication();
-
 		return true;
 	}
 }
