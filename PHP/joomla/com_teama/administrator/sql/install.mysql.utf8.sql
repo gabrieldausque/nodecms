@@ -11,3 +11,4 @@ create table if not exists `#__teama_news` (
     last_modifier INT,
     primary key (`id`)
 );
+

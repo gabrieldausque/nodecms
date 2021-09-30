@@ -28,10 +28,10 @@ $app = Factory::getApplication();
                     <thead>
                         <tr>
                             <th scope="col">
-                                <?php echo Text::_('COM_TEAMA_NEWS_TABLE_TABLEHEAD_TITLE')?>
+                                <?php echo Text::_('COM_TEAMA_NEWS_TABLE_HEAD_TITLE')?>
                             </th>
                             <th scope="col">
-                                <?php echo Text::_('COM_TEAMA_NEWS_TABLE_TABLEHEAD_AUTHOR')?>
+                                <?php echo Text::_('COM_TEAMA_NEWS_TABLE_HEAD_AUTHOR')?>
                             </th>
                             <th scope="col" style="width:1%" class="text-center d-none d-md-table-cell">
                               <?php echo Text::_('COM_TEAMA_NEWS_TABLE_HEAD_ID') ?>

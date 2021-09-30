@@ -4,6 +4,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\View\News;
 
 \defined('_JEXEC') or die;
 
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
@@ -29,6 +30,12 @@ class HtmlView
 	protected function addToolbar(){
 	  $toolbar = Toolbar::getInstance();
 	  ToolbarHelper::title(Text::_('COM_TEAMA_MANAGER_NEWS'), 'manage teama');
-	  $toolbar->addNew('onenews.add');
+    $globalCanDo = ContentHelper::getActions('com_teama');
+	  $newsCanDo = ContentHelper::getActions('com_teama','news');
+
+    if($globalCanDo->get('core.create') ||
+       $newsCanDo->get('core.create')
+    )
+      $toolbar->addNew('onenews.add');
   }
 }

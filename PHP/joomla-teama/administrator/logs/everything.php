@@ -2473,3 +2473,74 @@ Content-Transfer-Encoding: 8bit
 #15 {main}
 2021-09-29T14:24:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-09-29T14:24:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T08:15:08+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds
+2021-09-30T08:21:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T08:21:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T08:21:26+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.05 seconds
+2021-09-30T08:21:26+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
+2021-09-30T08:38:01+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T08:38:01+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T08:38:15+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.5. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN `creation_date` DATETIME NOT NULL DEFAU.
+2021-09-30T08:43:52+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-09-30T08:44:02+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-09-30T08:44:05+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.1 Array ( ) 
+2021-09-30T09:08:08+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T09:08:08+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T09:42:16+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T09:42:16+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T10:02:14+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Exception thrown with message "plop 1". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Installer/InstallerAdapter.php(1104): Com_TeamAInstallerScript->update()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Installer/InstallerAdapter.php(839): Joomla\CMS\Installer\InstallerAdapter->triggerManifestScript()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Installer/Installer.php(520): Joomla\CMS\Installer\InstallerAdapter->install()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_installer/src/Model/InstallModel.php(206): Joomla\CMS\Installer\Installer->install()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_installer/src/Controller/InstallController.php(50): Joomla\Component\Installer\Administrator\Model\InstallModel->install()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): Joomla\Component\Installer\Administrator\Controller\InstallController->install()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(143): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(186): Joomla\CMS\Application\AdministratorApplication->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\AdministratorApplication->doExecute()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/administrator/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/data/workspace...')
+#13 {main}
+2021-09-30T10:27:33+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T10:27:33+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T12:17:13+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T12:17:13+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-09-30T12:18:47+00:00	INFO 127.0.0.1	controller	Holding edit ID com_users.edit.level.2 Array (     [0] => 2 ) 
+2021-09-30T12:18:47+00:00	INFO 127.0.0.1	controller	Checking edit ID com_users.edit.level.2: 1 Array (     [0] => 2 ) 
+2021-09-30T12:19:02+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_users.edit.level.2 Array ( ) 
+2021-09-30T12:19:10+00:00	INFO 127.0.0.1	controller	Holding edit ID com_users.edit.group.13 Array (     [0] => 13 ) 
+2021-09-30T12:19:10+00:00	INFO 127.0.0.1	controller	Checking edit ID com_users.edit.group.13: 1 Array (     [0] => 13 ) 
+2021-09-30T12:19:16+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_users.edit.group.13 Array ( ) 
+2021-09-30T12:20:12+00:00	INFO 127.0.0.1	controller	Holding edit ID com_users.edit.group.2 Array (     [0] => 2 ) 
+2021-09-30T12:20:13+00:00	INFO 127.0.0.1	controller	Checking edit ID com_users.edit.group.2: 1 Array (     [0] => 2 ) 
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:20:49+00:00	INFO 127.0.0.1	assets	Asset com_massmail permissions fetch without preloading (slower method).
+2021-09-30T12:34:42+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds
+2021-09-30T12:34:42+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.04 seconds
+2021-09-30T12:34:42+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.03 seconds
+2021-09-30T12:51:05+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: le fichier n'existe pas /mnt/c/workspaces/nodecms/PHP/joomla/com_teama/administrator/config.xml
+2021-09-30T12:51:05+00:00	WARNING 127.0.0.1	jerror	Composant Mise à jour&#160;: Impossible de copier les fichiers administration.
+2021-09-30T13:00:11+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Class 'TheLoneBlackSheep\Component\TeamA\Administrator\View\TeamA\Text' not found". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Administrator\View\TeamA\HtmlView->display()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Controller/DisplayController.php(24): Joomla\CMS\MVC\Controller\BaseController->display()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Administrator\Controller\DisplayController->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Dispatcher/Dispatcher.php(12): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Administrator\Dispatcher\Dispatcher->dispatch()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(143): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(186): Joomla\CMS\Application\AdministratorApplication->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\AdministratorApplication->doExecute()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/administrator/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/data/workspace...')
+#11 {main}
