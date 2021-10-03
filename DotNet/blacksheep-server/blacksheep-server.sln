@@ -12,6 +12,8 @@ ProjectSection(SolutionItems) = preProject
 	docker_mongodbbackend.yaml = docker_mongodbbackend.yaml
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackSheep.Core", "BlackSheep.Core\BlackSheep.Core.csproj", "{067CC025-5394-4D85-93C9-00FF8D253D42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{51F79F7C-65D2-4F4E-8B48-6E1777B9C852}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51F79F7C-65D2-4F4E-8B48-6E1777B9C852}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51F79F7C-65D2-4F4E-8B48-6E1777B9C852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{067CC025-5394-4D85-93C9-00FF8D253D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{067CC025-5394-4D85-93C9-00FF8D253D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{067CC025-5394-4D85-93C9-00FF8D253D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{067CC025-5394-4D85-93C9-00FF8D253D42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

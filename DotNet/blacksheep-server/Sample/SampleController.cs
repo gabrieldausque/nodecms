@@ -7,9 +7,9 @@ namespace Sample
     {
         private readonly ISampleService _sampleService;
 
-        public SampleController(ISampleService sampleService)
+        public SampleController(ISampleService service)
         {
-            _sampleService = sampleService;
+            _sampleService = service;
         }
 
         [HttpGet]
@@ -17,7 +17,7 @@ namespace Sample
         [Route("api/[controller]/{id:int}")]
         public string GetSample([FromRoute] int id = 0)
         {
-            return _sampleService.Get(id);
+            return $"Toto {id}";
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace Sample
         [ActionName("other")]
         public string GetSampleOtherAction([FromRoute] int id = 0)
         {
-            return $"Other action : {_sampleService.Get(id)}";
+            return _sampleService.Get(id);
         }
     }
 }

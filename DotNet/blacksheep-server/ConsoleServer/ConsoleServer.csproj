@@ -15,7 +15,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sample\Sample.csproj" />
+    <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
   </ItemGroup>
+  
+  <Target Name="CleanCatalog" AfterTargets="Build"  >
+    <Message Text="Executing clean catalog" Importance="high"/>
+    <Delete Files="$(OutputPath)Catalog"/>
+  </Target>
+  
+  <Target Name="BuildControllers" AfterTargets="CleanCatalog">
+    <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build"/>
+  </Target>
 
+  <Target Name="PopulateCatalog" AfterTargets="BuildControllers">
+    <Move SourceFiles="..\Sample\$(OutputPath)Sample.dll" DestinationFiles="$(OutputPath)\Catalog\Sample.dll"/>
+  </Target>
+  
 </Project>
