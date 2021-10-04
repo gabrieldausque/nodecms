@@ -107,12 +107,14 @@ class Com_TeamAInstallerScript
 		    'rules' => json_encode([
 			    'core.create' => [$teamaAdminGroup->id => [1]],
 			    'core.edit' => [$teamaAdminGroup->id => [1]],
-			    'core.delete' => [$teamaAdminGroup->id => [1]]
+			    'core.delete' => [$teamaAdminGroup->id => [1]],
+			    'news.create' => [$teamaAdminGroup->id => [1]],
+			    'news.edit' => [$teamaAdminGroup->id => [1]],
+			    'news.delete' => [$teamaAdminGroup->id => [1]],
 		    ]),
 		    'name'=> 'com_teama',
 		    'title'=>'Team-A'
 	    ];
-	    var_dump($newRule);
 	    $asset->save($newRule);
     }
 

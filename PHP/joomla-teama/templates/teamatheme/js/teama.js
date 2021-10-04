@@ -54,4 +54,14 @@ document.addEventListener('DOMContentLoaded', async() => {
     tooltipTriggerList.map((tooltipTriggerEl) => {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
+
+    const submenuButtons = document.querySelectorAll('button.btn-submenu')
+    for(let button of submenuButtons){
+        button.addEventListener('click', () => {
+            if(button.classList.contains('show-submenu'))
+                button.classList.remove('show-submenu');
+            else
+                button.classList.add('show-submenu');
+        })
+    }
 })

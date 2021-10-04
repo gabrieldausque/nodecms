@@ -2578,3 +2578,83 @@ Content-Transfer-Encoding: 8bit
 2021-09-30T20:21:24+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
 2021-09-30T20:23:40+00:00	WARNING 127.0.0.1	jerror	L'extension doit avoir un titre
 2021-09-30T21:17:30+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.08 seconds
+2021-10-04T18:58:22+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-04T18:58:22+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-04T18:58:22+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.09 seconds
+2021-10-04T18:58:46+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.06 seconds
+2021-10-04T18:58:46+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.30 seconds
+2021-10-04T19:56:38+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.6. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN `header_media` varchar(1024) NOT NULL .
+2021-10-04T19:56:54+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T19:57:09+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.1 Array ( ) 
+2021-10-04T19:57:59+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: erreur SQL Duplicate column name 'header_media'
+2021-10-04T19:57:59+00:00	WARNING 127.0.0.1	jerror	Installation de l'extension interrompue.
+2021-10-04T20:00:13+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.7. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS header_media varchar(102.
+2021-10-04T20:04:00+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:04:04+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.1 Array ( ) 
+2021-10-04T20:04:12+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:06:36+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:06:48+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.1 Array ( ) 
+2021-10-04T20:06:51+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:07:02+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:09:34+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.8. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS header_media varchar(102.
+2021-10-04T20:09:45+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:09:45+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Call to undefined method Joomla\CMS\Form\Form::renderFields()". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/View/Onenews/HtmlView.php(31): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Administrator\View\Onenews\HtmlView->display()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Controller/DisplayController.php(24): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Administrator\Controller\DisplayController->display()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Dispatcher/Dispatcher.php(12): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Administrator\Dispatcher\Dispatcher->dispatch()
+#9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(143): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(186): Joomla\CMS\Application\AdministratorApplication->dispatch()
+#11 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\AdministratorApplication->doExecute()
+#12 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/mnt/c/workspac...')
+#14 {main}
+2021-10-04T20:14:55+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.9. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS headermedia varchar(1024.
+2021-10-04T20:20:43+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.10. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS header_media varchar(102.
+2021-10-04T20:23:04+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.10. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS header_media varchar(102.
+2021-10-04T20:24:18+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.10. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS header_media varchar(102.
+2021-10-04T20:27:39+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.11. Texte de la requête: AlTER TABLE #__teama_news     ADD COLUMN IF NOT EXISTS header_media varchar(102.
+2021-10-04T20:41:32+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:48:50+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:51:26+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T20:53:27+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:05:03+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:06:43+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:10:04+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:12:36+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.1 Array ( ) 
+2021-10-04T21:12:46+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:12:58+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:13:48+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:22:00+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:22:26+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:23:16+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:23:36+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:24:02+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:24:13+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:32:46+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.1 Array ( ) 
+2021-10-04T21:33:02+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.12. Texte de la requête: alter table #__teama_news     add column if not exists summary varchar(2096) no.
+2021-10-04T21:34:16+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:35:41+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:36:12+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T21:42:32+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-04T22:05:34+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type ParseError thrown with message "syntax error, unexpected '}', expecting ';' or ','". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ModuleDispatcher.php(54): include()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ModuleDispatcher.php(57): Joomla\CMS\Dispatcher\ModuleDispatcher::Joomla\CMS\Dispatcher\{closure}()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Helper/ModuleHelper.php(295): Joomla\CMS\Dispatcher\ModuleDispatcher->dispatch()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Helper/ModuleHelper.php(167): Joomla\CMS\Helper\ModuleHelper::renderRawModule()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Renderer/Html/ModuleRenderer.php(102): Joomla\CMS\Helper\ModuleHelper::renderModule()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/Renderer/Html/ModulesRenderer.php(48): Joomla\CMS\Document\Renderer\Html\ModuleRenderer->render()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(589): Joomla\CMS\Document\Renderer\Html\ModulesRenderer->render()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(895): Joomla\CMS\Document\HtmlDocument->getBuffer()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Document/HtmlDocument.php(660): Joomla\CMS\Document\HtmlDocument->_renderTemplate()
+#9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1036): Joomla\CMS\Document\HtmlDocument->render()
+#10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(804): Joomla\CMS\Application\CMSApplication->render()
+#11 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(284): Joomla\CMS\Application\SiteApplication->render()
+#12 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#14 {main}
+2021-10-04T22:46:46+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-04T22:46:46+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules

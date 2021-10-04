@@ -46,6 +46,13 @@ body {
 .teama-main-panel {
     flex-grow: 1;
     height:100%;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+
+}
+
+.teama-main-panel::-webkit-scrollbar {
+    display: none;
 }
 
 .teama-landingpage-main {
@@ -243,6 +250,45 @@ body {
         top: calc(100% + 20px);
         bottom:-12px;
     }
+}
+
+.modal-header {
+    border: none;
+    border-radius: 0px;
+}
+
+.teama-dark-forecolor {
+    color: black;
+}
+
+.teama-submenu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+.teama-submenu:hover {
+    background:rgb(33, 37, 41);
+}
+
+.teama-submenu.active {
+    background: #dc3545;
+}
+
+.btn-submenu {
+    box-shadow: none !important;
+    transition: transform 500ms;
+    color:white;
+}
+
+.btn-submenu:hover {
+    color:white;
+}
+
+.btn-submenu.show-submenu {
+    transform: rotate(90deg);
 }
 
 @keyframes teama-left-border {

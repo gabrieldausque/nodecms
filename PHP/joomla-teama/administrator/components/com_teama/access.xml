@@ -7,10 +7,8 @@
         <action name="core.create" title="JACTION_CREATE"/>
         <action name="core.edit" title="JACTION_EDIT"/>
         <action name="core.delete" title="JACTION_DELETE"/>
-    </section>
-    <section name="news">
-        <action name="core.create" title="JACTION_CREATE"/>
-        <action name="core.edit" title="JACTION_EDIT"/>
-        <action name="core.delete" title="JACTION_DELETE"/>
+        <action name="news.create" title="COM_TEAMA_NEWS_PERMS_CREATE"/>
+        <action name="news.edit" title="COM_TEAMA_NEWS_PERMS_EDIT"/>
+        <action name="news.delete" title="COM_TEAMA_NEWS_PERMS_DELETE"/>
     </section>
 </access>

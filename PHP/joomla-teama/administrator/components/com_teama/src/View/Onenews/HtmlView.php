@@ -40,6 +40,7 @@ class HtmlView
 
     ToolbarHelper::apply('onenews.apply');
     ToolbarHelper::cancel('onenews.cancel', 'JTOOLBAR_CLOSE');
+    ToolbarHelper::trash('onenews.remove', 'JTOOLBAR_TRASH');
   }
 
 }

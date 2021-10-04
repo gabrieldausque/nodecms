@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using BlackSheepServer = BlackSheep.Core.Host.Server;
 namespace ConsoleServer

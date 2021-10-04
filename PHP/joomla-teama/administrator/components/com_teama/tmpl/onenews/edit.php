@@ -25,8 +25,11 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
 ?>
 <form action="<?php echo Route::_('index.php?option=com_teama&layout=' . $layout .
                                   $tmpl . '&id=' . (int)$this->theNews->id); ?>" class="form-validate" method="post">
-  <?php echo $this->getForm()->renderField('title'); ?>
-  <?php echo $this->getForm()->renderField('body'); ?>
+    <?php echo $this->getForm()->renderField('title'); ?>
+    <?php echo $this->getForm()->renderFieldSet('header-media'); ?>
+    <?php echo $this->getForm()->renderField('summary'); ?>
+    <?php echo $this->getForm()->renderField('body'); ?>
+
   <input type="hidden" name="task" value="">
   <?php echo HTMLHelper::_('form.token'); ?>
 </form>

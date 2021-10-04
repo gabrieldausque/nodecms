@@ -74,7 +74,16 @@ if ($tagId = $params->get('tag_id', ''))
 		$class .= ' parent';
 	}
 
+	$deeperId = $item->alias . '-submenu';
+
 	echo '<li class="' . $class . ' nav-item">';
+	if($item->deeper) {
+        $subMenuClass = 'teama-submenu';
+        if($item->id == $active_id)
+            $subMenuClass .= ' active';
+		echo '<div class="' . $subMenuClass . '" ><button class="btn btn-toggle align-items-center rounded btn-submenu" data-bs-toggle="collapse" data-bs-target="#' . $deeperId . '" aria-expanded="true">';
+		echo '<i class="fas fa-chevron-right"></i></button>';
+	}
 
 	switch ($item->type) :
 		case 'separator':
@@ -92,7 +101,8 @@ if ($tagId = $params->get('tag_id', ''))
 	// The next item is deeper.
 	if ($item->deeper)
 	{
-		echo '<ul class="mod-menu__sub list-unstyled small">';
+	    echo '</div>';
+		echo '<ul id="' . $deeperId . '" class="mod-menu__sub list-unstyled small collapse">';
 	}
 	// The next item is shallower.
 	elseif ($item->shallower)

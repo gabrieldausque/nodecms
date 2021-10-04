@@ -53,7 +53,7 @@ Text::script('JHIDEPASSWORD');
 					<input id="modlgn-passwd-<?php echo $module->id; ?>" type="password" name="password" autocomplete="current-password" class="form-control" placeholder="<?php echo Text::_('JGLOBAL_PASSWORD'); ?>">
 					<label for="modlgn-passwd-<?php echo $module->id; ?>" class="visually-hidden"><?php echo Text::_('JGLOBAL_PASSWORD'); ?></label>
 					<button type="button" class="btn btn-secondary input-password-toggle">
-						<span class="icon-eye icon-fw" aria-hidden="true"></span>
+						<span class="fas fa-eye" aria-hidden="true"></span>
 						<span class="visually-hidden"><?php echo Text::_('JSHOWPASSWORD'); ?></span>
 					</button>
 				</div>
@@ -66,7 +66,7 @@ Text::script('JHIDEPASSWORD');
 		<?php if (PluginHelper::isEnabled('system', 'remember')) : ?>
 			<div class="mod-login__remember form-group">
 				<div id="form-login-remember-<?php echo $module->id; ?>" class="form-check">
-					<label class="form-check-label">
+					<label class="form-check-label teama-dark-forecolor" >
 						<input type="checkbox" name="remember" class="form-check-input" value="yes">
 						<?php echo Text::_('MOD_LOGIN_REMEMBER_ME'); ?>
 					</label>

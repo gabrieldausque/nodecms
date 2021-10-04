@@ -23,6 +23,10 @@ class OnenewsTable extends Table {
     parent::__construct('#__teama_news','id',$db);
   }
 
+	protected $_jsonEncode = [
+		'header_media'
+	];
+
   public function generateAlias() {
     if(empty($this->alias)){
       $this->alias = $this->title;
@@ -36,5 +40,4 @@ class OnenewsTable extends Table {
 
     return $this->alias;
   }
-
 }
