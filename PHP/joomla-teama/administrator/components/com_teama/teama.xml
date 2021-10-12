@@ -51,6 +51,7 @@
     <files folder="components/com_teama">
         <folder>src</folder>
         <folder>tmpl</folder>
+        <folder>language</folder>
     </files>
 
 </extension>

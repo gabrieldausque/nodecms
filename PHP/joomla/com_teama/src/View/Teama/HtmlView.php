@@ -15,8 +15,7 @@ class HtmlView extends BaseHtmlView
 
 	public function display($tpl = null)
 	{
-		$this->news = $this->get('News', 'News');
-
+		$this->news = $this->get('Top5News', 'News');
 		parent::display( $tpl );
 	}
 }

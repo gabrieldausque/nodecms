@@ -11,6 +11,14 @@ extends BaseDatabaseModel{
 
 	protected $news;
 
+	public function getTop5News() {
+		$db = $this->getDbo();
+		$query = "SELECT * FROM #__teama_news ORDER BY 'creation_date' LIMIT 5 ";
+		$db->setQuery($query);
+		$this->news = $db->loadObjectList();
+		return $this->news;
+	}
+
 	public function getNews() {
 		//todo manage errors
 

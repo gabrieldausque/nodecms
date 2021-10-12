@@ -48,7 +48,7 @@ body {
     height:100%;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
-
+    padding: 0 50px 0 50px;
 }
 
 .teama-main-panel::-webkit-scrollbar {
@@ -205,6 +205,30 @@ body {
 
 .nav-link > i {
     margin-right: 5px;
+}
+
+.teama-section-title {
+    display: flex;
+    margin-bottom: 25px;
+    font-family: 'Army';
+    font-size: 35px;
+    background: #dc3545;
+    padding-left: 15px;
+    color: white;
+}
+
+.teama-section-title-text {
+    width: 50%;
+}
+
+.teama-section-title-decoration {
+    width: 51%;
+    background-color: white;
+    clip-path: polygon(0 101%, 5% 0, 105% 0, 105% 105%);
+}
+
+.teama-section {
+    width:100%;
 }
 
 @keyframes teama-top-border {
