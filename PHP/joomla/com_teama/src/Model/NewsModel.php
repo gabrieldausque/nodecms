@@ -16,7 +16,15 @@ extends BaseDatabaseModel{
 		$query = "SELECT * FROM #__teama_news ORDER BY 'creation_date' LIMIT 5 ";
 		$db->setQuery($query);
 		$this->news = $db->loadObjectList();
+		foreach ($this->news as $onenews){
+			$this->deserialize($onenews);
+		}
 		return $this->news;
+	}
+
+	private function deserialize($onenews) {
+		if(isset($onenews))
+			$onenews->header_media = json_decode($onenews->header_media);
 	}
 
 	public function getNews() {
@@ -30,6 +38,10 @@ extends BaseDatabaseModel{
 
 		$db->setQuery($query);
 		$this->news = $db->loadObjectList();
+
+		foreach ($this->news as $onenews){
+			$this->deserialize($onenews);
+		}
 
 		return $this->news;
 	}
