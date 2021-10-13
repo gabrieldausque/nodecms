@@ -45,10 +45,11 @@ body {
 
 .teama-main-panel {
     flex-grow: 1;
-    height:100%;
+    height:90vh;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
     padding: 0 50px 0 50px;
+    overflow-y: scroll;
 }
 
 .teama-main-panel::-webkit-scrollbar {
@@ -242,6 +243,7 @@ body {
 
 .teama-section {
     width:100%;
+    min-height:523px;
 }
 
 .FirstLetters,

@@ -13,7 +13,7 @@ extends BaseDatabaseModel{
 
 	public function getTop5News() {
 		$db = $this->getDbo();
-		$query = "SELECT * FROM #__teama_news ORDER BY 'creation_date' LIMIT 5 ";
+		$query = "SELECT * FROM #__teama_news ORDER BY creation_date desc LIMIT 5 ";
 		$db->setQuery($query);
 		$this->news = $db->loadObjectList();
 		foreach ($this->news as $onenews){
