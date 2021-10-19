@@ -4,6 +4,8 @@
 
 use \Joomla\CMS\Language\Text;
 
+JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => true]);
+
 ?>
 
 <section id="teama-news" class="teama-section">
@@ -39,12 +41,6 @@ use \Joomla\CMS\Language\Text;
     </div>
 </section>
 
-<section id="teama-newspaper" class="teama-section">
-    <div class="teama-section-title">
-        <span class="teama-section-title-text">Dans les journaux</span>
-        <span class="teama-section-title-decoration sm"></span>
-        <span class="teama-section-title-decoration"></span>
-    </div>
-</section>
+
 
 <?php //TODO : add services - members

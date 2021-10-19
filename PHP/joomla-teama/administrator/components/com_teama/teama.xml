@@ -54,4 +54,8 @@
         <folder>language</folder>
     </files>
 
+    <media folder="media" destination="com_teama">
+        <folder>js</folder>
+    </media>
+
 </extension>

@@ -22,10 +22,10 @@ extends BaseDatabaseModel{
 		return $this->news;
 	}
 
-	private function deserialize($onenews) {
-		if(isset($onenews) && property_exists($onenews, 'header_media'))
-			$onenews->header_media = json_decode($onenews->header_media);
-	}
+  private function deserialize($onenews) {
+    if(isset($onenews) && property_exists($onenews, 'header_media'))
+      $onenews->header_media = json_decode($onenews->header_media);
+  }
 
 	public function getNews() {
 		//todo manage errors
