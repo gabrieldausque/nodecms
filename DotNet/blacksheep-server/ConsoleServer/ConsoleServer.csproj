@@ -17,18 +17,28 @@
   <ItemGroup>
     <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
-  <Target Name="CleanCatalog" AfterTargets="Build"  >
-    <Message Text="Executing clean catalog" Importance="high"/>
-    <Delete Files="$(OutputPath)Catalog"/>
+  <Target Name="CleanCatalog" AfterTargets="Build">
+    <Message Text="Executing clean catalog" Importance="high" />
+    <Delete Files="$(OutputPath)Catalog" />
   </Target>
   
   <Target Name="BuildControllers" AfterTargets="CleanCatalog">
-    <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build"/>
+    <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build" />
+    <MSBuild Projects="..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj" Targets="Clean;Build" />
+    <MSBuild Projects="..\BlackSheep.CMS\BlackSheep.CMS.csproj" Targets="Clean;Build" />
   </Target>
 
   <Target Name="PopulateCatalog" AfterTargets="BuildControllers">
-    <Move SourceFiles="..\Sample\$(OutputPath)Sample.dll" DestinationFiles="$(OutputPath)\Catalog\Sample.dll"/>
+    <Move SourceFiles="..\Sample\$(OutputPath)Sample.dll" DestinationFiles="$(OutputPath)\Catalog\Sample.dll" />
+    <Move SourceFiles="..\BlackSheep.MongoDb\$(OutputPath)BlackSheep.MongoDb.dll" DestinationFiles="$(OutputPath)\Catalog\BlackSheep.MongoDb.dll" />
+    <Move SourceFiles="..\BlackSheep.CMS\$(OutputPath)BlackSheep.CMS.dll" DestinationFiles="$(OutputPath)\Catalog\BlackSheep.CMS.dll" />
   </Target>
   
 </Project>
