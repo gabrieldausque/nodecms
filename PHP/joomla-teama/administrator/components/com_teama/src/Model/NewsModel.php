@@ -21,11 +21,12 @@ class NewsModel
   }
 
   protected function getListQuery() {
+
     $db = $this->getDbo();
     $query = $db->getQuery(true);
-
     $query->select(['*']);
     $query->from($db->quoteName('#__teama_news'));
+    $query->order('id DESC');
 
     return $query;
   }

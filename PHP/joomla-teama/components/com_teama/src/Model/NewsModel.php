@@ -6,13 +6,39 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Pagination\Pagination;
 
 class NewsModel
 extends BaseDatabaseModel{
 
+  public static string $TABLE_NAME = '#__teama_news';
+
 	protected $news;
 
-	public function getTop5News() {
+	protected Pagination $pagination;
+
+  /**
+   *
+   * @return mixed
+   *
+   * @since version
+   */
+  public function getTotal() {
+    $db    = $this->getDbo();
+    $query = $db->getQuery(TRUE);
+    $query->select('count(id) as nb');
+    $query->from(self::$TABLE_NAME);
+    $total = $db->setQuery($query)->loadObject()->nb;
+    return $total;
+  }
+
+  protected function populateState() {
+    $app = Factory::getApplication();
+    $this->setState('start', $app->input->getInt('start', 0));
+    $this->setState('limit', 8);
+  }
+
+  public function getTop5News() {
     $app = Factory::getApplication();
     $user = $app->getIdentity();
 
@@ -43,22 +69,30 @@ extends BaseDatabaseModel{
       $onenews->header_media = json_decode($onenews->header_media);
   }
 
+  public function getPagination() {
+    $pageIndex = $this->getState('start');
+    $limit = $this->getState('limit');
+    $start = $this->getState('start');
+    $total     = $this->getTotal();
+    $this->pagination = new Pagination($total, $start, $limit);
+	  return $this->pagination;
+  }
+
 	public function getNews() {
-		//todo manage errors
-
+    $this->getPagination();
 		$db = $this->getDbo();
-		$query = $db->getQuery(true);
-
-		$query->select(['*']);
-		$query->from($db->quoteName('#__teama_news'));
-
-		$db->setQuery($query);
-		$this->news = $db->loadObjectList();
-
+    $query = $db->getQuery(true);
+    $query->select('*')
+          ->from(self::$TABLE_NAME)
+          ->order('id DESC')
+          ->setLimit($this->pagination->limit,$this->pagination->limitstart);
+    $db->setQuery($query);
+    $this->news = $db->loadObjectList();
 		foreach ($this->news as $onenews){
 			$this->deserialize($onenews);
 		}
-
 		return $this->news;
 	}
+
+
 }

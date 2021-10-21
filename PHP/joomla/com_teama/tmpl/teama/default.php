@@ -43,7 +43,7 @@ $document->addStyleSheet('/media/com_teama/css/default.css');
                 </div>
             </article>
 		<?php }?>
-        <div class="card teama-news-card link-to-all-news">
+        <div class="card teama-news-card link-to-all-news" data-newslink="index.php?option=com_teama&task=news.display&view=news">
             <?php echo Text::_('COM_TEAMA_SHOW_ALL_NEWS') ?>
         </div>
     </div>

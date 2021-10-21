@@ -14,4 +14,11 @@ class NewsController
 	public function display( $cachable = false, $urlparams = array() ) {
 		return parent::display( $cachable, $urlparams );
 	}
+
+	public function nextNews(){
+	  if(!\JSession::checkToken('get')){
+	    echo new \JResponseJson(null, \JText::_('JINVALID_TOKEN'), true);
+    }
+	  parent::display();
+  }
 }

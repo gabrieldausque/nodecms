@@ -41,14 +41,14 @@ class Com_TeamAInstallerScript
 
 	public function foundGroupByName(string $groupName) {
     $groupsModel = new \Joomla\Component\Users\Administrator\Model\GroupsModel();
-    $groups = $groupsModel->getItems();
+    $db = $groupsModel->getDbo();
+    $db->setQuery("SELECT * from #__usergroups WHERE title='" . $groupName . "'");
 
-    if(is_array($groups)){
-      foreach($groups as $group){
-        if($group->title == $groupName)
-          return $group;
-      }
-    }
+    $group = $db->loadObject();
+
+    if(isset($group))
+      return $group;
+
     return false;
   }
 

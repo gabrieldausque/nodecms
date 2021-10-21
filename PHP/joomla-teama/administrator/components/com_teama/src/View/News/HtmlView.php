@@ -12,11 +12,14 @@ use Joomla\CMS\Language\Text;
 class HtmlView
 	extends \Joomla\CMS\MVC\View\HtmlView
 {
+  protected $pagination;
+
   protected $teamaNews;
 
 	public function display( $tpl = null ) {
 
     $this->teamaNews = $this->get('Items');
+    $this->pagination = $this->get('Pagination');
 
     if(!count($this->teamaNews) && $this->get('IsEmptyState')) {
       $this->setLayout('emptystate');
@@ -33,8 +36,8 @@ class HtmlView
     $globalCanDo = ContentHelper::getActions('com_teama');
 	  $newsCanDo = ContentHelper::getActions('com_teama','news');
 
-    if($globalCanDo->get('core.create') ||
-       $newsCanDo->get('core.create')
+    if($globalCanDo->get('news.create') ||
+       $newsCanDo->get('news.create')
     )
       $toolbar->addNew('onenews.add');
   }
