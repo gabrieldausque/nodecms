@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let request = new XMLHttpRequest();
     request.open(
         'post',
-        'index.php?options=com_teama&task=news.nextNews&format=json',
+        'index.php?options=com_teama&task=news.nextNews&view=news&format=json',
         true
     )
 
@@ -12,11 +12,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.log(request);
     };
 
-    const data = {
-      limit:next.attributes['data-limit'].value,
-      limitstart:next.attributes['data-limitstart'].value
-    }
-    data[`${next.attributes['data-token'].value}`] = "1";
+    const data = new FormData();
+    data.append('limit', next.attributes['data-limit'].value);
+    data.append('limitstart',next.attributes['data-limitstart'].value);
+    data.append(`${next.attributes['data-token'].value}`, "1");
     request.send(data)
   })
 })

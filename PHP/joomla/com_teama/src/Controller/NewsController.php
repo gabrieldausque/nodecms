@@ -4,6 +4,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Controller;
 
 \defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 class NewsController
@@ -16,9 +17,12 @@ class NewsController
 	}
 
 	public function nextNews(){
-	  if(!\JSession::checkToken('get')){
+	  $app = Factory::getApplication();
+	  if(!\JSession::checkToken())
+	  {
 	    echo new \JResponseJson(null, \JText::_('JINVALID_TOKEN'), true);
-    }
-	  parent::display();
+	  } else {
+		  parent::display();
+	  }
   }
 }
