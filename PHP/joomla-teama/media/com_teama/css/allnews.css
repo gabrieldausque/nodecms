@@ -1,0 +1,28 @@
+.teama-allnews-title {
+  text-transform: uppercase;
+  font-family: 'Army';
+  background: #dc3545;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 3.25rem;
+  max-height: 4.25rem;
+  align-items: center;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.teama-allnews-title-text {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.teama-allnews-title > .teama-section-title-decoration {
+  margin-right: 15px;
+  margin-left: auto;
+}
+
+.teama-section-news.lg {
+  width:100%;
+  justify-content: center;
+}
