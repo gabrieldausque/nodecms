@@ -4,6 +4,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 
 \defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class NewsModel
@@ -12,13 +13,28 @@ extends BaseDatabaseModel{
 	protected $news;
 
 	public function getTop5News() {
-		$db = $this->getDbo();
-		$query = "SELECT * FROM #__teama_news ORDER BY creation_date DESC LIMIT 5 ";
-		$db->setQuery($query);
-		$this->news = $db->loadObjectList();
-		foreach ($this->news as $onenews){
-			$this->deserialize($onenews);
-		}
+    $app = Factory::getApplication();
+    $user = $app->getIdentity();
+
+    if($user->authorise('news.read','com_teama')) {
+      $db = $this->getDbo();
+      $query = "SELECT * FROM #__teama_news ORDER BY creation_date DESC LIMIT 5 ";
+      $db->setQuery($query);
+      $this->news = $db->loadObjectList();
+      foreach ($this->news as $onenews){
+        $this->deserialize($onenews);
+      }
+    } else {
+      $this->news = [
+        new OneNews(true)
+      ];
+    }
+
+    if(!is_array($this->news) || count($this->news) <= 0)
+      $this->news =[
+        new OneNews()
+      ];
+
 		return $this->news;
 	}
 

@@ -14,6 +14,7 @@ use Joomla\CMS\MVC\Factory\MVCFactory;
 use Joomla\CMS\Access;
 use Joomla\CMS\Table\Table;
 use \Joomla\Component\Config\Administrator\Model\ComponentModel;
+use \Joomla\Component\Users\Administrator\Model\GroupModel;
 
 /**
  * @since 0.0.1
@@ -93,30 +94,15 @@ class Com_TeamAInstallerScript
     }
 
     $teamAMembers = $this->foundGroupByName('TeamA_Members');
-
-    if(!$this->foundGroupByName('TeamA_Administrators')){
+    if (!$this->foundGroupByName('TeamA_Administrators')) {
       $groupModel->save([
-        'id' =>0,
-        'parent_id'=> $teamAMembers->id,
-        'title' => 'TeamA_Administrators'
+        'id'        => 0,
+        'parent_id' => $teamAMembers->id,
+        'title'     => 'TeamA_Administrators'
       ]);
-	    $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
-	    $asset = Table::getInstance('asset');
-	    $asset->loadByName('com_teama');
-	    $newRule = [
-		    'rules' => json_encode([
-			    'core.create' => [$teamaAdminGroup->id => [1]],
-			    'core.edit' => [$teamaAdminGroup->id => [1]],
-			    'core.delete' => [$teamaAdminGroup->id => [1]],
-			    'news.create' => [$teamaAdminGroup->id => [1]],
-			    'news.edit' => [$teamaAdminGroup->id => [1]],
-			    'news.delete' => [$teamaAdminGroup->id => [1]],
-		    ]),
-		    'name'=> 'com_teama',
-		    'title'=>'Team-A'
-	    ];
-	    $asset->save($newRule);
     }
+
+    $this->setRules();
 
     return true;
   }
@@ -126,6 +112,8 @@ class Com_TeamAInstallerScript
 	  if(!$this->createTeamAGroups()){
 	    return false;
     }
+
+	  $this->setRules();
 
     return true;
 	}
@@ -163,4 +151,42 @@ class Com_TeamAInstallerScript
 	{
 		return true;
 	}
+
+  /**
+   *
+   *
+   * @since version
+   */
+  public function setRules(): void {
+    $teamAMembers = $this->foundGroupByName('TeamA_Members');
+    $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
+
+    $asset           = Table::getInstance('asset');
+    $asset->loadByName('com_teama');
+    $rules = [
+      'news.create' => [$teamaAdminGroup->id => 1],
+      'news.edit'   => [$teamaAdminGroup->id => 1],
+      'news.delete' => [$teamaAdminGroup->id => 1],
+      'news.read'   => [$teamAMembers->id => 1]
+    ];
+    $teamA_asset = [
+      'rules' => json_encode($rules),
+      'name'  => 'com_teama',
+      'title' => 'Team-A'
+    ];
+    $id = $asset->getId();
+    if(isset($id) && $id > 0){
+      $teamA_asset = $asset->getProperties();
+      $rules = json_decode($teamA_asset['rules'], true);
+    }
+
+    $rules['news.create'][$teamaAdminGroup->id] = 1;
+    $rules['news.edit'][$teamaAdminGroup->id] = 1;
+    $rules['news.delete'][$teamaAdminGroup->id] = 1;
+    $rules['news.read'][$teamAMembers->id] = 1;
+    $teamA_asset['rules'] = json_encode($rules);
+
+    $asset->save($teamA_asset);
+  }
+
 }

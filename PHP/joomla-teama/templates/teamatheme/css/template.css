@@ -145,6 +145,10 @@ body {
     width: 40px;
 }
 
+#teama-brand-title {
+    white-space: nowrap;
+}
+
 .teama-brand-container > h5 {
     margin-bottom: 0;
 }
@@ -208,42 +212,8 @@ body {
     margin-right: 5px;
 }
 
-.teama-section-title {
-    display: flex;
-    margin-bottom: 25px;
-    font-family: 'Army';
-    font-size: 35px;
-    background: #dc3545;
-    padding-left: 15px;
-    color: white;
-    height: 52px;
-    overflow: hidden;
-    align-items: center;
-}
-
-.teama-section-title-text {
-    width: 50%;
-    white-space: nowrap;
-}
-
-.teama-section-title-decoration {
-    width: 51%;
-    background-color: white;
-    height: 500px;
-    transform: rotate(30deg) translate(125px);
+.FirstLetters {
     margin-left: 10px;
-    margin-right:10px;
-}
-
-.teama-section-title-decoration.sm {
-    width: 20px;
-    transform: rotate(
-            30deg) translateX(95px);
-}
-
-.teama-section {
-    width:100%;
-    min-height:523px;
 }
 
 .FirstLetters,
@@ -251,22 +221,8 @@ body {
     white-space: nowrap;
 }
 
-.teama-news-card {
-    width: calc(30% - 10px);
-    min-height: 212px;
-    margin: 5px;
-}
-
-.teama-section-news {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.link-to-all-news {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: calc(30% - 10px);
+.teama-menu-link {
+    font-family: var(--bs-body-font-family) !important;
 }
 
 @keyframes teama-top-border {

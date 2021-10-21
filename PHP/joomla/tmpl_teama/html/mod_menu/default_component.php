@@ -75,11 +75,11 @@ elseif ($item->browserNav == 2)
 
 if (!array_key_exists('class', $attributes))
 {
-	$attributes['class'] = ' nav-link text-white';
+	$attributes['class'] = ' nav-link text-white teama-menu-link';
 }
 else
 {
-	$attributes['class'] .= ' nav-link text-white';
+	$attributes['class'] .= ' nav-link text-white teama-menu-link';
 }
 
 if ($item->id == $active_id)

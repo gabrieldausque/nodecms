@@ -3,8 +3,15 @@
 \defined('_JEXEC') or die ('Restricted Access');
 
 use \Joomla\CMS\Language\Text;
+use \Joomla\CMS\Factory;
+use \Joomla\CMS\Application\WebApplication;
+
+$app = Factory::getApplication();
+$document = $app->getDocument();
 
 JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => true]);
+
+$document->addStyleSheet('/media/com_teama/css/default.css');
 
 ?>
 
@@ -16,7 +23,7 @@ JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => t
     </div>
     <div class="teama-section-news ">
 		<?php foreach($this->news as  $i => $oneNews) { ?>
-            <article class="card teama-news-card">
+            <article class="card teama-news-card" data-newslink="index.php?option=com_teama&task=onenews.display&view=onenews&id=<?php echo $oneNews->id ?>">
                 <?php if(isset($oneNews->header_media->image) &&
                          $oneNews->header_media->image != "") { ?>
                     <div class="card-img-top"
@@ -27,6 +34,7 @@ JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => t
                                 width: 100%;
                                 height: 100px;"
                          alt="<?php echo $oneNews->header_media->alt?>"
+                         title="<?php echo $oneNews->header_media->caption ?>"
                     ></div>
                 <?php } ?>
                 <div class="card-body">
@@ -35,12 +43,10 @@ JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => t
                 </div>
             </article>
 		<?php }?>
-        <div class="link-to-all-news">
+        <div class="card teama-news-card link-to-all-news">
             <?php echo Text::_('COM_TEAMA_SHOW_ALL_NEWS') ?>
         </div>
     </div>
 </section>
-
-
 
 <?php //TODO : add services - members
