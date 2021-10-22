@@ -526,3 +526,44 @@
 #9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
 #10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
 #11 {main}
+2021-10-22T07:18:53+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds
+2021-10-22T07:18:58+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T07:18:58+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T07:51:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T07:51:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T07:51:43+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.06 seconds
+2021-10-22T07:51:43+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
+2021-10-22T08:07:25+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Cannot use object of type Joomla\CMS\Pagination\PaginationObject as array". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/News/HtmlView.php(20): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\News\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/NewsController.php(16): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\NewsController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-10-22T08:39:23+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T08:39:23+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T08:39:40+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.10 Array (     [0] => 10 ) 
+2021-10-22T08:39:42+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.10 Array ( ) 
+2021-10-22T08:39:54+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.11 Array (     [0] => 11 ) 
+2021-10-22T08:39:55+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.11 Array ( ) 
+2021-10-22T08:40:09+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.12 Array (     [0] => 12 ) 
+2021-10-22T08:40:10+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.12 Array ( ) 
+2021-10-22T08:46:40+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.1 Array (     [0] => 1 ) 
+2021-10-22T09:39:26+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.13 Array (     [0] => 1     [1] => 13 ) 
+2021-10-22T09:39:28+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.13 Array (     [0] => 1 ) 
+2021-10-22T09:39:35+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.14 Array (     [0] => 1     [1] => 14 ) 
+2021-10-22T09:39:36+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.14 Array (     [0] => 1 ) 
+2021-10-22T09:39:43+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.15 Array (     [0] => 1     [1] => 15 ) 
+2021-10-22T09:39:44+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.15 Array (     [0] => 1 ) 
+2021-10-22T09:39:50+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.16 Array (     [0] => 1     [1] => 16 ) 
+2021-10-22T09:39:51+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.16 Array (     [0] => 1 ) 
+2021-10-22T09:39:58+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 1     [1] => 17 ) 
+2021-10-22T09:40:00+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.17 Array (     [0] => 1 ) 

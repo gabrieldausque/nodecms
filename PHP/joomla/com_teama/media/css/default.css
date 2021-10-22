@@ -1,5 +1,5 @@
 .teama-news-card {
-  width: calc(30% - 10px);
+  width: calc(33% - 10px);
   min-height: 212px;
   margin: 5px;
   transition: transform 500ms ease-in-out;
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(30% - 10px);
+  width: calc(33% - 10px);
 }
 
 .teama-section-title {

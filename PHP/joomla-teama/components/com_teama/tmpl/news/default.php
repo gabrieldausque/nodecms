@@ -48,10 +48,28 @@ $document->addStyleSheet('/media/com_teama/css/allnews.css');
     </article>
   <?php }?>
   <div id="next-news" class="card teama-news-card link-to-all-news"
-       data-limit="<?php  echo $this->pagination->limit ?>"
-       data-limitstart="<?php echo $this->pagination->limitstart ?>"
+       data-start="<?php echo $this->pagination->getPaginationPages()['next']['data']->base ?>"
        data-token="<?php echo JSession::getFormToken() ?>"
   >
     <?php echo Text::_('COM_TEAMA_SHOW_NEXT_NEWS') ?>
   </div>
 </div>
+
+<article id="teama-news-tmpl"
+         class="card teama-news-card hidden"
+         data-newslink="index.php?option=com_teama&task=onenews.display&view=onenews&id=">
+      <div class="card-img-top"
+           style="background-image: url('');
+                   background-position: center;
+                   background-repeat: no-repeat;
+                   background-size: contain;
+                   width: 100%;
+                   height: 100px;"
+           alt=""
+           title=""
+      ></div>
+    <div class="card-body">
+        <h5 id="teama-thenews-title"></h5>
+        <p id="teama-thenews-summary" class="card-text"></p>
+    </div>
+</article>

@@ -31,7 +31,7 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
         <div class="display-4 teama-onenews-title"><?php echo $theNews->title ?></div>
           <?php if(isset($theNews->header_media) && $theNews->header_media->image != '') {?>
               <div class="teama-onenews-header-image"
-                   style="background-image: url('<?php echo $theNews->header_media->image ?>')";
+                   style="background-image: url('<?php echo $theNews->header_media->image ?>')"
                    title="<?php echo $theNews->header_media->caption ?>"
               ></div>
           <?php } ?>
