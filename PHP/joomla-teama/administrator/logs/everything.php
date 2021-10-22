@@ -567,3 +567,109 @@
 2021-10-22T09:39:51+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.16 Array (     [0] => 1 ) 
 2021-10-22T09:39:58+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 1     [1] => 17 ) 
 2021-10-22T09:40:00+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.17 Array (     [0] => 1 ) 
+2021-10-22T10:21:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T10:21:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T10:21:54+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T10:23:33+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T10:27:43+00:00	INFO 127.0.0.1	controller	Holding edit ID com_content.edit.article.1 Array (     [0] => 1 ) 
+2021-10-22T10:27:43+00:00	INFO 127.0.0.1	controller	Checking edit ID com_content.edit.article.1: 1 Array (     [0] => 1 ) 
+2021-10-22T10:28:30+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T10:36:24+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T10:48:44+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T11:21:04+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T11:21:04+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T12:02:14+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:02:27+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:02:50+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:03:35+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.17 Array ( ) 
+2021-10-22T12:07:39+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:10:15+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:16:48+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:19:15+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:19:17+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.17 Array ( ) 
+2021-10-22T12:19:23+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T12:22:58+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.onenews.17 Array ( ) 
+2021-10-22T13:35:32+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T13:35:32+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T13:35:32+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.05 seconds
+2021-10-22T14:04:06+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T14:04:06+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T16:26:08+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T16:26:08+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T16:35:48+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T16:35:48+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T16:36:10+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type ParseError thrown with message "syntax error, unexpected '}', expecting end of file". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Teama/HtmlView.php(19): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Teama\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-10-22T16:36:58+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type ParseError thrown with message "syntax error, unexpected '}', expecting end of file". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Teama/HtmlView.php(19): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Teama\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-10-22T16:45:27+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Call to a member function renderField() on null". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(18): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-10-22T16:54:56+00:00	WARNING 127.0.0.1	jerror	Joomla\CMS\Filesystem\Folder::delete : Le chemin n'est pas un dossier. Chemin&nbsp;: /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/forms
+2021-10-22T16:55:18+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Form::loadForm could not load file". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Model/OnenewsModel.php(29): Joomla\CMS\MVC\Model\FormModel->loadForm()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/AbstractView.php(146): TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel->getForm()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(20): Joomla\CMS\MVC\View\AbstractView->get()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-10-22T17:11:34+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T17:17:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T17:17:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-22T17:17:50+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.05 seconds
+2021-10-22T17:17:50+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.03 seconds
+2021-10-22T17:17:50+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
+2021-10-22T17:33:02+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-10-22T17:35:33+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}

@@ -60,5 +60,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     data.append('start',next.attributes['data-start'].value);
     data.append(`${next.attributes['data-token'].value}`, "1");
     request.send(data)
+  });
+  document.querySelectorAll('article[data-newslink]').forEach((elt) => {
+    elt.addEventListener('click',async () => {
+      window.open(elt.attributes['data-newslink'].value,'_self')
+    })
   })
 })

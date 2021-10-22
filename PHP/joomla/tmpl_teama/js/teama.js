@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', async() => {
     if(brandLogoButton) {
         brandLogoButton.addEventListener('click', async() => {
             const leftPanel = document.querySelector('.teama-left-panel');
-            if(leftPanel){
+            const brandingPanel = document.querySelector('.teama-brand-container');
+            if(leftPanel && brandingPanel){
                 if(leftPanel.classList.contains('shrink')){
                     leftPanel.classList.remove('shrink');
+                    brandingPanel.classList.remove('shrink');
                 } else {
                     leftPanel.classList.add('shrink');
+                    brandingPanel.classList.add('shrink');
                 }
             }
         })

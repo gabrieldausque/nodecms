@@ -53,6 +53,15 @@
 }
 
 .teama-section {
-  width:100%;
+  width:calc(100% - 30px);
   min-height:523px;
+  margin:15px;
+}
+
+.teama-toolbar {
+  width: 100%;
+  background-color: rgb(33, 37, 41);
+  height: 61px;
+  z-index: 5;
+  min-height: 61px;
 }

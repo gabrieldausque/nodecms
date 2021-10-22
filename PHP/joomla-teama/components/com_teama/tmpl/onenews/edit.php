@@ -26,7 +26,8 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
   '&tmpl=component':'';
 ?>
 <form action="<?php echo Route::_('index.php?option=com_teama&layout=' . $layout .
-                                  $tmpl . '&id=' . (int)$this->theNews->id); ?>" class="form-validate" method="post">
+                                  $tmpl . '&id=' . (int)$this->item->id); ?>" class="form-validate"
+      method="post">
   <?php echo $this->getForm()->renderField('title'); ?>
   <?php echo $this->getForm()->renderField('summary'); ?>
     <div>

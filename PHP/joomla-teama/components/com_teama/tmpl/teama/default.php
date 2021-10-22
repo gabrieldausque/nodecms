@@ -9,9 +9,9 @@ use \Joomla\CMS\Application\WebApplication;
 $app = Factory::getApplication();
 $document = $app->getDocument();
 
-JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => true]);
+include __DIR__ . '/../headers/toolbar.php';
 
-$document->addStyleSheet('/media/com_teama/css/default.css');
+JHtml::_('script', 'com_teama/home.js', ['version' => 'auto', 'relative' => true]);
 
 ?>
 

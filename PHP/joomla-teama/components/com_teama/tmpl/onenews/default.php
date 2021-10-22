@@ -13,15 +13,14 @@ use \Joomla\CMS\Language\Text;
 use \Joomla\CMS\Factory;
 use Joomla\CMS\User\UserFactoryInterface;
 
-$theNews = $this->item;
+include __DIR__ . '/../headers/toolbar.php';
 
+$theNews = $this->item;
 $theNews = $this->item;
 $app = Factory::getApplication();
 $document = $app->getDocument();
 $userFactory = Factory::getContainer()->get(UserFactoryInterface::class);
-
 $author = $userFactory->loadUserById($theNews->author);
-
 $document->addStyleSheet('/media/com_teama/css/onenews.css');
 
 ?>
