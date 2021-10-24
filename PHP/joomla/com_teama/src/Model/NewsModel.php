@@ -94,5 +94,4 @@ extends BaseDatabaseModel{
 		return $this->news;
 	}
 
-
 }

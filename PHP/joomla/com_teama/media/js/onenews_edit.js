@@ -6,3 +6,19 @@
  * replace src in data-iframe !!! BEWARE OF THE &quot !
  * during the onload ....
  */
+
+let htmlEncode = (toEncode) => {
+    const textArea = document.createElement('textArea');
+    textArea.innerHTML = toEncode;
+    return textArea.innerHTML;
+}
+let urlAdmin = htmlEncode('/administrator/index.php?option=com_media&view=media&tmpl=component&mediatypes=0&asset=com_teama&author=&fieldid={field-media-id}&path=local-images:/banners');
+
+document.addEventListener('DOMContentLoaded', () => {
+    let modalContentForMedia = document.getElementById('imageModal_jform_header_media_image');
+    if(modalContentForMedia){
+
+    }
+})
+
+

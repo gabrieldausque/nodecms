@@ -673,3 +673,5 @@
 #4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
 #5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
 #6 {main}
+2021-10-24T08:40:24+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.56 seconds
+2021-10-24T08:41:14+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.6 Array (     [0] => 6 ) 
