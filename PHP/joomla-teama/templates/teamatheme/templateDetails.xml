@@ -10,6 +10,7 @@
     <version>0.0.21</version>
     <description>The Team A Theme</description>
     <files>
+        <filename>component.php</filename>
         <filename>index.php</filename>
         <filename>templateDetails.xml</filename>
         <folder>images</folder>

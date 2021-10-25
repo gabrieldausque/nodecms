@@ -91,7 +91,7 @@ class JConfig {
 	public $session_redis_server_host = 'localhost';
 	public $session_redis_server_port = 6379;
 	public $session_redis_server_db = 0;
-	public $frontediting = 1;
+	public $frontediting = 2;
 	public $block_floc = 1;
 	public $log_everything = 1;
 	public $log_deprecated = 0;

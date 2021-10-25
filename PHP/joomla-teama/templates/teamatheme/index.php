@@ -12,11 +12,11 @@ use Joomla\CMS\Helper\ModuleHelper;
 $app = Factory::getApplication();
 $webAssetManager = $this->getWebAssetManager();
 $templatePath = 'templates/' . $this->template;
-
+$webAssetManager->registerAndUseStyle('fontawesome', 'media/system/css/joomla-fontawesome.min.css');
 $webAssetManager->registerAndUseStyle('teama-bootstrap-styles', $templatePath . '/css/bootstrap/bootstrap.css');
 $webAssetManager->registerAndUseStyle('teama-main-styles', $templatePath . '/css/template.css');
 $webAssetManager->registerAndUseStyle('teama-fonts', $templatePath . '/css/fonts.css');
-$webAssetManager->registerAndUseStyle('fontawesome', $templatePath . '/css/fontawesome/css/all.css');
+$webAssetManager->registerAndUseStyle('teama-fontawesome', $templatePath . '/css/fontawesome/css/all.css');
 $webAssetManager->registerAndUseScript('teama-bootstrap', $templatePath . '/js/bootstrap/bootstrap.bundle.js');
 $webAssetManager->registerAndUseScript('teama-main', $templatePath . '/js/teama.js');
 

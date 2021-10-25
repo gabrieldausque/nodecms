@@ -20,7 +20,7 @@ $input = $app->input;
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
    ->useScript('form.validate');
-
+JHtml::_('script', 'com_teama/onenews_edit.js', ['version' => 'auto', 'relative' => true]);
 $layout = 'edit';
 $tmpl = $input->get('tmpl','','cmd') === 'component' ?
   '&tmpl=component':'';

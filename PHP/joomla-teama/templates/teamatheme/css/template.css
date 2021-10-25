@@ -4,6 +4,12 @@ body {
     overflow: hidden;
 }
 
+.teama-component-body {
+    height: auto !important;
+    width: auto !important;
+    overflow-y: auto !important;
+}
+
 .teama-connected {
     background: white;
 }
@@ -337,4 +343,28 @@ body {
         bottom: calc(100% + 20px);
         top:-10px;
     }
+}
+
+.modal-dialog.jviewport-width80 {
+    width: 80vw;
+    max-width: none;
+}
+
+.modal-body.jviewport-height60 {
+    max-height: initial;
+    height: 68vh;
+    overflow-y: visible;
+}
+
+joomla-toolbar-button {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.media-main {
+    flex-basis: calc(100% - 280px);
+}
+
+.iframe {
+    width: 100%;
 }

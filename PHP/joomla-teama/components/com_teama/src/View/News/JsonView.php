@@ -15,18 +15,17 @@ class JsonView
 
 	function display( $tpl = null ) {
 		$this->_output = new class(){
-		  public $news;
-		  public $next;
+		  public $news = [];
+		  public $next = null;
     };
-
 		$this->_output->news = $this->get('News');
-
-		$next = $this->get('Pagination')->getPaginationPages()['next']['data'];
-
-		$this->_output->next = ($next->base == null)?
-      null:
-      $next;
-
+		$paginationPages = $this->get('Pagination')->getPaginationPages();
+		if(array_key_exists('next', $paginationPages)){
+			$next = $paginationPages['next']['data'];
+			$this->_output->next = ($next->base == null)?
+				null:
+				$next;
+		}
 		echo json_encode($this->_output);
 	}
 }
