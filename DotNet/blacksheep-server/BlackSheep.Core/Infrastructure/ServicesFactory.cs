@@ -36,17 +36,17 @@ namespace BlackSheep.Core.Infrastructure
             ServiceClasses[serviceTypeIdentifier] = type;
         }
 
-        public S GetServiceInstance<S, T>(string serviceTypeIdentifier)
+        public TS GetServiceInstance<TS, T, TF>(string serviceTypeIdentifier)
         {
             var serviceGenericType = ServiceClasses[serviceTypeIdentifier];
 
             if (!serviceGenericType.IsGenericType)
                 throw new ApplicationException(
                     $"Service {serviceGenericType.FullName} is not a generic type.");
-            var specializedType = serviceGenericType.MakeGenericType(typeof(T));
-            var service = specializedType.GetConstructor(new Type[] { }).Invoke(null);
-            if (service is not S concreteService)
-                throw new ApplicationException($"{service.GetType().FullName} is not if type {typeof(S).FullName}");
+            var specializedType = serviceGenericType.MakeGenericType(typeof(T), typeof(TF));
+            var service = specializedType.GetConstructor(new Type[] { })?.Invoke(null);
+            if (service is not TS concreteService)
+                throw new ApplicationException($"{service.GetType().FullName} is not if type {typeof(TS).FullName}");
             return concreteService;
         } 
     }

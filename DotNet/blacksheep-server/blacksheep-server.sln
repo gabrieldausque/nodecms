@@ -5,18 +5,23 @@ VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleServer", "ConsoleServer\ConsoleServer.csproj", "{CBD911D8-2CD5-4CA4-8C4A-5D2AABACC5C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{51F79F7C-65D2-4F4E-8B48-6E1777B9C852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{51F79F7C-65D2-4F4E-8B48-6E1777B9C852}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{4F0D1724-50A3-418E-BC7E-1FD3606F6D91}"
-ProjectSection(SolutionItems) = preProject
-	docker_mongodbbackend.yaml = docker_mongodbbackend.yaml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		docker_mongodbbackend.yaml = docker_mongodbbackend.yaml
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackSheep.Core", "BlackSheep.Core\BlackSheep.Core.csproj", "{067CC025-5394-4D85-93C9-00FF8D253D42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackSheep.Core", "BlackSheep.Core\BlackSheep.Core.csproj", "{067CC025-5394-4D85-93C9-00FF8D253D42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackSheep.MongoDb", "BlackSheep.MongoDb\BlackSheep.MongoDb.csproj", "{8168432C-A06E-4E16-BC83-72484B405A85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackSheep.MongoDb", "BlackSheep.MongoDb\BlackSheep.MongoDb.csproj", "{8168432C-A06E-4E16-BC83-72484B405A85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackSheep.CMS", "BlackSheep.CMS\BlackSheep.CMS.csproj", "{A82EF8D2-57AE-4FF2-B0A3-8C3D8604F84D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackSheep.CMS", "BlackSheep.CMS\BlackSheep.CMS.csproj", "{A82EF8D2-57AE-4FF2-B0A3-8C3D8604F84D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{A779BD04-B4F5-4739-911D-382109C5A0B8}"
+	ProjectSection(SolutionItems) = preProject
+		MongodbTeamAInitScript.js = MongodbTeamAInitScript.js
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

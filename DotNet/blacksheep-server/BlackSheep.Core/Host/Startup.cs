@@ -98,7 +98,8 @@ namespace BlackSheep.Core.Host
                 }
             });
             // Now Add all controllers
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
         }
     }
 }

@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+    <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,8 +24,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
-  <Target Name="CleanCatalog" AfterTargets="Build">
+
+  <Target Name="InitDb" AfterTargets="Build">
+    <Message Text="Initialization teama DB" Importance="high"/>
+    <Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg .\..\MongodbTeamAInitScript.js"/>
+  </Target>
+
+  <Target Name="CleanCatalog" AfterTargets="InitDb">
     <Message Text="Executing clean catalog" Importance="high" />
     <Delete Files="$(OutputPath)Catalog" />
   </Target>

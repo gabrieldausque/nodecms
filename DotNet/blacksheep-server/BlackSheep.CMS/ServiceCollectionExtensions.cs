@@ -16,10 +16,10 @@ namespace BlackSheep.CMS
         {
             var documentDbServiceIdentifier = Startup.Configuration.GetSection("Databases:Documents:ProviderName");
             var documentDbService =
-                ServicesFactory.Instance.GetServiceInstance<CRUDService<CMSDocument>, CMSDocument>(documentDbServiceIdentifier.Value);
+                ServicesFactory.Instance.GetServiceInstance<CRUDService<CMSDocument, CMSDocumentFilter>, CMSDocument, CMSDocumentFilter>(documentDbServiceIdentifier.Value);
             var documentDbServiceConfiguration = Startup.Configuration.GetSection("Databases:Documents");
             documentDbService.Init(documentDbServiceConfiguration);
-            services.Add(new ServiceDescriptor(typeof(CRUDService<CMSDocument>), documentDbService));
+            services.Add(new ServiceDescriptor(typeof(CRUDService<CMSDocument, CMSDocumentFilter>), documentDbService));
             return services;
         }
     }

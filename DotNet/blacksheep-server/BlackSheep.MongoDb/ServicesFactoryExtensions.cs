@@ -8,7 +8,7 @@ namespace BlackSheep.MongoDb
         [RegisterServiceType]
         public static void RegisterServices()
         {
-            ServicesFactory.Instance.RegisterType("mongodb", typeof(MongoDBCRUDService<>));
+            ServicesFactory.Instance.RegisterType("mongodb", typeof(MongoDBCRUDService<,>));
         }
     }
 }

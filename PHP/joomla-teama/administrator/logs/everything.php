@@ -730,3 +730,7 @@
 2021-10-25T13:45:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-10-25T13:45:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-10-25T13:46:12+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.6 Array (     [0] => 6 ) 
+2021-10-26T06:06:44+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 10.02 seconds
+2021-10-26T06:06:44+00:00	WARNING 127.0.0.1	updater	Error opening url: https://update.joomla.org/core/list.xml for update site: Joomla! Core
+2021-10-26T08:18:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-10-26T08:18:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
