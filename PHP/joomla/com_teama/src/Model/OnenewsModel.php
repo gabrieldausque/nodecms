@@ -68,14 +68,14 @@ class OnenewsModel
     $id = $this->getState('news.id');
 
     $actions = [];
-    if($user->authorise('news.edit') && isset($id) && $id > 0){
+    if($user->authorise('news.edit','com_teama') && isset($id) && $id > 0){
       array_push($actions, new Actions(
         'edit',
         'index.php?option=com_teama&view=onenews&layout=edit&id=' . $id
       ));
     }
 
-    if($user->authorise('news.delete') && isset($id) && $id > 0){
+    if($user->authorise('news.delete','com_teama') && isset($id) && $id > 0){
       array_push($actions, new Actions(
         'delete',
         'index.php?option=com_teama&view=onenews&layout=edit&id=' . $id

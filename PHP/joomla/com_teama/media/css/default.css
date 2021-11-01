@@ -64,4 +64,13 @@
   height: 61px;
   z-index: 5;
   min-height: 61px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
+
+.teama-toolbar > .btn {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+

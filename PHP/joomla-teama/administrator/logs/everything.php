@@ -734,3 +734,100 @@
 2021-10-26T06:06:44+00:00	WARNING 127.0.0.1	updater	Error opening url: https://update.joomla.org/core/list.xml for update site: Joomla! Core
 2021-10-26T08:18:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-10-26T08:18:50+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-01T16:00:23+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.16 seconds
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: "gabrieldausque.pro@gmail.com" <gabrieldausque.pro@gmail.com>
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Mise_=C3=A0_jour_de_Joomla_disponible_pour_Team_A_?=
+ =?utf-8?Q?=E2=80=93_https://teama.myhost.domain/?=
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Mon, 1 Nov 2021 17:00:23 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <F6BDX3FKT1ObffPoEgXK3WjJhdaqTNHsGtjJXVVhW8@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: "gabrieldausque.pro@gmail.com" <gabrieldausque.pro@gmail.com>
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Mise_=C3=A0_jour_de_Joomla_disponible_pour_Team_A_?=
+ =?utf-8?Q?=E2=80=93_https://teama.myhost.domain/?=
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Mon, 1 Nov 2021 17:00:23 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <Sw0hGfYfMbIfdmRBZFsX58yXawEKsRhiM6jszZ25w7s@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-01T16:00:23+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-01T16:00:23+00:00	WARNING 127.0.0.1	jerror	Could not instantiate mail function.
+2021-11-01T16:02:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-01T16:02:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-01T16:02:46+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.29 seconds
+2021-11-01T16:02:46+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.06 seconds
+2021-11-01T16:02:56+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.06 seconds
+2021-11-01T16:03:24+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.08 seconds
+2021-11-01T16:03:35+00:00	INFO 127.0.0.1	update	Mise à jour lancée par l'utilisateur admin_teama (461). L'ancienne version est &#x200E;4.0.3.
+2021-11-01T16:03:37+00:00	INFO 127.0.0.1	update	Téléchargement du fichier de mise à jour depuis https://downloads.joomla.org/cms/joomla4/4-0-4/Joomla_4.0.4-Stable-Update_Package.zip.
+2021-11-01T16:03:45+00:00	INFO 127.0.0.1	update	Fichier Joomla_4.0.4-Stable-Update_Package.zip téléchargé.
+2021-11-01T16:03:45+00:00	INFO 127.0.0.1	update	Lancement de l'installation de la nouvelle version.
+2021-11-01T16:04:24+00:00	INFO 127.0.0.1	update	Conclusion de l'installation.
+2021-11-01T16:04:25+00:00	INFO 127.0.0.1	update	Effacement des fichiers et dossiers à supprimer.
+2021-11-01T16:04:29+00:00	INFO 127.0.0.1	update	Mise en ordre après installation.
+2021-11-01T16:04:29+00:00	INFO 127.0.0.1	update	La mise à jour vers la version 4.0.4 est achevée.
+2021-11-01T16:04:29+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.09 seconds
+2021-11-01T16:05:59+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.08 seconds
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: John Smith <gabrieldausque@gmail.com>
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Param=C3=A8tres_de_nouvel_utilisateur?=
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Mon, 1 Nov 2021 17:42:44 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <tPK3xjShXWTvRv7kbcx4PamSusq25AixluPRF9pkM@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: John Smith <gabrieldausque@gmail.com>
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Param=C3=A8tres_de_nouvel_utilisateur?=
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Mon, 1 Nov 2021 17:42:44 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <tuRLU11vxJ4mghLqRxqRp1yBKeNioQ0UvtB3xMcI@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-01T16:42:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-01T16:42:44+00:00	WARNING 127.0.0.1	jerror	Could not instantiate mail function.
+2021-11-01T16:52:10+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Media\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#7 {main}
+2021-11-01T16:54:07+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Media\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#7 {main}
