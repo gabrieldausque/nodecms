@@ -77,7 +77,28 @@ namespace BlackSheep.MongoDb
 
         public override IEnumerable<T> Find(TF filter)
         {
-            throw new NotImplementedException();
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var filters = new List<FilterDefinition<T>>();
+            foreach (var filterProperty in filter.GetType().GetProperties())
+            {
+                var filterValue = filterProperty.GetValue(filter);
+                if (filterValue != null)
+                {
+                    filters.Add(Builders<T>.Filter.Eq(filterProperty.Name, filterValue));
+                }
+            }
+
+            if (filters.Any())
+            {
+                var finalFilter = Builders<T>.Filter.And(filters);
+                var findTask = collection.FindAsync(finalFilter);
+                findTask.Wait();
+                if (findTask.IsCompletedSuccessfully)
+                    return findTask.Result.ToList();
+            }
+            
+            return new List<T>();
         }
 
         public override T Get(string key)

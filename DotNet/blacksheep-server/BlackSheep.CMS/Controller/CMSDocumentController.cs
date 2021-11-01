@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using BlackSheep.CMS.Model;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,16 @@ namespace BlackSheep.CMS.Controller
             return NotFound();
         }
 
+        [HttpGet]
+        [Route("api/document")]
         public ActionResult<CMSDocument[]> FindDocument([FromQuery] CMSDocumentFilter filter)
         {
+            if (filter != null)
+            {
+                var found = _model.Find(filter);
+                if(found.Any())
+                    return Ok(found);
+            }
             return Ok(new CMSDocument[]{});
         }
     }
