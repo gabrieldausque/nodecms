@@ -372,3 +372,26 @@ joomla-toolbar-button {
 .iframe {
     width: 100%;
 }
+
+#system-message-container {
+    width: calc(100% - 20px);
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#system-message-container.hidden {
+    display: none;
+}
+
+joomla-alert {
+    width: 100%;
+    justify-self: center;
+    margin: 5px !important;
+}
+
+.joomla-alert--close {
+    top: auto !important;
+}

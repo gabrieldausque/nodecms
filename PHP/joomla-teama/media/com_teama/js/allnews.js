@@ -25,9 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             newsCard.setAttribute('data-newslink',`${newsTemplate.attributes['data-newslink'].value}${otherNews.id}`);
             const img = newsCard.querySelector('.card-img-top');
             if(otherNews['header_media'].image){
-              img.style.backgroundImage = `url('${otherNews['header_media'].image}')`;
-              img.setAttribute('alt',otherNews['header_media'].alt);
-              img.setAttribute('title', otherNews['header_media'].title);
+              const url = `url('\/${otherNews['header_media'].image}')`
+              img.style.backgroundImage = url;
+              if(otherNews['header_media'].alt)
+                img.setAttribute('alt',otherNews['header_media'].alt);
+              if(otherNews['header_media'].caption)
+                img.setAttribute('title', otherNews['header_media'].caption);
             } else {
               newsCard.removeChild(img);
             }

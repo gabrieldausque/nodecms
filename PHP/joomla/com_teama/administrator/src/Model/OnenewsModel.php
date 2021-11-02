@@ -51,10 +51,28 @@ class OnenewsModel
     $app = Factory::getApplication();
     $user = $app->getIdentity();
     $data = parent::validate($form, $data, $group);
+    $item = null;
     if(is_array($data)){
+
+      if($data['id'] > 0){
+        $item = $this->getItem($data['id']);
+      }
+
+      if(isset($item))
+      {
+        $data['author'] = $item->author;
+        $data['creation_date'] = $item->creation_date;
+        $data['publication_date'] = $item->publication_date;
+        $data['current_stage'] = $item->current_stage;
+        $data['publication_status'] = $item->publication_status;
+      }
+
       if(empty($data['author'])){
         $data['author'] = $user->id;
       }
+
+      $data['last_modifier'] = $user->id;
+      $data['modification_date'] = (new \DateTime())->format('Y-m-d H:i:s');
     }
     return $data;
   }
@@ -67,5 +85,12 @@ class OnenewsModel
 		}
 		return $item;
 	}
+
+  protected function canDelete($record) {
+    $app = Factory::getApplication();
+    $user = $app->getIdentity();
+    return $user->authorise('news.delete','com_teama');
+    return false;
+  }
 
 }

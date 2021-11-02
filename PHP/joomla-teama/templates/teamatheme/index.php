@@ -79,6 +79,7 @@ if ($this->params->get('logoFile'))
           <?php if($isAuthenticate) { ?>
               <jdoc:include type="modules" name="breadcrumb"/>
               <jdoc:include type="modules" name="top" />
+              <jdoc:include type="message" />
               <jdoc:include type="component"/>
               <jdoc:include type="modules" name="bottom" />
         </div>

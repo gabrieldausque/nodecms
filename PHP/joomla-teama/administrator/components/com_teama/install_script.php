@@ -190,12 +190,13 @@ class Com_TeamAInstallerScript
 
     $asset->loadByName('com_media');
     $media_asset = $asset->getProperties();
-	$rules = json_decode($teamA_asset['rules'], true);
-	$rules['core.create'][$teamaAdminGroup->id] = 1;
-	$rules['core.edit'][$teamaAdminGroup->id] = 1;
-	$rules['core.delete'][$teamaAdminGroup->id] = 1;
-	$rules['core.manage'][$teamaAdminGroup->id] = 1;
-	$asset->save($media_asset);
+	  $rules = json_decode($media_asset['rules'], true);
+	  $rules['core.create'][$teamaAdminGroup->id] = 1;
+	  $rules['core.edit'][$teamaAdminGroup->id] = 1;
+	  $rules['core.delete'][$teamaAdminGroup->id] = 1;
+	  $rules['core.manage'][$teamaAdminGroup->id] = 1;
+    $media_asset['rules'] = json_encode($rules);
+	  $asset->save($media_asset);
   }
 
 }

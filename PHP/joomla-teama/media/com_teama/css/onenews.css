@@ -41,3 +41,25 @@
   width: 100%;
   text-align: end;
 }
+
+.teama-news-forms {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.teama-news-forms .control-group {
+  margin-bottom: 10px;
+}
+
+.form-footer {
+  margin: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.teama-section-title {
+  margin-left:10px;
+  margin-right:10px;
+  margin-top:10px;
+}

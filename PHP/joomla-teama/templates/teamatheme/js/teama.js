@@ -67,4 +67,18 @@ document.addEventListener('DOMContentLoaded', async() => {
                 button.classList.add('show-submenu');
         })
     }
+
+    const messageZone = document.getElementById('system-message-container');
+    const messageHiddenHandler = () => {
+        const alert = document.querySelectorAll('joomla-alert');
+        if(alert.length <= 0) {
+            messageZone?.classList.add('hidden');
+        } else {
+            messageZone?.classList.remove('hidden');
+        }
+    };
+    messageZone.addEventListener('click',async() => {
+        window.setTimeout(async() => messageHiddenHandler(), 1000);
+    })
+    window.setTimeout(async() => messageHiddenHandler(), 500);
 })

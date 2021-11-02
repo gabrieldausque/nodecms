@@ -8,15 +8,16 @@
  */
 \defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
+include __DIR__ . '/../headers/toolbar.php';
+
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Language\Text;
 
 $app = \Joomla\CMS\Factory::getApplication();
 $input = $app->input;
 
+$document = $app->getDocument();
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
    ->useScript('form.validate');
@@ -24,9 +25,20 @@ JHtml::_('script', 'com_teama/onenews_edit.js', ['version' => 'auto', 'relative'
 $layout = 'edit';
 $tmpl = $input->get('tmpl','','cmd') === 'component' ?
   '&tmpl=component':'';
+
+$document->addStyleSheet('/media/com_teama/css/onenews.css');
+
 ?>
+<div class="teama-section-title text-white">
+    <div class="teama-section-title-text">
+      <?php echo Text::_('COM_TEAMA_EDITING') . ' : ' . $this->item->title ?>
+    </div>
+    <div class="teama-section-title-decoration sm"></div>
+    <div class="teama-section-title-decoration"></div>
+</div>
 <form action="<?php echo Route::_('index.php?option=com_teama&layout=' . $layout .
-                                  $tmpl . '&id=' . (int)$this->item->id); ?>" class="form-validate"
+                                  $tmpl . '&id=' . (int)$this->item->id); ?>"
+      class="form-validate teama-news-forms"
       method="post">
   <?php echo $this->getForm()->renderField('title'); ?>
   <?php echo $this->getForm()->renderField('summary'); ?>
@@ -38,6 +50,12 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
       <?php echo HTMLHelper::_('uitab.endTab') ?>
       <?php echo HTMLHelper::_('uitab.endTabSet') ?>
     </div>
-    <input type="hidden" name="task" value="">
-  <?php echo HTMLHelper::_('form.token'); ?>
+    <input type="hidden" name="task" value="onenews.save">
+    <?php echo HTMLHelper::_('form.token'); ?>
+    <div class="form-footer">
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-save"></i><?php echo ' ' . Text::_('COM_TEAMA_REGISTER_LABEL') ?>
+        </button>
+    </div>
 </form>
+

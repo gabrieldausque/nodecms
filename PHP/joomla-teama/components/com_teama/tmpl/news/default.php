@@ -72,11 +72,11 @@ $document->addStyleSheet('/media/com_teama/css/allnews.css');
          data-newslink="index.php?option=com_teama&task=onenews.display&view=onenews&id=">
     <div class="card-img-top"
          style="background-image: url('');
-                   background-position: center;
-                   background-repeat: no-repeat;
-                   background-size: contain;
-                   width: 100%;
-                   height: 100px;"
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 100%;
+                height: 100px;"
          alt=""
          title=""
     ></div>

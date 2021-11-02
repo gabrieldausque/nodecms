@@ -31,9 +31,11 @@
   background: #dc3545;
   padding-left: 15px;
   color: white;
+  min-height: 52px;
   height: 52px;
   overflow: hidden;
   align-items: center;
+  width: 100%;
 }
 
 .teama-section-title-text {
@@ -73,4 +75,3 @@
   margin-right: 5px;
   margin-left: 5px;
 }
-

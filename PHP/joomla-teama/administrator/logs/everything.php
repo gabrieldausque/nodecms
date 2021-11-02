@@ -673,6 +673,44 @@
 #4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
 #5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
 #6 {main}
+2021-11-02T07:45:57+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T07:45:57+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T07:45:57+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: "gabrieldausque.pro@gmail.com" <gabrieldausque.pro@gmail.com>
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Mise_=C3=A0_jour_de_Joomla_disponible_pour_Team_A_?=
+ =?utf-8?Q?=E2=80=93_https://teama.myhost.domain/administrato?=
+ =?utf-8?Q?r/?=
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Tue, 2 Nov 2021 08:45:57 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <J6v10hhrNGtNBuJY05AhRihrudIF70CxC60j9WThfeM@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: "gabrieldausque.pro@gmail.com" <gabrieldausque.pro@gmail.com>
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Mise_=C3=A0_jour_de_Joomla_disponible_pour_Team_A_?=
+ =?utf-8?Q?=E2=80=93_https://teama.myhost.domain/administrato?=
+ =?utf-8?Q?r/?=
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Tue, 2 Nov 2021 08:45:57 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <YuYBafFc4kGHwFFtsmrOEXIdYTlKoyN6GlF3Cnjck@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-02T07:45:57+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-02T07:45:57+00:00	WARNING 127.0.0.1	jerror	Could not instantiate mail function.
 2021-10-24T08:40:24+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.56 seconds
 2021-10-24T08:41:14+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.6 Array (     [0] => 6 ) 
 2021-10-25T07:53:09+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.34 seconds
@@ -838,3 +876,489 @@ Content-Transfer-Encoding: 8bit
 2021-11-02T07:18:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-11-02T07:18:20+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.27 seconds
 2021-11-02T07:18:21+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.12 seconds
+2021-11-02T07:47:26+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.05 seconds
+2021-11-02T07:47:27+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.03 seconds
+2021-11-02T07:47:29+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.04 seconds
+2021-11-02T07:47:29+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.03 seconds
+2021-11-02T07:47:29+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: John Smith <gabrieldausque@gmail.com>
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Param=C3=A8tres_de_nouvel_utilisateur?=
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Tue, 2 Nov 2021 08:51:01 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <Ip1hjmIrzwq2WOS0MAieMOxv2HdsqZNWZqQGDbE@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: John Smith <gabrieldausque@gmail.com>
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Param=C3=A8tres_de_nouvel_utilisateur?=
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Tue, 2 Nov 2021 08:51:01 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <f13HMTCLPOqXU8trNdkSVY6K0KyP683N3R5PZKYfk@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-02T07:51:01+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-02T07:51:01+00:00	WARNING 127.0.0.1	jerror	Could not instantiate mail function.
+2021-11-02T08:23:10+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T08:23:10+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T08:29:25+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.07 seconds
+2021-11-02T09:20:27+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.17 Array (     [0] => 17 ) 
+2021-11-02T09:36:41+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T09:38:10+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T09:38:51+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T09:39:55+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T09:39:57+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T09:41:48+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T09:47:12+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T10:09:43+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T10:39:22+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T10:40:19+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T10:58:40+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Class 'TheLoneBlackSheep\Component\TeamA\Administrator\Model\DateTime' not found". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/FormController.php(644): TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel->validate()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(47): Joomla\CMS\MVC\Controller\FormController->save()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->save()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#11 {main}
+2021-11-02T11:16:50+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Cannot use object of type stdClass as array". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/FormController.php(644): TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel->validate()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(47): Joomla\CMS\MVC\Controller\FormController->save()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->save()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#11 {main}
+2021-11-02T14:03:33+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T14:03:33+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T14:04:04+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:04:15+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:04:31+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:04:58+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:07:24+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:07:38+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:08:18+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:08:28+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:09:34+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:10:50+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:11:24+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:12:37+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:12:59+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:13:05+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type TypeError thrown with message "Argument 1 passed to Joomla\CMS\User\UserFactory::loadUserById() must be of the type int, null given, called in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php on line 24". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(24): Joomla\CMS\User\UserFactory->loadUserById()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T14:14:06+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:14:31+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:14:55+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:19:26+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T14:19:40+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Router\Exception\RouteNotFoundException thrown with message "Page introuvable". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(1066): Joomla\CMS\Router\Router->parse()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(822): Joomla\CMS\Application\CMSApplication->route()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(230): Joomla\CMS\Application\SiteApplication->route()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#6 {main}
+2021-11-02T15:13:05+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T15:13:05+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T15:18:26+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Typed property TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions::$confirmationMessage must not be accessed before initialization". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/tmpl/onenews/default.php(16): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include('/data/workspace...')
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(25): Joomla\CMS\MVC\Controller\BaseController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#14 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#15 {main}
+2021-11-02T16:09:39+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type ArgumentCountError thrown with message "Too few arguments to function Joomla\CMS\MVC\Model\AdminModel::delete(), 0 passed in /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php on line 56 and exactly 1 expected". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(56): Joomla\CMS\MVC\Model\AdminModel->delete()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->delete()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#10 {main}
+2021-11-02T16:14:23+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Cannot pass parameter 1 by reference". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->delete()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#9 {main}
+2021-11-02T16:16:04+00:00	WARNING 127.0.0.1	jerror	Suppression non autorisée
+2021-11-02T16:20:35+00:00	WARNING 127.0.0.1	jerror	Suppression non autorisée
+2021-11-02T16:22:03+00:00	WARNING 127.0.0.1	jerror	Suppression non autorisée
+2021-11-02T16:28:53+00:00	WARNING 127.0.0.1	jerror	Suppression non autorisée
+2021-11-02T16:29:55+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Class 'TheLoneBlackSheep\Component\TeamA\Site\Controller\Text' not found". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->delete()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#9 {main}
+2021-11-02T16:30:51+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(27): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T16:30:59+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(27): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}
+2021-11-02T16:31:00+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Object of class DateTime could not be converted to string". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(429): include()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/HtmlView.php(218): Joomla\CMS\MVC\View\HtmlView->loadTemplate()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(21): Joomla\CMS\MVC\View\HtmlView->display()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/OnenewsController.php(27): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\OnenewsController->display()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /data/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#14 {main}

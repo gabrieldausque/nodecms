@@ -21,6 +21,9 @@ $app = Factory::getApplication();
 $document = $app->getDocument();
 $userFactory = Factory::getContainer()->get(UserFactoryInterface::class);
 $author = $userFactory->loadUserById($theNews->author);
+$modifier = $author;
+if(isset($theNews->last_modifier))
+  $modifier = $userFactory->loadUserById($theNews->last_modifier);
 $document->addStyleSheet('/media/com_teama/css/onenews.css');
 
 ?>
@@ -41,7 +44,9 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
     <footer class="teama-onenews-footer">
       <?php if(isset($author)) { ?>
           <p><b><?php echo Text::_('COM_TEAMA_WRITTEN_BY')  ?> :</b> <?php echo $author->name ?></p>
-          <p><b><?php echo Text::_('COM_TEAMA_WRITTEN_WHEN')  ?> :</b> <?php echo $theNews->modification_date ?></p>
+          <p><b><?php echo Text::_('COM_TEAMA_WRITTEN_WHEN')  ?> :</b> <?php echo $theNews->creation_date ?></p>
+          <p><b><?php echo Text::_('COM_TEAMA_MODIFIED_BY')  ?> :</b> <?php echo $modifier->name ?></p>
+          <p><b><?php echo Text::_('COM_TEAMA_MODIFIED_WHEN')  ?> :</b> <?php echo $theNews->modification_date ?></p>
       <?php } ?>
     </footer>
 </article>
