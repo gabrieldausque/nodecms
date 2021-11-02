@@ -22,12 +22,16 @@ $document->addStyleSheet('/media/com_teama/css/default.css');
 $classByActions = [
     'new' => 'btn-outline-success',
     'edit' => 'btn-success',
-    'delete' => 'btn-danger'
+    'delete' => 'btn-danger',
+    'add' => 'btn-success'
 ]
 
 ?>
 
-<?php if(property_exists($this, 'actions')) { ?>
+<?php if(property_exists($this, 'actions') &&
+         is_array($this->actions) &&
+         count($this->actions) > 0
+) { ?>
 <div id="teama-component-toolbar" class="teama-toolbar">
     <?php foreach($this->actions as $action) { ?>
         <button class="btn <?php echo $classByActions[$action->name] ?>" type="button" data-link="<?php echo $action->link ?>">

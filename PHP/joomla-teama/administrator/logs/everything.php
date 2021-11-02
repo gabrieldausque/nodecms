@@ -831,3 +831,10 @@ Content-Transfer-Encoding: 8bit
 #5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
 #6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
 #7 {main}
+2021-11-02T07:06:06+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.10 seconds
+2021-11-02T07:06:40+00:00	INFO 127.0.0.1	joomlafailure	L'identifiant ne correspond pas au mot de passe, ou vous n'avez pas encore de compte.
+2021-11-02T07:06:40+00:00	WARNING 127.0.0.1	jerror	L'identifiant ne correspond pas au mot de passe, ou vous n'avez pas encore de compte.
+2021-11-02T07:18:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T07:18:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-02T07:18:20+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.27 seconds
+2021-11-02T07:18:21+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.12 seconds
