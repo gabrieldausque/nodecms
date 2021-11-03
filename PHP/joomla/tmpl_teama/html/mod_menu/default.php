@@ -75,13 +75,27 @@ if ($tagId = $params->get('tag_id', ''))
 	}
 
 	$deeperId = $item->alias . '-submenu';
+    $hasChildActive = false;
 
 	echo '<li class="' . $class . ' nav-item">';
 	if($item->deeper) {
         $subMenuClass = 'teama-submenu';
+        $allChildren = $item->getChildren(true);
+        foreach($allChildren as $child){
+            $hasChildActive = $item->id == $active_id ||
+                $item->id == $active->parent_id;
+            if($hasChildActive)
+                break;
+        }
+
         if($item->id == $active_id)
             $subMenuClass .= ' active';
-		echo '<div class="' . $subMenuClass . '" ><button class="btn btn-toggle align-items-center rounded btn-submenu" data-bs-toggle="collapse" data-bs-target="#' . $deeperId . '" aria-expanded="true">';
+
+		echo '<div class="' . $subMenuClass . '" >';
+		echo '<button class="btn btn-toggle align-items-center rounded btn-submenu';
+        if($hasChildActive)
+            echo ' show-submenu';
+        echo '" data-bs-toggle="collapse" data-bs-target="#' . $deeperId . '" aria-expanded="true">';
 		echo '<i class="fas fa-chevron-right"></i></button>';
 	}
 
@@ -102,8 +116,12 @@ if ($tagId = $params->get('tag_id', ''))
 	if ($item->deeper)
 	{
 	    echo '</div>';
-		echo '<ul id="' . $deeperId . '" class="mod-menu__sub list-unstyled small collapse">';
+		echo '<ul id="' . $deeperId . '" class="mod-menu__sub list-unstyled small collapse ';
+		if($hasChildActive)
+		    echo 'show';
+		echo '">';
 	}
+
 	// The next item is shallower.
 	elseif ($item->shallower)
 	{

@@ -7,6 +7,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Pagination\Pagination;
+use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
 
 class NewsModel
 extends BaseDatabaseModel{
@@ -93,5 +94,22 @@ extends BaseDatabaseModel{
 		}
 		return $this->news;
 	}
+
+  public function getActions(){
+    $app = Factory::getApplication();
+    $user = $app->getIdentity();
+
+    $actions = [];
+
+    if($user->authorise('news.create','com_teama'))
+    {
+      array_push($actions, new Actions(
+        'create',
+        'index.php?option=com_teama&view=onenews&layout=edit'
+      ));
+    }
+
+    return $actions;
+  }
 
 }

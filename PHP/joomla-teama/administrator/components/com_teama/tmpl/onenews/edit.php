@@ -34,6 +34,7 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
       <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publishing', Text::_('COM_TEAMA_NEWS_EDIT_GENERAL_OPTIONS')); ?>
       <?php echo $this->getForm()->renderFieldSet('header-media'); ?>
       <?php echo $this->getForm()->renderField('body'); ?>
+      <?php echo $this->getForm()->renderField('tags'); ?>
       <?php echo HTMLHelper::_('uitab.endTab') ?>
       <?php echo HTMLHelper::_('uitab.endTabSet') ?>
     </div>

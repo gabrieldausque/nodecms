@@ -4,6 +4,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\View\News;
 
 \defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -16,10 +17,13 @@ class HtmlView
 
   protected $teamaNews;
 
+  public $filterForm;
+
 	public function display( $tpl = null ) {
 
     $this->teamaNews = $this->get('Items');
     $this->pagination = $this->get('Pagination');
+    $this->filterForm = $this->get('FilterForm');
 
     if(!count($this->teamaNews) && $this->get('IsEmptyState')) {
       $this->setLayout('emptystate');
@@ -32,13 +36,15 @@ class HtmlView
 
 	protected function addToolbar(){
 	  $toolbar = Toolbar::getInstance();
-	  ToolbarHelper::title(Text::_('COM_TEAMA_MANAGER_NEWS'), 'manage teama');
-    $globalCanDo = ContentHelper::getActions('com_teama');
-	  $newsCanDo = ContentHelper::getActions('com_teama','news');
+	  $app = Factory::getApplication();
+	  $user = $app->getIdentity();
 
-    if($globalCanDo->get('news.create') ||
-       $newsCanDo->get('news.create')
-    )
+	  ToolbarHelper::title(Text::_('COM_TEAMA_MANAGER_NEWS'), 'manage teama');
+
+    if($user->authorise('news.create','com_teama'))
       $toolbar->addNew('onenews.add');
+
+    if($user->authorise('news.delete','com_teama'))
+      $toolbar->delete('news.delete');
   }
 }

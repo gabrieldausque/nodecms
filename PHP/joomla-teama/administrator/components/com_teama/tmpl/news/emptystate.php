@@ -11,6 +11,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 $displayData = [
   'textPrefix' => 'COM_TEAMA',
@@ -27,5 +28,12 @@ if($user->authorise('core.create','com_teama') ||
 {
   $displayData['createUrl'] = 'index.php?option=com_teama&task=onenews.add';
 }
-
-echo LayoutHelper::render('joomla.content.emptystate', $displayData);
+?>
+<form action="<?php echo Route::_('index.php?option=com_teama&task=news.display'); ?>"
+       method="post"
+       name="adminForm"
+       id="adminForm"
+>
+  <?php echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
+</form>
+<?php echo LayoutHelper::render('joomla.content.emptystate', $displayData);

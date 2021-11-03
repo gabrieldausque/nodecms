@@ -20,10 +20,9 @@ JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => t
 $document->addStyleSheet('/media/com_teama/css/default.css');
 
 $classByActions = [
-    'new' => 'btn-outline-success',
     'edit' => 'btn-success',
     'delete' => 'btn-danger',
-    'add' => 'btn-success'
+    'create' => 'btn-success'
 ]
 
 ?>

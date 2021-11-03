@@ -31,7 +31,11 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
 ?>
 <div class="teama-section-title text-white">
     <div class="teama-section-title-text">
-      <?php echo Text::_('COM_TEAMA_EDITING') . ' : ' . $this->item->title ?>
+      <?php $label = $this->item->id == 0?
+         Text::_('COM_TEAMA_NEWS_CREATING'):
+         Text::_('COM_TEAMA_EDITING') . ' : ' . $this->item->title;
+         echo $label;
+      ?>
     </div>
     <div class="teama-section-title-decoration sm"></div>
     <div class="teama-section-title-decoration"></div>

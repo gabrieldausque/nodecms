@@ -13,8 +13,10 @@ class HtmlView
 
   protected $pagination;
 
-	function display( $tpl = null ) {
+  protected $actions;
 
+	function display( $tpl = null ) {
+    $this->actions = $this->get('Actions');
 	  $this->pagination = $this->get('Pagination');
 	  $this->news = $this->get('News');
 		parent::display( $tpl );
