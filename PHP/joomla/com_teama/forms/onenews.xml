@@ -37,6 +37,13 @@
                 validate="UserId"
         />
 
+        <field name="tags"
+               type="text"
+               label="COM_TEAMA_NEWS_TAGS_FIELD"
+               size="45"
+               maxlength="255"
+        />
+
         <fields name="header_media">
             <fieldset
                     name="header-media"

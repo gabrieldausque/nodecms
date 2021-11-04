@@ -20,10 +20,9 @@ class HtmlView
   public $filterForm;
 
 	public function display( $tpl = null ) {
-
-    $this->teamaNews = $this->get('Items');
     $this->pagination = $this->get('Pagination');
     $this->filterForm = $this->get('FilterForm');
+    $this->teamaNews = $this->get('Items');
 
     if(!count($this->teamaNews) && $this->get('IsEmptyState')) {
       $this->setLayout('emptystate');

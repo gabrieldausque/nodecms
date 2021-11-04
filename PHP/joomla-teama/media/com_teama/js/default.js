@@ -45,4 +45,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
     }
+    const searchDisplayFilterButton = document.querySelector('#searchForm .js-stools-btn-filter');
+    const searchDisplayToolbar = document.querySelector('#searchForm .js-stools');
+    if(searchDisplayFilterButton && searchDisplayToolbar){
+        searchDisplayFilterButton.addEventListener('click', () => {
+            if(searchDisplayToolbar.classList.contains('expanded'))
+                searchDisplayToolbar.classList.remove('expanded')
+            else
+                searchDisplayToolbar.classList.add('expanded')
+        })
+        document.querySelectorAll('#searchForm > .js-stools > .js-stools-container-filters > .js-stools-field-filter > span.visually-hidden').forEach((elt) => {
+            elt.classList.remove('visually-hidden');
+            elt.classList.add('teama-filter-label');
+        });
+    }
+
 })
