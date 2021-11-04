@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Pagination\Pagination;
 use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Model\NewsModel as BaseNewsDatabaseModel;
+use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\OneNews;
 
 class NewsModel
   extends BaseNewsDatabaseModel{
@@ -35,9 +36,7 @@ class NewsModel
     }
 
     if(!is_array($this->news) || count($this->news) <= 0)
-      $this->news =[
-        new OneNews()
-      ];
+      $this->news =[];
 
 		return $this->news;
 	}

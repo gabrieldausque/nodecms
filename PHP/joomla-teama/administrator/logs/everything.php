@@ -2649,3 +2649,10 @@ Content-Transfer-Encoding: 8bit
 2021-11-04T11:38:11+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-11-04T11:59:52+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-11-04T11:59:52+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-04T16:22:21+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.19 seconds
+2021-11-04T16:23:54+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-04T16:23:54+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-04T16:24:12+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.08 seconds
+2021-11-04T16:24:12+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
+2021-11-04T16:25:59+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.197 Array (     [0] => 197 ) 
+2021-11-04T16:27:12+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.197 Array ( ) 
