@@ -8,6 +8,8 @@ using BlackSheep.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,32 +29,20 @@ namespace BlackSheep.Core.Host
         
         public void Configure(IApplicationBuilder builder)
         {
-            
-            builder.UseWebSockets();
             builder.UseStaticFiles();
             builder.UseDeveloperExceptionPage();
-            builder.Use((context, next) =>
-            {
-                return next();
-            });
             builder.UseRouting();
             builder.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //TODO : add signalR hubs using dependencies injection
             });
-            //TODO : specify a configuration to use authentication or not
-            builder.UseAuthentication();
             builder.Run((context) => context.Response.WriteAsync("Hello World !"));
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //TODO add configuration to specify usage of signal R;
-            //services.AddSignalR();
             services.AddOptions();
             var servicesBuilder = services.AddMvc();
-            
             //dynamic injection of services
             var pluginAssemblyNames = new List<string>(Directory.EnumerateFiles(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Catalog")));
@@ -98,7 +88,7 @@ namespace BlackSheep.Core.Host
                 }
             });
             // Now Add all controllers
-            services.AddControllers()
+            services.AddControllersWithViews()
                 .AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
         }
     }
