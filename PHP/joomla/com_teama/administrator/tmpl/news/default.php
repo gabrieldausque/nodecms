@@ -42,6 +42,18 @@ JHtml::_('script', 'com_teama/allnews_admin.js', ['version' => 'auto', 'relative
                             <th scope="col">
                                 <?php echo Text::_('COM_TEAMA_NEWS_TABLE_HEAD_AUTHOR')?>
                             </th>
+                            <th scope="col">
+                              <?php echo Text::_('COM_TEAMA_NEWS_CREATION_DATE_FIELD')?>
+                            </th>
+                            <th scope="col">
+                              <?php echo Text::_('COM_TEAMA_NEWS_MODIFICATION_DATE_FIELD')?>
+                            </th>
+                            <th scope="col">
+                              <?php echo Text::_('COM_TEAMA_NEWS_SUMMARY_FIELD')?>
+                            </th>
+                            <th scope="col">
+                              <?php echo Text::_('COM_TEAMA_NEWS_TAGS_FIELD')?>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +81,28 @@ JHtml::_('script', 'com_teama/allnews_admin.js', ['version' => 'auto', 'relative
                                 <?php
                                 $author = Factory::getContainer()->get(\Joomla\CMS\User\UserFactoryInterface::class)->loadUserById($news->author);
                                 echo $author->name;
+                                ?>
+                              </td>
+                              <td class="d-none d-md-table-cell">
+                                <?php
+                                    echo $news->creation_date;
+                                ?>
+                              </td>
+                              <td class="d-none d-md-table-cell">
+                                <?php
+                                    echo $news->modification_date;
+                                ?>
+                              </td>
+                              <td class="d-none d-md-table-cell" title="<?php echo $news->summary ?>">
+                                <?php
+                                    if(isset($news->summary) && trim($news->summary) != '')
+                                        echo substr($news->summary,0,25) . '...';
+                                ?>
+                              </td>
+                              <td class="d-none d-md-table-cell">
+                                <?php
+                                    if(isset($news->tags) && trim($news->tags) != '')
+                                        echo $news->tags;
                                 ?>
                               </td>
                           </tr>

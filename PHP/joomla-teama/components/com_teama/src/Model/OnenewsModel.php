@@ -12,13 +12,19 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\OneNews;
 use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel as BaseOneNewsModel;
 
 class OnenewsModel
   extends BaseOneNewsModel {
+
+  public function __construct($config = [], MVCFactoryInterface $factory = NULL, FormFactoryInterface $formFactory = NULL) {
+    parent::__construct($config, $factory, $formFactory);
+  }
 
   protected $item;
 
@@ -32,7 +38,7 @@ class OnenewsModel
   }
 
   private function deserialize($onenews) {
-    if(isset($onenews) && property_exists($onenews, 'header_media'))
+    if(isset($onenews) && property_exists( $onenews, 'header_media'))
       $onenews->header_media = json_decode($onenews->header_media);
   }
 
@@ -49,12 +55,7 @@ class OnenewsModel
 
     if($user->authorise('news.read','com_teama'))
     {
-      $db = $this->getDbo();
-      $query = 'SELECT * FROM #__teama_news WHERE id=' . $pk;
-      $db->setQuery($query);
-      $theNews = $db->loadObject();
-      if(isset($theNews))
-        $this->deserialize($theNews);
+      $theNews = parent::getItem($pk);
     } else
       $theNews = new OneNews(true);
 

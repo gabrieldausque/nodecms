@@ -9,7 +9,7 @@
     <authorUrl>https://theloneblacksheep.fr</authorUrl>
     <copyright>@gabrieldausque.pro</copyright>
     <license>MIT</license>
-    <version>0.0.17</version>
+    <version>0.0.19</version>
     <description>The Team A core component</description>
 
     <namespace path="src">TheLoneBlackSheep\Component\TeamA</namespace>

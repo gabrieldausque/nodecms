@@ -18,6 +18,7 @@ class HtmlView
 	function display( $tpl = null ) {
     $this->actions = $this->get('Actions');
 	  $this->pagination = $this->get('Pagination');
+	  $this->filterForm = $this->get('FilterForm');
 	  $this->news = $this->get('News');
 		parent::display( $tpl );
 	}

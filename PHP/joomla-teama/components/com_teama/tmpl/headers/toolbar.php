@@ -9,6 +9,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 
 \defined('_JEXEC') or die;
 
@@ -60,6 +61,20 @@ $classByActions = [
           <?php echo Text::_('COM_TEAMA_ACTION_' . strtoupper($action->name) . '_LABEL') ?>
         </button>
     <?php }?>
+    <?php if($this->get('CanSearch')){ ?>
+        <form method="post"
+              name="searchForm"
+              id="searchForm">
+          <?php
+          echo LayoutHelper::render('joomla.searchtools.default', [
+              'view' => $this,
+              'options' => [
+                'formSelector' => '#searchForm'
+              ]
+          ]);
+          ?>
+        </form>
+    <?php } ?>
 </div>
 
 <?php } ?>

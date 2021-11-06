@@ -3,6 +3,7 @@
 defined('_JEXEC') or die('Restricted Access');
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
@@ -82,6 +83,10 @@ if ($this->params->get('logoFile'))
               <jdoc:include type="message" />
               <jdoc:include type="component"/>
               <jdoc:include type="modules" name="bottom" />
+            <div id="teama-loading-screen">
+                <div class="spinner-border teama-loading-spinner text-danger"></div>
+                <div class="teama-loading-label"><?php echo Text::_('TPL_TEAMA_LOADING') ?></div>
+            </div>
         </div>
         <div class="teama-widget-panel">
             <jdoc:include type="modules" name="right"/>

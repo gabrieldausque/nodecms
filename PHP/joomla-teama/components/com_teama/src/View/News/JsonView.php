@@ -14,10 +14,14 @@ class JsonView
 	protected $_output;
 
 	function display( $tpl = null ) {
-		$this->_output = new class(){
+
+    $this->pagination = $this->get('Pagination');
+	  $this->_output = new class(){
 		  public $news = [];
 		  public $next = null;
     };
+
+
 		$this->_output->news = $this->get('News');
 		$paginationPages = $this->get('Pagination')->getPaginationPages();
 		if(array_key_exists('next', $paginationPages)){

@@ -5,39 +5,17 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Pagination\Pagination;
 use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Model\NewsModel as BaseNewsDatabaseModel;
+use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\OneNews;
 
 class NewsModel
-extends BaseDatabaseModel{
+  extends BaseNewsDatabaseModel{
 
   public static string $TABLE_NAME = '#__teama_news';
 
 	protected $news;
-
-	protected Pagination $pagination;
-
-  /**
-   *
-   * @return mixed
-   *
-   * @since version
-   */
-  public function getTotal() {
-    $db    = $this->getDbo();
-    $query = $db->getQuery(TRUE);
-    $query->select('count(id) as nb');
-    $query->from(self::$TABLE_NAME);
-    $total = $db->setQuery($query)->loadObject()->nb;
-    return $total;
-  }
-
-  protected function populateState() {
-    $app = Factory::getApplication();
-    $this->setState('start', $app->input->getInt('start', 0));
-    $this->setState('limit', 8);
-  }
 
   public function getTop5News() {
     $app = Factory::getApplication();
@@ -58,37 +36,14 @@ extends BaseDatabaseModel{
     }
 
     if(!is_array($this->news) || count($this->news) <= 0)
-      $this->news =[
-        new OneNews()
-      ];
+      $this->news =[];
 
 		return $this->news;
 	}
 
-  private function deserialize($onenews) {
-    if(isset($onenews) && property_exists($onenews, 'header_media'))
-      $onenews->header_media = json_decode($onenews->header_media);
-  }
-
-  public function getPagination() {
-    $pageIndex = $this->getState('start');
-    $limit = $this->getState('limit');
-    $start = $this->getState('start');
-    $total     = $this->getTotal();
-    $this->pagination = new Pagination($total, $start, $limit);
-	  return $this->pagination;
-  }
-
 	public function getNews() {
-    $this->getPagination();
-		$db = $this->getDbo();
-    $query = $db->getQuery(true);
-    $query->select('*')
-          ->from(self::$TABLE_NAME)
-          ->order('id DESC')
-          ->setLimit($this->pagination->limit,$this->pagination->limitstart);
-    $db->setQuery($query);
-    $this->news = $db->loadObjectList();
+    $query = $this->getListQuery();
+    $this->news = $this->_getList($query);
 		foreach ($this->news as $onenews){
 			$this->deserialize($onenews);
 		}
@@ -110,6 +65,10 @@ extends BaseDatabaseModel{
     }
 
     return $actions;
+  }
+
+  public function getCanSearch(){
+    return true;
   }
 
 }

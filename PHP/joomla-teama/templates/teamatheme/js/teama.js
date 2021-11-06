@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                     leftPanel.classList.remove('shrink');
                     brandingPanel.classList.remove('shrink');
                 } else {
+                    leftPanel.classList.remove('grown');
                     leftPanel.classList.add('shrink');
                     brandingPanel.classList.add('shrink');
                 }
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async() => {
                     ol.style.display = 'block';
                 })
             }
+            leftPanel.classList.add('grown');
         });
     }
 
@@ -77,8 +79,15 @@ document.addEventListener('DOMContentLoaded', async() => {
             messageZone?.classList.remove('hidden');
         }
     };
-    messageZone.addEventListener('click',async() => {
-        window.setTimeout(async() => messageHiddenHandler(), 1000);
-    })
-    window.setTimeout(async() => messageHiddenHandler(), 500);
+    window.setTimeout(async() => {
+        const loadingScreen = document.getElementById('teama-loading-screen');
+        if(loadingScreen){
+            loadingScreen.addEventListener('transitionend', ()=>{
+                loadingScreen.classList.add('hidden');
+            }, { once: true})
+            loadingScreen.classList.add('hidding');
+        }
+        messageHiddenHandler()
+    }, 500);
+    window.setInterval(async() => messageHiddenHandler(), 500);
 })

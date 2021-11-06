@@ -63,15 +63,64 @@
 .teama-toolbar {
   width: 100%;
   background-color: rgb(33, 37, 41);
-  height: 61px;
   z-index: 5;
-  min-height: 61px;
+  min-height: 48px;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-start;
+  padding-top: 5px;
 }
 
 .teama-toolbar > .btn {
   margin-right: 5px;
   margin-left: 5px;
+}
+
+#searchForm {
+  align-self: flex-start;
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#searchForm > div.js-stools {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  height: 38px;
+  margin-right: auto;
+  margin-left: auto;
+  transition: height 200ms linear;
+  overflow-y: hidden;
+}
+
+#searchForm > div.js-stools.expanded {
+  height: 175px;
+}
+
+#searchForm > div.js-stools > .js-stools-container-bar {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  max-height: 38px;
+}
+
+#searchForm > div.js-stools > .js-stools-container-bar > .btn-toolbar {
+  width: 100%;
+  justify-content: center;
+}
+
+#searchForm > div.js-stools > .js-stools-container-bar > .btn-toolbar > .btn-group {
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+#searchForm > div.js-stools > div.js-stools-container-filters {
+  margin-top: 15px;
+  display: flex;
+  width: auto;
+  justify-content: space-evenly;
+}
+
+.teama-filter-label {
+  color: white;
 }
