@@ -27,7 +27,7 @@ namespace BlackSheep.Core.Host
             Configuration = builder.Build();
         }
         
-        public void Configure(IApplicationBuilder builder)
+        public virtual void Configure(IApplicationBuilder builder)
         {
             builder.UseStaticFiles();
             builder.UseDeveloperExceptionPage();
@@ -36,10 +36,9 @@ namespace BlackSheep.Core.Host
             {
                 endpoints.MapControllers();
             });
-            builder.Run((context) => context.Response.WriteAsync("Hello World !"));
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
             var servicesBuilder = services.AddMvc();

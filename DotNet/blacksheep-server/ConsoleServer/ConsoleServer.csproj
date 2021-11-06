@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
   </ItemGroup>
 
@@ -25,27 +24,38 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ClientApp Include="..\BlazorSample\$(OutputPath)wwwroot\**\*.*" />
+    <ClientAppStatic Include="..\BlazorSample\wwwroot\**\*.*" />
+    <ClientAppBundle Include="..\BlazorSample\obj\$(Configuration)\net5.0\scopedcss\bundle\*.*" />
+  </ItemGroup>
+
   <Target Name="InitDb" AfterTargets="Build">
-    <Message Text="Initialization teama DB" Importance="high"/>
-    <Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg .\..\MongodbTeamAInitScript.js"/>
+    <Message Text="Initialization teama DB" Importance="high" />
+    <Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg .\..\MongodbTeamAInitScript.js" />
   </Target>
 
   <Target Name="CleanCatalog" AfterTargets="InitDb">
     <Message Text="Executing clean catalog" Importance="high" />
     <Delete Files="$(OutputPath)Catalog" />
+    <Delete Files="$(OutputPath)wwwroot" />
   </Target>
   
   <Target Name="BuildControllers" AfterTargets="CleanCatalog">
     <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build" />
+    <MSBuild Projects="..\BlazorSample\BlazorSample.csproj" Targets="Clean;Build" />
     <MSBuild Projects="..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj" Targets="Clean;Build" />
     <MSBuild Projects="..\BlackSheep.CMS\BlackSheep.CMS.csproj" Targets="Clean;Build" />
   </Target>
 
   <Target Name="PopulateCatalog" AfterTargets="BuildControllers">
-    <Move SourceFiles="..\Sample\$(OutputPath)Sample.dll" DestinationFiles="$(OutputPath)\Catalog\Sample.dll" />
-    <Move SourceFiles="..\BlackSheep.MongoDb\$(OutputPath)BlackSheep.MongoDb.dll" DestinationFiles="$(OutputPath)\Catalog\BlackSheep.MongoDb.dll" />
-    <Move SourceFiles="..\BlackSheep.CMS\$(OutputPath)BlackSheep.CMS.dll" DestinationFiles="$(OutputPath)\Catalog\BlackSheep.CMS.dll" />
-    <Move SourceFiles="..\BlackSheep.CMS\$(OutputPath)BlackSheep.CMS.Views.dll" DestinationFiles="$(OutputPath)\Catalog\BlackSheep.CMS.Views.dll" />
+    <Copy SourceFiles="..\Sample\$(OutputPath)Sample.dll" DestinationFolder="$(OutputPath)\Catalog\" />
+    <Copy SourceFiles="..\BlackSheep.MongoDb\$(OutputPath)BlackSheep.MongoDb.dll" DestinationFolder="$(OutputPath)\Catalog" />
+    <Copy SourceFiles="..\BlackSheep.CMS\$(OutputPath)BlackSheep.CMS.dll" DestinationFolder="$(OutputPath)\Catalog" />
+    <Copy SourceFiles="..\BlackSheep.CMS\$(OutputPath)BlackSheep.CMS.Views.dll" DestinationFolder="$(OutputPath)\Catalog" />
+    <Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(OutputPath)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
+    <Copy SourceFiles="@(ClientApp)" DestinationFiles="@(ClientApp->'$(OutputPath)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
+    <Copy SourceFiles="@(ClientAppBundle)" DestinationFolder="$(OutputPath)\wwwroot"/>
   </Target>
   
 </Project>

@@ -6,9 +6,9 @@ namespace BlackSheep.Core.Host
 {
     public class Server
     {
-        private IWebHost _host;
+        protected IWebHost _host;
 
-        public void Start()
+        public virtual void Start()
         {
             _host = new WebHostBuilder()
                 .UseKestrel(options =>
