@@ -2656,3 +2656,80 @@ Content-Transfer-Encoding: 8bit
 2021-11-04T16:24:12+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
 2021-11-04T16:25:59+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.197 Array (     [0] => 197 ) 
 2021-11-04T16:27:12+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.197 Array ( ) 
+2021-11-04T17:32:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-04T17:32:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-04T17:33:07+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.16 seconds
+2021-11-04T17:33:07+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.04 seconds
+2021-11-04T17:33:07+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.04 seconds
+2021-11-04T17:34:13+00:00	INFO 127.0.0.1	controller	Holding edit ID com_templates.edit.style.15 Array (     [0] => 15 ) 
+2021-11-04T17:34:13+00:00	INFO 127.0.0.1	controller	Checking edit ID com_templates.edit.style.15: 1 Array (     [0] => 15 ) 
+2021-11-04T17:34:30+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_templates.edit.style.15 Array ( ) 
+2021-11-05T10:20:48+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.18 seconds
+2021-11-05T10:35:40+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-05T10:35:40+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-05T10:35:53+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.17 seconds
+2021-11-05T10:35:53+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.03 seconds
+2021-11-05T10:36:35+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Fields\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#7 {main}
+2021-11-05T10:42:54+00:00	INFO 127.0.0.1	controller	Holding edit ID com_plugins.edit.plugin.114 Array (     [0] => 114 ) 
+2021-11-05T10:42:54+00:00	INFO 127.0.0.1	controller	Checking edit ID com_plugins.edit.plugin.114: 1 Array (     [0] => 114 ) 
+2021-11-05T10:48:00+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_plugins.edit.plugin.114 Array ( ) 
+2021-11-05T10:55:00+00:00	INFO 127.0.0.1	controller	Holding edit ID com_plugins.edit.plugin.114 Array (     [0] => 114 ) 
+2021-11-05T10:55:00+00:00	INFO 127.0.0.1	controller	Checking edit ID com_plugins.edit.plugin.114: 1 Array (     [0] => 114 ) 
+2021-11-05T10:56:12+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_plugins.edit.plugin.114 Array ( ) 
+2021-11-05T10:56:42+00:00	INFO 127.0.0.1	controller	Holding edit ID com_plugins.edit.plugin.121 Array (     [0] => 121 ) 
+2021-11-05T10:56:42+00:00	INFO 127.0.0.1	controller	Checking edit ID com_plugins.edit.plugin.121: 1 Array (     [0] => 121 ) 
+2021-11-05T10:56:59+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_plugins.edit.plugin.121 Array ( ) 
+2021-11-05T10:57:13+00:00	INFO 127.0.0.1	controller	Holding edit ID com_plugins.edit.plugin.114 Array (     [0] => 114 ) 
+2021-11-05T10:57:13+00:00	INFO 127.0.0.1	controller	Checking edit ID com_plugins.edit.plugin.114: 1 Array (     [0] => 114 ) 
+2021-11-05T10:57:27+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_plugins.edit.plugin.114 Array ( ) 
+2021-11-05T11:02:20+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-05T11:02:20+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-05T11:03:31+00:00	INFO 127.0.0.1	controller	Holding edit ID com_users.edit.group.14 Array (     [0] => 14 ) 
+2021-11-05T11:03:31+00:00	INFO 127.0.0.1	controller	Checking edit ID com_users.edit.group.14: 1 Array (     [0] => 14 ) 
+2021-11-05T11:03:34+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_users.edit.group.14 Array ( ) 
+2021-11-05T11:09:32+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Fields\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#7 {main}
+2021-11-05T11:23:43+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Fields\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#7 {main}
+2021-11-05T11:25:15+00:00	INFO 127.0.0.1	controller	Holding edit ID com_plugins.edit.plugin.97 Array (     [0] => 97 ) 
+2021-11-05T11:25:16+00:00	INFO 127.0.0.1	controller	Checking edit ID com_plugins.edit.plugin.97: 1 Array (     [0] => 97 ) 
+2021-11-05T11:25:24+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_plugins.edit.plugin.97 Array ( ) 
+2021-11-05T11:25:32+00:00	INFO 127.0.0.1	controller	Holding edit ID com_plugins.edit.plugin.106 Array (     [0] => 106 ) 
+2021-11-05T11:25:32+00:00	INFO 127.0.0.1	controller	Checking edit ID com_plugins.edit.plugin.106: 1 Array (     [0] => 106 ) 
+2021-11-05T11:25:43+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_plugins.edit.plugin.106 Array ( ) 
+2021-11-05T11:26:52+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Fields\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#7 {main}
+2021-11-05T11:29:57+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Joomla\CMS\Access\Exception\NotAllowed thrown with message "Vous n'avez pas les permissions requises pour accéder à ce contenu. Veuillez contacter un administrateur du site si vous pensez qu'il s'agit d'une erreur.". Stack trace: #0 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(115): Joomla\Component\Fields\Site\Dispatcher\Dispatcher->checkAccess()
+#1 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#2 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#3 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#4 /data/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#5 /data/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#6 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
+#7 {main}
+2021-11-05T16:33:36+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds

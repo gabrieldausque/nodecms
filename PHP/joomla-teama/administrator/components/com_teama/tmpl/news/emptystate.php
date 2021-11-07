@@ -20,14 +20,6 @@ $displayData = [
   'icon' => 'icon-copy'
 ];
 
-$user = Factory::getApplication()->getIdentity();
-
-if($user->authorise('core.create','com_teama') ||
-   count($user->getAuthorisedCategories('com_teama', 'core.create'))
-)
-{
-  $displayData['createUrl'] = 'index.php?option=com_teama&task=onenews.add';
-}
 ?>
 <form action="<?php echo Route::_('index.php?option=com_teama&task=news.display'); ?>"
        method="post"
@@ -35,5 +27,5 @@ if($user->authorise('core.create','com_teama') ||
        id="adminForm"
 >
   <?php echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
+  <?php echo LayoutHelper::render('joomla.content.emptystate', $displayData); ?>
 </form>
-<?php echo LayoutHelper::render('joomla.content.emptystate', $displayData);

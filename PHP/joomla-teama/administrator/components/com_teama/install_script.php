@@ -164,6 +164,8 @@ class Com_TeamAInstallerScript
     $asset           = Table::getInstance('asset');
     $asset->loadByName('com_teama');
     $rules = [
+      'core.create' => [$teamaAdminGroup->id => 1],
+      'core.edit' => [$teamaAdminGroup->id => 1],
       'news.create' => [$teamaAdminGroup->id => 1],
       'news.edit'   => [$teamaAdminGroup->id => 1],
       'news.delete' => [$teamaAdminGroup->id => 1],
@@ -180,6 +182,8 @@ class Com_TeamAInstallerScript
       $rules = json_decode($teamA_asset['rules'], true);
     }
 
+    $rules['core.create'][$teamaAdminGroup->id] = 1;
+    $rules['core.edit'][$teamaAdminGroup->id] = 1;
     $rules['news.create'][$teamaAdminGroup->id] = 1;
     $rules['news.edit'][$teamaAdminGroup->id] = 1;
     $rules['news.delete'][$teamaAdminGroup->id] = 1;

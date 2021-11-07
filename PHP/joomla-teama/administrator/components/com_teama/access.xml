@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <access component="com_teama">
     <section name="component">
+        <action name="core.create" title="COM_TEAMA_GLOBAL_PERMS_CREATE"/>
+        <action name="core.edit" title="COM_TEAMA_GLOBAL_PERMS_EDIT"/>
         <action name="news.create" title="COM_TEAMA_NEWS_PERMS_CREATE"/>
         <action name="news.edit" title="COM_TEAMA_NEWS_PERMS_EDIT"/>
         <action name="news.delete" title="COM_TEAMA_NEWS_PERMS_DELETE"/>
