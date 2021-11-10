@@ -2733,4 +2733,19 @@ Content-Transfer-Encoding: 8bit
 #6 /data/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/data/workspace...')
 #7 {main}
 2021-11-05T16:33:36+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.06 seconds
-2021-11-08T19:46:06+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.08 seconds
+2021-11-08T20:57:52+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.22 seconds
+2021-11-08T20:58:04+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-08T20:58:04+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-08T20:58:37+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.49 seconds
+2021-11-08T20:58:38+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.10 seconds
+2021-11-08T20:58:57+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: alter table `#__teama_news` DROP COLUMN IF EXISTS tags;.
+2021-11-08T20:58:57+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: create table if not exists `#__teama_tags` (     id int(11) NOT NULL AUTO_INCRE.
+2021-11-08T20:58:57+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: create table if not exists `#__teama_news_tags` (     id int(11) NOT NULL AUTO_.
+2021-11-08T20:58:58+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.17. Texte de la requête: alter table `#__teama_tags` ADD UNIQUE (`tag`);.
+2021-11-08T20:58:58+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: erreur SQL Duplicate column name 'summary'
+2021-11-08T20:58:58+00:00	WARNING 127.0.0.1	jerror	Installation de l'extension interrompue.
+2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: alter table `#__teama_news` DROP COLUMN IF EXISTS tags;.
+2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: create table if not exists `#__teama_tags` (     id int(11) NOT NULL AUTO_INCRE.
+2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: create table if not exists `#__teama_news_tags` (     id int(11) NOT NULL AUTO_.
+2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.17. Texte de la requête: alter table `#__teama_tags` ADD UNIQUE (`tag`);.
+2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.22. Texte de la requête: alter table `#__teama_news` add column IF NOT EXISTS `summary` VARCHAR(2096) NOT.

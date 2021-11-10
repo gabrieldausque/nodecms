@@ -10,6 +10,7 @@ create table if not exists `#__teama_news` (
     current_stage INT NOT NULL DEFAULT 0,
     publication_status INT NOT NULL DEFAULT 0,
     last_modifier INT,
+    summary VARCHAR(2096) NOT NULL DEFAULT,
     primary key (`id`)
 );
 

@@ -56,27 +56,27 @@ if ($this->params->get('logoFile'))
     echo $bodyClass;
 ?>">
 <div class="teama-viewport container-fluid d-flex flex-row align-items-start justify-content-start">
-    <header class="teama-navbar text-white">
-        <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
-            <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
-            <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
-        </div>
-        <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-              <?php if (!$isAuthenticate) { ?>
-                  <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
-              <?php } else { ?>
-                  <jdoc:include type="modules" name="header"/>
-              <?php } ?>
-        </nav>
-    </header>
-    <?php if ($isAuthenticate)
-    { ?>
     <div class="teama-content-panel">
         <div class="teama-left-panel d-flex flex-column justify-content-start align-items-center">
+            <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
+                <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
+                <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
+            </div>
+	        <?php if ($isAuthenticate)
+	        { ?>
             <jdoc:include type="modules" name="left"/>
+            <?php } ?>
         </div>
-    <?php } ?>
         <div class="teama-middle-panel d-flex flex-column justify-content-start align-items-start">
+            <header class="teama-navbar text-white">
+                <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+			        <?php if (!$isAuthenticate) { ?>
+                        <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+			        <?php } else { ?>
+                        <jdoc:include type="modules" name="header"/>
+			        <?php } ?>
+                </nav>
+            </header>
           <?php if($isAuthenticate) { ?>
               <jdoc:include type="modules" name="breadcrumb"/>
               <jdoc:include type="modules" name="top" />
