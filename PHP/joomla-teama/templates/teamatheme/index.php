@@ -56,40 +56,48 @@ if ($this->params->get('logoFile'))
     echo $bodyClass;
 ?>">
 <div class="teama-viewport container-fluid d-flex flex-row align-items-start justify-content-start">
-    <header class="teama-navbar text-white">
-        <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
-            <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
-            <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
-        </div>
-        <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-              <?php if (!$isAuthenticate) { ?>
-                  <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
-              <?php } else { ?>
-                  <jdoc:include type="modules" name="header"/>
-              <?php } ?>
-        </nav>
-    </header>
-    <?php if ($isAuthenticate)
-    { ?>
     <div class="teama-content-panel">
         <div class="teama-left-panel d-flex flex-column justify-content-start align-items-center">
+            <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
+                <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
+                <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
+            </div>
+	        <?php if ($isAuthenticate)
+	        { ?>
             <jdoc:include type="modules" name="left"/>
+            <?php } ?>
         </div>
-    <?php } ?>
-        <div class="teama-middle-panel d-flex flex-column justify-content-start align-items-start">
+        <div class="teama-middle-panel">
+            <header class="teama-navbar text-white">
+                <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+			        <?php if (!$isAuthenticate) { ?>
+                        <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+			        <?php } else { ?>
+                        <jdoc:include type="modules" name="header"/>
+			        <?php } ?>
+                </nav>
+            </header>
           <?php if($isAuthenticate) { ?>
-              <jdoc:include type="modules" name="breadcrumb"/>
-              <jdoc:include type="modules" name="top" />
-              <jdoc:include type="message" />
-              <jdoc:include type="component"/>
-              <jdoc:include type="modules" name="bottom" />
+            <div class="container-fluid teama-user-content-panel">
+                <div class="row">
+                    <div class="col">
+                        <jdoc:include type="modules" name="breadcrumb"/>
+                        <jdoc:include type="modules" name="top" />
+                        <jdoc:include type="message" />
+                        <jdoc:include type="component"/>
+                        <footer class="teama-content-footer">
+                            <jdoc:include type="modules" name="bottom" />
+                        </footer>
+                    </div>
+                    <div class="teama-widget-panel">
+                        <jdoc:include type="modules" name="right"/>
+                    </div>
+                </div>
+            </div>
             <div id="teama-loading-screen">
                 <div class="spinner-border teama-loading-spinner text-danger"></div>
                 <div class="teama-loading-label"><?php echo Text::_('TPL_TEAMA_LOADING') ?></div>
             </div>
-        </div>
-        <div class="teama-widget-panel">
-            <jdoc:include type="modules" name="right"/>
         </div>
     </div>
       <?php } else  {  ?>

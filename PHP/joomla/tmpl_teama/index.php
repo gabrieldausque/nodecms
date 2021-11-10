@@ -67,7 +67,7 @@ if ($this->params->get('logoFile'))
             <jdoc:include type="modules" name="left"/>
             <?php } ?>
         </div>
-        <div class="teama-middle-panel d-flex flex-column justify-content-start align-items-start">
+        <div class="teama-middle-panel">
             <header class="teama-navbar text-white">
                 <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 			        <?php if (!$isAuthenticate) { ?>
@@ -78,18 +78,26 @@ if ($this->params->get('logoFile'))
                 </nav>
             </header>
           <?php if($isAuthenticate) { ?>
-              <jdoc:include type="modules" name="breadcrumb"/>
-              <jdoc:include type="modules" name="top" />
-              <jdoc:include type="message" />
-              <jdoc:include type="component"/>
-              <jdoc:include type="modules" name="bottom" />
+            <div class="container-fluid teama-user-content-panel">
+                <div class="row">
+                    <div class="col">
+                        <jdoc:include type="modules" name="breadcrumb"/>
+                        <jdoc:include type="modules" name="top" />
+                        <jdoc:include type="message" />
+                        <jdoc:include type="component"/>
+                        <footer class="teama-content-footer">
+                            <jdoc:include type="modules" name="bottom" />
+                        </footer>
+                    </div>
+                    <div class="teama-widget-panel">
+                        <jdoc:include type="modules" name="right"/>
+                    </div>
+                </div>
+            </div>
             <div id="teama-loading-screen">
                 <div class="spinner-border teama-loading-spinner text-danger"></div>
                 <div class="teama-loading-label"><?php echo Text::_('TPL_TEAMA_LOADING') ?></div>
             </div>
-        </div>
-        <div class="teama-widget-panel">
-            <jdoc:include type="modules" name="right"/>
         </div>
     </div>
       <?php } else  {  ?>

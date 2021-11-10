@@ -2749,3 +2749,8 @@ Content-Transfer-Encoding: 8bit
 2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.16. Texte de la requête: create table if not exists `#__teama_news_tags` (     id int(11) NOT NULL AUTO_.
 2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.17. Texte de la requête: alter table `#__teama_tags` ADD UNIQUE (`tag`);.
 2021-11-08T20:59:48+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.22. Texte de la requête: alter table `#__teama_news` add column IF NOT EXISTS `summary` VARCHAR(2096) NOT.
+2021-11-10T13:42:55+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.70 seconds
+2021-11-10T13:43:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-10T13:43:03+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-10T13:44:36+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.62 seconds
+2021-11-10T13:44:38+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.54 seconds
