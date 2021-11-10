@@ -32,7 +32,7 @@
 
   <Target Name="InitDb" AfterTargets="Build">
     <Message Text="Initialization teama DB" Importance="high" />
-    <Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg .\..\MongodbTeamAInitScript.js" />
+    <Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg ./../MongodbTeamAInitScript.js" />
   </Target>
 
   <Target Name="CleanCatalog" AfterTargets="InitDb">
