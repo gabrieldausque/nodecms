@@ -33,8 +33,8 @@ body {
     width: 100%;
     display: flex;
     border-bottom: solid 1px lightgrey;
-    height: 61px;
-    max-height: 61px;
+    height: 57px;
+    max-height: 57px;
 }
 
 #teama-header-toolbar {
@@ -62,7 +62,7 @@ body {
 }
 
 .teama-left-panel {
-    width:10vw;
+    width:25vw;
     height:100%;
     color: white;
     transition: width 1s ease, min-width 1s ease;
@@ -71,10 +71,11 @@ body {
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
+    min-width: 25vw;
 }
 
 .teama-left-panel.grown {
-    min-width:10vw;
+    min-width:25vw;
 }
 
 .teama-left-panel::-webkit-scrollbar {
@@ -83,8 +84,42 @@ body {
 
 .teama-left-panel.shrink,
 .teama-brand-container.shrink {
-    width: 60px;
-    min-width: 60px;
+    width: 82px;
+    min-width: 82px;
+}
+
+.teama-menu-link {
+    font-family: var(--bs-body-font-family) !important;
+    display: flex !important;
+    width: 100%;
+    justify-content: flex-start !important;
+}
+
+.teama-menu-icon {
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+
+.FirstLetter {
+    margin-left: 10px;
+}
+
+.FirstLetter,
+.OtherLetters {
+    white-space: nowrap;
+}
+
+.OtherLetters {
+    margin-left: 0px;
+    margin-right: auto;
+}
+
+.shrink .FirstLetter {
+    width: 16px;
+    display: flex;
+    justify-content: center;
+    margin: 2px;
 }
 
 .teama-middle-panel {
@@ -94,18 +129,23 @@ body {
     flex-grow: 1;
     overflow: hidden;
     margin-left: 2px;
-    display: flex;
-    flex-wrap: wrap;
 }
 
 .teama-user-content-panel{
     overflow-y:scroll;
     max-height: calc(100% - 61px);
+    padding: 0;
 }
 
 
 .teama-user-content-panel::-webkit-scrollbar {
     display: none;
+}
+
+.teama-user-content-panel .row,
+.teama-user-content-panel .col {
+    padding: 0;
+    --bs-gutter-x: 0;
 }
 
 .teama-content-panel {
@@ -172,7 +212,7 @@ body {
 
 .teama-brand-container {
     font-family: Army, Sans, serif;
-    width:10vw;
+    width:100%;
     transition: width 1s ease;
     height: 56px;
     max-height: 56px;
@@ -195,9 +235,10 @@ body {
 }
 
 .teama-widget-panel {
-    width:10vw;
+    width:0;
     height: 100%;
-    min-width:10vw;
+    min-width:0;
+    transition: width 500ms ease;
 }
 
 .mod-login__userdata {
@@ -252,19 +293,6 @@ body {
 
 .nav-link > i {
     margin-right: 5px;
-}
-
-.FirstLetters {
-    margin-left: 10px;
-}
-
-.FirstLetters,
-.OtherLetters {
-    white-space: nowrap;
-}
-
-.teama-menu-link {
-    font-family: var(--bs-body-font-family) !important;
 }
 
 #teama-loading-screen {

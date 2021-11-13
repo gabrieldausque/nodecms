@@ -29,7 +29,18 @@ if ($item->anchor_rel)
 	$attributes['rel'] = $item->anchor_rel;
 }
 
-$linktype = $item->title;
+$iconRegex = '/teamaicon_(?<icon>.+)_teamaicon/';
+$matches = [];
+$linkIcon = '<span class="teama-menu-icon"><i class="fas fa-globe"></i></span>';
+
+if(array_key_exists('class', $attributes) &&
+   preg_match($iconRegex, $attributes['class'], $matches)){
+	$linkIcon = '<span><i class="' . $matches['icon'] . '"></i></span>';
+	preg_replace($iconRegex, '', $attributes['class']);
+}
+
+$linktype = $linkIcon . '<span class="FirstLetter">' . $item->title[0] .
+            '</span><span class="OtherLetters">' . substr($item->title, 1) . '</span>';
 
 if ($item->menu_image)
 {
@@ -62,14 +73,19 @@ if ($item->browserNav == 1)
 elseif ($item->browserNav == 2)
 {
 	$options = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,' . $params->get('window_open');
-
 	$attributes['onclick'] = "window.open(this.href, 'targetWindow', '" . $options . "'); return false;";
 }
 
 if(isset($attributes['class']))
-	$attributes['class'] += ' nav-link text-white';
+	$attributes['class'] .= ' nav-link text-white teama-menu-link';
 else
-	$attributes['class'] = 'nav-link text-white';
+	$attributes['class'] = 'nav-link text-white teama-menu-link';
 
-echo HTMLHelper::_('link', OutputFilter::ampReplace(htmlspecialchars($item->flink, ENT_COMPAT, 'UTF-8', false)),
+if(!array_key_exists('title', $attributes))
+	$attributes['title'] = $item->title;
+
+echo HTMLHelper::_('link', OutputFilter::ampReplace(htmlspecialchars($item->flink,
+	ENT_COMPAT,
+	'UTF-8',
+	false)),
 	$linktype, $attributes);

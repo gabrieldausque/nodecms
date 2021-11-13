@@ -57,6 +57,7 @@ if ($this->params->get('logoFile'))
 ?>">
 <div class="teama-viewport container-fluid d-flex flex-row align-items-start justify-content-start">
     <div class="teama-content-panel">
+        <?php if($isAuthenticate) { ?>
         <div class="teama-left-panel d-flex flex-column justify-content-start align-items-center">
             <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
                 <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
@@ -67,6 +68,7 @@ if ($this->params->get('logoFile'))
             <jdoc:include type="modules" name="left"/>
             <?php } ?>
         </div>
+        <?php } ?>
         <div class="teama-middle-panel">
             <header class="teama-navbar text-white">
                 <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">

@@ -22,8 +22,6 @@ if ($tagId = $params->get('tag_id', ''))
 {
 	$id = ' id="' . $tagId . '"';
 }
-
-// The menu class is deprecated. Use mod-menu instead
 ?>
 <ul<?php echo $id; ?> class="mod-menu mod-list nav nav-pills flex-column mb-auto <?php echo $class_sfx; ?>">
 <?php foreach ($list as $i => &$item)
@@ -92,11 +90,6 @@ if ($tagId = $params->get('tag_id', ''))
             $subMenuClass .= ' active';
 
 		echo '<div class="' . $subMenuClass . '" >';
-		echo '<button class="btn btn-toggle align-items-center rounded btn-submenu';
-        if($hasChildActive)
-            echo ' show-submenu';
-        echo '" data-bs-toggle="collapse" data-bs-target="#' . $deeperId . '" aria-expanded="true">';
-		echo '<i class="fas fa-chevron-right"></i></button>';
 	}
 
 	switch ($item->type) :
@@ -115,10 +108,18 @@ if ($tagId = $params->get('tag_id', ''))
 	// The next item is deeper.
 	if ($item->deeper)
 	{
-	    echo '</div>';
-		echo '<ul id="' . $deeperId . '" class="mod-menu__sub list-unstyled small collapse ';
+
+		echo '<button class="btn btn-toggle align-items-center rounded btn-submenu';
 		if($hasChildActive)
-		    echo 'show';
+			echo ' show-submenu';
+		echo '" data-bs-toggle="collapse" data-bs-target="#' . $deeperId . '" aria-expanded="true">';
+		echo '<i class="fas fa-chevron-right"></i></button>';
+
+
+		echo '</div>';
+		echo '<ul id="' . $deeperId . '" class="mod-menu__sub list-unstyled small collapse';
+		if($hasChildActive)
+		    echo ' show';
 		echo '">';
 	}
 

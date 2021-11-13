@@ -41,24 +41,24 @@ if ($item->id == $active_id)
 	}
 }
 
-$linktype = '<span class="FirstLetter">' . substr($item->title, 0,1) . '</span>' .
-			'<span class="OtherLetters">' . substr($item->title, 1, strlen($item->title) - 1) . '</span>';
+$linkTitle = '<span class="FirstLetter">' . substr($item->title, 0,1) . '</span>' .
+             '<span class="OtherLetters">' . substr($item->title, 1, strlen($item->title) - 1) . '</span>';
 
 if ($item->menu_image)
 {
 	if ($item->menu_image_css)
 	{
 		$image_attributes['class'] = $item->menu_image_css;
-		$linktype = HTMLHelper::_('image', $item->menu_image, $item->title, $image_attributes);
+		$linkTitle                 = HTMLHelper::_('image', $item->menu_image, $item->title, $image_attributes);
 	}
 	else
 	{
-		$linktype = HTMLHelper::_('image', $item->menu_image, $item->title);
+		$linkTitle = HTMLHelper::_('image', $item->menu_image, $item->title);
 	}
 
 	if ($itemParams->get('menu_text', 1))
 	{
-		$linktype .= '<span class="image-title">' . $item->title . '</span>';
+		$linkTitle .= '<span class="image-title">' . $item->title . '</span>';
 	}
 }
 
@@ -89,12 +89,16 @@ if ($item->id == $active_id)
 
 $iconRegex = '/teamaicon_(?<icon>.+)_teamaicon/';
 $matches = [];
+$linkIcon = '<span class="teama-menu-icon"><i class="fas fa-external-link"></i></span>';
+
 if(preg_match($iconRegex, $attributes['class'], $matches)){
-	$linktype = '<i class="' . $matches['icon'] . '"></i>' . $linktype;
+	$linkIcon = '<span><i class="' . $matches['icon'] . '"></i></span>';
 	preg_replace($iconRegex, '', $attributes['class']);
 }
 
-$final = HTMLHelper::_('link', OutputFilter::ampReplace(htmlspecialchars($item->flink, ENT_COMPAT, 'UTF-8', false)),
-	$linktype, $attributes);
+$final = HTMLHelper::_('link',
+	OutputFilter::ampReplace(htmlspecialchars($item->flink, ENT_COMPAT, 'UTF-8', false)),
+	$linkIcon . $linkTitle,
+	$attributes);
 
 echo $final;
