@@ -68,6 +68,7 @@
   display: flex;
   align-items: flex-start;
   padding-top: 5px;
+  padding-bottom: 10px;
 }
 
 .teama-toolbar > .btn {
@@ -123,4 +124,8 @@
 
 .teama-filter-label {
   color: white;
+}
+
+#filter_tag {
+  height:97px;
 }

@@ -59,7 +59,7 @@ if ($this->params->get('logoFile'))
     <div class="teama-content-panel">
         <?php if($isAuthenticate) { ?>
         <div class="teama-left-panel d-flex flex-column justify-content-start align-items-center">
-            <div class="teama-brand-container d-flex flex-row justify-content-evenly align-items-center bg-dark">
+            <div class="teama-brand-container d-flex flex-row justify-content-start align-items-center bg-dark">
                 <div id="teama-brand-logo" style="background-image: url('<?php echo $logoUrl ?>');"></div>
                 <h5 id="teama-brand-title"><?php echo $siteName ?></h5>
             </div>
