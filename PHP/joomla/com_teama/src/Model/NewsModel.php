@@ -64,6 +64,11 @@ class NewsModel
       ));
     }
 
+	  array_push($actions, new Actions(
+		  'search',
+		  ''
+	  ));
+
     return $actions;
   }
 

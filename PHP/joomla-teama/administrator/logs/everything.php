@@ -25,3 +25,4 @@
 2021-11-13T20:27:37+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.08 seconds
 2021-11-13T21:39:21+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.401 Array (     [0] => 401 ) 
 2021-11-13T21:43:35+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.401 Array ( ) 
+2021-11-14T04:58:44+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.08 seconds
