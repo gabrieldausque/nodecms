@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.12" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
   </ItemGroup>
 
@@ -55,7 +56,9 @@
     <Copy SourceFiles="..\BlackSheep.CMS\$(OutputPath)BlackSheep.CMS.Views.dll" DestinationFolder="$(OutputPath)\Catalog" />
     <Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(OutputPath)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
     <Copy SourceFiles="@(ClientApp)" DestinationFiles="@(ClientApp->'$(OutputPath)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
-    <Copy SourceFiles="@(ClientAppBundle)" DestinationFolder="$(OutputPath)\wwwroot"/>
+    <Copy SourceFiles="@(ClientAppBundle)" DestinationFolder="$(OutputPath)\wwwroot" />
   </Target>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
   
 </Project>

@@ -20,9 +20,10 @@ namespace BlackSheep.Core.Host
 
         public override void Configure(IApplicationBuilder builder)
         {
+            builder.UseDeveloperExceptionPage();
+            builder.UseWebAssemblyDebugging();
             builder.UseBlazorFrameworkFiles();
             builder.UseStaticFiles();
-            builder.UseDeveloperExceptionPage();
             builder.UseRouting();
             builder.UseEndpoints(endpoints =>
             {
