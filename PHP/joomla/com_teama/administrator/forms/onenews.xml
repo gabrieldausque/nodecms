@@ -68,5 +68,18 @@
             </fieldset>
         </fields>
 
+        <field
+                name="catid"
+                type="category"
+                extension="com_teama"
+                class="inputbox"
+                default=""
+                label="COM_TEAMA_TEAMA_FIELD_CATID_LABEL"
+                description="COM_TEAMA_TEAMA_FIELD_CATID_DESC"
+                required="true"
+                published="true"
+                multiple="true"
+        />
+
     </fieldset>
 </form>

@@ -24,7 +24,7 @@ $classByActions = [
     'edit' => 'btn-success',
     'delete' => 'btn-danger',
     'create' => 'btn-success'
-];
+]
 
 ?>
 

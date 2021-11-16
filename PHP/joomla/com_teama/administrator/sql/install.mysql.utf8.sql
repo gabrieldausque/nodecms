@@ -11,6 +11,7 @@ create table if not exists `#__teama_news` (
     publication_status INT NOT NULL DEFAULT 0,
     last_modifier INT,
     summary VARCHAR(2096) NOT NULL DEFAULT,
+    catid INT(11) NOT NULL DEFAULT '0',
     primary key (`id`)
 );
 

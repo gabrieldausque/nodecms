@@ -21,6 +21,7 @@
   align-items: center;
   justify-content: center;
   width: calc(33% - 10px);
+  text-align: center;
 }
 
 .teama-section-title {

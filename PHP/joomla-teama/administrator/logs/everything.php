@@ -26,3 +26,13 @@
 2021-11-13T21:39:21+00:00	INFO 127.0.0.1	controller	Holding edit ID com_menus.edit.item.401 Array (     [0] => 401 ) 
 2021-11-13T21:43:35+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_menus.edit.item.401 Array ( ) 
 2021-11-14T04:58:44+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.08 seconds
+2021-11-16T06:14:38+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.13 seconds
+2021-11-16T06:14:47+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-16T06:14:47+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-16T06:14:48+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-16T06:14:48+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-16T06:15:14+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.54 seconds
+2021-11-16T06:15:16+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.31 seconds
+2021-11-16T06:15:34+00:00	INFO 127.0.0.1	update	Requête lancée à partir du fichier 0.0.23. Texte de la requête: ALTER TABLE `#__teama_news` add column `catid` INT(11) NOT NULL DEFAULT '0';.
+2021-11-16T06:24:19+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.6 Array (     [0] => 6 ) 
+2021-11-16T06:26:38+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.onenews.6 Array (     [0] => 6 ) 

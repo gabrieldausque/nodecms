@@ -102,6 +102,14 @@ class Com_TeamAInstallerScript
       ]);
     }
 
+	if(!$this->foundGroupByName('TeamA_RH')) {
+	   $groupModel->save([
+	        'id'        => 0,
+		    'parent_id' => $teamAMembers->id,
+		    'title'     => 'TeamA_HumanResources'
+	   ]);
+	}
+
     $this->setRules();
 
     return true;

@@ -78,7 +78,7 @@ class OnenewsModel
   }
 
 	public function getItem( $pk = null ) {
-    $item = parent::getItem( $pk );
+        $item = parent::getItem( $pk );
 		if($item && property_exists($item, 'header_media'))
 		{
 			$item->header_media = json_decode($item->header_media,true);
