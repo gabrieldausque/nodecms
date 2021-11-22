@@ -8,4 +8,11 @@
         <action name="news.delete" title="COM_TEAMA_NEWS_PERMS_DELETE"/>
         <action name="news.read" title="COM_TEAMA_NEWS_PERMS_READ"/>
     </section>
+    <section>
+        <action name="core.create" title="JACTION_CREATE"/>
+        <action name="core.edit" title="JACTION_EDIT"/>
+        <action name="core.delete" title="JACTION_DELETE"/>
+        <action name="core.edit.state" title="JACTION_EDITSTATE"/>
+        <action name="core.edit.own" title="JACTION_EDITOWN"/>
+    </section>
 </access>

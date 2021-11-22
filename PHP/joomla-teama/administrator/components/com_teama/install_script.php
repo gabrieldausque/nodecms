@@ -15,6 +15,9 @@ use Joomla\CMS\Access;
 use Joomla\CMS\Table\Table;
 use \Joomla\Component\Config\Administrator\Model\ComponentModel;
 use \Joomla\Component\Users\Administrator\Model\GroupModel;
+use \Joomla\Component\Categories\Administrator\Model\CategoryModel;
+use \Joomla\Component\Categories\Administrator\Model\CategoriesModel;
+use TheLoneBlackSheep\Component\TeamA\Site\Model\OnenewsModel;
 
 /**
  * @since 0.0.1
@@ -121,7 +124,9 @@ class Com_TeamAInstallerScript
 	    return false;
     }
 
-	  $this->setRules();
+	$this->createTeamACategories();
+
+	$this->setRules();
 
     return true;
 	}
@@ -211,4 +216,57 @@ class Com_TeamAInstallerScript
 	  $asset->save($media_asset);
   }
 
+  public function createTeamACategories(){
+	$categories = [
+		[
+			'title'=>'Non Catégorisé',
+			'path'=>'non-categorise'
+		],
+		[
+			'title'=>'RH',
+			'path'=>'teama-human-resource'
+		]
+	];
+
+	foreach($categories as $category){
+		$this->createCategory($category);
+	}
+
+	$newsModel = new OnenewsModel();
+	$db = $newsModel->getDbo();
+	$query = "
+	UPDATE #__teama_news
+	SET catid = (SELECT id FROM #__categories WHERE extension = 'com_teama' AND title = 'Non Catégorisé') 
+	WHERE catid = 0;
+";
+	$db->setQuery($query);
+	$db->execute();
+  }
+
+  public function createCategory($category)
+  {
+	$categoryModel = new CategoryModel();
+	$categoriesModel = new CategoriesModel();
+	$db = $categoriesModel->getDbo();
+	$query = $db->getQuery(true);
+	$query->select('id,title,path')
+	        ->from('#__categories')
+	        ->where("title='" . $category['title'] . "'")
+	        ->where("extension='com_teama'");
+	$db->setQuery($query);
+	$existing = $db->loadObject();
+	if(!isset($existing)){
+	  $category_data['id'] = 0;
+	  $category_data['parent_id'] = 0;
+	  $category_data['title'] = $category['title'];
+	  $category_data['alias'] = $category['path'];
+	  $category_data['extension'] = 'com_teama';
+	  $category_data['published'] = 1;
+	  $category_data['language'] = '*';
+	  $category_data['params'] = array('category_layout' => '','image' => '');
+	  $category_data['metadata'] = array('author' => '','robots' => '');
+	  $category_data['access'] = 2;
+	  $categoryModel->save($category_data);
+	}
+  }
 }

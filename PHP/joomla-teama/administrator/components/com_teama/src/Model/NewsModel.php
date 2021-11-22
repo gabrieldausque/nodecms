@@ -57,7 +57,7 @@ class NewsModel
     $filterByTitle = $this->getState('filter.title');
     $db = $this->getDbo();
     $query =
-    "SELECT a.*, COALESCE(GROUP_CONCAT(c.tag SEPARATOR ','),'') as tags
+    "SELECT a.*, cat.title as category_title, COALESCE(GROUP_CONCAT(c.tag SEPARATOR ','),'') as tags
      FROM #__teama_news a";
 
     if(!isset($filterByTags)){
@@ -67,9 +67,13 @@ class NewsModel
     } else {
       $query .= "
         INNER JOIN #__teama_news_tags b ON a.id = b.news_id
-        INNER JOIN #__teama_tags c ON c.id = b.tags_id AND c.id IN (" . implode(',',$filterByTags) . ")
+        INNER JOIN #__teama_tags c ON c.id = b.tags_id AND c.id IN (" . implode(',',$filterByTags) . ") 
       ";
     }
+
+    $query .= "
+    INNER JOIN #__categories cat on a.catid = cat.id 
+    ";
 
     $whereClause = [];
 

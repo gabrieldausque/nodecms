@@ -7,6 +7,7 @@ namespace TeamA;
 
 \defined('_JEXEC') or die('Restricted Access');
 
+use Joomla\CMS\Categories\CategoryFactoryInterface;
 use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
 use Joomla\CMS\Extension\ComponentInterface;
 use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
@@ -40,7 +41,7 @@ class TeamAServiceProvider implements ServiceProviderInterface
 				$component = new TeamAComponent($container->get(ComponentDispatcherFactoryInterface::class));
 				$component->setMVCFactory($container->get(MVCFactoryInterface::class));
 				$component->setRegistry($container->get(Registry::class));
-
+				$component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
 				return $component;
 			}
 		);

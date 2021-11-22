@@ -1,0 +1,1 @@
+UPDATE `#__teama_news` SET publication_status = 1 where publication_status = 0;
