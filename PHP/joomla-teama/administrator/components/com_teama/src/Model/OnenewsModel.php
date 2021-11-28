@@ -22,6 +22,8 @@ class OnenewsModel
   extends AdminModel
 {
 
+  private $item = null;
+
   public $typeAlias = 'com_teama.onenews';
 
   public function getForm($data = [], $loadData = TRUE) {
@@ -86,16 +88,16 @@ class OnenewsModel
     return $data;
   }
 
-	public function getItem( $pk = null ) {
-        $item = parent::getItem( $pk );
-		if($item && property_exists($item, 'header_media'))
-		{
-			$item->header_media = json_decode($item->header_media,true);
-		}
-		$var = $this->getTags($item->id);
-		$item->{"tags"} = implode(',',$var);
-		return $item;
+  public function getItem( $pk = null ) {
+    $this->item = parent::getItem( $pk );
+	if($this->item && property_exists($this->item, 'header_media'))
+	{
+		$this->item->header_media = json_decode($this->item->header_media,true);
 	}
+	$var = $this->getTags($this->item->id);
+	$this->item->{"tags"} = implode(',',$var);
+	return $this->item;
+  }
 
   protected function canDelete($record) {
     $app = Factory::getApplication();
@@ -127,7 +129,6 @@ class OnenewsModel
         $this->deleteTags($tagsToRemove);
       }
     }
-
     return $saved;
   }
 
@@ -183,6 +184,16 @@ class OnenewsModel
   	$query = 'SELECT id from #__categories WHERE title = "RH" and extension = "com_teama"';
   	$db->setQuery($query);
   	return $db->loadResult();
+  }
+
+  public function IsRHNews($item = null) : bool{
+  	if(!isset($item)){
+  		$item = $this->item;
+    }
+  	if(isset($item)){
+  		return $item->catid == $this->getRHCategoryId();
+    }
+  	return false;
   }
 
 }

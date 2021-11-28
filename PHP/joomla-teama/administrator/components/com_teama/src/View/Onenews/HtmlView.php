@@ -42,5 +42,10 @@ class HtmlView
     ToolbarHelper::cancel('onenews.cancel', 'JTOOLBAR_CLOSE');
   }
 
+  public function getIsRHNews(){
+    $model = $this->getModel();
+    return $model->isRHNews();
+  }
+
 }
 

@@ -232,3 +232,10 @@ Content-Transfer-Encoding: 8bit
 2021-11-28T10:48:18+00:00	INFO 127.0.0.1	joomlacanceled	
 2021-11-28T10:48:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
 2021-11-28T10:48:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T15:37:13+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.10 seconds
+2021-11-28T16:36:42+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T16:36:43+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T16:53:40+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T16:53:40+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T16:53:55+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML
+2021-11-28T16:53:55+00:00	WARNING 127.0.0.1	jerror	JInstaller: :Install: impossible de trouver un fichier d'initialisation XML

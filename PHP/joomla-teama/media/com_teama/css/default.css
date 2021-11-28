@@ -11,6 +11,12 @@
   border: solid 1px #dc3545;
 }
 
+.teama-news-card .badge {
+  width: fit-content;
+  align-self: flex-end;
+  margin: 5px;
+}
+
 .teama-section-news {
   display: flex;
   flex-wrap: wrap;

@@ -78,6 +78,7 @@
                 default=""
                 addfieldprefix="Joomla\Component\Categories\Administrator\Field"
                 class="readonly"
+                readonly="true"
         />
 
     </fieldset>

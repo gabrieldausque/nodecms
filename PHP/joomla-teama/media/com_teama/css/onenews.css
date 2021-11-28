@@ -63,3 +63,14 @@
   margin-right:10px;
   margin-top:10px;
 }
+
+.choices__button_joomla{
+  position: absolute;
+  margin-left: auto;
+  left: calc(100% - 150px);
+  top: 4px;
+}
+
+div.is-disabled .choices__button_joomla {
+  display: none;
+}

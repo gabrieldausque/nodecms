@@ -4,6 +4,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\View\Teama;
 \defined('_JEXEC') or die('Restricted Access');
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use TheLoneBlackSheep\Component\TeamA\Site\Model\OnenewsModel;
 
 class HtmlView extends BaseHtmlView
 {
@@ -17,5 +18,10 @@ class HtmlView extends BaseHtmlView
 	{
 		$this->news = $this->get('Top5News', 'News');
 		parent::display( $tpl );
+	}
+
+	public function isRHNews($theNews):bool {
+		$model = new OnenewsModel();
+		return $model->IsRHNews($theNews);
 	}
 }
