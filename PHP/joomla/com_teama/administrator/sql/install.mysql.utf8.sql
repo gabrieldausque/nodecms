@@ -37,3 +37,11 @@ create table if not exists `#__teama_news_tags` (
             ON UPDATE RESTRICT
 );
 
+create table if not exists `#__teama_france_departments` (
+
+);
+
+create table if not exists `#__teama_offshoots`(
+    id int(11) NOT NULL AUTO_INCREMENT,
+
+);
