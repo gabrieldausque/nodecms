@@ -68,5 +68,16 @@
             </fieldset>
         </fields>
 
+        <field
+                name="catid"
+                type="categoryedit"
+                extension="com_teama"
+                label="COM_TEAMA_TEAMA_FIELD_CATID_LABEL"
+                description="COM_TEAMA_TEAMA_FIELD_CATID_DESC"
+                required="true"
+                default=""
+                addfieldprefix="Joomla\Component\Categories\Administrator\Field"
+        />
+
     </fieldset>
 </form>

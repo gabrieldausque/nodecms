@@ -52,6 +52,7 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
       <?php echo $this->getForm()->renderFieldSet('header-media'); ?>
       <?php echo $this->getForm()->renderField('body'); ?>
       <?php echo $this->getForm()->renderField('tags'); ?>
+      <?php echo $this->getForm()->renderField('catid'); ?>
       <?php echo HTMLHelper::_('uitab.endTab') ?>
       <?php echo HTMLHelper::_('uitab.endTabSet') ?>
     </div>

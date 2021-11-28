@@ -140,3 +140,95 @@
 2021-11-22T07:58:51+00:00	INFO 127.0.0.1	controller	Holding edit ID com_categories.edit.category.13 Array (     [0] => 13 ) 
 2021-11-22T07:58:51+00:00	INFO 127.0.0.1	controller	Checking edit ID com_categories.edit.category.13: 1 Array (     [0] => 13 ) 
 2021-11-22T08:00:08+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_categories.edit.category.13 Array ( ) 
+2021-11-28T09:23:59+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T09:23:59+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T09:23:59+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.09 seconds
+2021-11-28T09:24:13+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.30 seconds
+2021-11-28T09:24:14+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.07 seconds
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: Amy Amanda <gabydausquy@hotmail.com>
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Param=C3=A8tres_de_nouvel_utilisateur?=
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Sun, 28 Nov 2021 10:28:07 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <rNjOPFrHfNPyk0NW9Ex6xmXhevA0ImxZGeZROQzbw@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: Amy Amanda <gabydausquy@hotmail.com>
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Param=C3=A8tres_de_nouvel_utilisateur?=
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Sun, 28 Nov 2021 10:28:07 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <hurg5Lzq3BYd3VDjUdXUIjmXdJAP2CY4WoHKTeYqEM@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2021-11-28T09:28:07+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2021-11-28T09:28:07+00:00	WARNING 127.0.0.1	jerror	Could not instantiate mail function.
+2021-11-28T09:28:53+00:00	INFO 127.0.0.1	joomlafailure	L'identifiant ne correspond pas au mot de passe, ou vous n'avez pas encore de compte.
+2021-11-28T09:28:53+00:00	WARNING 127.0.0.1	jerror	L'identifiant ne correspond pas au mot de passe, ou vous n'avez pas encore de compte.
+2021-11-28T09:51:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T09:51:30+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T10:13:38+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Form::loadForm could not load file". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Model/OnenewsModel.php(39): Joomla\CMS\MVC\Model\FormModel->loadForm()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/AbstractView.php(146): TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel->getForm()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(20): Joomla\CMS\MVC\View\AbstractView->get()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#14 {main}
+2021-11-28T10:13:42+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Form::loadForm could not load file". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Model/OnenewsModel.php(39): Joomla\CMS\MVC\Model\FormModel->loadForm()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/AbstractView.php(146): TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel->getForm()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(20): Joomla\CMS\MVC\View\AbstractView->get()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#14 {main}
+2021-11-28T10:13:55+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type RuntimeException thrown with message "Form::loadForm could not load file". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Model/OnenewsModel.php(39): Joomla\CMS\MVC\Model\FormModel->loadForm()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/View/AbstractView.php(146): TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel->getForm()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/View/Onenews/HtmlView.php(20): Joomla\CMS\MVC\View\AbstractView->get()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(692): TheLoneBlackSheep\Component\TeamA\Site\View\Onenews\HtmlView->display()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Controller/DisplayController.php(26): Joomla\CMS\MVC\Controller\BaseController->display()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): TheLoneBlackSheep\Component\TeamA\Site\Controller\DisplayController->display()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/components/com_teama/src/Dispatcher/Dispatcher.php(13): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Site\Dispatcher\Dispatcher->dispatch()
+#9 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(206): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#10 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/SiteApplication.php(245): Joomla\CMS\Application\SiteApplication->dispatch()
+#11 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\SiteApplication->doExecute()
+#12 /mnt/c/workspaces/nodecms/PHP/joomla-teama/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#13 /mnt/c/workspaces/nodecms/PHP/joomla-teama/index.php(32): require_once('/mnt/c/workspac...')
+#14 {main}
+2021-11-28T10:43:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T10:43:49+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T10:48:11+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T10:48:11+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T10:48:18+00:00	INFO 127.0.0.1	joomlacanceled	
+2021-11-28T10:48:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-11-28T10:48:19+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules

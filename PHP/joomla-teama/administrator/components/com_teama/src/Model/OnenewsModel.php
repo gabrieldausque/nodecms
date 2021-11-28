@@ -14,6 +14,9 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\Component\Contact\Site\Model\CategoryModel;
+use Joomla\Component\Users\Administrator\Model\GroupModel;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Helpers\UserHelpers;
 
 class OnenewsModel
   extends AdminModel
@@ -22,15 +25,21 @@ class OnenewsModel
   public $typeAlias = 'com_teama.onenews';
 
   public function getForm($data = [], $loadData = TRUE) {
-    $form = $this->loadForm($this->typeAlias,
-    'onenews',
-    [
-      'control' => 'jform',
-      'load_data' => $loadData
-    ]);
+  	$app = Factory::getApplication();
+  	$user = $app->getIdentity();
+  	$isRH = UserHelpers::IsUserRH($user);
+    $form = $isRH?
+	    $this->loadForm($this->typeAlias,'onenews_rh', [ 'control' => 'jform', 'load_data' => $loadData ]):
+	    $this->loadForm($this->typeAlias,'onenews', [ 'control' => 'jform', 'load_data' => $loadData ]);
 
     if(empty($form)){
       return false;
+    }
+
+    if($isRH){
+    	$form->setFieldAttribute("catid",
+		    "default",
+		    $this->getRHCategoryId());
     }
 
     return $form;
@@ -92,7 +101,6 @@ class OnenewsModel
     $app = Factory::getApplication();
     $user = $app->getIdentity();
     return $user->authorise('news.delete','com_teama');
-    return false;
   }
 
   public function save($data) {
@@ -168,6 +176,13 @@ class OnenewsModel
     return array_map(function($elt) {
       return $elt->tag;
     }, $db->loadObjectList());
+  }
+
+  protected function getRHCategoryId(): int {
+  	$db = $this->getDbo();
+  	$query = 'SELECT id from #__categories WHERE title = "RH" and extension = "com_teama"';
+  	$db->setQuery($query);
+  	return $db->loadResult();
   }
 
 }

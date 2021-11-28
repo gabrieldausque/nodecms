@@ -11,7 +11,7 @@ use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Psr\Container\ContainerInterface;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Service\HTML\AdministratorService;
 
-defined('JPATH_PLATFORM') or die;
+\defined('_JEXEC') or die('Access Restricted');
 
 class TeamAComponent extends MVCComponent implements BootableExtensionInterface, CategoryServiceInterface {
 

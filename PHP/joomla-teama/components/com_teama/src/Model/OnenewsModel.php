@@ -15,6 +15,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\User\UserHelper;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Helpers\UserHelpers;
 use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\OneNews;
 use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel as BaseOneNewsModel;
@@ -73,22 +75,44 @@ class OnenewsModel
 
     $actions = [];
     if($layout != 'edit'){
-      if($user->authorise('news.edit','com_teama') && isset($id) && $id > 0){
-        array_push($actions, new Actions(
-          'edit',
-          'index.php?option=com_teama&view=onenews&layout=edit&id=' . $id
-        ));
+
+    	if($user->authorise('news.edit','com_teama') && isset($id) && $id > 0){
+
+    		$editActions = new Actions(
+			    'edit',
+			    'index.php?option=com_teama&view=onenews&layout=edit&id=' . $id
+		    );
+    		if(UserHelpers::IsUserRH($user))
+		    {
+			    if(!isset($this->item))
+			    {
+				    $this->getItem($id);
+			    }
+			    if($this->item->catid == $this->getRHCategoryId()){
+				    array_push($actions, $editActions);
+			    }
+		    } else {
+			    array_push($actions, $editActions);
+		    }
       }
 
       if($user->authorise('news.delete','com_teama') && isset($id) && $id > 0){
-        $news = $this->getItem($id);
+      	$news = $this->getItem($id);
         $deleteAction = new Actions(
           'delete',
           'index.php?option=com_teama&task=onenews.delete&id=' . $id
         );
         $deleteAction->useConfirmation = true;
         $deleteAction->confirmationMessage = Text::_('COM_TEAMA_NEWS_DELETE_CONFIRMATION_MESSAGE') . ' "' . $news->title . '" ?';
-        array_push($actions, $deleteAction);
+	    if(UserHelpers::IsUserRH($user))
+	    {
+		    if($news->catid == $this->getRHCategoryId()){
+			     array_push($actions, $deleteAction);
+		    }
+	    }
+        else {
+	        array_push($actions, $deleteAction);
+        }
       }
     }
 

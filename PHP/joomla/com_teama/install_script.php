@@ -105,7 +105,7 @@ class Com_TeamAInstallerScript
       ]);
     }
 
-	if(!$this->foundGroupByName('TeamA_RH')) {
+	if(!$this->foundGroupByName('TeamA_HumanResources')) {
 	   $groupModel->save([
 	        'id'        => 0,
 		    'parent_id' => $teamAMembers->id,
@@ -173,16 +173,34 @@ class Com_TeamAInstallerScript
   public function setRules(): void {
     $teamAMembers = $this->foundGroupByName('TeamA_Members');
     $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
+    $teamaRHGroup = $this->foundGroupByName('TeamA_HumanResources');
 
     $asset           = Table::getInstance('asset');
     $asset->loadByName('com_teama');
     $rules = [
-      'core.create' => [$teamaAdminGroup->id => 1],
-      'core.edit' => [$teamaAdminGroup->id => 1],
-      'news.create' => [$teamaAdminGroup->id => 1],
-      'news.edit'   => [$teamaAdminGroup->id => 1],
-      'news.delete' => [$teamaAdminGroup->id => 1],
-      'news.read'   => [$teamAMembers->id => 1]
+      'core.create' => [
+      	$teamaAdminGroup->id => 1,
+	    $teamaRHGroup->id =>1
+      ],
+      'core.edit' => [
+      	$teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1
+      ],
+      'news.create' => [
+      	$teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1
+      ],
+      'news.edit'   => [
+      	$teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1
+      ],
+      'news.delete' => [
+      	$teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1
+      ],
+      'news.read'   => [
+      	$teamAMembers->id => 1
+      ]
     ];
     $teamA_asset = [
       'rules' => json_encode($rules),
@@ -196,10 +214,15 @@ class Com_TeamAInstallerScript
     }
 
     $rules['core.create'][$teamaAdminGroup->id] = 1;
+    $rules['core.create'][$teamaRHGroup->id] = 1;
     $rules['core.edit'][$teamaAdminGroup->id] = 1;
+    $rules['core.edit'][$teamaRHGroup->id] = 1;
     $rules['news.create'][$teamaAdminGroup->id] = 1;
+    $rules['news.create'][$teamaRHGroup->id] = 1;
     $rules['news.edit'][$teamaAdminGroup->id] = 1;
+    $rules['news.edit'][$teamaRHGroup->id] = 1;
     $rules['news.delete'][$teamaAdminGroup->id] = 1;
+    $rules['news.delete'][$teamaRHGroup->id] = 1;
     $rules['news.read'][$teamAMembers->id] = 1;
     $teamA_asset['rules'] = json_encode($rules);
 
@@ -209,9 +232,13 @@ class Com_TeamAInstallerScript
     $media_asset = $asset->getProperties();
 	  $rules = json_decode($media_asset['rules'], true);
 	  $rules['core.create'][$teamaAdminGroup->id] = 1;
+	  $rules['core.create'][$teamaRHGroup->id] = 1;
 	  $rules['core.edit'][$teamaAdminGroup->id] = 1;
+	  $rules['core.edit'][$teamaRHGroup->id] = 1;
 	  $rules['core.delete'][$teamaAdminGroup->id] = 1;
+	  $rules['core.delete'][$teamaRHGroup->id] = 1;
 	  $rules['core.manage'][$teamaAdminGroup->id] = 1;
+	  $rules['core.manage'][$teamaRHGroup->id] = 1;
     $media_asset['rules'] = json_encode($rules);
 	  $asset->save($media_asset);
   }

@@ -2,6 +2,8 @@
 
 namespace TheLoneBlackSheep\Component\TeamA\Administrator\Controller;
 
+\defined('_JEXEC') or die('Access Restricted');
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 

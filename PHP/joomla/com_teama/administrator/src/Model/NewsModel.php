@@ -9,6 +9,8 @@
 
 namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model;
 
+\defined('_JEXEC') or die('Access Restricted');
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;

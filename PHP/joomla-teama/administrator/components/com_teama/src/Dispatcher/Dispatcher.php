@@ -2,6 +2,8 @@
 
 namespace TheLoneBlackSheep\Component\TeamA\Administrator\Dispatcher;
 
+\defined('_JEXEC') or die('Access Restricted');
+
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 
 class Dispatcher
