@@ -33,6 +33,7 @@
         <menu>Team A</menu>
         <submenu>
             <menu link="option=com_categories&amp;extension=com_teama">COM_TEAMA_CATEGORIES_LABEL</menu>
+            <menu link="option=com_teama&amp;task=departments.display">COM_TEAMA_DEPARTMENTS</menu>
             <menu link="option=com_teama&amp;task=news.display">COM_TEAMA_NEWS_MENU_LABEL</menu>
             <menu link="option=com_teama&amp;task=offshoot.display">COM_TEAMA_OFFSHOOT_LABEL</menu>
         </submenu>
