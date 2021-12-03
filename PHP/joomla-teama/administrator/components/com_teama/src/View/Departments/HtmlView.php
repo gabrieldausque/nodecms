@@ -40,7 +40,7 @@ class HtmlView
 
 		if($user->authorise('departments.create',
 			'com_teama'))
-			$toolbar->addNew('department.add');
+			$toolbar->addNew('departments.add');
 
 		if($user->authorise('departments.delete',
 			'com_teama'))

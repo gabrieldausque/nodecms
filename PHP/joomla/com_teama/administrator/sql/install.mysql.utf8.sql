@@ -37,7 +37,7 @@ create table if not exists `#__teama_news_tags` (
             ON UPDATE RESTRICT
 );
 
-create table if not exists `#__teama_france_departments` (
+create table if not exists `#__teama_departments` (
     id int(11) NOT NULL AUTO_INCREMENT,
     department_number varchar(10) NOT NULL,
     name varchar(255) NOT NULL,
@@ -62,7 +62,7 @@ create table if not exists `#__teama_offshoots_departments` (
     primary key(`id`),
     unique(`department_id`,`offshoots_id`),
     constraint `fk_departments`
-        FOREIGN KEY (department_id) REFERENCES `#__teama_france_departments` (id)
+        FOREIGN KEY (department_id) REFERENCES `#__teama_departments` (id)
             ON DELETE CASCADE
             ON UPDATE RESTRICT,
     constraint `fk_offshoots`

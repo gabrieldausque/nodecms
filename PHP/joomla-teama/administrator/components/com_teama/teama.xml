@@ -9,7 +9,7 @@
     <authorUrl>https://theloneblacksheep.fr</authorUrl>
     <copyright>@gabrieldausque.pro</copyright>
     <license>MIT</license>
-    <version>0.0.25</version>
+    <version>0.0.26</version>
     <description>The Team A core component</description>
 
     <namespace path="src">TheLoneBlackSheep\Component\TeamA</namespace>
@@ -32,8 +32,10 @@
     <administration>
         <menu>Team A</menu>
         <submenu>
-            <menu link="option=com_categories&amp;extension=com_teama">JCATEGORY</menu>
-            <menu link="option=com_teama&amp;task=news.display">News</menu>
+            <menu link="option=com_categories&amp;extension=com_teama">COM_TEAMA_CATEGORIES_LABEL</menu>
+            <menu link="option=com_teama&amp;task=departments.display">COM_TEAMA_DEPARTMENTS_LABEL</menu>
+            <menu link="option=com_teama&amp;task=news.display">COM_TEAMA_NEWS_LABEL</menu>
+            <menu link="option=com_teama&amp;task=offshoot.display">COM_TEAMA_OFFSHOOT_LABEL</menu>
         </submenu>
         <files folder="administrator">
             <filename>index.html</filename>
