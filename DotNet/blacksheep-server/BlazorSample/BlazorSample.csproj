@@ -1,15 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <BaseOutputPath>..\dist\</BaseOutputPath>
+	<OutputPath>$(BaseOutputPath)\$(Configuration)\Catalog\BlazorSample</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.8" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+	<ItemGroup>
+		<ClientApp Include="$(OutputPath)wwwroot\**\*.*" />
+		<ClientAppStatic Include=".\wwwroot\**\*.*"/>
+		<ClientStyle Include=".\obj\$(Configuration)\scopedcss\bundle\**\*.css"/>
+	</ItemGroup>
+
+	<Target Name="CopyRoot" AfterTargets="Build">
+		<Copy SourceFiles="@(ClientAppStatic)"
+		      DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
+		      SkipUnchangedFiles="true"
+		      OverwriteReadOnlyFiles="true"
+		      Retries="3"
+		      RetryDelayMilliseconds="300"
+		/>
+		<Copy SourceFiles="@(ClientApp)" 
+		      DestinationFiles="@(ClientApp->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" 
+		      SkipUnchangedFiles="true" 
+		      OverwriteReadOnlyFiles="true" 
+		      Retries="3" 
+		      RetryDelayMilliseconds="300" 
+		/>
+		<Copy SourceFiles="@(ClientStyle)" 
+		      DestinationFiles="@(ClientStyle->'$(BaseOutputPath)\$(Configuration)\wwwroot\css\%(Filename)%(Extension)')" 
+		      SkipUnchangedFiles="true" 
+		      OverwriteReadOnlyFiles="true" 
+		      Retries="3" 
+		      RetryDelayMilliseconds="300" 
+		/>
+	</Target>
 
 </Project>

@@ -17,13 +17,13 @@ namespace BlackSheep.Core.Host
             : base(env)
         {
         }
-
+        
         public override void Configure(IApplicationBuilder builder)
         {
+            builder.UseStaticFiles();
             builder.UseDeveloperExceptionPage();
             builder.UseWebAssemblyDebugging();
             builder.UseBlazorFrameworkFiles();
-            builder.UseStaticFiles();
             builder.UseRouting();
             builder.UseEndpoints(endpoints =>
             {

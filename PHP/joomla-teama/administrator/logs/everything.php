@@ -505,3 +505,11 @@ Content-Transfer-Encoding: 8bit
 #15 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/mnt/c/workspac...')
 #16 {main}
 2021-12-03T05:49:47+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.27 seconds
+2021-12-03T06:12:07+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-12-03T06:12:07+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-12-03T06:26:09+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-12-03T06:26:09+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-12-04T21:25:47+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-12-04T21:25:47+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2021-12-04T21:25:57+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 10.15 seconds
+2021-12-04T21:25:57+00:00	WARNING 127.0.0.1	updater	Error opening url: https://update.joomla.org/core/list.xml for update site: Joomla! Core

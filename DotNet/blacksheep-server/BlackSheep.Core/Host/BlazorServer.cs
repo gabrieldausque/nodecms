@@ -16,7 +16,7 @@ namespace BlackSheep.Core.Host
                 {
                     // TODO : read configuration for listening port
                     options.Listen(IPAddress.Any, 6060);
-                }); 
+                });
             builder.UseStaticWebAssets();
             builder.UseStartup<BlazorStartup>();
             _host = builder.Build();

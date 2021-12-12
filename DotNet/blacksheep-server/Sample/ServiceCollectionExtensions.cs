@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackSheep.Core.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Sample.Dep;
 
 namespace Sample
 {
