@@ -15,7 +15,7 @@ use TheLoneBlackSheep\Component\TeamA\Administrator\Helpers\UserHelpers;
 
 
 class OffshootModel
-	extends TeamaModel {
+	extends TeamAOneItemModel {
 
 	public function __construct( $config = array(), MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null ) {
 		parent::__construct( 'com_teama.offshoot',

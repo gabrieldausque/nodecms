@@ -1,6 +1,8 @@
 # Method of Development MVC
 
-## 1. Create the datatable(s):
+## For backend side
+
+### 1. Create the datatable(s):
 
 Add new table(s) statement(s) in :
 
@@ -10,7 +12,7 @@ Add update script in :
 
 com_teama/sql/updates/<new version number>.sql
 
-## 2. Add the controllers : 
+### 2. Add the controllers : 
 
 Create the plurals controller : 
 
@@ -30,7 +32,7 @@ extends FormController
 
 specify the $view_list value  as the name of the plurals controller in lower case
 
-## 3. Add the models
+### 3. Add the models
 
 Add the plural models : 
 
@@ -42,12 +44,6 @@ add available filters in constructor
 
 specify the filter form name variable
 
-Create the filter xml file in :
-
-com_teama/administrator/forms/filter_<entities>.xml
-
-and fill in using the forms syntax (use existing example)
-
 Override the get list query method. Don't forget filters !
 
 Create the model for the single extends TeamAModel
@@ -57,7 +53,28 @@ implements the canDelete method if needed (and it will)
 Create the table for the single extends 
 use same typeAlias than in the model
 
-Create form file in 
+### 4. create the views : 
+
+Create form file in
 
 com_teama/administrator/forms/<entity>.xml
 
+Create the filter xml file in :
+
+com_teama/administrator/forms/filter_<entities>.xml
+
+and fill in using the forms syntax (use existing example)
+
+Create the folder com_teama\administrator\src\View\<Entities>
+Create class HtmlView in com_teama\administrator\src\View\<Entities>
+inherits from TeamAViewList
+
+Add template in com_teama\administrator\src\tmpl
+Create folder <entities>
+Create default.php file
+
+## Deploy
+
+Change version of the teama.xml file
+
+Deploy

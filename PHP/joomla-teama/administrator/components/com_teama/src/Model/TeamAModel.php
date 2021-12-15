@@ -29,7 +29,7 @@ abstract class TeamAModel extends AdminModel {
 	}
 
 	public function getForm( $data = array(), $loadData = true ) {
-		$form = $this->loadForm($this->formName);
+		$form = $this->loadForm($this->typeAlias,$this->formName, [ 'control' => 'jform', 'load_data' => $loadData ]);
 		if(empty($form))
 			return false;
 		return $form;

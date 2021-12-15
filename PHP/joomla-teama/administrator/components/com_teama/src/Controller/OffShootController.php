@@ -6,7 +6,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\Controller;
 
 use Joomla\CMS\MVC\Controller\FormController;
 
-class OffShootController
+class OffshootController
 	extends FormController {
 
 	protected $view_list = "offshoots";

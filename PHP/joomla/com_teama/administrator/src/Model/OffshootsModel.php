@@ -29,6 +29,7 @@ class OffshootsModel
 		$dbo = $this->getDbo();
 
 		$query = $dbo->getQuery(true);
+		$query->select('*');
 		$query->from($this->tableName);
 
 		$whereClauses = [];

@@ -11,7 +11,7 @@ abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 
 	protected int $paginationLimit = 20;
 
-	protected string $filterFormName = '';
+	protected $filterFormName = '';
 
 	protected string $tableName = '';
 
