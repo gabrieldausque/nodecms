@@ -28,7 +28,7 @@ class NewsModel
     parent::__construct($config, $factory);
   }
 
-  protected $filterFormName = 'filter_news';
+  protected string $filterFormName = 'filter_news';
 
   protected function getListQuery() {
     $filterByTags = is_array($this->getState('filter.tag'))?

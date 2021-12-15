@@ -17,7 +17,9 @@ class NewsModel
   extends TeamAListModel
 {
 
- public function __construct($config = [], MVCFactoryInterface $factory = NULL) {
+ public function __construct(
+ 	$config = [],
+    MVCFactoryInterface $factory = NULL) {
     if(empty($config['filter_fields'])){
       $config['filter_fields'] = [
         'tags','a.tags',
@@ -25,16 +27,19 @@ class NewsModel
       ];
     }
     $this->paginationLimit = 8;
-    parent::__construct($config, $factory);
+    parent::__construct('filter_news',
+	    '#__teama_news',
+	    $config,
+	    $factory);
   }
 
-  protected $filterFormName = 'filter_news';
-
   protected function getListQuery() {
-    $filterByTags = is_array($this->getState('filter.tag'))?
+    $filterByTags = is_array(
+    	$this->getState('filter.tag'))?
       $this->getState('filter.tag'):
       null;
-    $filterByTitle = $this->getState('filter.title');
+    $filterByTitle =
+	    $this->getState('filter.title');
     $db = $this->getDbo();
     $query =
     "SELECT a.*, cat.title as category_title, COALESCE(GROUP_CONCAT(c.tag SEPARATOR ','),'') as tags

@@ -11,8 +11,17 @@ abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 
 	protected int $paginationLimit = 20;
 
-	public function __construct( $config = array(), MVCFactoryInterface $factory = null ) {
+	protected string $filterFormName = '';
+
+	protected string $tableName = '';
+
+	public function __construct($filterFormName,
+		$tableName,
+		$config = array(),
+		MVCFactoryInterface $factory = null ) {
 		$this->populateState();
+		$this->filterFormName = $filterFormName;
+		$this->tableName = $tableName;
 		parent::__construct( $config, $factory );
 	}
 
@@ -41,5 +50,17 @@ abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 		return $db->loadObjectList();
 	}
 
+	protected function getEmptyStateQuery() {
+		return "SELECT * FROM " . $this->tableName . " WHERE 1=0";
+	}
+
+	public function delete($pks = []){
+		if(is_array($pks) && count($pks) > 0){
+			$db = $this->getDbo();
+			$query = "DELETE " . $this->tableName . " FROM " . $this->tableName . " WHERE id IN (" . implode(',', $pks) . ")";
+			$db->setQuery($query);
+			$db->execute();
+		}
+	}
 
 }

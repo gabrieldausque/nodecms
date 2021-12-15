@@ -68,7 +68,7 @@ class ListModel extends BaseDatabaseModel implements ListModelInterface
 	 * @var    string
 	 * @since  3.2
 	 */
-	protected $filterFormName = null;
+	protected string $filterFormName = null;
 
 	/**
 	 * Associated HTML form

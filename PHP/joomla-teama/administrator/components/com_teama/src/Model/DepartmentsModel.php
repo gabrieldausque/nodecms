@@ -19,7 +19,7 @@ class DepartmentsModel
 		parent::__construct($config, $factory);
 	}
 
-	protected $filterFormName = 'filter_departments';
+	protected string $filterFormName = 'filter_departments';
 
 	protected function getListQuery() {
 		$filter = $this->getState("filter.search");

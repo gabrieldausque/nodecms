@@ -12,10 +12,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model;
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\Component\Contact\Site\Model\CategoryModel;
-use Joomla\Component\Users\Administrator\Model\GroupModel;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Helpers\UserHelpers;
 
 class OnenewsModel
