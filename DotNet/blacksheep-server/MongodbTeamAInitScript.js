@@ -1,4 +1,5 @@
 /**
+/**
  * Mongodb database initialisation script
  *
  *
@@ -7,15 +8,15 @@
 var conn = new Mongo('localhost:27018');
 var adminDb = conn.getDB('admin');
 adminDb.auth('root', 'Mbhj#ksf1445Mbfgqg');
-var teamADb = conn.getDB('teama');
-teamADb.dropDatabase();
+var teamaDb = conn.getDB('teama');
+teamaDb.dropDatabase();
 try {
-    teamADb.dropUser('admin_teama');
+    teamaDb.dropUser('admin_teama');
 } catch (e) {
 
 }
 
-teamADb.createUser({
+teamaDb.createUser({
     user: 'admin_teama',
     pwd: 'jfkbqsgbEGQ#dd54qfdgb',
     roles: [
@@ -28,7 +29,7 @@ teamADb.createUser({
 })
 
 function newId(collectionName) {
-    var result = teamADb.counters.findOneAndUpdate({
+    var result = teamaDb.counters.findOneAndUpdate({
             name: collectionName
         },
         {
@@ -48,12 +49,20 @@ function initData() {
 
     var documentId = newId('documents');
 
-    teamADb.documents.insert(
+    teamaDb.documents.insert(
         {
             "Id": documentId,
             "Key": "welcome",
+            "Title": "Welcome",
             "Headers": {
-                "Content": [],
+                "Content": [
+                    {
+                        "BlocType": "title",
+                        "Properties": {
+                            "Text": "The main title"
+                        }
+                    }
+                ],
                 "Layout": 0
             },
             "Bodies": {

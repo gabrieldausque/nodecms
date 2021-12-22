@@ -14,10 +14,11 @@ namespace BlackSheep.CMS
         [ConfigureServices]
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
-            var documentDbServiceIdentifier = Startup.Configuration.GetSection("Databases:Documents:ProviderName");
+            //TODO : regroup configurations under BlackSheepCMS:Databases
+            var documentDbServiceIdentifier = Startup.Configuration.GetSection("BlackSheepCMS:Databases:Documents:ProviderName");
             var documentDbService =
                 ServicesFactory.Instance.GetServiceInstance<CRUDService<CMSDocument, CMSDocumentFilter>, CMSDocument, CMSDocumentFilter>(documentDbServiceIdentifier.Value);
-            var documentDbServiceConfiguration = Startup.Configuration.GetSection("Databases:Documents");
+            var documentDbServiceConfiguration = Startup.Configuration.GetSection("BlackSheepCMS:Databases:Documents");
             documentDbService.Init(documentDbServiceConfiguration);
             services.Add(new ServiceDescriptor(typeof(CRUDService<CMSDocument, CMSDocumentFilter>), documentDbService));
             return services;

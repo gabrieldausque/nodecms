@@ -20,7 +20,21 @@ namespace BlazorSample
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            builder.Services.AddTransient<IInjected>(provider =>
+            {
+                return new MyInjected();
+            });
+
             await builder.Build().RunAsync();
         }
+    }
+
+    public interface IInjected
+    {
+    }
+
+    public class MyInjected : IInjected
+    {
+
     }
 }

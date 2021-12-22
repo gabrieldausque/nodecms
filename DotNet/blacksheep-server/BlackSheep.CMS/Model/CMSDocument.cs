@@ -41,6 +41,7 @@ namespace BlackSheep.CMS.Model
         public Visibility Visibility { get; set; }
         
         public IEnumerable<string> Tags { get; set; }
-        
+        public string Title { get; set; }
+        public string Layout { get; set; }
     }
 }

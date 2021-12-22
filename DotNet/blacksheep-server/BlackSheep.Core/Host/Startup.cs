@@ -9,9 +9,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace BlackSheep.Core.Host
 {
@@ -54,25 +57,85 @@ namespace BlackSheep.Core.Host
 
         public virtual void Configure(IApplicationBuilder builder)
         {
-            builder.UseStaticFiles();
+            UseSwagger(builder);
             builder.UseDeveloperExceptionPage();
             builder.UseRouting();
             builder.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            
+            UseStaticFilesAndRedirect(builder);
+        }
+
+        public virtual void UseStaticFilesAndRedirect(IApplicationBuilder builder)
+        {
+            builder.UseStaticFiles();
+            builder.UseRewriter(new RewriteOptions()
+                .AddRedirect("(.*[^/])$", "$1/")
+            );
+        }
+
+        protected virtual void UseSwagger(IApplicationBuilder builder)
+        {
+            builder.UseSwagger(options => { options.RouteTemplate = "api/swagger/{documentname}/swagger.json"; });
+            builder.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/api/swagger/v1/swagger.json",
+                    "The Lone BlackSheep v1");
+                options.RoutePrefix = "api/swagger/ui";
+            });
+        }
+
+        protected IServiceCollection AddSwagger(IServiceCollection services)
+        {
+            return services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Contact = new OpenApiContact()
+                    {
+                        Email = Configuration["BlackSheepServer:Info:Contact"],
+                        Name = Configuration["BlackSheepServer:Info:Name"],
+                        Url = string.IsNullOrWhiteSpace(Configuration["BlackSheepServer:Info:Url"]) ?
+                            null :
+                            new Uri(Configuration["BlackSheepServer:Info:Url"])
+                    },
+                    Description = Configuration["BlackSheepServer:Info:Description"],
+                    Title = Configuration["BlackSheepServer:Info:Title"],
+                    Version = Assembly.GetEntryAssembly() != null ?
+                        Assembly.GetEntryAssembly().GetName().Version.ToString() :
+                        "Unknown Version",
+                    License = new OpenApiLicense()
+                    {
+                        Name = !string.IsNullOrWhiteSpace(Configuration["BlackSheepServer:Info:License:Name"]) ?
+                            Configuration["BlackSheepServer:Info:License:Name"] :
+                            "UNLICENSED",
+                        Url = !string.IsNullOrWhiteSpace(Configuration["BlackSheepServer:Info:License:Url"]) ?
+                            new Uri(Configuration["BlackSheepServer:Info:License:Url"]) :
+                            null
+                    }
+                });
+            });
+
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            AddSwagger(services);
             var servicesBuilder = services.AddMvc();
-            var pluginsToLoad = Configuration.GetSection($"{MainConfigurationSectionName}:Plugins").Get<string[]>();
+            var pluginsToLoad = Configuration.GetSection($"{MainConfigurationSectionName}:Plugins")
+                .Get<string[]>();
             //dynamic injection of services
             var pluginAssemblyNames = new List<string>(Directory.EnumerateFiles(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Catalog"), "*.dll", SearchOption.AllDirectories));
             var pluginAssemblies = new List<Assembly>();
-            pluginAssemblyNames.ForEach(n =>
+            
+            pluginAssemblyNames.Where(filePath => pluginsToLoad.Contains(Path.GetFileNameWithoutExtension(filePath)))
+                .OrderBy(filePath => Array.IndexOf(pluginsToLoad, Path.GetFileNameWithoutExtension(filePath)))
+                .ToList()
+                .ForEach(n =>
             {
                 if (pluginsToLoad.Contains(Path.GetFileNameWithoutExtension(n)) &&
                     pluginAssemblies.All(a => a.GetName().Name != Path.GetFileNameWithoutExtension(n)))
@@ -85,6 +148,7 @@ namespace BlackSheep.Core.Host
             //Register all services classes first
             pluginAssemblies.ForEach(assembly =>
             {
+                
                 var registerServicesClasses = assembly.GetTypes().Where(t =>
                     t.GetCustomAttributes<RegisterServiceTypeAttribute>().Any());
                 

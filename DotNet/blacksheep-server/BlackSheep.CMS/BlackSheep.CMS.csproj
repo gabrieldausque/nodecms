@@ -3,10 +3,17 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	    <BaseOutputPath>../dist</BaseOutputPath>
+	    <OutputPath>$(BaseOutputPath)\$(Configuration)\Catalog\BlackSheep.CMS</OutputPath>
     </PropertyGroup>
+
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
 
   <ItemGroup>
       <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
-    </ItemGroup>
+  </ItemGroup>
 
 </Project>
