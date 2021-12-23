@@ -1,7 +1,6 @@
 ﻿@using BlackSheep.Core.Services;
-@using BlackSheep.CMS.Model;
 
-@model CMSDocument
+@model BlackSheep.CMS.Models.CMSDocument
 
 @{
     ViewBag.Title = Model?.Title;
@@ -12,5 +11,23 @@
 
 <h2>@ViewBag.Title</h2>
 
-@await Component.InvokeAsync("Title");
+<header>
+    @foreach (var component in Model.Headers.Content)
+    {
+        @await Component.InvokeAsync(component.BlocType, component.Properties)
+    }
+</header>
+<main>
+    @foreach (var component in Model.Bodies.Content)
+    {
+        @await Component.InvokeAsync(component.BlocType, component.Properties)
+    }
+</main>
+<footer>
+    @foreach (var component in Model.Footers.Content)
+    {
+        @await Component.InvokeAsync(component.BlocType, component.Properties)
+    }
+</footer>
+
 

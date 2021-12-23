@@ -1,5 +1,5 @@
 ﻿using System;
-using BlackSheep.CMS.Model;
+using BlackSheep.CMS.Models;
 using BlackSheep.Core.Host;
 using BlackSheep.Core.Infrastructure;
 using BlackSheep.Core.Services;

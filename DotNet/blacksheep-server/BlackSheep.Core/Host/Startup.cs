@@ -122,6 +122,7 @@ namespace BlackSheep.Core.Host
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.Add(new ServiceDescriptor(typeof(IConfigurationRoot), Configuration));
             services.AddOptions();
             AddSwagger(services);
             var servicesBuilder = services.AddMvc();

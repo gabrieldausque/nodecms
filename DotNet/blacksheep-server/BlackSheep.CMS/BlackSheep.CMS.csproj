@@ -1,10 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	    <BaseOutputPath>../dist</BaseOutputPath>
 	    <OutputPath>$(BaseOutputPath)\$(Configuration)\Catalog\BlackSheep.CMS</OutputPath>
+	    <OutputType>Library</OutputType>
+	    <StartupObject />
     </PropertyGroup>
 
 	<PropertyGroup>
@@ -15,5 +17,44 @@
   <ItemGroup>
       <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ClientAppStatic Include=".\wwwroot\**\*.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\cms\css\bootstrap-grid.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-grid.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-grid.rtl.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-grid.rtl.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-reboot.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-reboot.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-reboot.rtl.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-reboot.rtl.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-utilities.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-utilities.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-utilities.rtl.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap-utilities.rtl.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap.min.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap.rtl.css.map" />
+	  <None Include="wwwroot\cms\css\bootstrap.rtl.min.css.map" />
+	  <None Include="wwwroot\cms\js\bootstrap.bundle.js" />
+	  <None Include="wwwroot\cms\js\bootstrap.bundle.js.map" />
+	  <None Include="wwwroot\cms\js\bootstrap.bundle.min.js" />
+	  <None Include="wwwroot\cms\js\bootstrap.bundle.min.js.map" />
+	  <None Include="wwwroot\cms\js\bootstrap.esm.js" />
+	  <None Include="wwwroot\cms\js\bootstrap.esm.js.map" />
+	  <None Include="wwwroot\cms\js\bootstrap.esm.min.js" />
+	  <None Include="wwwroot\cms\js\bootstrap.esm.min.js.map" />
+	  <None Include="wwwroot\cms\js\bootstrap.js" />
+	  <None Include="wwwroot\cms\js\bootstrap.js.map" />
+	  <None Include="wwwroot\cms\js\bootstrap.min.js" />
+	  <None Include="wwwroot\cms\js\bootstrap.min.js.map" />
+	</ItemGroup>
+
+	<Target Name="CopyRoot" AfterTargets="Build">
+		<Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
+	</Target>
 
 </Project>
