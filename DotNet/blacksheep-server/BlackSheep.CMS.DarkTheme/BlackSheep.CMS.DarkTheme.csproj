@@ -27,6 +27,10 @@
 	  <ClientAppStatic Include=".\wwwroot\**\*.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
   <Target Name="CopyRoot" AfterTargets="Build">
 	<Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
   </Target>

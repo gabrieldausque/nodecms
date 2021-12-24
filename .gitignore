@@ -21,3 +21,4 @@
 /composer.lock
 /vendor/
 /PHP/joomla-teama/administrator/logs
+**/dist/**
