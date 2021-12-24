@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlackSheep.CMS.Components
 {
-    [ViewComponent(Name = "Title")]
+    [ViewComponent(Name = "title")]
     public class TitleViewComponent : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
