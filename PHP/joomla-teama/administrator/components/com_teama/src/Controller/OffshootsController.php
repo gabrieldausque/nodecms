@@ -4,25 +4,20 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\Controller;
 
 \defined('_JEXEC') or die('Access Restricted');
 
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\Input\Input;
 
 class OffshootsController
-	extends BaseController {
+	extends TeamAListController {
 
-	protected $default_view = 'Offshoots';
-
-	public function delete($pks= []){
-		$app = Factory::getApplication();
-		$input = $app->getInput();
-		$offShootsToDelete = $input->get('selectedItemId');
-		if(is_array($offShootsToDelete) &&
-		   count($offShootsToDelete) > 0)
-		{
-			$model = $this->getModel();
-			$model->delete($offShootsToDelete);
-			$app->enqueueMessage("Offshoots has been deleted");
-		}
-		return $this->display();
+	public function __construct($config = array(), MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null ) {
+		parent::__construct( 'Offshoots',
+			'Offshoots',
+			$config,
+			$factory,
+			$app, $input );
 	}
 }

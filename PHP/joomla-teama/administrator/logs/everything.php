@@ -204,3 +204,26 @@
 2021-12-15T20:28:21+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.2 Array (     [0] => 2 ) 
 2021-12-15T20:28:33+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.2 Array (     [0] => 2 ) 
 2021-12-15T20:28:37+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.offshoot.2 Array ( ) 
+2022-01-03T17:29:39+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2022-01-03T17:29:39+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2022-01-03T17:29:39+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.65 seconds
+2022-01-03T17:29:41+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2022-01-03T17:29:41+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2022-01-03T17:30:26+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.48 seconds
+2022-01-03T17:30:28+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.51 seconds
+2022-01-03T17:30:31+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.38 seconds
+2022-01-03T17:30:31+00:00	INFO 127.0.0.1	updater	Loading information from update site #2 with name "Accredited Joomla! Translations" and URL https://update.joomla.org/language/translationlist_4.xml took 0.39 seconds
+2022-01-03T17:30:33+00:00	INFO 127.0.0.1	updater	Loading information from update site #3 with name "Joomla! Update Component Update Site" and URL https://update.joomla.org/core/extensions/com_joomlaupdate.xml took 0.59 seconds
+2022-01-03T17:31:07+00:00	CRITICAL 127.0.0.1	error	Uncaught Throwable of type Error thrown with message "Call to a member function getTable() on bool". Stack trace: #0 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/MVC/Controller/BaseController.php(730): Joomla\CMS\MVC\Controller\FormController->edit()
+#1 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Dispatcher/ComponentDispatcher.php(146): Joomla\CMS\MVC\Controller\BaseController->execute()
+#2 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/components/com_teama/src/Dispatcher/Dispatcher.php(14): Joomla\CMS\Dispatcher\ComponentDispatcher->dispatch()
+#3 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Component/ComponentHelper.php(389): TheLoneBlackSheep\Component\TeamA\Administrator\Dispatcher\Dispatcher->dispatch()
+#4 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(143): Joomla\CMS\Component\ComponentHelper::renderComponent()
+#5 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/AdministratorApplication.php(186): Joomla\CMS\Application\AdministratorApplication->dispatch()
+#6 /mnt/c/workspaces/nodecms/PHP/joomla-teama/libraries/src/Application/CMSApplication.php(278): Joomla\CMS\Application\AdministratorApplication->doExecute()
+#7 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/includes/app.php(63): Joomla\CMS\Application\CMSApplication->execute()
+#8 /mnt/c/workspaces/nodecms/PHP/joomla-teama/administrator/index.php(32): require_once('/mnt/c/workspac...')
+#9 {main}
+2022-01-03T17:37:20+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.2 Array (     [0] => 2 ) 
+2022-01-03T17:37:39+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.2 Array (     [0] => 2 ) 
+2022-01-03T17:37:42+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.offshoot.2 Array ( ) 
