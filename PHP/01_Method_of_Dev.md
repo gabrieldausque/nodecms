@@ -78,3 +78,25 @@ Create default.php file
 Change version of the teama.xml file
 
 Deploy
+
+# FRONTEND :
+
+## Add menu : 
+
+in tmpl directory, create a folder for your list view : 
+
+tmpl\<name of your list view in lowercase>
+
+add a default.xml file that define the layout with the description
+
+## add the list controller : 
+
+add a class in src/Controller/<plural class>Controller. 
+
+Inherits from the plural class in administrator directory
+
+## add the list views : 
+
+add a class in src/View/<Plural>/HtmlView.php
+
+inherits from TeamAFrontendView
