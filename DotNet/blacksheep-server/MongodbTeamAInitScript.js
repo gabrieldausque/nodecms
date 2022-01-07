@@ -52,7 +52,6 @@ function initData() {
     teamaDb.documents.insert(
         {
             "Id": documentId,
-            "Layout":"DarkTheme_Document_Layout",
             "Key": "welcome",
             "Title": "Welcome",
             "Headers": {
