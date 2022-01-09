@@ -47,6 +47,13 @@ function newId(collectionName) {
 
 function initData() {
 
+    var configTitleId = newId('configurations');
+    teamaDb.configurations.insert({
+        "Id": configTitleId,
+        "Key": "title",
+        "Value": "The team-A"
+    });
+
     var documentId = newId('documents');
 
     teamaDb.documents.insert(

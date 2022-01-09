@@ -7,18 +7,20 @@ namespace BlackSheep.CMS.Controllers
 {
 
     // ReSharper disable once InconsistentNaming
-    public class CMSDocumentController : Microsoft.AspNetCore.Mvc.Controller
+    [ApiController]
+    [Route("api/document")]
+    public class CMSDocumentController : Controller
     {
 
         private readonly CRUDService<CMSDocument, CMSDocumentFilter> _model;
 
-        public CMSDocumentController(CRUDService<CMSDocument, CMSDocumentFilter> model)
+        public CMSDocumentController()
         {
-            _model = model;
+            _model = null;
         }
 
         [HttpGet]
-        [Route("api/document/{id:int}")]
+        [Route("{id:int}")]
         public ActionResult<CMSDocument> GetDocument([FromRoute] int id)
         {
             var document = _model.Get(id);
@@ -28,7 +30,7 @@ namespace BlackSheep.CMS.Controllers
         }
 
         [HttpGet]
-        [Route("api/document/{key:alpha}")]
+        [Route("{key:alpha}")]
         public ActionResult<CMSDocument> GetDocument([FromRoute] string key)
         {
             var document = _model.Get(key);
@@ -38,7 +40,6 @@ namespace BlackSheep.CMS.Controllers
         }
 
         [HttpGet]
-        [Route("api/document")]
         public ActionResult<CMSDocument[]> FindDocument([FromQuery] CMSDocumentFilter filter)
         {
             if (filter != null)

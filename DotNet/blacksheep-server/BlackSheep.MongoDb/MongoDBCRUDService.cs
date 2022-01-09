@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using BlackSheep.Core.Infrastructure;
 using BlackSheep.Core.Services;
 using BlackSheep.MongoDb.Configuration;
@@ -75,6 +76,14 @@ namespace BlackSheep.MongoDb
             return null;
         }
 
+        public override async Task<T> GetAsync(int id)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var results = await collection.FindAsync(t => t.Id == id);
+            return results.FirstOrDefault();
+        }
+
         public override IEnumerable<T> Find(TF filter)
         {
             var db = _client.GetDatabase(_configurationModel.Database);
@@ -101,6 +110,29 @@ namespace BlackSheep.MongoDb
             return new List<T>();
         }
 
+        public override async Task<IEnumerable<T>> FindAsync(TF filter)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var filters = new List<FilterDefinition<T>>();
+            foreach (var filterProperty in filter.GetType().GetProperties())
+            {
+                var filterValue = filterProperty.GetValue(filter);
+                if (filterValue != null)
+                {
+                    filters.Add(Builders<T>.Filter.Eq(filterProperty.Name, filterValue));
+                }
+            }
+
+            if (filters.Any())
+            {
+                var finalFilter = Builders<T>.Filter.And(filters);
+                return (await collection.FindAsync(finalFilter)).ToList();
+            }
+
+            return new List<T>();
+        }
+
         public override T Get(string key)
         {
             var db = _client.GetDatabase(_configurationModel.Database);
@@ -112,6 +144,13 @@ namespace BlackSheep.MongoDb
                 return findTask.Result.ToList().FirstOrDefault();
 
             return null;
+        }
+
+        public override async Task<T> GetAsync(string key)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            return (await db.GetCollection<T>(_configurationModel.Collection)
+                .FindAsync(t => t.Key == key)).FirstOrDefault();
         }
     }
 }
