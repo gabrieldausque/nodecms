@@ -9,12 +9,15 @@ using BlackSheep.MongoDb.Configuration;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace BlackSheep.MongoDb
 {
-    public class MongoDBCRUDService<T, TF> : CRUDService<T, TF> where T:class,IBlackSheepModel
+    public class MongoDBCRUDService<T, TF> : CRUDService<T, TF> where T:class,IBlackSheepEntity
     {
+
+        private static readonly string COUNTERS_COLLECTION_NAME = "counters";
 
         private MongoDbServiceConfiguration _configurationModel;
 
@@ -63,6 +66,7 @@ namespace BlackSheep.MongoDb
                     cm.SetIgnoreExtraElements(true);
                 });
             }
+
         }
 
         public override T Get(int id)
@@ -152,5 +156,42 @@ namespace BlackSheep.MongoDb
             return (await db.GetCollection<T>(_configurationModel.Collection)
                 .FindAsync(t => t.Key == key)).FirstOrDefault();
         }
+
+        public override async Task<T> Create(T newEntity)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var entityCollection = db.GetCollection<T>(_configurationModel.Collection);
+            newEntity.Id = await GetNewId(_configurationModel.Collection);
+            await entityCollection.InsertOneAsync(newEntity);
+            return await GetAsync(newEntity.Id);
+        }
+
+        private async Task<int> GetNewId(string collectionName)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var countersCollection = db.GetCollection<MongoDbCollectionLastId>(COUNTERS_COLLECTION_NAME);
+            var newId = await countersCollection
+                .FindOneAndUpdateAsync<MongoDbCollectionLastId, MongoDbCollectionLastId>(
+                c => c.Name == collectionName,
+                $"{{ $inc: {{ lastId : 1 }} }}",
+                new FindOneAndUpdateOptions<MongoDbCollectionLastId, MongoDbCollectionLastId>()
+                {
+                    ReturnDocument = ReturnDocument.After,
+                    IsUpsert = true
+                });
+            return newId.LastId;
+        }
+    }
+
+    public class MongoDbCollectionLastId
+    {
+        [BsonId]
+        public ObjectId Id { get; set; }
+
+        [BsonElement("name")]
+        public string Name { get; set; }
+
+        [BsonElement("lastId")]
+        public int LastId { get; set; }
     }
 }

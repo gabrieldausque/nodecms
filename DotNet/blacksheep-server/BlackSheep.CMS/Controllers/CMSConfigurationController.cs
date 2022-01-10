@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using BlackSheep.CMS.Models;
+using BlackSheep.Core.Exceptions;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BlackSheep.CMS.Controllers
 {
@@ -48,6 +51,16 @@ namespace BlackSheep.CMS.Controllers
             return NotFound();
         }
 
+        [HttpPost]
+        public async Task<ActionResult<CMSConfiguration>> Create([FromBody] CMSConfiguration configuration)
+        {
+            if (!(await _model.Exists(configuration.Key)))
+            {
+                var created = await _model.Create(configuration);
+                return Created($"api/configuration/{created.Id}", created);
+            }
 
+            return Conflict(new ExistingEntityException(configuration));
+        }
     }
 }

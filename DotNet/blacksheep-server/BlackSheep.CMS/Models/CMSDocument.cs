@@ -4,7 +4,7 @@ using BlackSheep.Core.Services;
 
 namespace BlackSheep.CMS.Models
 {
-    public class CMSDocument : IBlackSheepModel
+    public class CMSDocument : IBlackSheepEntity
     {
         public CMSDocument()
         {

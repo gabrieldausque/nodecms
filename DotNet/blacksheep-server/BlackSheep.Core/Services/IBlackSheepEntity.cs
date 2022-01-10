@@ -1,6 +1,6 @@
 ﻿namespace BlackSheep.Core.Services
 {
-    public interface IBlackSheepModel
+    public interface IBlackSheepEntity
     {
         public int Id { get; set; }
 

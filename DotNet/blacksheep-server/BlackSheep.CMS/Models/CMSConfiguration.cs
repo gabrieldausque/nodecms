@@ -2,7 +2,7 @@
 
 namespace BlackSheep.CMS.Models;
 
-public class CMSConfiguration : IBlackSheepModel
+public class CMSConfiguration : IBlackSheepEntity
 {
     public CMSConfiguration()
     {

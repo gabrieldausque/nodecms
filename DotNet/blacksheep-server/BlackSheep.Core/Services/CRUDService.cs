@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace BlackSheep.Core.Services
 {
-    public abstract class CRUDService<T, TF> where T:class,IBlackSheepModel
+    public abstract class CRUDService<T, TF> where T:class,IBlackSheepEntity
     {
         protected CRUDService()
         {
@@ -25,5 +25,12 @@ namespace BlackSheep.Core.Services
         public abstract T Get(string key);
         
         public abstract Task<T> GetAsync(string key);
+
+        public virtual async Task<bool> Exists(string key)
+        {
+            return (await GetAsync(key)) != null;
+        }
+
+        public abstract Task<T> Create(T newEntity);
     }
 }
