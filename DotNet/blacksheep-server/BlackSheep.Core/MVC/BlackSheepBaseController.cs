@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
-namespace BlackSheep.CMS.Controllers
+namespace BlackSheep.Core.MVC
 {
     public abstract class BaseCMSController : Controller
     {

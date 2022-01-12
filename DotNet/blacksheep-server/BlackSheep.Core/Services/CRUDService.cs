@@ -18,9 +18,9 @@ namespace BlackSheep.Core.Services
 
         public abstract Task<T> GetAsync(int id);
 
-        public abstract IEnumerable<T> Find(TF filter);
+        public abstract IEnumerable<T> Find(TF filter, bool noFilterReturnAll = false);
 
-        public abstract Task<IEnumerable<T>> FindAsync(TF filter);
+        public abstract Task<IEnumerable<T>> FindAsync(TF filter, bool noFilterReturnAll = false);
 
         public abstract T Get(string key);
         

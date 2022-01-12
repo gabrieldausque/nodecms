@@ -1,4 +1,6 @@
 ﻿using BlackSheep.CMS.Models;
+using BlackSheep.Core;
+using BlackSheep.Core.MVC;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +12,8 @@ namespace BlackSheep.CMS.Controllers
     {
 
         private readonly CRUDService<CMSDocument, CMSDocumentFilter> _model;
+        
         private readonly CRUDService<CMSConfiguration, CMSConfigurationFilter> _globalConfigurationModel;
-
 
         public CMSDocumentViewController(CRUDService<CMSDocument, CMSDocumentFilter> model,
             CRUDService<CMSConfiguration, CMSConfigurationFilter> globalConfigurationModel,

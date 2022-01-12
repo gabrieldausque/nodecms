@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using BlackSheep.CMS.Models;
+using BlackSheep.CMS.Rules;
+using BlackSheep.Core;
 using BlackSheep.Core.Exceptions;
+using BlackSheep.Core.MVC;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +20,13 @@ namespace BlackSheep.CMS.Controllers
     public class CMSConfigurationController : BaseCMSController
     {
         private readonly CRUDService<CMSConfiguration, CMSConfigurationFilter> _model;
+        private readonly CMSConfigurationRules _rules;
 
         public CMSConfigurationController(CRUDService<CMSConfiguration, CMSConfigurationFilter> model, 
             IConfigurationRoot configuration):base(configuration)
         {
             _model = model;
+            _rules = new CMSConfigurationRules(_model);
         }
 
         [HttpGet]
@@ -47,7 +52,7 @@ namespace BlackSheep.CMS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CMSConfiguration>>> Find([FromQuery] CMSConfigurationFilter filter = null)
         {
-            var configurations = await _model.FindAsync(filter);
+            var configurations = await _model.FindAsync(filter, true);
             if (configurations != null)
                 return Ok(configurations);
             return NotFound();
@@ -69,32 +74,30 @@ namespace BlackSheep.CMS.Controllers
         [Route("{id:int}")]
         public async Task<ActionResult<CMSConfiguration>> Update([FromRoute] int id, [FromBody] CMSConfiguration configuration)
         {
-            if (await _model.Exists(id))
-            {
-                if (id != configuration.Id)
-                    return BadRequest($"Id in route and id in entity are not the same. Please Correct");
+            var validationResult = await _rules.ValidateForUpdate(id, configuration);
 
+            if (validationResult.IsOk)
+            {
                 var updated = await _model.Update(configuration.Id, configuration);
                 return Ok(updated);
             }
 
-            return NotFound(configuration);
+            return BadRequest(validationResult);
         }
         
         [HttpPut]
-        [Route("{key:string}")]
+        [Route("{key:alpha}")]
         public async Task<ActionResult<CMSConfiguration>> Update([FromRoute] string key, [FromBody] CMSConfiguration configuration)
         {
-            if (await _model.Exists(key))
-            {
-                if (key != configuration.Key)
-                    return BadRequest($"Key in route and key in entity are not the same. Please Correct");
+            var validationResult = await _rules.ValidateForUpdate(key, configuration);
 
-                var updated = await _model.Update(configuration.Key, configuration);
+            if (validationResult.IsOk)
+            {
+                var updated = await _model.Update(configuration.Id, configuration);
                 return Ok(updated);
             }
 
-            return NotFound(configuration);
+            return BadRequest(validationResult);
         }
 
         [HttpPatch]

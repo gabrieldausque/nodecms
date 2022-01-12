@@ -89,7 +89,7 @@ namespace BlackSheep.MongoDb
             return results.FirstOrDefault();
         }
 
-        public override IEnumerable<T> Find(TF filter)
+        public override IEnumerable<T> Find(TF filter, bool noFilterReturnAll = false)
         {
             var db = _client.GetDatabase(_configurationModel.Database);
             var collection = db.GetCollection<T>(_configurationModel.Collection);
@@ -110,12 +110,16 @@ namespace BlackSheep.MongoDb
                 findTask.Wait();
                 if (findTask.IsCompletedSuccessfully)
                     return findTask.Result.ToList();
+            } 
+            else if (noFilterReturnAll)
+            {
+                return collection.Find(e => true).ToList();
             }
             
             return new List<T>();
         }
 
-        public override async Task<IEnumerable<T>> FindAsync(TF filter)
+        public override async Task<IEnumerable<T>> FindAsync(TF filter, bool noFilterReturnAll = false)
         {
             var db = _client.GetDatabase(_configurationModel.Database);
             var collection = db.GetCollection<T>(_configurationModel.Collection);
@@ -132,7 +136,11 @@ namespace BlackSheep.MongoDb
             if (filters.Any())
             {
                 var finalFilter = Builders<T>.Filter.And(filters);
-                return (await collection.FindAsync(finalFilter)).ToList();
+                    return (await collection.FindAsync(finalFilter)).ToList();
+            } 
+            else if (noFilterReturnAll)
+            {
+                return await (await collection.FindAsync(e => true)).ToListAsync();
             }
 
             return new List<T>();
