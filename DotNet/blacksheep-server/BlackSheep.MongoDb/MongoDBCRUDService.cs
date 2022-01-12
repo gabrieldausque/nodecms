@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using BlackSheep.Core.Infrastructure;
 using BlackSheep.Core.Services;
@@ -166,6 +167,59 @@ namespace BlackSheep.MongoDb
             return await GetAsync(newEntity.Id);
         }
 
+        public override async Task<T> Update(int id, T entityToUpdate)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var entityCollection = db.GetCollection<T>(_configurationModel.Collection);
+            var currentEntity = await GetAsync(id);
+            return await InternalUpdate(entityToUpdate, currentEntity, entityCollection);
+        }
+
+        public override async Task<T> Update(string key, T entityToUpdate)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var entityCollection = db.GetCollection<T>(_configurationModel.Collection);
+            var currentEntity = await GetAsync(key);
+            return await InternalUpdate(entityToUpdate, currentEntity, entityCollection);
+        }
+
+        protected virtual async Task<T> InternalUpdate(T entityToUpdate, T currentEntity, IMongoCollection<T> entityCollection)
+        {
+            var builder = Builders<T>.Update;
+            UpdateDefinition<T> update = null;
+            foreach (var entityProperty in currentEntity.GetType().GetProperties())
+            {
+                var existingValue = entityProperty.GetValue(currentEntity);
+                var newValue = entityProperty.GetValue(entityToUpdate);
+                if (existingValue != null && !existingValue.Equals(newValue))
+                {
+                    var bsonPropName = entityProperty.Name;
+                    if (entityProperty.GetCustomAttributes().Any(ca => ca is BsonElementAttribute))
+                    {
+                        bsonPropName = entityProperty.GetCustomAttribute<BsonElementAttribute>().ElementName;
+                    }
+
+                    if (update == null)
+                        update = builder.Set(bsonPropName, entityProperty.GetValue(entityToUpdate));
+                    else
+                        update.Set(bsonPropName, entityProperty.GetValue(entityToUpdate));
+                }
+            }
+
+            T entityToReturn = currentEntity;
+            if (update != null)
+            {
+                entityToReturn = await entityCollection.FindOneAndUpdateAsync<T, T>(
+                    e => e.Id == currentEntity.Id,
+                    update, new FindOneAndUpdateOptions<T, T>()
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
+            }
+
+            return entityToReturn;
+        }
+
         private async Task<int> GetNewId(string collectionName)
         {
             var db = _client.GetDatabase(_configurationModel.Database);
@@ -181,6 +235,8 @@ namespace BlackSheep.MongoDb
                 });
             return newId.LastId;
         }
+
+
     }
 
     public class MongoDbCollectionLastId

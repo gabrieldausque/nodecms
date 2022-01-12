@@ -46,7 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MongoDb", "MongoDb", "{3AE2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{249A11A3-B36D-4F09-BB16-EFD26768FF7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackSheep.CMS.DarkTheme", "BlackSheep.CMS.DarkTheme\BlackSheep.CMS.DarkTheme.csproj", "{D432544C-BCD0-47E3-AED3-1D4F2720D681}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackSheep.CMS.DarkTheme", "BlackSheep.CMS.DarkTheme\BlackSheep.CMS.DarkTheme.csproj", "{D432544C-BCD0-47E3-AED3-1D4F2720D681}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

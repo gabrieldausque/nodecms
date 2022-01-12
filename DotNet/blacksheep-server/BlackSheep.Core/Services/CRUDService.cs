@@ -31,6 +31,16 @@ namespace BlackSheep.Core.Services
             return (await GetAsync(key)) != null;
         }
 
+        public virtual async Task<bool> Exists(int id)
+        {
+            return (await GetAsync(id)) != null;
+        }
+
         public abstract Task<T> Create(T newEntity);
+
+        public abstract Task<T> Update(int id, T entityToUpdate);
+        public abstract Task<T> Update(string key, T entityToUpdate);
+
+
     }
 }

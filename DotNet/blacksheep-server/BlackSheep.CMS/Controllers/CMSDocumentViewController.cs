@@ -10,12 +10,15 @@ namespace BlackSheep.CMS.Controllers
     {
 
         private readonly CRUDService<CMSDocument, CMSDocumentFilter> _model;
+        private readonly CRUDService<CMSConfiguration, CMSConfigurationFilter> _globalConfigurationModel;
 
 
-        public CMSDocumentViewController(CRUDService<CMSDocument, CMSDocumentFilter> model, 
+        public CMSDocumentViewController(CRUDService<CMSDocument, CMSDocumentFilter> model,
+            CRUDService<CMSConfiguration, CMSConfigurationFilter> globalConfigurationModel,
             IConfigurationRoot configuration) : base(configuration)
         {
             _model = model;
+            _globalConfigurationModel = globalConfigurationModel;
         }
 
         [HttpGet]
@@ -23,6 +26,7 @@ namespace BlackSheep.CMS.Controllers
         public ViewResult Get(int documentId)
         {
             var document = _model.Get(documentId);
+            var applicationTitle = 
             ViewData["ApplicationTitle"] = Configuration.GetSection("BlackSheepCMS:Application:Title").Value;
             return View("DocumentView", document);
         }
