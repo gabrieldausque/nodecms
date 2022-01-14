@@ -191,6 +191,16 @@ namespace BlackSheep.MongoDb
             return await InternalUpdate(entityToUpdate, currentEntity, entityCollection);
         }
 
+        public override async Task<T> Patch(int id, Dictionary<string, object> partialConfiguration)
+        {
+            var currentEntity = await GetAsync(id);
+            foreach (var kvp in partialConfiguration)
+            {
+                //TODO : foreach key, search for the corresponding property (with same name or bsonElementAttribute) and set to the current entity the value;
+            }
+            return await Update(id, currentEntity);
+        }
+
         protected virtual async Task<T> InternalUpdate(T entityToUpdate, T currentEntity, IMongoCollection<T> entityCollection)
         {
             var builder = Builders<T>.Update;

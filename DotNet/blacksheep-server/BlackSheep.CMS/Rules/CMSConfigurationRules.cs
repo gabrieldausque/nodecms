@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Threading.Tasks;
 using BlackSheep.CMS.Models;
 using BlackSheep.CMS.Views.Shared;
@@ -7,7 +9,7 @@ using BlackSheep.Core.Services;
 
 namespace BlackSheep.CMS.Rules;
 
-public class CMSConfigurationRules
+public class CMSConfigurationRules : EntityRules<CMSConfiguration, CMSConfigurationFilter>
 {
     private readonly CRUDService<CMSConfiguration, CMSConfigurationFilter> _model;
 
@@ -78,6 +80,67 @@ public class CMSConfigurationRules
 
         return result;
     }
+
+    public async Task<BlackSheepValidationResult> ValidateForCreate(CMSConfiguration configuration)
+    {
+        var result = new BlackSheepValidationResult();
+        if (configuration.Id != 0)
+        {
+            result.IsOk = false;
+            result.Messages.Add("Id must be 0 for creation.");
+        }
+
+        if (string.IsNullOrWhiteSpace(configuration.Key))
+        {
+            result.IsOk = false;
+            result.Messages.Add("Key must not be empty");
+        }
+
+        if (await _model.Exists(configuration.Key))
+        {
+            result.IsOk = false;
+            result.Messages.Add($"An object with key {configuration.Key} already exists");
+        }
+
+        return result;
+    }
+
+    public async Task<BlackSheepValidationResult> ValidateForPatch(int id, Dictionary<string, object> partialConfiguration)
+    {
+        var result = new BlackSheepValidationResult();
+        if (partialConfiguration.ContainsKey("Id"))
+        {
+            result.IsOk = false;
+            result.Messages.Add($"Id can't be updated.");
+        }
+
+        if (partialConfiguration.Keys.Any(k => typeof(CMSConfiguration).GetProperties().All(p => p.Name != k)))
+        {
+            result.IsOk = false;
+            result.Messages.Add($"Some of the properties in the argument doesn't exists in type {nameof(CMSConfiguration)}");
+        }
+
+        if (partialConfiguration.ContainsKey("Key"))
+        {
+            var key = partialConfiguration["key"] as string;
+            if(string.IsNullOrWhiteSpace(key))
+            {
+                result.IsOk = false;
+                result.Messages.Add("Key can't be empty.");
+            } 
+            else if (await _model.Exists(key) && (await _model.GetAsync(key)).Id != id)
+            {
+                result.IsOk = false;
+                result.Messages.Add($"Another entity use the same key.");
+            }
+        }
+
+        return result;
+    }
+}
+
+public abstract class EntityRules<TEntity, TEntityFilter>
+{
 }
 
 public class BlackSheepValidationResult

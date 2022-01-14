@@ -61,13 +61,14 @@ namespace BlackSheep.CMS.Controllers
         [HttpPost]
         public async Task<ActionResult<CMSConfiguration>> Create([FromBody] CMSConfiguration configuration)
         {
-            if (!(await _model.Exists(configuration.Key)))
+            var validationResult = await _rules.ValidateForCreate(configuration);
+            if (validationResult.IsOk)
             {
                 var created = await _model.Create(configuration);
                 return Created($"api/configuration/{created.Id}", created);
             }
 
-            return Conflict(new ExistingEntityException(configuration));
+            return BadRequest(validationResult);
         }
 
         [HttpPut]
@@ -104,12 +105,13 @@ namespace BlackSheep.CMS.Controllers
         [Route("{id:int}")]
         public async Task<ActionResult<CMSConfiguration>> Patch([FromRoute] int id, [FromBody] Dictionary<string, object> partialConfiguration)
         {
-            if (await _model.Exists(id))
+            var validationResult = await _rules.ValidateForPatch(id, partialConfiguration);
+            if (validationResult.IsOk)
             {
-                //TODO : remove id from the partialConfiguration and then pass to model entity
+                var patch = await _model.Patch(id, partialConfiguration);
             }
 
-            return NotFound($"Entity of type {nameof(CMSConfiguration)} with id {id} doesn't exist.");
+            return BadRequest(validationResult);
         }
     }
 }

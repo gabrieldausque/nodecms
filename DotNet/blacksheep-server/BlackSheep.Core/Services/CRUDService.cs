@@ -41,6 +41,6 @@ namespace BlackSheep.Core.Services
         public abstract Task<T> Update(int id, T entityToUpdate);
         public abstract Task<T> Update(string key, T entityToUpdate);
 
-
+        public abstract Task<T> Patch(int id, Dictionary<string, object> partialConfiguration);
     }
 }

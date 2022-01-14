@@ -14,7 +14,7 @@ namespace BlackSheep.CMS.Components
         public async Task<IViewComponentResult> InvokeAsync(bool isEditMode = false)
         {
             var layout = isEditMode ? "TitleEdit" : "Title";
-            return await Task.Run(() => View(layout));
+            return await Task.Run<IViewComponentResult>(() => View(layout));
         }
 
     }
