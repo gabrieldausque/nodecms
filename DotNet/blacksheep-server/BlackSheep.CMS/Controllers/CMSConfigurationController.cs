@@ -109,6 +109,7 @@ namespace BlackSheep.CMS.Controllers
             if (validationResult.IsOk)
             {
                 var patch = await _model.Patch(id, partialConfiguration);
+                return Ok(patch);
             }
 
             return BadRequest(validationResult);

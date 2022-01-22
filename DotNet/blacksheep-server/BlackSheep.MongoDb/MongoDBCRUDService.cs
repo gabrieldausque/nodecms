@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using BlackSheep.Core.Infrastructure;
 using BlackSheep.Core.Services;
@@ -194,10 +195,85 @@ namespace BlackSheep.MongoDb
         public override async Task<T> Patch(int id, Dictionary<string, object> partialConfiguration)
         {
             var currentEntity = await GetAsync(id);
+            var properties = typeof(T).GetProperties();
+            var propByBsonName = new Dictionary<string, PropertyInfo>();
+            
+            foreach (var property in properties)
+            {
+                var bsonAttribute = property.GetCustomAttribute<BsonElementAttribute>();
+                if (bsonAttribute != null)
+                {
+                    propByBsonName.Add(bsonAttribute.ElementName, property);
+                }
+                else
+                {
+                    propByBsonName.Add(property.Name, property);
+                }
+            }
+
             foreach (var kvp in partialConfiguration)
             {
-                //TODO : foreach key, search for the corresponding property (with same name or bsonElementAttribute) and set to the current entity the value;
+                if (kvp.Key.ToLower().Trim() == "id")
+                {
+                    continue;
+                }
+                
+                if (propByBsonName.TryGetValue(kvp.Key, out var property) && kvp.Value is JsonElement jsonElement)
+                {
+                    switch (jsonElement.ValueKind)
+                    {
+                        case JsonValueKind.String:
+                            property.SetValue(currentEntity, jsonElement.GetString());
+                            break;
+                        case JsonValueKind.Number:
+                        {
+                            if (!string.IsNullOrWhiteSpace(jsonElement.GetString()))
+                            {
+                                if (jsonElement.GetString()!.Contains("."))
+                                {
+                                    if (property.PropertyType == typeof(double))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetDouble());
+                                    } 
+                                    else if (property.PropertyType == typeof(decimal))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetDecimal());
+                                    }
+                                    else if (property.PropertyType == typeof(float))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetSingle());
+                                    }
+                                }
+                                else
+                                {
+                                    if (property.PropertyType == typeof(int))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetInt32());
+                                    } 
+                                    else if (property.PropertyType == typeof(long))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetInt64());
+                                    }
+                                }
+                            }
+                            
+                            break;
+                            }
+                        case JsonValueKind.True:
+                        {
+                            if (property.PropertyType == typeof(bool))
+                            {
+                                property.SetValue(currentEntity, true);
+                            } else if (property.PropertyType == typeof(byte) || property.PropertyType == typeof(int))
+                            {
+                                property.SetValue(currentEntity, 1);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
+
             return await Update(id, currentEntity);
         }
 

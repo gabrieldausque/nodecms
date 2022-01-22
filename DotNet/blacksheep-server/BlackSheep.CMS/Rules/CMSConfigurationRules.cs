@@ -107,7 +107,15 @@ public class CMSConfigurationRules : EntityRules<CMSConfiguration, CMSConfigurat
 
     public async Task<BlackSheepValidationResult> ValidateForPatch(int id, Dictionary<string, object> partialConfiguration)
     {
+        var existingEntity = await _model.GetAsync(id);
         var result = new BlackSheepValidationResult();
+
+        if (existingEntity == null)
+        {
+            result.IsOk = false;
+            result.Messages.Add($"Entity with id {id} doesn't exists.");
+        }
+
         if (partialConfiguration.ContainsKey("Id"))
         {
             result.IsOk = false;
