@@ -7,6 +7,7 @@ using BlackSheep.CMS.Rules;
 using BlackSheep.Core;
 using BlackSheep.Core.Exceptions;
 using BlackSheep.Core.MVC;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,102 +18,12 @@ namespace BlackSheep.CMS.Controllers
 {
     [ApiController]
     [Route("api/configuration")]
-    public class CMSConfigurationController : BaseCMSController
+    public class ConfigurationController : BlackSheepBaseController<CMSConfiguration, CMSConfigurationFilter>
     {
-        private readonly CRUDService<CMSConfiguration, CMSConfigurationFilter> _model;
-        private readonly CMSConfigurationRules _rules;
-
-        public CMSConfigurationController(CRUDService<CMSConfiguration, CMSConfigurationFilter> model, 
-            IConfigurationRoot configuration):base(configuration)
+        public ConfigurationController(CRUDService<CMSConfiguration, CMSConfigurationFilter> model,
+            BlackSheepEntityRules<CMSConfiguration, CMSConfigurationFilter> rules,
+            IConfigurationRoot configuration):base(model, rules, configuration,"api/configuration")
         {
-            _model = model;
-            _rules = new CMSConfigurationRules(_model);
-        }
-
-        [HttpGet]
-        [Route("{id:int}")]
-        public async Task<ActionResult<CMSConfiguration>> Get(int id)
-        {
-            var configuration = await _model.GetAsync(id);
-            if (configuration != null)
-                return Ok(configuration);
-            return NotFound();
-        }
-        
-        [HttpGet]
-        [Route("{key:alpha}")]
-        public async Task<ActionResult<CMSConfiguration>> Get(string key)
-        {
-            var configuration = await _model.GetAsync(key);
-            if (configuration != null)
-                return Ok(configuration);
-            return NotFound();
-        }
-        
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CMSConfiguration>>> Find([FromQuery] CMSConfigurationFilter filter = null)
-        {
-            var configurations = await _model.FindAsync(filter, true);
-            if (configurations != null)
-                return Ok(configurations);
-            return NotFound();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<CMSConfiguration>> Create([FromBody] CMSConfiguration configuration)
-        {
-            var validationResult = await _rules.ValidateForCreate(configuration);
-            if (validationResult.IsOk)
-            {
-                var created = await _model.Create(configuration);
-                return Created($"api/configuration/{created.Id}", created);
-            }
-
-            return BadRequest(validationResult);
-        }
-
-        [HttpPut]
-        [Route("{id:int}")]
-        public async Task<ActionResult<CMSConfiguration>> Update([FromRoute] int id, [FromBody] CMSConfiguration configuration)
-        {
-            var validationResult = await _rules.ValidateForUpdate(id, configuration);
-
-            if (validationResult.IsOk)
-            {
-                var updated = await _model.Update(configuration.Id, configuration);
-                return Ok(updated);
-            }
-
-            return BadRequest(validationResult);
-        }
-        
-        [HttpPut]
-        [Route("{key:alpha}")]
-        public async Task<ActionResult<CMSConfiguration>> Update([FromRoute] string key, [FromBody] CMSConfiguration configuration)
-        {
-            var validationResult = await _rules.ValidateForUpdate(key, configuration);
-
-            if (validationResult.IsOk)
-            {
-                var updated = await _model.Update(configuration.Id, configuration);
-                return Ok(updated);
-            }
-
-            return BadRequest(validationResult);
-        }
-
-        [HttpPatch]
-        [Route("{id:int}")]
-        public async Task<ActionResult<CMSConfiguration>> Patch([FromRoute] int id, [FromBody] Dictionary<string, object> partialConfiguration)
-        {
-            var validationResult = await _rules.ValidateForPatch(id, partialConfiguration);
-            if (validationResult.IsOk)
-            {
-                var patch = await _model.Patch(id, partialConfiguration);
-                return Ok(patch);
-            }
-
-            return BadRequest(validationResult);
         }
     }
 }

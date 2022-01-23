@@ -1,4 +1,5 @@
 ﻿using System;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 
 namespace BlackSheep.Core.Exceptions;

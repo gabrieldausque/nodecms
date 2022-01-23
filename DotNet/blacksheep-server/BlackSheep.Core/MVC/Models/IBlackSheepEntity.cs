@@ -1,4 +1,4 @@
-﻿namespace BlackSheep.Core.Services
+﻿namespace BlackSheep.Core.MVC.Models
 {
     public interface IBlackSheepEntity
     {

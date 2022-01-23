@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 using BlackSheep.CMS.Models;
+using BlackSheep.Core.MVC;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace BlackSheep.CMS.Controllers
 {
@@ -9,46 +12,13 @@ namespace BlackSheep.CMS.Controllers
     // ReSharper disable once InconsistentNaming
     [ApiController]
     [Route("api/document")]
-    public class CMSDocumentController : Controller
+    public class CMSDocumentController : BlackSheepBaseController<CMSDocument, CMSDocumentFilter>
     {
-
-        private readonly CRUDService<CMSDocument, CMSDocumentFilter> _model;
-
-        public CMSDocumentController()
+        public CMSDocumentController(CRUDService<CMSDocument, CMSDocumentFilter> model, 
+            BlackSheepEntityRules<CMSDocument, CMSDocumentFilter> rules,
+            IConfigurationRoot configuration):
+            base(model,rules, configuration, "api/document")
         {
-            _model = null;
-        }
-
-        [HttpGet]
-        [Route("{id:int}")]
-        public ActionResult<CMSDocument> GetDocument([FromRoute] int id)
-        {
-            var document = _model.Get(id);
-            if (document != null)
-                return Ok(document);
-            return NotFound();
-        }
-
-        [HttpGet]
-        [Route("{key:alpha}")]
-        public ActionResult<CMSDocument> GetDocument([FromRoute] string key)
-        {
-            var document = _model.Get(key);
-            if (document != null)
-                return Ok(document);
-            return NotFound();
-        }
-
-        [HttpGet]
-        public ActionResult<CMSDocument[]> FindDocument([FromQuery] CMSDocumentFilter filter)
-        {
-            if (filter != null)
-            {
-                var found = _model.Find(filter);
-                if(found.Any())
-                    return Ok(found);
-            }
-            return Ok(new CMSDocument[]{});
         }
     }
 }

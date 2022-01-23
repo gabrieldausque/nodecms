@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 namespace BlackSheep.CMS.Controllers
 {
     [Route("/view/document")]
-    public class CMSDocumentViewController : BaseCMSController
+    public class CMSDocumentViewController : Controller
     {
 
         private readonly CRUDService<CMSDocument, CMSDocumentFilter> _model;
@@ -17,11 +17,14 @@ namespace BlackSheep.CMS.Controllers
 
         public CMSDocumentViewController(CRUDService<CMSDocument, CMSDocumentFilter> model,
             CRUDService<CMSConfiguration, CMSConfigurationFilter> globalConfigurationModel,
-            IConfigurationRoot configuration) : base(configuration)
+            IConfigurationRoot configuration)
         {
+            Configuration = configuration;
             _model = model;
             _globalConfigurationModel = globalConfigurationModel;
         }
+
+        public IConfigurationRoot Configuration { get; set; }
 
         [HttpGet]
         [Route("{documentId:int}")]

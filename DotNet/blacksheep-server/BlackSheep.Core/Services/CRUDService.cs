@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BlackSheep.Core.MVC.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace BlackSheep.Core.Services
@@ -39,8 +40,15 @@ namespace BlackSheep.Core.Services
         public abstract Task<T> Create(T newEntity);
 
         public abstract Task<T> Update(int id, T entityToUpdate);
+
         public abstract Task<T> Update(string key, T entityToUpdate);
 
-        public abstract Task<T> Patch(int id, Dictionary<string, object> partialConfiguration);
+        public abstract Task<T> Patch(int id, Dictionary<string, object> partialEntity);
+        
+        public abstract Task<T> Patch(string key, Dictionary<string, object> partialEntity);
+
+        public abstract Task<T> Delete(int id);
+
+        public abstract Task<T> Delete(string key);
     }
 }

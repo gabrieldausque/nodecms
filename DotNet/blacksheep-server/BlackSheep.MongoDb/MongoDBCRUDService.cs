@@ -6,10 +6,10 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BlackSheep.Core.Infrastructure;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 using BlackSheep.MongoDb.Configuration;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
@@ -192,12 +192,19 @@ namespace BlackSheep.MongoDb
             return await InternalUpdate(entityToUpdate, currentEntity, entityCollection);
         }
 
-        public override async Task<T> Patch(int id, Dictionary<string, object> partialConfiguration)
+        public override async Task<T> Patch(int id, Dictionary<string, object> partialEntity)
         {
             var currentEntity = await GetAsync(id);
+            InternalPatch(partialEntity, currentEntity);
+
+            return await Update(id, currentEntity);
+        }
+
+        protected virtual void InternalPatch(Dictionary<string, object> partialConfiguration, T currentEntity)
+        {
             var properties = typeof(T).GetProperties();
             var propByBsonName = new Dictionary<string, PropertyInfo>();
-            
+
             foreach (var property in properties)
             {
                 var bsonAttribute = property.GetCustomAttribute<BsonElementAttribute>();
@@ -217,7 +224,7 @@ namespace BlackSheep.MongoDb
                 {
                     continue;
                 }
-                
+
                 if (propByBsonName.TryGetValue(kvp.Key, out var property) && kvp.Value is JsonElement jsonElement)
                 {
                     switch (jsonElement.ValueKind)
@@ -234,7 +241,7 @@ namespace BlackSheep.MongoDb
                                     if (property.PropertyType == typeof(double))
                                     {
                                         property.SetValue(currentEntity, jsonElement.GetDouble());
-                                    } 
+                                    }
                                     else if (property.PropertyType == typeof(decimal))
                                     {
                                         property.SetValue(currentEntity, jsonElement.GetDecimal());
@@ -249,32 +256,73 @@ namespace BlackSheep.MongoDb
                                     if (property.PropertyType == typeof(int))
                                     {
                                         property.SetValue(currentEntity, jsonElement.GetInt32());
-                                    } 
+                                    }
                                     else if (property.PropertyType == typeof(long))
                                     {
                                         property.SetValue(currentEntity, jsonElement.GetInt64());
                                     }
                                 }
                             }
-                            
+
                             break;
-                            }
+                        }
                         case JsonValueKind.True:
                         {
                             if (property.PropertyType == typeof(bool))
                             {
                                 property.SetValue(currentEntity, true);
-                            } else if (property.PropertyType == typeof(byte) || property.PropertyType == typeof(int))
+                            }
+                            else if (property.PropertyType == typeof(byte) || property.PropertyType == typeof(int))
                             {
                                 property.SetValue(currentEntity, 1);
                             }
+
                             break;
                         }
                     }
                 }
             }
+        }
 
-            return await Update(id, currentEntity);
+        public override async Task<T> Patch(string key, Dictionary<string, object> partialEntity)
+        {
+            var currentEntity = await GetAsync(key);
+            InternalPatch(partialEntity, currentEntity);
+
+            return await Update(key, currentEntity);
+        }
+
+        public override async Task<T> Delete(int id)
+        {
+            var deleted = await GetAsync(id);
+
+            return await InternalDelete(deleted);
+        }
+
+        public override async Task<T> Delete(string key)
+        {
+            var deleted = await GetAsync(key);
+
+            return await InternalDelete(deleted);
+        }
+
+
+        protected virtual async Task<T> InternalDelete(T deleted)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var filterBuilder = Builders<T>.Filter;
+            var filter = filterBuilder.Eq(e => e.Id, deleted.Id);
+            if (deleted != null)
+            {
+                var deleteResult = await collection.DeleteOneAsync(filter);
+                if (deleteResult is { IsAcknowledged: true, DeletedCount: 1 })
+                {
+                    return deleted;
+                }
+            }
+
+            throw new ApplicationException("Unknown error while deleting. please contact administrator");
         }
 
         protected virtual async Task<T> InternalUpdate(T entityToUpdate, T currentEntity, IMongoCollection<T> entityCollection)
@@ -330,18 +378,5 @@ namespace BlackSheep.MongoDb
             return newId.LastId;
         }
 
-
-    }
-
-    public class MongoDbCollectionLastId
-    {
-        [BsonId]
-        public ObjectId Id { get; set; }
-
-        [BsonElement("name")]
-        public string Name { get; set; }
-
-        [BsonElement("lastId")]
-        public int LastId { get; set; }
     }
 }

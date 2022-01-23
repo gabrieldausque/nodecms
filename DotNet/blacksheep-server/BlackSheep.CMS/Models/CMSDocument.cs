@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 
 namespace BlackSheep.CMS.Models

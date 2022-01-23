@@ -1,4 +1,5 @@
-﻿using BlackSheep.Core.Services;
+﻿using BlackSheep.Core.MVC.Models;
+using BlackSheep.Core.Services;
 
 namespace BlackSheep.CMS.Models;
 
