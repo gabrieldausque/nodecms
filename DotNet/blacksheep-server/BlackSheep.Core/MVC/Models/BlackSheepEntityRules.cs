@@ -8,8 +8,14 @@ namespace BlackSheep.Core.MVC.Models;
 public abstract class BlackSheepEntityRules<TEntity, TEntityFilter>
     where TEntity : class, IBlackSheepEntity
 {
-    protected readonly CRUDService<TEntity, TEntityFilter> _model;
+    protected CRUDService<TEntity, TEntityFilter> _model;
 
+    public CRUDService<TEntity, TEntityFilter> Model
+    {
+        get => _model;
+        set => _model = value;
+    }
+    
     protected BlackSheepEntityRules(CRUDService<TEntity, TEntityFilter> model)
     {
         _model = model;
