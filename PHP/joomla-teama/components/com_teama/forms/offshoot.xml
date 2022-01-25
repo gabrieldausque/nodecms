@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+    <fieldset>
+        <field name="id"
+               type="number"
+               label="JGLOBAL_FIELD_ID_LABEL"
+               default="0"
+               class="readonly"
+               readonly="true"
+        />
+
+        <field name="name"
+               type="text"
+               label="COM_TEAMA_NAME_LABEL"
+               size="45"
+               required="true"
+               maxlength="255"
+        />
+
+        <field name="address"
+               type="text"
+               label="COM_TEAMA_FIELD_ADDRESS_LABEL"
+               size="500"
+               required="true"
+               maxlength="1500"
+        />
+
+        <field name="phone_number"
+               type="tel"
+               label="COM_TEAMA_FIELD_PHONE_LABEL"
+               size="20"
+               pattern="^[0-9]{2}[. ]{1}[0-9]{2}[. ]{1}[0-9]{2}[. ]{1}[0-9]{2}[. ]{1}[0-9]{2}"
+        />
+
+        <field name="mail"
+               type="email"
+               validate="email"
+               label="JGLOBAL_EMAIL"
+               size="30"
+               class="inputbox"
+        />
+    </fieldset>
+</form>

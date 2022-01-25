@@ -31,12 +31,12 @@
   </Target>
 
   <Target Name="BuildControllers" AfterTargets="CleanCatalog">
-    <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build" />
-    <MSBuild Projects="..\BlazorSample\BlazorSample.csproj" Targets="Clean;Build" />
     <MSBuild Projects="..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj" Targets="Clean;Build" />
     <MSBuild Projects="..\BlackSheep.CMS\BlackSheep.CMS.csproj" Targets="Clean;Build" />
+    <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build" />
+    <MSBuild Projects="..\BlazorSample\BlazorSample.csproj" Targets="Clean;Build" />
   </Target>
 
-  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
   
 </Project>

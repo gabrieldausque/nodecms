@@ -20,7 +20,7 @@ namespace BlackSheep.Core.Host
         
         public override void Configure(IApplicationBuilder builder)
         {
-            builder.UseStaticFiles();
+            UseSwagger(builder);
             builder.UseDeveloperExceptionPage();
             builder.UseWebAssemblyDebugging();
             builder.UseBlazorFrameworkFiles();
@@ -31,6 +31,7 @@ namespace BlackSheep.Core.Host
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
+            UseStaticFilesAndRedirect(builder);
         }
 
         public override void ConfigureServices(IServiceCollection services)

@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
 using BlackSheep.Core.Infrastructure;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 using BlackSheep.MongoDb.Configuration;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace BlackSheep.MongoDb
 {
-    public class MongoDBCRUDService<T, TF> : CRUDService<T, TF> where T:class,IBlackSheepModel
+    public class MongoDBCRUDService<T, TF> : CRUDService<T, TF> where T:class,IBlackSheepEntity
     {
+
+        private static readonly string COUNTERS_COLLECTION_NAME = "counters";
 
         private MongoDbServiceConfiguration _configurationModel;
 
@@ -62,6 +68,7 @@ namespace BlackSheep.MongoDb
                     cm.SetIgnoreExtraElements(true);
                 });
             }
+
         }
 
         public override T Get(int id)
@@ -75,7 +82,15 @@ namespace BlackSheep.MongoDb
             return null;
         }
 
-        public override IEnumerable<T> Find(TF filter)
+        public override async Task<T> GetAsync(int id)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var results = await collection.FindAsync(t => t.Id == id);
+            return results.FirstOrDefault();
+        }
+
+        public override IEnumerable<T> Find(TF filter, bool noFilterReturnAll = false)
         {
             var db = _client.GetDatabase(_configurationModel.Database);
             var collection = db.GetCollection<T>(_configurationModel.Collection);
@@ -96,8 +111,39 @@ namespace BlackSheep.MongoDb
                 findTask.Wait();
                 if (findTask.IsCompletedSuccessfully)
                     return findTask.Result.ToList();
+            } 
+            else if (noFilterReturnAll)
+            {
+                return collection.Find(e => true).ToList();
             }
             
+            return new List<T>();
+        }
+
+        public override async Task<IEnumerable<T>> FindAsync(TF filter, bool noFilterReturnAll = false)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var filters = new List<FilterDefinition<T>>();
+            foreach (var filterProperty in filter.GetType().GetProperties())
+            {
+                var filterValue = filterProperty.GetValue(filter);
+                if (filterValue != null)
+                {
+                    filters.Add(Builders<T>.Filter.Eq(filterProperty.Name, filterValue));
+                }
+            }
+
+            if (filters.Any())
+            {
+                var finalFilter = Builders<T>.Filter.And(filters);
+                    return (await collection.FindAsync(finalFilter)).ToList();
+            } 
+            else if (noFilterReturnAll)
+            {
+                return await (await collection.FindAsync(e => true)).ToListAsync();
+            }
+
             return new List<T>();
         }
 
@@ -113,5 +159,224 @@ namespace BlackSheep.MongoDb
 
             return null;
         }
+
+        public override async Task<T> GetAsync(string key)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            return (await db.GetCollection<T>(_configurationModel.Collection)
+                .FindAsync(t => t.Key == key)).FirstOrDefault();
+        }
+
+        public override async Task<T> Create(T newEntity)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var entityCollection = db.GetCollection<T>(_configurationModel.Collection);
+            newEntity.Id = await GetNewId(_configurationModel.Collection);
+            await entityCollection.InsertOneAsync(newEntity);
+            return await GetAsync(newEntity.Id);
+        }
+
+        public override async Task<T> Update(int id, T entityToUpdate)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var entityCollection = db.GetCollection<T>(_configurationModel.Collection);
+            var currentEntity = await GetAsync(id);
+            return await InternalUpdate(entityToUpdate, currentEntity, entityCollection);
+        }
+
+        public override async Task<T> Update(string key, T entityToUpdate)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var entityCollection = db.GetCollection<T>(_configurationModel.Collection);
+            var currentEntity = await GetAsync(key);
+            return await InternalUpdate(entityToUpdate, currentEntity, entityCollection);
+        }
+
+        public override async Task<T> Patch(int id, Dictionary<string, object> partialEntity)
+        {
+            var currentEntity = await GetAsync(id);
+            InternalPatch(partialEntity, currentEntity);
+
+            return await Update(id, currentEntity);
+        }
+
+        protected virtual void InternalPatch(Dictionary<string, object> partialConfiguration, T currentEntity)
+        {
+            var properties = typeof(T).GetProperties();
+            var propByBsonName = new Dictionary<string, PropertyInfo>();
+
+            foreach (var property in properties)
+            {
+                var bsonAttribute = property.GetCustomAttribute<BsonElementAttribute>();
+                if (bsonAttribute != null)
+                {
+                    propByBsonName.Add(bsonAttribute.ElementName, property);
+                }
+                else
+                {
+                    propByBsonName.Add(property.Name, property);
+                }
+            }
+
+            foreach (var kvp in partialConfiguration)
+            {
+                if (kvp.Key.ToLower().Trim() == "id")
+                {
+                    continue;
+                }
+
+                if (propByBsonName.TryGetValue(kvp.Key, out var property) && kvp.Value is JsonElement jsonElement)
+                {
+                    switch (jsonElement.ValueKind)
+                    {
+                        case JsonValueKind.String:
+                            property.SetValue(currentEntity, jsonElement.GetString());
+                            break;
+                        case JsonValueKind.Number:
+                        {
+                            if (!string.IsNullOrWhiteSpace(jsonElement.GetString()))
+                            {
+                                if (jsonElement.GetString()!.Contains("."))
+                                {
+                                    if (property.PropertyType == typeof(double))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetDouble());
+                                    }
+                                    else if (property.PropertyType == typeof(decimal))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetDecimal());
+                                    }
+                                    else if (property.PropertyType == typeof(float))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetSingle());
+                                    }
+                                }
+                                else
+                                {
+                                    if (property.PropertyType == typeof(int))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetInt32());
+                                    }
+                                    else if (property.PropertyType == typeof(long))
+                                    {
+                                        property.SetValue(currentEntity, jsonElement.GetInt64());
+                                    }
+                                }
+                            }
+
+                            break;
+                        }
+                        case JsonValueKind.True:
+                        {
+                            if (property.PropertyType == typeof(bool))
+                            {
+                                property.SetValue(currentEntity, true);
+                            }
+                            else if (property.PropertyType == typeof(byte) || property.PropertyType == typeof(int))
+                            {
+                                property.SetValue(currentEntity, 1);
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        public override async Task<T> Patch(string key, Dictionary<string, object> partialEntity)
+        {
+            var currentEntity = await GetAsync(key);
+            InternalPatch(partialEntity, currentEntity);
+
+            return await Update(key, currentEntity);
+        }
+
+        public override async Task<T> Delete(int id)
+        {
+            var deleted = await GetAsync(id);
+
+            return await InternalDelete(deleted);
+        }
+
+        public override async Task<T> Delete(string key)
+        {
+            var deleted = await GetAsync(key);
+
+            return await InternalDelete(deleted);
+        }
+
+
+        protected virtual async Task<T> InternalDelete(T deleted)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var collection = db.GetCollection<T>(_configurationModel.Collection);
+            var filterBuilder = Builders<T>.Filter;
+            var filter = filterBuilder.Eq(e => e.Id, deleted.Id);
+            if (deleted != null)
+            {
+                var deleteResult = await collection.DeleteOneAsync(filter);
+                if (deleteResult is { IsAcknowledged: true, DeletedCount: 1 })
+                {
+                    return deleted;
+                }
+            }
+
+            throw new ApplicationException("Unknown error while deleting. please contact administrator");
+        }
+
+        protected virtual async Task<T> InternalUpdate(T entityToUpdate, T currentEntity, IMongoCollection<T> entityCollection)
+        {
+            var builder = Builders<T>.Update;
+            UpdateDefinition<T> update = null;
+            foreach (var entityProperty in currentEntity.GetType().GetProperties())
+            {
+                var existingValue = entityProperty.GetValue(currentEntity);
+                var newValue = entityProperty.GetValue(entityToUpdate);
+                if (existingValue != null && !existingValue.Equals(newValue))
+                {
+                    var bsonPropName = entityProperty.Name;
+                    if (entityProperty.GetCustomAttributes().Any(ca => ca is BsonElementAttribute))
+                    {
+                        bsonPropName = entityProperty.GetCustomAttribute<BsonElementAttribute>().ElementName;
+                    }
+
+                    if (update == null)
+                        update = builder.Set(bsonPropName, entityProperty.GetValue(entityToUpdate));
+                    else
+                        update.Set(bsonPropName, entityProperty.GetValue(entityToUpdate));
+                }
+            }
+
+            T entityToReturn = currentEntity;
+            if (update != null)
+            {
+                entityToReturn = await entityCollection.FindOneAndUpdateAsync<T, T>(
+                    e => e.Id == currentEntity.Id,
+                    update, new FindOneAndUpdateOptions<T, T>()
+                    {
+                        ReturnDocument = ReturnDocument.After
+                    });
+            }
+
+            return entityToReturn;
+        }
+
+        private async Task<int> GetNewId(string collectionName)
+        {
+            var db = _client.GetDatabase(_configurationModel.Database);
+            var countersCollection = db.GetCollection<MongoDbCollectionLastId>(COUNTERS_COLLECTION_NAME);
+            var newId = await countersCollection
+                .FindOneAndUpdateAsync<MongoDbCollectionLastId, MongoDbCollectionLastId>(
+                c => c.Name == collectionName,
+                $"{{ $inc: {{ lastId : 1 }} }}",
+                new FindOneAndUpdateOptions<MongoDbCollectionLastId, MongoDbCollectionLastId>()
+                {
+                    ReturnDocument = ReturnDocument.After,
+                    IsUpsert = true
+                });
+            return newId.LastId;
+        }
+
     }
 }

@@ -25,3 +25,5 @@
 /DotNet/blacksheep-server/.vs/blacksheep-server/v17/.futdcache.v1
 /DotNet/blacksheep-server/.vs/blacksheep-server/v17/.suo
 /DotNet/blacksheep-server/.vs/blacksheep-server/project-colors.json
+
+**/dist/**

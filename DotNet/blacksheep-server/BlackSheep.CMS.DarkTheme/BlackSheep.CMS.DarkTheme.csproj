@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <BaseOutputPath>../dist</BaseOutputPath>
+	  <OutputPath>$(BaseOutputPath)\$(Configuration)\Catalog\BlackSheep.CMS.DarkTheme</OutputPath>
+	  <OutputType>Library</OutputType>
+	  <StartupObject />
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ClientAppStatic Include=".\wwwroot\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <Target Name="CopyRoot" AfterTargets="Build">
+	<Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
+  </Target>
+
+</Project>

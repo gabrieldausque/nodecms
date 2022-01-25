@@ -1,0 +1,15 @@
+﻿@using BlackSheep.Core.Services;
+
+@model BlackSheep.CMS.Models.CMSDocument
+
+@{
+    ViewBag.Title = Model?.Title;
+    Layout = Model != null && !string.IsNullOrWhiteSpace(Model.Layout)?
+        Model.Layout:
+        "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@await Component.InvokeAsync("title", true);
+

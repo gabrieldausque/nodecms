@@ -1,8 +1,11 @@
-﻿using System;
-using BlackSheep.CMS.Model;
+﻿using BlackSheep.CMS.Models;
+using BlackSheep.CMS.Rules;
 using BlackSheep.Core.Host;
 using BlackSheep.Core.Infrastructure;
+using BlackSheep.Core.MVC;
+using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -14,13 +17,15 @@ namespace BlackSheep.CMS
         [ConfigureServices]
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
-            var documentDbServiceIdentifier = Startup.Configuration.GetSection("Databases:Documents:ProviderName");
-            var documentDbService =
-                ServicesFactory.Instance.GetServiceInstance<CRUDService<CMSDocument, CMSDocumentFilter>, CMSDocument, CMSDocumentFilter>(documentDbServiceIdentifier.Value);
-            var documentDbServiceConfiguration = Startup.Configuration.GetSection("Databases:Documents");
-            documentDbService.Init(documentDbServiceConfiguration);
-            services.Add(new ServiceDescriptor(typeof(CRUDService<CMSDocument, CMSDocumentFilter>), documentDbService));
+            services.AddBlackSheepControllerServices<CMSConfiguration, 
+                CMSConfigurationFilter, 
+                CMSConfigurationRules>("BlackSheepCMS:Databases:Configurations");
+            services.AddBlackSheepControllerServices<CMSDocument, 
+                CMSDocumentFilter, 
+                CMSDocumentRules>("BlackSheepCMS:Databases:Documents");
+
             return services;
         }
+
     }
 }
