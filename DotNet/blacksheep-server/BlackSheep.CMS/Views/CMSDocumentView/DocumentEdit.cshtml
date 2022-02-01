@@ -1,4 +1,5 @@
-﻿@using BlackSheep.Core.Services;
+﻿@using BlackSheep.CMS.Models
+@using BlackSheep.Core.Services;
 
 @model BlackSheep.CMS.Models.CMSDocument
 
@@ -6,10 +7,72 @@
     ViewBag.Title = Model?.Title;
     Layout = Model != null && !string.IsNullOrWhiteSpace(Model.Layout)?
         Model.Layout:
-        "_Layout";
+        "_Layout_BootStrap";
 }
 
 <h2>@ViewBag.Title</h2>
 
-@await Component.InvokeAsync("title", true);
-
+@if (Model != null)
+{
+    <header>
+        @if (Model.Headers.Layout == ZoneLayout.Stack)
+        {
+            <div class="blacksheep-stack-zone">
+                @foreach (var component in Model.Headers.Content)
+                {
+                    @await Component.InvokeAsync(component.BlocType, component.Properties)
+                }
+            </div>
+        }
+        else
+        {
+            Model.Headers.Content.ToList().Sort((a, b) =>
+            {
+                if (a.Row > b.Row)
+                    return 1;
+                if (a.Row < b.Row)
+                    return -1;
+                if (a.Column > b.Column)
+                    return 1;
+                if (a.Column < b.Column)
+                    return -1;
+                return 0;
+            });
+            <div class="blacksheep-grid-zone container">
+                @{
+                    var columnIndex = 0;
+                }
+                <div class="row">
+                    @foreach (var component in Model.Headers.Content)
+                    {
+                        if (component.Row > columnIndex)
+                        {
+                            columnIndex = component.Row;
+                            @Html.Raw("</div><div class=\"row\">")
+                            ;
+                        }
+                        @Html.Raw("<div class=\"col\">")
+                        @await Component.InvokeAsync(component.BlocType, component.Properties)
+                        @Html.Raw("</div>")
+                    }
+                </div>
+            </div>
+        }
+    </header>
+    <main>
+        @foreach (var component in Model.Bodies.Content)
+        {
+            @await Component.InvokeAsync(component.BlocType, component.Properties)
+        }
+    </main>
+    <footer>
+        @foreach (var component in Model.Footers.Content)
+        {
+            @await Component.InvokeAsync(component.BlocType, component.Properties)
+        }
+    </footer>
+}
+else
+{
+    <h2>No Content</h2>    
+}
