@@ -63,17 +63,17 @@ class NewsModel
     $whereClause = [];
 
     if(isset($filterByTitle) && trim($filterByTitle) != ''){
-      $whereClause["title"] = [$filterByTitle];
+      $whereClause["a.title"] = [$filterByTitle];
     }
 
     $searchTerms = $this->getState('filter.search');
 
     if(isset($searchTerms) && trim($searchTerms) != ''){
 
-      if(array_key_exists("title",$whereClause) && is_array($whereClause["title"])){
-        array_push($whereClause["title"],$searchTerms);
+      if(array_key_exists("a.title",$whereClause) && is_array($whereClause["a.title"])){
+        array_push($whereClause["a.title"],$searchTerms);
       } else {
-        $whereClause["title"] = [$searchTerms];
+        $whereClause["a.title"] = [$searchTerms];
       }
 
       if(array_key_exists("summary",$whereClause) && is_array($whereClause["summary"])){

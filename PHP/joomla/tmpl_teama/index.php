@@ -105,6 +105,7 @@ if ($this->params->get('logoFile'))
       <?php } else  {  ?>
           <div class="teama-landingpage-main d-flex flex-column align-items-center justify-content-around">
               <h4 class="teama-tagline-landing-page"><?php echo $this->params->get('siteDescription') ?></h4>
+              <jdoc:include type="message" />
               <div class="teama-logo-landing-page"
                    style="background-image: url('<?php echo $logoUrl ?>')" >
                   <div id="teama-top-border"></div>
