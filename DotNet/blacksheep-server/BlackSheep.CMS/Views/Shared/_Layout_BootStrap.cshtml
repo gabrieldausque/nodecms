@@ -3,9 +3,11 @@
 <html>
 <head>
     <title>@ViewBag.ApplicationTitle</title>
-    <link rel="stylesheet" href="cms/css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="cms/css/blacksheep-main.css"/>
-    <script src="cms/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/cms/css/fontawesome/css/all.min.css"/>
+    <link rel="stylesheet" href="/cms/css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/cms/css/blacksheep-main.css"/>
+    <script src="/cms/js/bootstrap/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts",false/*required*/)
 </head>
 <body>
 <header>

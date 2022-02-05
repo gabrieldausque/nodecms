@@ -23,10 +23,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ClientAppStatic Remove="wwwroot\cms\css\blacksheep-main.css" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Include="wwwroot\cms\css\bootstrap\bootstrap-grid.css.map" />
 	  <None Include="wwwroot\cms\css\bootstrap\bootstrap-grid.min.css.map" />
 	  <None Include="wwwroot\cms\css\bootstrap\bootstrap-grid.rtl.css.map" />
@@ -43,6 +39,24 @@
 	  <None Include="wwwroot\cms\css\bootstrap\bootstrap.min.css.map" />
 	  <None Include="wwwroot\cms\css\bootstrap\bootstrap.rtl.css.map" />
 	  <None Include="wwwroot\cms\css\bootstrap\bootstrap.rtl.min.css.map" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\all.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\all.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\brands.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\brands.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\conflict-detection.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\conflict-detection.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\fontawesome.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\fontawesome.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\regular.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\regular.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\solid.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\solid.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\v4-shims.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\js\v4-shims.min.js" />
+	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-brands-400.woff2" />
+	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-regular-400.woff2" />
+	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-solid-900.woff2" />
+	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-v4compatibility.woff2" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.bundle.js" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.bundle.js.map" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.bundle.min.js" />
@@ -55,14 +69,24 @@
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.js.map" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.min.js" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.min.js.map" />
+	  <None Include="wwwroot\cms\js\EditorContextualMenu.js" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Rules\" />
+		<Folder Include="Rules\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
 	</ItemGroup>
 
 	<Target Name="CopyRoot" AfterTargets="Build">
-		<Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
+		<Copy SourceFiles="@(ClientAppStatic)" 
+		      DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" 
+		      SkipUnchangedFiles="true" 
+		      OverwriteReadOnlyFiles="true" 
+		      Retries="3" 
+		      RetryDelayMilliseconds="300" />
 	</Target>
 
 </Project>

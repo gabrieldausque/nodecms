@@ -8,15 +8,37 @@ namespace BlackSheep.CMS.Models
 {
     public class CMSDocumentBlocMetadata
     {
+        private Guid _htmlId;
+
         public CMSDocumentBlocMetadata()
         {
+            _htmlId = Guid.NewGuid();
             Properties = new Dictionary<string, object>();
         }
 
         public string BlocType { get; set; }
 
+        private Dictionary<string, object> _properties;
+
         [JsonConverter(typeof(PropertiesConverter))]
-        public Dictionary<string, object> Properties { get; set; }
+        public Dictionary<string, object> Properties
+        {
+            get => _properties;
+            set
+            {
+                if (value != null && value.ContainsKey("HtmlId") 
+                                  && value["HtmlId"] is string existingGuidAsString 
+                                  && Guid.TryParse(existingGuidAsString, out var existingGuid))
+                {
+                    _htmlId = existingGuid;
+                }
+                else
+                {
+                    value["HtmlId"] = _htmlId.ToString();
+                }
+                _properties = value;
+            }
+        }
 
         public int Row
         {
@@ -90,6 +112,11 @@ namespace BlackSheep.CMS.Models
                     }
                     //TODO : manage number type
                 }
+            }
+
+            if (!properties.ContainsKey("HtmlId"))
+            {
+                properties.Add("HtmlId",Guid.NewGuid().ToString().Replace("-",string.Empty));
             }
             return properties;
         }

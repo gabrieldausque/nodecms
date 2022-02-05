@@ -1,7 +1,18 @@
-﻿
-<h3>The title</h3>
+﻿@using Microsoft.VisualBasic
+@model BlackSheep.CMS.Models.CMSDocumentBlocMetadata
+<div id="@Model.Properties["HtmlId"].ToString().Replace("-",string.Empty)">
+    <h3>@{
+            if (Model.Properties.TryGetValue("Text", out var titleAsObject) && titleAsObject is string title)
+            {
+                @Html.Raw(title);
+            }
+            else
+            {
+                @Html.Raw("My Title");
+            }
+        }</h3>
+</div>
 
 @{
-
-
+    
 }

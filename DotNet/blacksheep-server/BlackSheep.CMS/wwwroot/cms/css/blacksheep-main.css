@@ -10,3 +10,31 @@
     flex-direction: column;
     align-items: stretch;
 }
+
+.blacksheep-editor-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+}
+
+.blacksheep-editor-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px;
+    z-index: 15;
+    border: solid black 3px;
+    background: white;
+    color: black;
+    border-radius: 25px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blacksheep-editor-menu.shown {
+    display: block;
+}
