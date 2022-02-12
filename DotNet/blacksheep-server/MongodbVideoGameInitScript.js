@@ -47,7 +47,7 @@ function newId(collectionName) {
 
 function initData() {
 
-    var documentId = newId('levels');
+    var documentId = newId('scenes');
 
 }
 
