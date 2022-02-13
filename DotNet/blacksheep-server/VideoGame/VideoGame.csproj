@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BaseOutputPath>bin\</BaseOutputPath>
+    <BaseOutputPath>..\dist_videogame\</BaseOutputPath>
   </PropertyGroup>
 
 	
@@ -19,27 +19,17 @@
     <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
   </ItemGroup>
 
-	<Target Name="InitDb" BeforeTargets="BuildPlugins">
+	<Target Name="InitDb" AfterTargets="BuildPlugins">
 		<Message Text="Initialization video game DB" Importance="high" />
 		<Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg ./../MongodbVideoGameInitScript.js" />
 	</Target>
 
 
-	<Target Name="BuildPlugins" BeforeTargets="Build">
-		<MSBuild Projects="..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj" 
-		         Targets="Clean;Build" 
-		         RebaseOutputs="true"
-				 
-		/>
+	<Target Name="BuildPlugins" AfterTargets="Build">
+		<Exec Command="&quot;C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\msbuild.exe&quot; ..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj /p:BaseOutputPath=$(BaseOutputPath) /p:Configuration=$(Configuration)" ConsoleToMSBuild="true" />
+		<Exec Command="&quot;C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\msbuild.exe&quot; ..\BlackSheep.Playground\BlackSheep.Playground.csproj /p:BaseOutputPath=$(BaseOutputPath) /p:Configuration=$(Configuration)" ConsoleToMSBuild="true" />
 	</Target>
 
-	<ItemGroup>
-		<MongoDbPlugins Include="..\dist\$(Configuration)\Catalog\BlackSheep.MongoDb\**\*.*"></MongoDbPlugins>	
-	</ItemGroup>
 
-	<Target Name="CopyPlugins" AfterTargets="BuildPlugins">
-		<Copy SourceFiles="@(MongoDbPlugins)"
-			  DestinationFiles="@(MongoDbPlugins->'$(OutDir)\Catalog\BlackSheep.MongoDb\%(RecursiveDir)%(Filename)%(Extension)')"/>
-	</Target>
 
 </Project>

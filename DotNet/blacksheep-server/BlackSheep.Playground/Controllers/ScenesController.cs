@@ -3,6 +3,7 @@ using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace BlackSheep.Playground.Controllers
 {

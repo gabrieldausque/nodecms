@@ -3,6 +3,7 @@ using BlackSheep.Core.MVC;
 using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Services;
 using BlackSheep.Playground.Controllers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BlackSheep.Playground
 {

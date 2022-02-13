@@ -28,3 +28,4 @@
 
 **/dist/**
 /DotNet/blacksheep-server/.vs/
+/DotNet/blacksheep-server/dist*
