@@ -7,13 +7,11 @@
     <Nullable>enable</Nullable>
     <BaseOutputPath>..\dist_videogame\</BaseOutputPath>
   </PropertyGroup>
-
 	
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-	</PropertyGroup>					
- 
+	</PropertyGroup>
 	
 	<ItemGroup>
     <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
@@ -24,12 +22,9 @@
 		<Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg ./../MongodbVideoGameInitScript.js" />
 	</Target>
 
-
 	<Target Name="BuildPlugins" AfterTargets="Build">
 		<Exec Command="&quot;C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\msbuild.exe&quot; ..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj /p:BaseOutputPath=$(BaseOutputPath) /p:Configuration=$(Configuration)" ConsoleToMSBuild="true" />
 		<Exec Command="&quot;C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin\msbuild.exe&quot; ..\BlackSheep.Playground\BlackSheep.Playground.csproj /p:BaseOutputPath=$(BaseOutputPath) /p:Configuration=$(Configuration)" ConsoleToMSBuild="true" />
 	</Target>
-
-
 
 </Project>
