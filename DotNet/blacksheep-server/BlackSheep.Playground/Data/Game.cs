@@ -8,7 +8,7 @@ namespace BlackSheep.Playground.Data
     {
         public Game()
         {
-            Scenes = new List<int>();
+            Scenes = new List<Scene>();
         }
 
         public int Id { get; set; }
@@ -17,7 +17,7 @@ namespace BlackSheep.Playground.Data
 
         public string Owner { get; set; }
 
-        public IList<int> Scenes { get; set; }
+        public IList<Scene> Scenes { get; set; }
 
     }
 }
