@@ -57,6 +57,7 @@
 	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-regular-400.woff2" />
 	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-solid-900.woff2" />
 	  <None Include="wwwroot\cms\css\fontawesome\webfonts\fa-v4compatibility.woff2" />
+	  <None Include="wwwroot\cms\js\BlackSheepCMS.js" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.bundle.js" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.bundle.js.map" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.bundle.min.js" />
@@ -69,7 +70,8 @@
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.js.map" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.min.js" />
 	  <None Include="wwwroot\cms\js\bootstrap\bootstrap.min.js.map" />
-	  <None Include="wwwroot\cms\js\EditorContextualMenu.js" />
+	  <None Include="wwwroot\cms\js\DocumentEdit.js" />
+	  <None Include="wwwroot\cms\js\BlackSheepCMS.js" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -81,12 +83,7 @@
 	</ItemGroup>
 
 	<Target Name="CopyRoot" AfterTargets="Build">
-		<Copy SourceFiles="@(ClientAppStatic)" 
-		      DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" 
-		      SkipUnchangedFiles="true" 
-		      OverwriteReadOnlyFiles="true" 
-		      Retries="3" 
-		      RetryDelayMilliseconds="300" />
+		<Copy SourceFiles="@(ClientAppStatic)" DestinationFiles="@(ClientAppStatic->'$(BaseOutputPath)\$(Configuration)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Retries="3" RetryDelayMilliseconds="300" />
 	</Target>
 
 </Project>

@@ -71,5 +71,7 @@ namespace BlackSheep.CMS.Models
 
             set => Properties["ZoneColumn"] = value;
         }
+
+        public string Id => Properties["HtmlId"].ToString();
     }
 }

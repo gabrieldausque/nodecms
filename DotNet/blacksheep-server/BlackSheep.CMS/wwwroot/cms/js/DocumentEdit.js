@@ -1,6 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", (e) => {
     let allEditorBlocs = document.querySelectorAll('.blacksheep-bloc-cell');
-
     if (allEditorBlocs) {
         for (let blocElement of allEditorBlocs) {
             blocElement.addEventListener('contextmenu', (e) => {
@@ -16,5 +15,4 @@
             });
         }
     }
-    
 });

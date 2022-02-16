@@ -1,6 +1,18 @@
 ﻿@model BlackSheep.CMS.Models.CMSDocumentBlocMetadata
 
-<div class="dropdown-menu blacksheep-editor-menu">
-    <div class="dropdown-item">Edit</div>
-    <div class="dropdown-item">Delete</div>
+@{
+    var blocEditorGuid = $"editor_menu_{Guid.NewGuid().ToString().Replace("-", string.Empty)}";
+}
+
+<div class="dropdown-menu blacksheep-editor-menu" id="@blocEditorGuid">
+    <script type="text/javascript">
+        function onClick_@Html.Raw(blocEditorGuid)_handler() {
+            let menuElement = document.querySelector('#@blocEditorGuid');
+            menuElement.classList.remove('shown');
+            let showEditorEvent = new CustomEvent('SHOW_RIGHT_PANE', { detail: { modelId: '@Html.Raw(Model.Id)' } });
+            document.dispatchEvent(showEditorEvent);
+        } 
+    </script>
+    <div class="dropdown-item" data-bloc-id="@Model.Id" onclick="onClick_@Html.Raw(blocEditorGuid)_handler()">Edit</div>
+    <div class="dropdown-item" data-bloc-idd="@Model.Id">Delete</div>
 </div>

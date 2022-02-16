@@ -1,4 +1,32 @@
 ﻿body {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+#blacksheep-document-commandbar {
+    display: none;
+    flex-direction: row-reverse;
+    height: 50px;
+}
+
+#blacksheep-document-commandbar.shown {
+    display: flex;
+}
+
+#blacksheep-viewport {
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-grow: 1;
 }
 
 .blacksheep-grid-zone {
@@ -11,11 +39,34 @@
     align-items: stretch;
 }
 
-.blacksheep-editor-zone {
+.blacksheep-aside-header {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 5px;
+    overflow: hidden;
+}
+
+#blacksheep-body-zone {
+    background: yellow;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    position: relative;
+    justify-content: flex-start;
+    text-align: center;
+    flex-grow: 1;
+}
+
+#blacksheep-right-zone {
+    width: 0;
+    background: aqua;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: width linear 100ms;
+}
+
+#blacksheep-right-zone.shown {
+    width: 300px;
 }
 
 .blacksheep-editor-button {

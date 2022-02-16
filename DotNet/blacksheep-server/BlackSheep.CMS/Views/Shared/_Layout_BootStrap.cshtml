@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/cms/css/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="/cms/css/blacksheep-main.css"/>
     <script src="/cms/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/cms/js/BlackSheepCMS.js" type="text/javascript"></script>
     @await RenderSectionAsync("Scripts",false/*required*/)
 </head>
 <body>
@@ -17,14 +18,22 @@
         </div>
     </nav>
 </header>
-<aside>
-
-</aside>
-<main>
-    @RenderBody()
+<nav id="blacksheep-document-commandbar" class="navbar navbar-light bg-light">
+    @await RenderSectionAsync("CommandBar", false)
+</nav>
+<main id="blacksheep-viewport">
+    <aside id="blacksheep-left-zone">
+        @await RenderSectionAsync("LeftAside", false)
+    </aside>
+    <main id="blacksheep-body-zone">
+        @RenderBody()
+    </main>
+    <aside id="blacksheep-right-zone">
+        <header class="blacksheep-aside-header">
+            <div onclick="hideRightPane()"><i class="fas fa-close"></i></div>
+        </header>
+        @await RenderSectionAsync("RightAside", false)
+    </aside>
 </main>
-<aside>
-
-</aside>
 </body>
 </html>
