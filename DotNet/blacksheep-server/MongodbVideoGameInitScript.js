@@ -49,6 +49,39 @@ function initData() {
 
     var documentId = newId('scenes');
 
+    videogame.scenes.insert({
+        Id: newId('scenes'),
+        Key: 'main',
+        Entities: [
+            {
+                Id: '7FBC3064-BEF3-4540-AB3B-8065CBEA1546',
+                Components: [
+                    {
+                        TypeIdentifier: 'Title',
+                        Properties: {
+                            'Text': 'King Of Monsters',
+                            'Font-Family': 'Arial'
+                        }
+                    },
+                    {
+                        TypeIdentifier: 'Position',
+                        Properties: {
+                            'Top': 250,
+                            'Left': 150,
+                            'ZIndex': 5
+                        }
+                    },
+                    {
+                        TypeIdentifier: 'Body',
+                        Properties: {
+                            'Height': 150,
+                            'Width': 150
+                        }
+                    }
+                ]
+            }]
+    });
+
 }
 
 initData();

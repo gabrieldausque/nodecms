@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using BlackSheep.Core.MVC.Models;
 using BlackSheep.Core.Utils;
@@ -21,11 +22,12 @@ public class GameEntityMetadata
 {
     public GameEntityMetadata()
     {
+        Id = Guid.NewGuid().ToString();
         Components = new List<GameEntityComponent>();
         Behaviors = new List<GameEntityBehavior>();
     }
 
-    public string TypeIdentifier { get; set; }
+    public string Id { get; set; }
 
     public IList<GameEntityComponent> Components { get; set; }
 
@@ -39,6 +41,13 @@ public class GameEntityBehavior
 
 public class GameEntityComponent
 {
+    public GameEntityComponent()
+    {
+        Properties = new Dictionary<string, object>();
+    }
+
     public string TypeIdentifier { get; set; }
 
+    [JsonConverter(typeof(PropertiesConverter))]
+    private Dictionary<string,object> Properties { get; set; } 
 }
