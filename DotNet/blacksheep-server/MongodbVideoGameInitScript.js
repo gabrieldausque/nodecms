@@ -60,7 +60,8 @@ function initData() {
                         TypeIdentifier: 'Title',
                         Properties: {
                             'Text': 'King Of Monsters',
-                            'Font-Family': 'Arial'
+                            'Font-Family': 'Arial',
+                            'Font-Size': 25
                         }
                     },
                     {
@@ -79,7 +80,8 @@ function initData() {
                         }
                     }
                 ]
-            }]
+            }
+        ]
     });
 
 }
