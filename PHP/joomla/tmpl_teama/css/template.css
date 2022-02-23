@@ -46,6 +46,10 @@ body {
     margin-left: auto;
 }
 
+#teama-brand-logo {
+    margin-left: 5px;
+}
+
 #teama-brand-logo,
 .teama-logo-landing-page {
     height: 50vh;
@@ -84,8 +88,8 @@ body {
 
 .teama-left-panel.shrink,
 .teama-brand-container.shrink {
-    width: 82px;
-    min-width: 82px;
+    width: 90px;
+    min-width: 90px;
 }
 
 .teama-menu-link {

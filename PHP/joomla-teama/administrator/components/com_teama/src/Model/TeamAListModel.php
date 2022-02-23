@@ -15,6 +15,11 @@ abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 
 	protected string $tableName = '';
 
+	// for frontend
+	protected string $pluralTypeName;
+
+	protected string $typeName;
+
 	public function __construct($filterFormName,
 		$tableName,
 		$config = array(),
@@ -61,6 +66,29 @@ abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 			$db->setQuery($query);
 			$db->execute();
 		}
+	}
+
+	public function getActions(){
+		$app = Factory::getApplication();
+		$user = $app->getIdentity();
+
+		$actions = [];
+
+		if($user->authorise(
+			$this->pluralTypeName . '.create',
+			'com_teama'))
+		{
+			array_push($actions, new Actions(
+				'create',
+				'index.php?option=com_teama&view='. $this->typeName .'&layout=edit'
+			));
+		}
+
+		return $actions;
+	}
+
+	public function getCanSearch(){
+		return true;
 	}
 
 }
