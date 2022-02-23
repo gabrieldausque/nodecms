@@ -10,7 +10,8 @@ namespace BlackSheep.Playground.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GameController : BlackSheepBaseController<Game, GameFilter>
+    public class GameController : BlackSheepBaseController<Game, 
+        GameFilter>
     {
         public GameController(CRUDService<Game, GameFilter> model, 
             BlackSheepEntityRules<Game, GameFilter> rules, 

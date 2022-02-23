@@ -1,5 +1,6 @@
 ﻿using BlackSheep.Core.Infrastructure;
 using BlackSheep.Core.MVC;
+using BlackSheep.Playground.Controllers;
 using BlackSheep.Playground.Data;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,9 @@ namespace BlackSheep.Playground
             services.AddBlackSheepControllerServices<Game,
                 GameFilter,
                 GameRules>("BlackSheepPlayground:Databases:Games");
-
+            services.AddBlackSheepControllerServices<GameInstance, 
+                GameInstanceFilter,
+                GameInstanceRules>("BlackSheepPlayground:Databases:GameInstances");
             return services;
         }
     }

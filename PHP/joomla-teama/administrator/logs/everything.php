@@ -845,3 +845,41 @@ Content-Transfer-Encoding: 8bit
 2022-02-23T15:50:26+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.4 Array (     [0] => 4 ) 
 2022-02-23T15:50:32+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.4 Array (     [0] => 4 ) 
 2022-02-23T16:07:29+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.offshoot.4 Array ( ) 
+2022-02-23T20:44:44+00:00	INFO 127.0.0.1	updater	Loading information from update site #1 with name "Joomla! Core" and URL https://update.joomla.org/core/list.xml took 0.12 seconds
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: "gabrieldausque.pro@gmail.com" <gabrieldausque.pro@gmail.com>
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Mise_=C3=A0_jour_de_Joomla_disponible_pour_Team_A_?=
+ =?utf-8?Q?=E2=80=93_https://teama.myhost.domain/?=
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Wed, 23 Feb 2022 21:44:44 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <9jIEtT4XzkoA8WVHK3zokhAFqJkSxsSm03YtOfSeI5U@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sending with mail()
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Sendmail path: /usr/sbin/sendmail -t -i 
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Envelope sender: 
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: To: "gabrieldausque.pro@gmail.com" <gabrieldausque.pro@gmail.com>
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Subject: =?utf-8?Q?Mise_=C3=A0_jour_de_Joomla_disponible_pour_Team_A_?=
+ =?utf-8?Q?=E2=80=93_https://teama.myhost.domain/?=
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Headers: Date: Wed, 23 Feb 2022 21:44:44 +0100
+From: Team A <gabrieldausque.pro@gmail.com>
+Message-ID: <i8s5LlYLleLrgKC411U3V4T6d3N5FIsgsuRQVfcOHQY@teama.myhost.domain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Result: false
+2022-02-23T20:44:44+00:00	ERROR 127.0.0.1	mail	Error in Mail API: Could not instantiate mail function.
+2022-02-23T20:44:44+00:00	WARNING 127.0.0.1	jerror	Could not instantiate mail function.
+2022-02-23T20:45:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2022-02-23T20:45:14+00:00	WARNING 127.0.0.1	assets	No asset found for com_modules.module.90, falling back to com_modules
+2022-02-23T20:47:20+00:00	INFO 127.0.0.1	controller	Holding edit ID com_teama.edit.offshoot.6 Array (     [0] => 6 ) 
+2022-02-23T20:47:25+00:00	INFO 127.0.0.1	controller	Releasing edit ID com_teama.edit.offshoot.6 Array ( ) 

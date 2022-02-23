@@ -16,6 +16,9 @@ public class Scene : IBlackSheepEntity
     public int Id { get; set; }
     public string Key { get; set; }
     public IList<GameEntityMetadata> Entities { get; set; }
+
+    public string IsActive { get; set; }
+
 }
 
 public class GameEntityMetadata
