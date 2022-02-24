@@ -1,1 +1,1 @@
-ALTER TABLE `#__teama_news` add column `catid` INT(11) NOT NULL DEFAULT '0'
+-- ALTER TABLE `#__teama_news` add column if not exists `catid` INT(11) NOT NULL DEFAULT '0'

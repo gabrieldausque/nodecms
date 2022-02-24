@@ -72,6 +72,7 @@ $document->addScriptOptions('offshoots', $offshootsOptions);
                 </div>
             </div>
             <?php } ?>
+            <div id="steps"></div>
         </div>
     </div>
 </div>

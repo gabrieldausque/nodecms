@@ -1,1 +1,0 @@
-alter table `#__teama_news` add column `summary` VARCHAR(2096) NOT NULL DEFAULT '';

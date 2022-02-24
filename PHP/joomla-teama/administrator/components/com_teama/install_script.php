@@ -188,6 +188,10 @@ class Com_TeamAInstallerScript
       	$teamaAdminGroup->id => 1,
         $teamaRHGroup->id =>1
       ],
+      'core.edit.state' => [
+      	$teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1
+      ],
       'news.create' => [
       	$teamaAdminGroup->id => 1,
         $teamaRHGroup->id =>1
@@ -219,6 +223,8 @@ class Com_TeamAInstallerScript
     $rules['core.create'][$teamaRHGroup->id] = 1;
     $rules['core.edit'][$teamaAdminGroup->id] = 1;
     $rules['core.edit'][$teamaRHGroup->id] = 1;
+    $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
+    $rules['core.edit.state'][$teamaRHGroup->id] = 1;
     $rules['news.create'][$teamaAdminGroup->id] = 1;
     $rules['news.create'][$teamaRHGroup->id] = 1;
     $rules['news.edit'][$teamaAdminGroup->id] = 1;
@@ -237,6 +243,8 @@ class Com_TeamAInstallerScript
 	  $rules['core.create'][$teamaRHGroup->id] = 1;
 	  $rules['core.edit'][$teamaAdminGroup->id] = 1;
 	  $rules['core.edit'][$teamaRHGroup->id] = 1;
+	  $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
+	  $rules['core.edit.state'][$teamaRHGroup->id] = 1;
 	  $rules['core.delete'][$teamaAdminGroup->id] = 1;
 	  $rules['core.delete'][$teamaRHGroup->id] = 1;
 	  $rules['core.manage'][$teamaAdminGroup->id] = 1;

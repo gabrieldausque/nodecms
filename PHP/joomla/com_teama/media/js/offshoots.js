@@ -2,6 +2,8 @@ let mapMetropole;
 let geocoder;
 let offshoots;
 let distanceService;
+let directionsService;
+let directionRenderer;
 
 function initMap() {
   offshoots = Joomla.getOptions('offshoots');
@@ -12,7 +14,12 @@ function initMap() {
   });
   geocoder = new google.maps.Geocoder();
   distanceService = new google.maps.DistanceMatrixService();
-
+  directionsService = new google.maps.DirectionsService();
+  directionRenderer = new google.maps.DirectionsRenderer({
+    map: mapMetropole,
+    panel: document.getElementById("steps")
+  })
+  directionRenderer.setMap(mapMetropole);
   for(let offshoot of offshoots){
       displayOffshoot(offshoot, mapMetropole).catch(console.error);
   }
@@ -44,7 +51,7 @@ async function displayOffshoot(offshoot, map){
 
 function zoomOnOffshoot(offshoot, map) {
   map.setCenter(offshoot.position);
-  map.setZoom(13);
+  map.setZoom(10);
   let allSummaries = document.querySelectorAll('.offshoot-summary');
   for(let summary of allSummaries){
     summary.classList.remove('active');
@@ -52,7 +59,10 @@ function zoomOnOffshoot(offshoot, map) {
   let activeSummary = document.getElementById(`offshoot-summary-${offshoot.id}`);
   if(activeSummary){
     activeSummary.classList.add('active');
-    document.getElementById('offshoots').scrollTop = activeSummary.offsetTop;
+    let offshootsContainer = document.getElementById('offshoots');
+    window.setTimeout(() => {
+      offshootsContainer.scrollTop = activeSummary.offsetTop;
+    },1000);
   }
 
   let allDetails = document.querySelectorAll('.offshoot-details');
@@ -60,8 +70,16 @@ function zoomOnOffshoot(offshoot, map) {
     detailCard.classList.remove('shown');
   }
   let detailCard = document.getElementById(`offshoot-details-${offshoot.id}`);
-  if(detailCard)
-      detailCard.classList.add('shown');
+  if(detailCard) {
+    detailCard.classList.add('shown');
+  }
+
+
+  let stepsPanel = document.getElementById('steps');
+  if(stepsPanel)
+    stepsPanel.classList.remove('shown');
+
+  directionRenderer.setDirections({ routes: []});
 }
 
 document.addEventListener('DOMContentLoaded',() => {
@@ -125,13 +143,44 @@ document.addEventListener('DOMContentLoaded',() => {
       if(response && Array.isArray(response.rows) && response.rows.length > 0){
         let nearestRow = response.rows[0]
         for(let row of response.rows){
-          if(row.elements[0].duration.value < nearestRow.elements[0].duration.value)
+          if(row.elements[0].status === 'OK' &&
+              row.elements[0].duration &&
+              (!nearestRow.elements[0].duration ||
+              row.elements[0].duration.value < nearestRow.elements[0].duration.value))
             nearestRow = row;
         }
-        let nearestRowAddress = request.origins[response.rows.indexOf(nearestRow)];
-        let nearestOffshoot = offshoots.find(o => o.address === nearestRowAddress);
-        zoomOnOffshoot(nearestOffshoot, mapMetropole);
+        if(nearestRow && Array.isArray(nearestRow.elements) && nearestRow.elements[0].status === 'OK'){
+          let nearestRowAddress = request.origins[response.rows.indexOf(nearestRow)];
+          let nearestOffshoot = offshoots.find(o => o.address === nearestRowAddress);
+          zoomOnOffshoot(nearestOffshoot, mapMetropole);
+          //display path to target
+          try {
+            let routeResponse = await directionsService.route({
+              origin: { query : nearestOffshoot.address},
+              destination: { query: locationForDistance.value},
+              travelMode: google.maps.DirectionsTravelMode.DRIVING
+            });
+            await directionRenderer.setDirections(routeResponse);
+            let focusOnDetail = async () => {
+              let activeDetail = document.querySelector('.offshoot-details.shown')
+              if(activeDetail)
+                activeDetail.parentElement.scrollTop = activeDetail.offsetTop;
+            }
+            let displayPanel = async () => {
+              let stepsPanel = document.getElementById('steps');
+              if(stepsPanel)
+                stepsPanel.classList.add('shown');
+              window.setTimeout(async () => {
+                await focusOnDetail();
+              },1000)
+            }
+            await displayPanel();
+          }catch(error){
+            console.error(error)
+          }
+        }
       } else {
+        //TODO : show a popup
         console.error('No results from google map api. Check offshoots address or destination address');
       }
     }catch(error) {

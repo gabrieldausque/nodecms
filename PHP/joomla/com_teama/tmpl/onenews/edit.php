@@ -51,6 +51,7 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
       <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publishing', Text::_('COM_TEAMA_NEWS_EDIT_GENERAL_OPTIONS')); ?>
       <?php echo $this->getForm()->renderFieldSet('header-media'); ?>
       <?php echo $this->getForm()->renderField('body'); ?>
+        <div style="height:50px"></div>
       <?php echo $this->getForm()->renderField('tags'); ?>
       <?php echo $this->getForm()->renderField('catid'); ?>
       <?php echo HTMLHelper::_('uitab.endTab') ?>

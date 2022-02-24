@@ -27,11 +27,6 @@ $classByActions = [
 ]
 
 ?>
-
-<?php if(property_exists($this, 'actions') &&
-         ((is_array($this->actions) &&
-         count($this->actions) > 0) || $this->get('canSearch'))
-) { ?>
 <div class="modal fade" id="teama-toolbar-modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" >
         <div class="modal-content">
@@ -52,6 +47,10 @@ $classByActions = [
         </div>
     </div>
 </div>
+<?php if(property_exists($this, 'actions') &&
+         ((is_array($this->actions) &&
+         count($this->actions) > 0) || $this->get('canSearch'))
+) { ?>
 <div id="teama-component-toolbar" class="teama-toolbar">
     <?php foreach($this->actions as $action) { ?>
         <button class="btn <?php
