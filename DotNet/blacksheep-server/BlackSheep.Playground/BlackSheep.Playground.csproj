@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<OutputType>Library</OutputType>
+		<BaseOutputPath>../dist_videogame</BaseOutputPath>
+		<OutputPath>$(BaseOutputPath)\$(Configuration)\Catalog\BlackSheep.Playground</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+    <ProjectReference Include="..\BlackSheep.Core\BlackSheep.Core.csproj" />
+  </ItemGroup>
+
+</Project>

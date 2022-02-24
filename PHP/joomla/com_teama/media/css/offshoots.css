@@ -1,4 +1,46 @@
-#map {
-  height: calc(100vh - 140px);
+.map-viewport {
+  height: calc(100vh - 169px);
   width: 100%;
+  display: flex;
+  position:relative;
+}
+
+#map-metropole {
+  height: 100%;
+  width: calc(100% - 300px);
+  flex-grow: 1;
+}
+
+.offshoots-list {
+  width: 300px;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  position:relative;
+  overflow-y: auto;
+}
+
+.offshoots {
+  flex-grow:1;
+  min-height:50%;
+  overflow-y: auto;
+}
+
+.offshoot-details {
+  display: none;
+  height: 50%;
+  border-top: solid 1px grey;
+}
+
+.offshoot-details.shown {
+  display: block;
+}
+
+#steps {
+  display: none
+}
+
+#steps.shown {
+  display: block;
 }

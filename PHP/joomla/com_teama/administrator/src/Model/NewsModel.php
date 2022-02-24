@@ -57,7 +57,7 @@ class NewsModel
     }
 
     $query .= "
-    INNER JOIN #__categories cat on a.catid = cat.id 
+    LEFT OUTER JOIN #__categories cat on a.catid = cat.id 
     ";
 
     $whereClause = [];

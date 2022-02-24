@@ -4,17 +4,17 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using BlackSheep.CMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlackSheep.CMS.Components
 {
-    [ViewComponent(Name = "title")]
+    [ViewComponent(Name = "Title")]
     public class TitleViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(bool isEditMode = false)
+        public async Task<IViewComponentResult> InvokeAsync(CMSDocumentBlocMetadata component)
         {
-            var layout = isEditMode ? "TitleEdit" : "Title";
-            return await Task.Run<IViewComponentResult>(() => View(layout));
+            return await Task.Run<IViewComponentResult>(() => View("Title", component));
         }
 
     }

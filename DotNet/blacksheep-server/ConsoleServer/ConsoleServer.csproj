@@ -30,7 +30,7 @@
     <Exec Command="mongo mongodb://localhost:27018/admin -u root -p Mbhj#ksf1445Mbfgqg ./../MongodbTeamAInitScript.js" />
   </Target>
 
-  <Target Name="BuildControllers" AfterTargets="CleanCatalog">
+  <Target Name="BuildControllers" BeforeTargets="Build">
     <MSBuild Projects="..\BlackSheep.MongoDb\BlackSheep.MongoDb.csproj" Targets="Clean;Build" />
     <MSBuild Projects="..\BlackSheep.CMS\BlackSheep.CMS.csproj" Targets="Clean;Build" />
     <MSBuild Projects="..\Sample\Sample.csproj" Targets="Clean;Build" />

@@ -32,6 +32,11 @@ class Com_TeamAInstallerScript
 	{
 	  if(!$this->createTeamAGroups())
 	    return false;
+
+	  $this->createTeamACategories();
+
+	  $this->setRules();
+
 	  return true;
 	}
 
@@ -39,6 +44,55 @@ class Com_TeamAInstallerScript
 	{
 	  //TODO : remove existing groups !
 
+		return true;
+	}
+
+	public function update($parent) : bool
+	{
+		if(!$this->createTeamAGroups()){
+			return false;
+		}
+
+		$this->createTeamACategories();
+
+		$this->updateCategories();
+
+		$this->setRules();
+
+		return true;
+	}
+
+	public function preflight($type, $parent) : bool
+	{
+		if ($type !== 'uninstall') {
+			if (!empty($this->minimumPHPVersion) && version_compare(PHP_VERSION, $this->minimumPHPVersion, '<'))
+			{
+				Log::add(
+					Text::sprintf('JLIB_INSTALLER_MINIMUM_PHP', $this->minimumPHPVersion),
+					Log::WARNING,
+					'jerror'
+				);
+
+				return false;
+			}
+
+			if (!empty($this->minimumJoomlaVersion) && version_compare(JVERSION, $this->minimumJoomlaVersion, '<'))
+			{
+				Log::add(
+					Text::sprintf('JLIB_INSTALLER_MINIMUM_JOOMLA', $this->minimumJoomlaVersion),
+					Log::WARNING,
+					'jerror'
+				);
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function postflight($type, $parent) : bool
+	{
 		return true;
 	}
 
@@ -70,7 +124,7 @@ class Com_TeamAInstallerScript
     return $registered;
   }
 
-  public function createTeamAGroups() : bool {
+    public function createTeamAGroups() : bool {
     $groupsToBeCreated = [
       'TeamA_Members',
       'TeamA_Clients',
@@ -118,59 +172,7 @@ class Com_TeamAInstallerScript
     return true;
   }
 
-	public function update($parent) : bool
-	{
-	  if(!$this->createTeamAGroups()){
-	    return false;
-    }
-
-	$this->createTeamACategories();
-
-	$this->setRules();
-
-    return true;
-	}
-
-	public function preflight($type, $parent) : bool
-	{
-		if ($type !== 'uninstall') {
-			if (!empty($this->minimumPHPVersion) && version_compare(PHP_VERSION, $this->minimumPHPVersion, '<'))
-			{
-				Log::add(
-					Text::sprintf('JLIB_INSTALLER_MINIMUM_PHP', $this->minimumPHPVersion),
-						Log::WARNING,
-						'jerror'
-				);
-
-				return false;
-			}
-
-			if (!empty($this->minimumJoomlaVersion) && version_compare(JVERSION, $this->minimumJoomlaVersion, '<'))
-			{
-				Log::add(
-					Text::sprintf('JLIB_INSTALLER_MINIMUM_JOOMLA', $this->minimumJoomlaVersion),
-					Log::WARNING,
-					'jerror'
-				);
-
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	public function postflight($type, $parent) : bool
-	{
-		return true;
-	}
-
-  /**
-   *
-   *
-   * @since version
-   */
-  public function setRules(): void {
+    public function setRules(): void {
     $teamAMembers = $this->foundGroupByName('TeamA_Members');
     $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
     $teamaRHGroup = $this->foundGroupByName('TeamA_HumanResources');
@@ -183,6 +185,10 @@ class Com_TeamAInstallerScript
 	    $teamaRHGroup->id =>1
       ],
       'core.edit' => [
+      	$teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1
+      ],
+      'core.edit.state' => [
       	$teamaAdminGroup->id => 1,
         $teamaRHGroup->id =>1
       ],
@@ -217,6 +223,8 @@ class Com_TeamAInstallerScript
     $rules['core.create'][$teamaRHGroup->id] = 1;
     $rules['core.edit'][$teamaAdminGroup->id] = 1;
     $rules['core.edit'][$teamaRHGroup->id] = 1;
+    $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
+    $rules['core.edit.state'][$teamaRHGroup->id] = 1;
     $rules['news.create'][$teamaAdminGroup->id] = 1;
     $rules['news.create'][$teamaRHGroup->id] = 1;
     $rules['news.edit'][$teamaAdminGroup->id] = 1;
@@ -235,6 +243,8 @@ class Com_TeamAInstallerScript
 	  $rules['core.create'][$teamaRHGroup->id] = 1;
 	  $rules['core.edit'][$teamaAdminGroup->id] = 1;
 	  $rules['core.edit'][$teamaRHGroup->id] = 1;
+	  $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
+	  $rules['core.edit.state'][$teamaRHGroup->id] = 1;
 	  $rules['core.delete'][$teamaAdminGroup->id] = 1;
 	  $rules['core.delete'][$teamaRHGroup->id] = 1;
 	  $rules['core.manage'][$teamaAdminGroup->id] = 1;
@@ -243,7 +253,7 @@ class Com_TeamAInstallerScript
 	  $asset->save($media_asset);
   }
 
-  public function createTeamACategories(){
+    public function createTeamACategories(){
 	$categories = [
 		[
 			'title'=>'Non Catégorisé',
@@ -258,16 +268,6 @@ class Com_TeamAInstallerScript
 	foreach($categories as $category){
 		$this->createCategory($category);
 	}
-
-	$newsModel = new OnenewsModel();
-	$db = $newsModel->getDbo();
-	$query = "
-	UPDATE #__teama_news
-	SET catid = (SELECT id FROM #__categories WHERE extension = 'com_teama' AND title = 'Non Catégorisé') 
-	WHERE catid = 0;
-";
-	$db->setQuery($query);
-	$db->execute();
   }
 
   public function createCategory($category)
@@ -295,5 +295,16 @@ class Com_TeamAInstallerScript
 	  $category_data['access'] = 2;
 	  $categoryModel->save($category_data);
 	}
+  }
+
+  public function updateCategories() {
+	  $db = Factory::getDbo();
+	  $query = "
+	UPDATE #__teama_news
+	SET catid = (SELECT id FROM #__categories WHERE extension = 'com_teama' AND title = 'Non Catégorisé') 
+	WHERE catid = 0 OR catid NOT IN (SELECT id FROM #__categories WHERE extension = 'com_teama');
+";
+	  $db->setQuery($query);
+	  $db->execute();
   }
 }

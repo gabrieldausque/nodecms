@@ -29,7 +29,12 @@ $document->addStyleSheet('/media/com_teama/css/allnews.css');
     <div class="teama-section-news">
 		<?php foreach($this->news as  $i => $oneNews) { ?>
             <article id="teama-news-<?php echo $oneNews->id ?>" class="card teama-news-card" data-newslink="index.php?option=com_teama&task=onenews.display&view=onenews&id=<?php echo $oneNews->id ?>">
-				<?php if(isset($oneNews->header_media->image) &&
+	            <?php
+	            if($this->isRhNews($oneNews)){
+	            ?><div class="badge bg-success">RH</div>
+                <?php }
+
+	            if(isset($oneNews->header_media->image) &&
 				         $oneNews->header_media->image != "") { ?>
                     <div class="card-img-top"
                          style="background-image: url('<?php echo $oneNews->header_media->image ?>');

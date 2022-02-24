@@ -64,7 +64,7 @@ function initData() {
             "Headers": {
                 "Content": [
                     {
-                        "BlocType": "title",
+                        "BlocType": "Title",
                         "Properties": {
                             "Text": "The main title"
                         }
