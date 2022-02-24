@@ -61,7 +61,7 @@ subjectAltName = DNS:frontend.myhost.domain , DNS:backend.myhost.domain , IP:127
 
 sudo openssl req -new -key new.cert.key -out new.cert.csr -config cert-request.conf
 
-create a file for alternative name : 
+create a file for alternative name altname.ext: 
 subjectAltName = DNS:*.myhost.domain, IP:127.0.0.1
 
 create the certificate 
@@ -79,6 +79,8 @@ sudo cp server.crt /etc/ssl/certs
 
 copy new.cert.key to /etc/ssl/private server.key
 sudo cp new.cert.key /etc/ssl/private/server.key
+
+### check apache listening to 443
 
 ### create apache conf file
 
