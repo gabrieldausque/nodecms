@@ -7,6 +7,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormFactoryInterface;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Component\Contact\Site\Model\CategoryModel;
@@ -19,6 +20,8 @@ class OffshootModel
 	public function __construct( $config = array(), MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null ) {
 		parent::__construct( 'com_teama.offshoot',
 			'offshoot', $config, $factory, $formFactory );
+		$this->pluralTypeName = 'offshoots';
+		$this->typeName = 'offshoot';
 	}
 
 	protected function getUnauthorizedEntity() {

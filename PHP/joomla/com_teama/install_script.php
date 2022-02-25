@@ -37,6 +37,10 @@ class Com_TeamAInstallerScript
 
 	  $this->setRules();
 
+	  $this->updateViewLevels();
+
+	  $this->updateModulesMinimumAccess();
+
 	  return true;
 	}
 
@@ -58,6 +62,10 @@ class Com_TeamAInstallerScript
 		$this->updateCategories();
 
 		$this->setRules();
+
+		$this->updateViewLevels();
+
+		$this->updateModulesMinimumAccess();
 
 		return true;
 	}
@@ -180,6 +188,10 @@ class Com_TeamAInstallerScript
     $asset           = Table::getInstance('asset');
     $asset->loadByName('com_teama');
     $rules = [
+      'core.manage' => [
+      	$teamaAdminGroup->id => 1,
+	    $teamaRHGroup->id =>1
+      ],
       'core.create' => [
       	$teamaAdminGroup->id => 1,
 	    $teamaRHGroup->id =>1
@@ -206,7 +218,22 @@ class Com_TeamAInstallerScript
       ],
       'news.read'   => [
       	$teamAMembers->id => 1
-      ]
+      ],
+      'offshoots.create' => [
+	      $teamaAdminGroup->id => 1,
+	      $teamaRHGroup->id =>1
+      ],
+      'offshoots.edit'   => [
+	      $teamaAdminGroup->id => 1,
+	      $teamaRHGroup->id =>1
+      ],
+      'offshoots.delete' => [
+	      $teamaAdminGroup->id => 1,
+	      $teamaRHGroup->id =>1
+      ],
+      'offshoots.read'   => [
+	      $teamAMembers->id => 1
+      ]  
     ];
     $teamA_asset = [
       'rules' => json_encode($rules),
@@ -219,6 +246,8 @@ class Com_TeamAInstallerScript
       $rules = json_decode($teamA_asset['rules'], true);
     }
 
+    $rules['core.manage'][$teamaAdminGroup->id] = 1;
+    $rules['core.manage'][$teamaRHGroup->id] = 1;
     $rules['core.create'][$teamaAdminGroup->id] = 1;
     $rules['core.create'][$teamaRHGroup->id] = 1;
     $rules['core.edit'][$teamaAdminGroup->id] = 1;
@@ -232,6 +261,14 @@ class Com_TeamAInstallerScript
     $rules['news.delete'][$teamaAdminGroup->id] = 1;
     $rules['news.delete'][$teamaRHGroup->id] = 1;
     $rules['news.read'][$teamAMembers->id] = 1;
+
+    $rules['offshoots.create'][$teamaAdminGroup->id] = 1;
+    $rules['offshoots.create'][$teamaRHGroup->id] = 1;
+    $rules['offshoots.edit'][$teamaAdminGroup->id] = 1;
+    $rules['offshoots.edit'][$teamaRHGroup->id] = 1;
+    $rules['offshoots.delete'][$teamaAdminGroup->id] = 1;
+    $rules['offshoots.delete'][$teamaRHGroup->id] = 1;
+    $rules['offshoots.read'][$teamAMembers->id] = 1;
     $teamA_asset['rules'] = json_encode($rules);
 
     $asset->save($teamA_asset);
@@ -298,12 +335,47 @@ class Com_TeamAInstallerScript
   }
 
   public function updateCategories() {
-	  $db = Factory::getDbo();
+	  $db = Factory::getContainer()->get('DatabaseDriver');
 	  $query = "
 	UPDATE #__teama_news
 	SET catid = (SELECT id FROM #__categories WHERE extension = 'com_teama' AND title = 'Non Catégorisé') 
 	WHERE catid = 0 OR catid NOT IN (SELECT id FROM #__categories WHERE extension = 'com_teama');
 ";
+	  $db->setQuery($query);
+	  $db->execute();
+  }
+
+  public function updateViewLevels() {
+	  $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
+	  $teamaRHGroup = $this->foundGroupByName('TeamA_HumanResources');
+	  $db = Factory::getContainer()->get('DatabaseDriver');
+      $query = "SELECT * from #__viewlevels WHERE title like 'Super%' ";
+      $db->setQuery($query);
+      $superUserAccessLevel =  $db->loadObject();
+      $rules = json_decode($superUserAccessLevel->rules);
+      $rulesModified = false;
+      if(!in_array($teamaAdminGroup->id, $rules)){
+      	array_push($rules, $teamaAdminGroup->id);
+      	$rulesModified = true;
+      }
+      if(!in_array($teamaRHGroup->id, $rules)){
+      	array_push($rules, $teamaRHGroup->id);
+      	$rulesModified = true;
+      }
+      if($rulesModified){
+      	$rulesAsString = json_encode($rules);
+      	$updateQuery = "UPDATE #__viewlevels SET rules='" . $rulesAsString . "' WHERE id=" . $superUserAccessLevel->id;
+      	$db->setQuery($updateQuery);
+      	$db->execute();
+      }
+  }
+
+  public function updateModulesMinimumAccess() {
+	  $db = Factory::getContainer()->get('DatabaseDriver');
+	  $query = "SELECT * from #__viewlevels WHERE title like 'Super%' ";
+	  $db->setQuery($query);
+	  $superUserAccessLevel =  $db->loadObject();
+	  $query = "UPDATE #__modules SET access=". $superUserAccessLevel->id . " WHERE module='mod_toolbar' and position='toolbar'";
 	  $db->setQuery($query);
 	  $db->execute();
   }
