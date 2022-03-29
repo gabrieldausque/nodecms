@@ -73,6 +73,7 @@ if ($this->params->get('logoFile'))
             <header class="teama-navbar text-white">
                 <nav id="teama-header-toolbar" class=" d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 			        <?php if (!$isAuthenticate) { ?>
+                        <jdoc:include type="modules" name="publicnavbar"/>
                         <button id="teama-login-modal-button" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
 			        <?php } else { ?>
                         <jdoc:include type="modules" name="header"/>
