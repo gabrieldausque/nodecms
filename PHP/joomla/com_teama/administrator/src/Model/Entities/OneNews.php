@@ -7,7 +7,7 @@
  * @license     A "Slug" license name e.g. GPL2
  */
 
-namespace TheLoneBlackSheep\Component\TeamA\Site\Model\Entities;
+namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model\Entities;
 
 \defined('_JEXEC') or die;
 

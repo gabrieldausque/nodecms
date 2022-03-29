@@ -6,9 +6,9 @@ namespace TheLoneBlackSheep\Component\TeamA\Site\Model;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Pagination\Pagination;
-use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Model\Entities\Actions;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Model\NewsModel as BaseNewsDatabaseModel;
-use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\OneNews;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Model\Entities\OneNews;
 
 class NewsModel
   extends BaseNewsDatabaseModel{

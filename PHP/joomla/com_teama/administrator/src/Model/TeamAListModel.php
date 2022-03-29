@@ -5,6 +5,7 @@ namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\Pagination\Pagination;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Model\Entities\Actions;
 
 abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 	protected Pagination $pagination;

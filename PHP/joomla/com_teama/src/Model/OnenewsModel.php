@@ -17,8 +17,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\User\UserHelper;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Helpers\UserHelpers;
-use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\OneNews;
-use TheLoneBlackSheep\Component\TeamA\Site\Model\Entities\Actions;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Model\Entities\OneNews;
+use TheLoneBlackSheep\Component\TeamA\Administrator\Model\Entities\Actions;
 use TheLoneBlackSheep\Component\TeamA\Administrator\Model\OnenewsModel as BaseOneNewsModel;
 
 class OnenewsModel
