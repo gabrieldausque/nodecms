@@ -37,7 +37,7 @@
         <field name="content"
                type="editor"
                filter="JComponentHelper::filterText"
-               label="COM_TEAMA_FIELD_BODY_LABEL"
+               label="COM_TEAMA_FIELD_HELP_REQUEST_SUMMARY_LABEL"
                buttons="true"
         />
 
@@ -47,5 +47,13 @@
                default="NOW"
                singleheader="true"
         />
+
+        <field name="address"
+               type="textarea"
+               label="COM_TEAMA_FIELD_ADDRESS_LABEL"
+               rows="5"
+        />
+
+
     </fieldset>
 </form>
