@@ -14,7 +14,7 @@ class OffshootTable
 	extends Table {
 
 	public function __construct(DatabaseDriver $db) {
-		$this->typeAlias = 'com_teama.offshore';
+		$this->typeAlias = 'com_teama.offshoot';
 		parent::__construct( '#__teama_offshoots',
 			'id',
 			$db);

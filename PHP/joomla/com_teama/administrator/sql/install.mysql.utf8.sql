@@ -50,7 +50,7 @@ create table if not exists `__teama_help_requests_weapons`(
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(1000) NOT NULL,
   primary key(`id`),
-  unique key('name')
+  unique key( `name`)
 );
 
 create table if not exists `__teama_help_requests_objectives`(
@@ -65,14 +65,14 @@ create table if not exists `__teama_help_requests_objectives`(
     size varchar(25) NULL,
     dangerousness varchar(255) NULL,
     comment text null,
-    primary key('id')
+    primary key(`id`)
 );
 
 create table if not exists `#__teama_help_request_types`(
    id int(11) NOT NULL AUTO_INCREMENT,
    name varchar(100) NOT NULL,
-   primary key (id),
-   unique key (name)
+   primary key (`id`),
+   unique key (`name`)
 );
 
 create table if not exists `#__teama_help_requests`(
@@ -85,7 +85,7 @@ create table if not exists `#__teama_help_requests`(
    address text NOT NULL,
    difficulties text NOT NULL,
    request_type int(11) NOT NULL,
-   primary key('id'),
+   primary key(`id`),
    CONSTRAINT `fk_request_type`
        FOREIGN KEY (request_type) REFERENCES `#__teama_help_request_types` (id)
            ON DELETE CASCADE
@@ -119,7 +119,7 @@ create table if not exists `#__teama_help_requests_weapons`
             ON DELETE CASCADE
             ON UPDATE RESTRICT,
     CONSTRAINT `fk_req_wea_weapon`
-        FOREIGN KEY (weapon_id) REFERENCES `#__teama_help_requests` (id)
+        FOREIGN KEY (weapon_id) REFERENCES `#__teama_help_requests_weapons` (id)
             ON DELETE CASCADE
             ON UPDATE RESTRICT
 )
