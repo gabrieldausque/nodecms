@@ -13,8 +13,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 \defined('_JEXEC') or die;
 
-
 $app = Factory::getApplication();
+$user = $app->getIdentity();
 $document = $app->getDocument();
 
 JHtml::_('script', 'com_teama/default.js', ['version' => 'auto', 'relative' => true]);
@@ -24,7 +24,12 @@ $classByActions = [
     'edit' => 'btn-success',
     'delete' => 'btn-danger',
     'create' => 'btn-success'
-]
+];
+
+$user = $app->getIdentity();
+$isAuthenticate = !$user->guest;
+
+if($isAuthenticate) {
 
 ?>
 <div class="modal fade" id="teama-toolbar-modal" tabindex="-1">
@@ -79,4 +84,6 @@ $classByActions = [
     <?php } ?>
 </div>
 
-<?php } ?>
+<?php }
+}
+?>

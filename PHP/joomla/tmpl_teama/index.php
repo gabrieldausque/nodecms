@@ -9,8 +9,12 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
 
 /** @var Joomla\CMS\Document\HtmlDocument $this */
+$container = Factory::getContainer();
+/** @var Joomla\CMS\Application\SiteApplication $app */
+$app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
+$isHomePage = '/' . $app->getMenu()->getDefault()->link == $_SERVER["REQUEST_URI"] ||
+            $_SERVER["REQUEST_URI"] == "/";
 
-$app = Factory::getApplication();
 $webAssetManager = $this->getWebAssetManager();
 $templatePath = 'templates/' . $this->template;
 $webAssetManager->registerAndUseStyle('fontawesome', 'media/system/css/joomla-fontawesome.min.css');
@@ -105,16 +109,23 @@ if ($this->params->get('logoFile'))
     </div>
       <?php } else  {  ?>
           <div class="teama-landingpage-main d-flex flex-column align-items-center justify-content-around">
-              <h4 class="teama-tagline-landing-page"><?php echo $this->params->get('siteDescription') ?></h4>
               <jdoc:include type="message" />
-              <div class="teama-logo-landing-page"
-                   style="background-image: url('<?php echo $logoUrl ?>')" >
-                  <div id="teama-top-border"></div>
-                  <div id="teama-right-border"></div>
-                  <div id="teama-bottom-border"></div>
-                  <div id="teama-left-border"></div>
-              </div>
-              <h1 class="teama-title-landing-page"><?php echo $siteName ?></h1>
+              <?php if($isHomePage) {
+                  //TODO : based on query parameter, got the main page or display the component ?>
+                  <h4 class="teama-tagline-landing-page"><?php echo $this->params->get('siteDescription') ?></h4>
+                  <div class="teama-logo-landing-page"
+                       style="background-image: url('<?php echo $logoUrl ?>')" >
+                      <div id="teama-top-border"></div>
+                      <div id="teama-right-border"></div>
+                      <div id="teama-bottom-border"></div>
+                      <div id="teama-left-border"></div>
+                  </div>
+                  <h1 class="teama-title-landing-page"><?php echo $siteName ?></h1>
+              <?php } else {
+                  ?>
+                  <jdoc:include type="component"/>
+              <?php
+              }?>
           </div>
           <div class="modal fade" id="login-modal" tabindex="-1">
               <div class="modal-dialog modal-dialog-centered" >

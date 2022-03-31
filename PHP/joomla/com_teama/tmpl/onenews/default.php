@@ -26,6 +26,10 @@ if(isset($theNews->last_modifier))
   $modifier = $userFactory->loadUserById($theNews->last_modifier);
 $document->addStyleSheet('/media/com_teama/css/onenews.css');
 
+$user = $app->getIdentity();
+$isAuthenticate = !$user->guest;
+
+if($isAuthenticate) {
 ?>
 
 <article class="teama-onenews">
@@ -49,3 +53,6 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
           <p><b>Tags : </b><?php echo $theNews->tags ?></p>
     </footer>
 </article>
+
+<?php
+}

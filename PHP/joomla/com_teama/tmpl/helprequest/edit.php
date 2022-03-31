@@ -9,5 +9,4 @@
 
 ?>
 
-
-The default frontend view for help request
+This is for edition of request for non authenticated !

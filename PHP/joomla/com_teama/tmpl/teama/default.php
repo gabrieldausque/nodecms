@@ -13,6 +13,10 @@ include __DIR__ . '/../headers/toolbar.php';
 
 JHtml::_('script', 'com_teama/home.js', ['version' => 'auto', 'relative' => true]);
 
+$user = $app->getIdentity();
+$isAuthenticate = !$user->guest;
+
+if($isAuthenticate) {
 ?>
 
 <section id="teama-news" class="teama-section">
@@ -54,4 +58,5 @@ JHtml::_('script', 'com_teama/home.js', ['version' => 'auto', 'relative' => true
     </div>
 </section>
 
-<?php //TODO : add services - members
+<?php
+}

@@ -3,4 +3,15 @@
     <layout title="COM_TEAMA_HELP_REQUEST_VIEW_DEFAULT_TITLE">
         <message>COM_TEAMA_HELP_REQUEST_VIEW_DEFAULT_DESC</message>
     </layout>
+    <fields name="request">
+        <fieldset name="request">
+            <field
+                    name="controller"
+                    type="text"
+                    label="controller"
+                    default="helprequest"
+                    readonly="true"
+            />
+        </fieldset>
+    </fields>
 </metadata>

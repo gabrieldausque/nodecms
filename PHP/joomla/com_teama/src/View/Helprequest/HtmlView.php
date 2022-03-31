@@ -7,7 +7,7 @@
  * @license     A "Slug" license name e.g. GPL2
  */
 
-namespace TheLoneBlackSheep\Component\TeamA\View\Helprequest;
+namespace TheLoneBlackSheep\Component\TeamA\Site\View\Helprequest;
 
 class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
 {

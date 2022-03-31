@@ -19,7 +19,10 @@ $document = $app->getDocument();
 
 JHtml::_('script', 'com_teama/allnews.js', ['version' => 'auto', 'relative' => true]);
 $document->addStyleSheet('/media/com_teama/css/allnews.css');
+$user = $app->getIdentity();
+$isAuthenticate = !$user->guest;
 
+if($isAuthenticate) {
 ?>
 <div class="teama-section">
     <div class="teama-allnews-title text-white">
@@ -90,3 +93,5 @@ $document->addStyleSheet('/media/com_teama/css/allnews.css');
         <p id="teama-thenews-summary" class="card-text"></p>
     </div>
 </article>
+<?php
+}

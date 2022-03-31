@@ -24,7 +24,9 @@ $offshootsOptions = $document->getScriptOptions('offshoots');
 
 $offshootsOptions['offshoots'] = $offshoots;
 $document->addScriptOptions('offshoots', $offshootsOptions);
-
+$user = $app->getIdentity();
+$isAuthenticate = !$user->guest;
+if($isAuthenticate) {
 ?>
 <div class="teama-section">
     <script type="application/javascript">
@@ -75,3 +77,5 @@ $document->addScriptOptions('offshoots', $offshootsOptions);
         </div>
     </div>
 </div>
+<?php
+}

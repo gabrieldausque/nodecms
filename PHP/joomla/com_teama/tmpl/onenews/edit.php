@@ -28,6 +28,10 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
 
 $document->addStyleSheet('/media/com_teama/css/onenews.css');
 
+$user = $app->getIdentity();
+$isAuthenticate = !$user->guest;
+
+if($isAuthenticate) {
 ?>
 <div class="teama-section-title text-white">
     <div class="teama-section-title-text">
@@ -66,3 +70,5 @@ $document->addStyleSheet('/media/com_teama/css/onenews.css');
     </div>
 </form>
 
+<?php
+}
