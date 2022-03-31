@@ -46,8 +46,6 @@ class Com_TeamAInstallerScript
 
 	public function uninstall($parent) : bool
 	{
-	  //TODO : remove existing groups !
-
 		return true;
 	}
 
@@ -184,6 +182,7 @@ class Com_TeamAInstallerScript
     $teamAMembers = $this->foundGroupByName('TeamA_Members');
     $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
     $teamaRHGroup = $this->foundGroupByName('TeamA_HumanResources');
+    $publicGroup = $this->foundGroupByName('Public');
 
     $asset           = Table::getInstance('asset');
     $asset->loadByName('com_teama');
@@ -217,6 +216,8 @@ class Com_TeamAInstallerScript
         $teamaRHGroup->id =>1
       ],
       'news.read'   => [
+        $teamaAdminGroup->id => 1,
+        $teamaRHGroup->id =>1,
       	$teamAMembers->id => 1
       ],
       'offshoots.create' => [
@@ -232,9 +233,30 @@ class Com_TeamAInstallerScript
 	      $teamaRHGroup->id =>1
       ],
       'offshoots.read'   => [
-	      $teamAMembers->id => 1
-      ]  
+          $teamaAdminGroup->id => 1,
+          $teamaRHGroup->id =>1,
+          $teamAMembers->id => 1
+      ],
+        'helprequeststypes.create' => [
+            $teamaAdminGroup->id => 1,
+            $teamaRHGroup->id =>1
+        ],
+        'helprequeststypes.edit'   => [
+            $teamaAdminGroup->id => 1,
+            $teamaRHGroup->id =>1
+        ],
+        'helprequeststypes.delete' => [
+            $teamaAdminGroup->id => 1,
+            $teamaRHGroup->id =>1
+        ],
+        'helprequeststypes.read'   => [
+            $teamAMembers->id => 1,
+            $teamaAdminGroup->id => 1,
+            $teamaRHGroup->id =>1,
+            $publicGroup->id => 1
+        ]
     ];
+
     $teamA_asset = [
       'rules' => json_encode($rules),
       'name'  => 'com_teama',
@@ -261,31 +283,47 @@ class Com_TeamAInstallerScript
     $rules['news.delete'][$teamaAdminGroup->id] = 1;
     $rules['news.delete'][$teamaRHGroup->id] = 1;
     $rules['news.read'][$teamAMembers->id] = 1;
-
+    $rules['news.read'][$teamaAdminGroup->id] = 1;
+    $rules['news.read'][$teamaRHGroup->id] = 1;
     $rules['offshoots.create'][$teamaAdminGroup->id] = 1;
     $rules['offshoots.create'][$teamaRHGroup->id] = 1;
     $rules['offshoots.edit'][$teamaAdminGroup->id] = 1;
     $rules['offshoots.edit'][$teamaRHGroup->id] = 1;
+    $rules['offshoots.read'][$teamaAdminGroup->id] = 1;
+    $rules['offshoots.read'][$teamaRHGroup->id] = 1;
+    $rules['offshoots.read'][$teamAMembers->id] = 1;
     $rules['offshoots.delete'][$teamaAdminGroup->id] = 1;
     $rules['offshoots.delete'][$teamaRHGroup->id] = 1;
-    $rules['offshoots.read'][$teamAMembers->id] = 1;
+    $rules['helprequeststypes.create'][$teamaAdminGroup->id] = 1;
+    $rules['helprequeststypes.create'][$teamaRHGroup->id] = 1;
+    $rules['helprequeststypes.edit'][$teamaAdminGroup->id] = 1;
+    $rules['helprequeststypes.edit'][$teamaRHGroup->id] = 1;
+    $rules['helprequeststypes.read'][$teamaAdminGroup->id] = 1;
+    $rules['helprequeststypes.read'][$teamaRHGroup->id] = 1;
+    $rules['helprequeststypes.read'][$teamAMembers->id] = 1;
+    $rules['helprequeststypes.read'][$publicGroup->id] = 1;
+    $rules['helprequeststypes.delete'][$teamaAdminGroup->id] = 1;
+    $rules['helprequeststypes.delete'][$teamaRHGroup->id] = 1;
     $teamA_asset['rules'] = json_encode($rules);
 
     $asset->save($teamA_asset);
 
     $asset->loadByName('com_media');
     $media_asset = $asset->getProperties();
-	  $rules = json_decode($media_asset['rules'], true);
-	  $rules['core.create'][$teamaAdminGroup->id] = 1;
-	  $rules['core.create'][$teamaRHGroup->id] = 1;
-	  $rules['core.edit'][$teamaAdminGroup->id] = 1;
-	  $rules['core.edit'][$teamaRHGroup->id] = 1;
-	  $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
-	  $rules['core.edit.state'][$teamaRHGroup->id] = 1;
-	  $rules['core.delete'][$teamaAdminGroup->id] = 1;
-	  $rules['core.delete'][$teamaRHGroup->id] = 1;
-	  $rules['core.manage'][$teamaAdminGroup->id] = 1;
-	  $rules['core.manage'][$teamaRHGroup->id] = 1;
+      $rules = json_decode($media_asset['rules'], true);
+      $rules['core.create'][$teamaAdminGroup->id] = 1;
+      $rules['core.create'][$teamaRHGroup->id] = 1;
+      $rules['core.create'][$publicGroup->id] = 1;
+      $rules['core.edit'][$teamaAdminGroup->id] = 1;
+      $rules['core.edit'][$teamaRHGroup->id] = 1;
+      $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
+      $rules['core.edit.state'][$teamaRHGroup->id] = 1;
+      $rules['core.delete'][$teamaAdminGroup->id] = 1;
+      $rules['core.delete'][$teamaRHGroup->id] = 1;
+      $rules['core.manage'][$teamaAdminGroup->id] = 1;
+      $rules['core.manage'][$teamaRHGroup->id] = 1;
+      $rules['core.manage'][$publicGroup->id] = 1;
+
     $media_asset['rules'] = json_encode($rules);
 	  $asset->save($media_asset);
   }

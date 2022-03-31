@@ -16,13 +16,13 @@ class HtmlView
 			'COM_TEAMA_CREATE_HELP_REQUEST_LABEL',
 			'COM_TEAMA_EDIT_HELP_REQUEST_LABEL',
 			$config );
-		$this->addHeaderField('creation_date');
+        $this->addHeaderField('creation_date');
+        $this->addHeaderField('request_datetime');
 		$this->addHeaderField('requester_service');
 		$this->addHeaderField('requester');
-		$this->addBodyField(new BodyField('request_datetime'));
-		$this->addBodyField(new BodyField('content'));
+		$this->addBodyField(new BodyField('request_type'));
 		$this->addBodyField(new BodyField('address'));
-		$this->addBodyField(new BodyField('difficulties'));
+		$this->addBodyField(new BodyField('content'));
 	}
 
 }

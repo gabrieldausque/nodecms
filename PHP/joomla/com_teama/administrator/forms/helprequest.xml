@@ -25,15 +25,6 @@
                maxlength="1000"
         />
 
-        <field
-                name="request_type"
-                type="sql"
-                label="COM_TEAMA_FIELD_HELP_REQUEST_TYPE_LABEL"
-                query="SELECT DISTINCT id, name FROM #__teama_help_request_type"
-                key_field="id"
-                value_field="name"
-                onchange="this.form.submit();"/>
-
         <field name="content"
                type="editor"
                filter="JComponentHelper::filterText"
@@ -54,6 +45,14 @@
                rows="5"
         />
 
+        <field name="request_type"
+               type="sql"
+               default=""
+               key_field="id"
+               value_field="name"
+               query="SELECT id, name from #__teama_help_request_types ORDER BY id DESC"
+               required="false">
+        </field>
 
     </fieldset>
 </form>

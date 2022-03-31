@@ -6,6 +6,11 @@
                label="COM_TEAMA_GOOGLEMAP_API_KEY_LABEL"
                description="COM_TEAMA_GOOGLEMAP_API_KEY_DESC"
         />
+        <field name="help_request_activated"
+               type="checkbox"
+               label="COM_TEAMA_HELP_REQUEST_ACTIVATED"
+               description="COM_TEAMA_HELP_REQUEST_ACTIVATED"
+        />
     </fieldset>
     <fieldset name="permissions"
               label="JCONFIG_PERMISSIONS_LABEL"

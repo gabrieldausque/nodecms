@@ -18,7 +18,6 @@ $app = Factory::getApplication();
 $document = $app->getDocument();
 $config = $this->get('State')->get('params');
 $offshoots = $this->items;
-//TODO : set the api key in a configuration from Joomla
 JHtml::_('script', 'com_teama/offshoots.js', ['version' => 'auto', 'relative' => true]);
 $document->addStyleSheet('/media/com_teama/css/offshoots.css');
 $offshootsOptions = $document->getScriptOptions('offshoots');

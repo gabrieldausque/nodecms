@@ -36,6 +36,7 @@
             <menu link="option=com_categories&amp;extension=com_teama">COM_TEAMA_CATEGORIES_LABEL</menu>
             <menu link="option=com_teama&amp;task=news.display">COM_TEAMA_NEWS_LABEL</menu>
             <menu link="option=com_teama&amp;task=offshoots.display">COM_TEAMA_OFFSHOOT_LABEL</menu>
+            <menu link="option=com_teama&amp;task=helprequeststypes.display">COM_TEAMA_HELP_REQUEST_TYPES_LABEL</menu>
             <menu link="option=com_teama&amp;task=helprequests.display">COM_TEAMA_HELP_REQUESTS_LABEL</menu>
         </submenu>
         <files folder="administrator">

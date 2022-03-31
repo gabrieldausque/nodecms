@@ -19,4 +19,21 @@ class HelprequestsModel extends TeamAListModel {
     parent::__construct('filter_helprequests', '#__teama_help_requests', $config, $factory);
   }
 
+  protected function getListQuery()
+  {
+	  $dbo = $this->getDbo();
+
+	  $query = $dbo->getQuery(true);
+	  $query->select('*');
+	  $query->from($this->tableName);
+	  $query->order(["id DESC"]);
+
+	  return $query;
+  }
+
+  public function getCanSearch()
+  {
+	  return false;
+  }
+
 }

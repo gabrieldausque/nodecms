@@ -22,7 +22,13 @@ class HelprequestModel
 		$this->typeName = 'helprequest';
 	}
 
-	protected function getUnauthorizedEntity() {
+    public function getItem($pk = null)
+    {
+        $item = parent::getItem($pk);
+        return $item;
+    }
+
+    protected function getUnauthorizedEntity() {
 		return [
 			'id' => 0,
 			'creation_date' => new DateTime(),

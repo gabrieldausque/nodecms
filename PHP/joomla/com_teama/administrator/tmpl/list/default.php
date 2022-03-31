@@ -36,6 +36,9 @@ JHtml::_('script', 'com_teama/' . $this->item_type . '_admin.js', ['version' => 
 							<th scope="col" style="width:1%" class="text-center d-none d-md-table-cell">
 								<?php echo Text::_('COM_TEAMA_TABLE_HEAD_ID') ?>
 							</th>
+                            <th scope="col" style="width:1%" class="text-center d-none d-md-table-cell">
+								<?php echo Text::_('COM_TEAMA_TABLE_HEAD_EDIT') ?>
+                            </th>
 							<?php foreach($this->fields_to_display as $field) { ?>
 								<th scope="col">
 									<?php echo Text::_($field->label)?>

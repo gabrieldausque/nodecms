@@ -2,6 +2,7 @@
 
 namespace TheLoneBlackSheep\Component\TeamA\Administrator\Model;
 
+use FG\ASN1\Exception\NotImplementedException;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\Pagination\Pagination;
@@ -90,6 +91,11 @@ abstract class TeamAListModel extends \Joomla\CMS\MVC\Model\ListModel {
 
 	public function getCanSearch(){
 		return true;
+	}
+
+	protected function getListQuery()
+	{
+		throw new NotImplementedException("getListQuery is not implemented");
 	}
 
 }

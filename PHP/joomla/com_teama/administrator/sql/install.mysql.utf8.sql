@@ -83,7 +83,7 @@ create table if not exists `#__teama_help_requests`(
    content longtext NOT NULL,
    request_datetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
    address text NOT NULL,
-   request_type int(11) NOT NULL,
+   request_type int(11) NULL,
    primary key(`id`),
    CONSTRAINT `fk_request_type`
        FOREIGN KEY (request_type) REFERENCES `#__teama_help_request_types` (id)

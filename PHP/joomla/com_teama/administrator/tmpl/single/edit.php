@@ -30,6 +30,7 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
     <?php foreach ($this->header_fields as $header_field) {
 	    echo $this->getForm()->renderField($header_field);
     } ?>
+    <?php //TODO : Manage multiple tabs in forms ?>
     <div>
       <?php echo HTMLHelper::_('uitab.startTabSet','myTab', ['active' => 'details']); ?>
       <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publishing', Text::_('COM_TEAMA_EDIT_GENERAL_OPTIONS')); ?>
