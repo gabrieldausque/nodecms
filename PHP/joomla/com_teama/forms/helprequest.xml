@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+    <fieldset>
+        <field name="id"
+               type="number"
+               label="JGLOBAL_FIELD_ID_LABEL"
+               default="0"
+               class="readonly"
+               readonly="true"
+        />
+
+        <field name="requester_service"
+               type="text"
+               label="COM_TEAMA_FIELD_HELP_REQUEST_REQUESTER_SERVICE_LABEL"
+               size="45"
+               required="true"
+               maxlength="255"
+        />
+
+        <field name="requester"
+               type="text"
+               label="COM_TEAMA_FIELD_HELP_REQUEST_REQUESTER_LABEL"
+               size="45"
+               required="true"
+               maxlength="1000"
+        />
+
+        <field name="content"
+               type="editor"
+               filter="JComponentHelper::filterText"
+               label="COM_TEAMA_FIELD_HELP_REQUEST_SUMMARY_LABEL"
+               buttons="true"
+        />
+
+        <field name="request_datetime"
+               type="calendar"
+               label="COM_TEAMA_FIELD_HELP_REQUEST_REQUEST_DATE_LABEL"
+               default="NOW"
+               singleheader="true"
+        />
+
+        <field name="address"
+               type="textarea"
+               label="COM_TEAMA_FIELD_ADDRESS_LABEL"
+               rows="5"
+        />
+
+        <field name="request_type"
+               type="sql"
+               default=""
+               key_field="id"
+               value_field="name"
+               query="SELECT id, name from #__teama_help_request_types ORDER BY id DESC"
+               required="false">
+        </field>
+
+    </fieldset>
+</form>
