@@ -27,26 +27,23 @@ $tmpl = $input->get('tmpl','','cmd') === 'component' ?
 <form action="<?php echo Route::_('index.php?option=com_teama&layout=' . $layout .
     $tmpl . '&id=' . (int)$this->item->id); ?>"
       class="form-validate" method="post">
-    <div class="teama-help-request-header">
-        <?php foreach ($this->header_fields as $header_field) {
-            echo $this->getForm()->renderField($header_field);
-        } ?>
-    </div>
     <div class="teama-help-request-body">
-        <?php foreach($this->body_fields as $body_field) {
-            if($body_field->isFieldSet)
-                echo $this->getForm()->renderFieldSet($body_field->name);
-            else
-                echo $this->getForm()->renderField($body_field->name);
-        }?>
-        <div class="teama-help-request-objectives">
-
-        </div>
-        <div class="teama-help-request-weapons">
-
-        </div>
+	    <?php echo HTMLHelper::_('uitab.startTabSet','helpRequestTabs',
+		    ['active' => 'details']); ?>
+	    <?php echo HTMLHelper::_('uitab.addTab', 'helpRequestTabs', 'publishing',
+		    Text::_('COM_TEAMA_HELP_REQUEST_EDIT_GENERAL_OPTIONS')); ?>
+        <?php
+		    echo $this->getForm()->renderFieldSet("general");
+        ?>
+	    <?php echo HTMLHelper::_('uitab.endTab') ?>
+	    <?php echo HTMLHelper::_('uitab.addTab', 'helpRequestTabs', 'publishing',
+		    Text::_('COM_TEAMA_HELP_REQUEST_EDIT_OBJECTIVES_OPTIONS')); ?>
+	    <?php
+		    echo $this->getForm()->renderFieldSet("objectives");
+	    ?>
+	    <?php echo HTMLHelper::_('uitab.endTab') ?>
+	    <?php echo HTMLHelper::_('uitab.endTabSet') ?>
     </div>
-
     <input type="hidden" name="task" value="">
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>
