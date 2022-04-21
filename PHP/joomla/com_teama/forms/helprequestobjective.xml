@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+    <fieldset name="general"
+              addfieldpath="/administrator/components/com_teama/src/Field">
+        <field name="id"
+               type="hidden"
+               label="JGLOBAL_FIELD_ID_LABEL"
+               default="0"
+               class="readonly"
+               readonly="true"
+        />
+        <field
+                name="photo"
+                type="media"
+                preview="tooltip"
+                label="COM_TEAMA_PHOTO"
+        />
+
+        <field name="lastname"
+               type="text"
+               label="COM_TEAMA_LASTNAME"
+               size="45"
+               required="true"
+               maxlength="1000"
+        />
+        <field name="firstname"
+               type="text"
+               label="COM_TEAMA_FIRSTNAME"
+               size="45"
+               required="true"
+               maxlength="1000"
+        />
+        <field name="age"
+               type="number"
+               label="COM_TEAMA_AGE"
+               size="45"
+               required="true"
+               maxlength="1000"
+        />
+        <field name="sex"
+               type="list"
+               label="COM_TEAMA_SEX"
+               default="neutral"
+               multiple="false"
+               required="true"
+        >
+            <option value="man">COM_TEAMA_MAN</option>
+            <option value="man">COM_TEAMA_WOMAN</option>
+        </field>
+        <field name="birthdate"
+               type="bscalendar"
+               label="COM_TEAMA_BIRTHDATE"
+               default="NOW"
+               singleheader="true"
+        />
+        <field name="birthplace"
+               type="text"
+               label="COM_TEAMA_BIRTHPLACE"
+               size="45"
+               required="true"
+               maxlength="1000"
+        />
+    </fieldset>
+</form>

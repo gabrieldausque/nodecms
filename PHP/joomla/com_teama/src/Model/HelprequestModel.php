@@ -21,4 +21,6 @@ class HelprequestModel
 		$this->typeName = 'helprequest';
 		$this->pluralTypeName = 'helprequests';
 	}
+
+
 }

@@ -183,6 +183,7 @@ class Com_TeamAInstallerScript
     $teamaAdminGroup = $this->foundGroupByName('TeamA_Administrators');
     $teamaRHGroup = $this->foundGroupByName('TeamA_HumanResources');
     $publicGroup = $this->foundGroupByName('Public');
+	$guestGroup = $this->foundGroupByName('Guest');
 
     $asset           = Table::getInstance('asset');
     $asset->loadByName('com_teama');
@@ -239,7 +240,8 @@ class Com_TeamAInstallerScript
       ],
         'helprequeststypes.create' => [
             $teamaAdminGroup->id => 1,
-            $teamaRHGroup->id =>1
+            $teamaRHGroup->id =>1,
+	        $guestGroup->id => 1
         ],
         'helprequeststypes.edit'   => [
             $teamaAdminGroup->id => 1,
@@ -253,7 +255,24 @@ class Com_TeamAInstallerScript
             $teamAMembers->id => 1,
             $teamaAdminGroup->id => 1,
             $teamaRHGroup->id =>1,
-            $publicGroup->id => 1
+            $guestGroup->id => 1
+        ],
+        'helprequests.create' => [
+            $teamaAdminGroup->id => 1,
+            $teamAMembers->id =>1,
+	        $guestGroup->id => 1
+        ],
+        'helprequests.edit'   => [
+            $teamaAdminGroup->id => 1
+        ],
+        'helprequests.delete' => [
+            $teamaAdminGroup->id => 1
+        ],
+        'helprequests.read'   => [
+            $teamAMembers->id => 1,
+            $teamaAdminGroup->id => 1,
+            $teamaRHGroup->id =>1,
+            $guestGroup->id => 1
         ]
     ];
 
@@ -295,15 +314,21 @@ class Com_TeamAInstallerScript
     $rules['offshoots.delete'][$teamaAdminGroup->id] = 1;
     $rules['offshoots.delete'][$teamaRHGroup->id] = 1;
     $rules['helprequeststypes.create'][$teamaAdminGroup->id] = 1;
-    $rules['helprequeststypes.create'][$teamaRHGroup->id] = 1;
+    $rules['helprequeststypes.create'][$guestGroup->id] = 1;
     $rules['helprequeststypes.edit'][$teamaAdminGroup->id] = 1;
-    $rules['helprequeststypes.edit'][$teamaRHGroup->id] = 1;
     $rules['helprequeststypes.read'][$teamaAdminGroup->id] = 1;
-    $rules['helprequeststypes.read'][$teamaRHGroup->id] = 1;
     $rules['helprequeststypes.read'][$teamAMembers->id] = 1;
-    $rules['helprequeststypes.read'][$publicGroup->id] = 1;
+    $rules['helprequeststypes.read'][$guestGroup->id] = 1;
     $rules['helprequeststypes.delete'][$teamaAdminGroup->id] = 1;
     $rules['helprequeststypes.delete'][$teamaRHGroup->id] = 1;
+    $rules['helprequests.create'][$teamaAdminGroup->id] = 1;
+    $rules['helprequests.create'][$teamAMembers->id] = 1;
+    $rules['helprequests.create'][$guestGroup->id] = 1;
+    $rules['helprequests.edit'][$teamaAdminGroup->id] = 1;
+    $rules['helprequests.read'][$teamaAdminGroup->id] = 1;
+    $rules['helprequests.read'][$teamAMembers->id] = 1;
+    $rules['helprequests.read'][$guestGroup->id] = 1;
+    $rules['helprequests.delete'][$teamaAdminGroup->id] = 1;
     $teamA_asset['rules'] = json_encode($rules);
 
     $asset->save($teamA_asset);
@@ -313,7 +338,7 @@ class Com_TeamAInstallerScript
       $rules = json_decode($media_asset['rules'], true);
       $rules['core.create'][$teamaAdminGroup->id] = 1;
       $rules['core.create'][$teamaRHGroup->id] = 1;
-      $rules['core.create'][$publicGroup->id] = 1;
+      $rules['core.create'][$guestGroup->id] = 1;
       $rules['core.edit'][$teamaAdminGroup->id] = 1;
       $rules['core.edit'][$teamaRHGroup->id] = 1;
       $rules['core.edit.state'][$teamaAdminGroup->id] = 1;
@@ -322,7 +347,7 @@ class Com_TeamAInstallerScript
       $rules['core.delete'][$teamaRHGroup->id] = 1;
       $rules['core.manage'][$teamaAdminGroup->id] = 1;
       $rules['core.manage'][$teamaRHGroup->id] = 1;
-      $rules['core.manage'][$publicGroup->id] = 1;
+      $rules['core.manage'][$guestGroup->id] = 1;
 
     $media_asset['rules'] = json_encode($rules);
 	  $asset->save($media_asset);

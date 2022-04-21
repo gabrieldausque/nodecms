@@ -23,35 +23,59 @@ $layout = 'edit';
 $tmpl = $input->get('tmpl','','cmd') === 'component' ?
 	'&tmpl=component':'';
 
-//TODO : add stylesheet or js
+JHtml::_('script', 'com_teama/helprequest_edit.js', ['version' => 'auto', 'relative' => true]);
+$document->addStyleSheet('/media/com_teama/css/helprequest.css');
 ?>
-<div class="teama-section-title text-white">
-    <div class="teama-section-title-text">
-		<?php echo Text::_('COM_TEAMA_HELP_REQUEST_CREATING');?>
+<div class="teama-helprequest-viewport">
+    <div class="teama-section-title text-white">
+        <div class="teama-section-title-text">
+			<?php echo Text::_('COM_TEAMA_HELP_REQUEST_CREATING');?>
+        </div>
+        <div class="teama-section-title-decoration sm"></div>
+        <div class="teama-section-title-decoration"></div>
     </div>
-    <div class="teama-section-title-decoration sm"></div>
-    <div class="teama-section-title-decoration"></div>
+    <div class="teama-section-helprequest-creation">
+        <form action="<?php echo Route::_('index.php?option=com_teama&layout=' . $layout .
+			$tmpl . '&id=0');  ?>"
+              class="form-validate" method="post">
+            <div class="teama-help-request-body">
+				<?php echo HTMLHelper::_('uitab.startTabSet','helpRequestTabs',
+					['active' => 'details']); ?>
+				<?php echo HTMLHelper::_('uitab.addTab', 'helpRequestTabs', 'publishing',
+					Text::_('COM_TEAMA_HELP_REQUEST_EDIT_GENERAL_OPTIONS')); ?>
+				<?php
+				echo $this->getForm()->renderFieldSet("general");
+				?>
+				<?php echo HTMLHelper::_('uitab.endTab') ?>
+				<?php echo HTMLHelper::_('uitab.addTab', 'helpRequestTabs', 'publishing',
+					Text::_('COM_TEAMA_HELP_REQUEST_EDIT_OBJECTIVES_OPTIONS')); ?>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#helprequest-add-objective-modal">
+                    <?php echo Text::_('COM_TEAMA_HELPREQUEST_ADD_OBJECTIVE') ?>
+                </button>
+				<?php echo HTMLHelper::_('uitab.endTab') ?>
+				<?php echo HTMLHelper::_('uitab.endTabSet') ?>
+            </div>
+            <input type="hidden" name="task" value="">
+			<?php echo HTMLHelper::_('form.token'); ?>
+        </form>
+    </div>
 </div>
-<form action="<?php echo Route::_('index.php?option=com_teama&layout=' . $layout .
-	$tmpl . '&id=0');  ?>"
-      class="form-validate" method="post">
-    <div class="teama-help-request-body">
-		<?php echo HTMLHelper::_('uitab.startTabSet','helpRequestTabs',
-			['active' => 'details']); ?>
-		<?php echo HTMLHelper::_('uitab.addTab', 'helpRequestTabs', 'publishing',
-			Text::_('COM_TEAMA_HELP_REQUEST_EDIT_GENERAL_OPTIONS')); ?>
-		<?php
-		echo $this->getForm()->renderFieldSet("general");
-		?>
-		<?php echo HTMLHelper::_('uitab.endTab') ?>
-		<?php echo HTMLHelper::_('uitab.addTab', 'helpRequestTabs', 'publishing',
-			Text::_('COM_TEAMA_HELP_REQUEST_EDIT_OBJECTIVES_OPTIONS')); ?>
-		<?php
-		echo $this->getForm()->renderFieldSet("objectives");
-		?>
-		<?php echo HTMLHelper::_('uitab.endTab') ?>
-		<?php echo HTMLHelper::_('uitab.endTabSet') ?>
+
+<div class="modal fade" id="helprequest-add-objective-modal">
+    <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title"><?php echo Text::_('COM_TEAMA_HELPREQUEST_ADD_OBJECTIVE') ?></h5>
+             </div>
+             <div class="modal-body">
+	             <?php
+                    echo $this->get("ObjectiveForm")->renderFieldSet("general");
+	             ?>
+             </div>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                 <button type="button" class="btn btn-primary"><?php echo Text::_('COM_TEAMA_ADD') ?></button>
+             </div>
+         </div>
     </div>
-    <input type="hidden" name="task" value="">
-	<?php echo HTMLHelper::_('form.token'); ?>
-</form>
+</div>

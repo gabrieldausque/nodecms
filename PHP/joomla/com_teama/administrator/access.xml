@@ -11,6 +11,10 @@
         <action name="helprequesttypes.edit" title="COM_TEAMA_HELP_REQUEST_TYPES_PERMS_EDIT"/>
         <action name="helprequesttypes.delete" title="COM_TEAMA_HELP_REQUEST_TYPES_PERMS_DELETE"/>
         <action name="helprequesttypes.read" title="COM_TEAMA_HELP_REQUEST_TYPES_PERMS_READ"/>
+        <action name="helprequests.create" title="COM_TEAMA_HELP_REQUESTS_PERMS_CREATE"/>
+        <action name="helprequests.edit" title="COM_TEAMA_HELP_REQUESTS_PERMS_EDIT"/>
+        <action name="helprequests.delete" title="COM_TEAMA_HELP_REQUESTS_PERMS_DELETE"/>
+        <action name="helprequests.read" title="COM_TEAMA_HELP_REQUESTS_PERMS_READ"/>
         <action name="offshoots.create" title="COM_TEAMA_OFFSHOOTS_PERMS_CREATE"/>
         <action name="offshoots.edit" title="COM_TEAMA_OFFSHOOTS_PERMS_EDIT"/>
         <action name="offshoots.delete" title="COM_TEAMA_OFFSHOOTS_PERMS_DELETE"/>

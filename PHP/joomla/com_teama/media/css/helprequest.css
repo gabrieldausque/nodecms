@@ -1,0 +1,23 @@
+.teama-helprequest-viewport {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 56px;
+}
+
+.teama-section-helprequest-creation {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width:75vw;
+}
+
+.teama-section-title {
+    font-size: xxx-large;
+}
+
+.control-label label,
+.modal-title {
+    color: black;
+}
