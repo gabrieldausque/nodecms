@@ -21,3 +21,29 @@
 .modal-title {
     color: black;
 }
+
+.teama-help-request-objectives-displayed {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.teama-help-request-objectives-displayed .card {
+    margin:5px;
+}
+
+.objective-photo {
+   object-fit: contain;
+   object-position: center;
+}
+
+.add-objective-modal-title {
+    font-weight: bolder;
+}
+
+#new-objective-form {
+    margin:15px;
+}
+
+.card-template {
+    display: none;
+}

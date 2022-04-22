@@ -41,10 +41,22 @@
                label="COM_TEAMA_SEX"
                default="neutral"
                multiple="false"
-               required="true"
         >
             <option value="man">COM_TEAMA_MAN</option>
-            <option value="man">COM_TEAMA_WOMAN</option>
+            <option value="woman">COM_TEAMA_WOMAN</option>
+            <option value="neutral">COM_TEAMA_NEUTRAL</option>
+        </field>
+        <field name="dangerousness"
+               type="list"
+               label="COM_TEAMA_DANGEROUSNESS"
+               default="neutral"
+               multiple="false"
+               required="true"
+        >
+            <option value="high">COM_TEAMA_HIGH</option>
+            <option value="middle">COM_TEAMA_MIDDLE</option>
+            <option value="low">COM_TEAMA_LOW</option>
+            <option value="none">COM_TEAMA_NONE</option>
         </field>
         <field name="birthdate"
                type="calendar"
@@ -56,8 +68,20 @@
                type="text"
                label="COM_TEAMA_BIRTHPLACE"
                size="45"
-               required="true"
                maxlength="1000"
+        />
+        <field name="size"
+               type="number"
+               label="COM_TEAMA_SIZE"
+               size="45"
+               maxlength="1000"
+        />
+        <field name="comment"
+               type="editor"
+               filter="JComponentHelper::filterText"
+               label="COM_TEAMA_COMMENTS"
+               buttons="[image]"
+               class="teama-helprequest-field"
         />
     </fieldset>
 </form>

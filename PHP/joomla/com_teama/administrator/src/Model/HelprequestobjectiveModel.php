@@ -22,6 +22,8 @@ class HelprequestobjectiveModel extends TeamAOneItemModel
 			'com_teama.helprequestobjective',
 			'helprequestobjective',
 			$config, $factory, $formFactory);
+		$this->pluralTypeName = 'helprequestobjectives';
+		$this->typeName = 'helprequestobjective';
 	}
 
 	protected function getUnauthorizedEntity()

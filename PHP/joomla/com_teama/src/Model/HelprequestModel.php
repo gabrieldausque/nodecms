@@ -18,8 +18,7 @@ class HelprequestModel
 	public function __construct($config = array(), MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
 	{
 		parent::__construct($config, $factory, $formFactory);
-		$this->typeName = 'helprequest';
-		$this->pluralTypeName = 'helprequests';
+
 	}
 
 

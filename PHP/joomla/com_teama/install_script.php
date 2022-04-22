@@ -273,6 +273,23 @@ class Com_TeamAInstallerScript
             $teamaAdminGroup->id => 1,
             $teamaRHGroup->id =>1,
             $guestGroup->id => 1
+        ],
+        'helprequestobjectives.create' => [
+            $teamaAdminGroup->id => 1,
+            $teamAMembers->id =>1,
+	        $guestGroup->id => 1
+        ],
+        'helprequestobjectives.edit'   => [
+            $teamaAdminGroup->id => 1
+        ],
+        'helprequestobjectives.delete' => [
+            $teamaAdminGroup->id => 1
+        ],
+        'helprequestobjectives.read'   => [
+            $teamAMembers->id => 1,
+            $teamaAdminGroup->id => 1,
+            $teamaRHGroup->id =>1,
+            $guestGroup->id => 1
         ]
     ];
 
@@ -329,6 +346,14 @@ class Com_TeamAInstallerScript
     $rules['helprequests.read'][$teamAMembers->id] = 1;
     $rules['helprequests.read'][$guestGroup->id] = 1;
     $rules['helprequests.delete'][$teamaAdminGroup->id] = 1;
+    $rules['helprequestobjectives.create'][$teamaAdminGroup->id] = 1;
+    $rules['helprequestobjectives.create'][$teamAMembers->id] = 1;
+    $rules['helprequestobjectives.create'][$guestGroup->id] = 1;
+	$rules['helprequestobjectives.edit'][$teamaAdminGroup->id] = 1;
+    $rules['helprequestobjectives.read'][$teamaAdminGroup->id] = 1;
+    $rules['helprequestobjectives.read'][$teamAMembers->id] = 1;
+    $rules['helprequestobjectives.read'][$guestGroup->id] = 1;
+    $rules['helprequestobjectives.delete'][$teamaAdminGroup->id] = 1;
     $teamA_asset['rules'] = json_encode($rules);
 
     $asset->save($teamA_asset);
