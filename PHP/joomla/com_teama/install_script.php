@@ -184,8 +184,13 @@ class Com_TeamAInstallerScript
     $teamaRHGroup = $this->foundGroupByName('TeamA_HumanResources');
     $publicGroup = $this->foundGroupByName('Public');
 	$guestGroup = $this->foundGroupByName('Guest');
+	if(!isset($guestGroup) || !$guestGroup){
+		$guestGroup = $this->foundGroupByName('Invité');
+	}
 
-    $asset           = Table::getInstance('asset');
+
+
+	$asset           = Table::getInstance('asset');
     $asset->loadByName('com_teama');
     $rules = [
       'core.manage' => [

@@ -65,6 +65,14 @@
                required="true"
         />
 
+        <field name="difficulties"
+               type="textarea"
+               rows="5"
+               label="COM_TEAMA_FIELD_HELP_REQUEST_DIFFICULTIES_LABEL"
+               class="teama-helprequest-field"
+               required="true"
+        />
+
     </fieldset>
     <fieldset name="objectives">
         <field name="objectives"
