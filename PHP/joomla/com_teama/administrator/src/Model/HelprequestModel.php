@@ -83,7 +83,7 @@ class HelprequestModel
 	}
 
 	protected function saveLinkedObjectives($helpRequest,$data){
-		$updatedObjectiveIds = $data['objectives'];
+		$updatedObjectiveIds = json_decode($data['objectives']);
 		$existingIds = [];
 		foreach($helpRequest->objectives as $objective){
 			$existingIds[] = $objective->id;
@@ -95,12 +95,28 @@ class HelprequestModel
 				$toDelete[] = $existing->id;
 			}
 		}
+
 		foreach ($updatedObjectiveIds as $inModificationId){
 			if(!in_array($inModificationId, $existingIds)){
 				$toAdd[] = $inModificationId;
 			}
 		}
 
+		$db = $this->getDbo();
+
+		foreach($toDelete as $toDeleteID){
+			$query = "DELETE FROM #__teama_objectives_by_help_requests WHERE objective_id=" . $toDeleteID ." AND request_id=" . $helpRequest->id;
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+		$query = "INSERT INTO #__teama_objectives_by_help_requests(request_id, objective_id) VALUES ";
+		foreach($toAdd as $toAddID){
+			$query .= "(".$helpRequest->id.",".$toAddID."),";
+		}
+		$query = trim($query,",");
+		$db->setQuery($query);
+		$db->execute();
 	}
 
 	public function getObjectiveForm(){

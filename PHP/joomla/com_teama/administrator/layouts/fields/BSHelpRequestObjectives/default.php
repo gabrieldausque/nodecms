@@ -26,7 +26,9 @@ if(isset($displayData) && is_array($displayData['value'])){
 		foreach($displayData['value'] as $linkedObjective){
 			?>
 			<div class="card w-25" id="<?php echo 'linked-objective-' . $linkedObjective->id ?>" >
-				<img src="/<?php echo $linkedObjective->photo ?>>" class="card-img-top objective-photo">
+				<?php if(!empty($linkedObjective->photo)) { ?>
+                    <img src="/<?php echo $linkedObjective->photo; ?>>" class="card-img-top objective-photo">
+                <?php } ?>
 				<div class="card-body">
 					<h2 class="card-title"><?php echo $linkedObjective->lastname . ' ' . $linkedObjective->firstname ?></h2>
 					<p class="card-text"><b><?php echo Text::_('COM_TEAMA_AGE')?> : </b><span><?php echo $linkedObjective->age ?></span></p>
